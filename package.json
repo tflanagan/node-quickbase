@@ -1,0 +1,21 @@
+{
+	"name": "node-quickbase",
+	"version": "0.0.1",
+	"description": "A lightweight, very flexible QuickBase API",
+	"main": "QuickBase.js",
+	"dependencies": {
+		"underscore": "1.6.0",
+		"xml2js": "0.4.3"
+	},
+	"devDependencies": {},
+	"scripts": {
+	},
+	"keywords": [
+		"QuickBase",
+		"qb",
+		"quickbase",
+		"api"
+	],
+	"author": "Tristian Flanagan",
+	"license": "MIT"
+}
