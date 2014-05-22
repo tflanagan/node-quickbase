@@ -404,6 +404,127 @@ quickbase.prototype.api.prototype = {
 		delete this.queries[query].options.fields;
 
 		return this._transmit.call(this, query);
+	},
+
+	QueryEdit: function(query){
+		var that = this;
+
+		if(typeof(this.queries[query].options.query) === 'undefined' || typeof(this.queries[query].options.edit) === 'undefined'){
+			this._return(query, 1006, 'Invalid Options', 'Please supply both query and edit options');
+
+			return false;
+		}
+
+		if(typeof(this.queries[query].options.useCSVImport) === 'undefined'){
+			this.queries[query].options.useCSVImport = false;
+		}
+
+		this.api.call(this, 'API_DoQuery', this.queries[query].options.query, function(err, results){
+			if(err.code != 0){
+				that._return(query, err.code, err.text, err.details);
+
+				return false;
+			}
+
+			if(results.records.length == 0){
+				that._return(query, 1007, 'No Records Found', 'The query produced no results to edit');
+
+				return false;
+			}
+
+			if(typeof(that.queries[query].options.import) !== 'undefined'){
+				var editQueries = [];
+			}else{
+				this.error = false;
+				this.results = undefined;
+				var there = this;
+			}
+
+			for(var i = 0; i < results.records.length; i++){
+				var editQuery = {
+					dbid: that.queries[query].options.edit.dbid,
+					fields: [],
+					rid: 0
+				};
+
+				var rid = that.queries[query].options.edit.rid.match(/^_query_(\d*)/);
+				if(rid){
+					editQuery.rid = results.records[i][rid[1]];
+				}else{
+					editQuery.rid = that.queries[query].options.edit.rid;
+				}
+
+				for(var f in that.queries[query].options.edit.fields){
+					var value = that.queries[query].options.edit.fields[f].value.match(/^_query_(\d*)/);
+
+					if(value){
+						value = results.records[i][value[1]];
+					}else{
+						value = that.queries[query].options.edit.fields[f].value;
+					}
+
+					editQuery.fields.push({
+						fid: that.queries[query].options.edit.fields[f].fid,
+						value: value
+					});
+				}
+
+				if(typeof(that.queries[query].options.import) !== 'undefined'){
+					editQueries.push(editQuery);
+				}else{
+					if(!this.error){
+						that.api.call(that, 'API_EditRecord', {
+							dbid: editQuery.dbid,
+							fields: editQuery.fields,
+							rid: editQuery.rid,
+							udata: i
+						}, function(err, result){
+							if(err.code != 0){
+								there.error = true;
+
+								that._return(query, err.code, err.text, err.details, there.results);
+							}else
+							if(results.udata == (results.records.length - 1)){
+								that._return(query, null, null, null, there.results);
+							}else{
+								if(there.results == undefined){
+									there.results = [];
+								}
+
+								there.results.push(result);
+							}
+						});
+					}
+				}
+			}
+
+			if(typeof(that.queries[query].options.import) !== 'undefined'){
+				var clist = [that.queries[query].options.import.rid];
+				var csv = '';
+
+				for(var i = 0; i < editQueries.length; i++){
+					csv += editQueries[i].rid;
+
+					for(var o = 0; o < editQueries[i].fields.length; o++){
+						if(clist.indexOf(editQueries[i].fields[o].fid) == -1){
+							clist.push(editQueries[i].fields[o].fid);
+						}
+						
+						csv += ',' + editQueries[i].fields[o].value;
+					}
+
+					csv += "\n";
+				}
+
+				that.api.call(that, 'API_ImportFromCSV', _.extend({}, that.queries[query].options.import, {
+					dbid: that.queries[query].options.edit.dbid,
+					records_csv: csv,
+					clist: clist
+				}), function(err, result){
+					that._return(query, err.code, err.text, err.details, result);
+				});
+			}
+		});
 	}
 };
 
