@@ -23,7 +23,7 @@ function quickbase(options, callback){
 			details: ''
 		},
 
-		queuePollInterval: 1000
+		queuePollInterval: 500
 	};
 
 	this.connected = false;
@@ -369,6 +369,12 @@ quickbase.prototype.api.prototype = {
 				results.table.records = records;
 				results.table.queries = results.table.queries.query;
 				results.table.fields = results.table.fields.field;
+
+				for(var ele in results.table){
+					results[ele] = results.table[ele];
+				}
+
+				delete results.table;
 			}
 
 			if(typeof(that.queries[query].callback) === 'function'){

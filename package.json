@@ -1,5 +1,8 @@
 {
-	"name": "node-quickbase",
+	"name": "quickbase",
+	"engines": {
+		"node": ">=0.10.*"
+	},
 	"version": "0.0.1",
 	"description": "A lightweight, very flexible QuickBase API",
 	"main": "QuickBase.js",
@@ -8,14 +11,23 @@
 		"xml2js": "0.4.3"
 	},
 	"devDependencies": {},
-	"scripts": {
-	},
 	"keywords": [
 		"QuickBase",
 		"qb",
 		"quickbase",
 		"api"
 	],
-	"author": "Tristian Flanagan",
-	"license": "MIT"
+	"git": "git://github.com/tflanagan/node-quickbase.git#master",
+	"repository": {
+		"type": "git",
+		"url": "git://github.com/tflanagan/node-quickbase.git"
+	},
+	"homepage": "https://github.com/tflanagan/node-quickbase",
+	"bugs": {
+		"url": "https://github.com/tflanagan/node-quickbase/issues"
+	},
+	"author": {
+		"name": "Tristian Flanagan",
+	},
+	"license": "Apache-2.0"
 }
