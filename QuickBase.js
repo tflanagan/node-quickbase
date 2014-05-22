@@ -96,6 +96,10 @@ quickbase.prototype = {
 	},
 
 	_prepareOption: function(option, value){
+		if(option.match(/^_/)){
+			return value;
+		}
+
 		try {
 			return this._prepareOption.prototype[option](value);
 		}catch(e){
