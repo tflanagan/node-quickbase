@@ -1,4 +1,4 @@
-var quickbase = require('./QuickBase.js');
+var quickbase = require('quickbase');
 
 var qb = new quickbase({
 	realm: 'www',
