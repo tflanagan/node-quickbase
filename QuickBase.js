@@ -21,30 +21,35 @@ function quickbase(options, callback){
 			code: 0,
 			text: 'No error',
 			details: ''
-		}
+		},
+
+		queuePollInterval: 1000
 	};
 
 	this.connected = false;
-	this.input = {};
 	this.settings = _.extend({}, this._defaults, options);
 	this.queries = [];
 
-	if(this.settings.username != '' && this.settings.password != ''){
-		var that = this;
+	var that = this;
 
+	if(this.settings.username != '' && this.settings.password != ''){
 		this.api('API_Authenticate', {
 			username: this.settings.username,
 			password: this.settings.password,
 			hours: this.settings.hours
 		}, function(err, results){
 			if(typeof(callback) === 'function'){
-				callback.call(that, that.settings.status, that.connected);
+				callback.call(that, err, results);
 			}
 		});
 	}else
 	if(typeof(callback) === 'function'){
-		callback.call(this, this.settings.status, this.connected);
+		setTimeout(function(){
+			callback.call(that, that.settings.status, that.connected);
+		});
 	}
+
+	return this;
 }
 
 quickbase.prototype = {
@@ -74,6 +79,20 @@ quickbase.prototype = {
 		}
 
 		return this._preparePayload.call(this, query);
+	},
+
+	_pollForQueue: function(){
+		if(this.connected){
+			clearInterval(this.queueInterval);
+
+			for(var query in this.queries){
+				if(this.queries[query]._inQueue){
+					this.queries[query]._inQueue = false;
+
+					this._transmit.call(this, query, this.queries[query]._internalCB);
+				}
+			}
+		}
 	},
 
 	_prepareOption: function(option, value){
@@ -129,8 +148,22 @@ quickbase.prototype = {
 	},
 
 	_transmit: function(query, cb){
-		var that = this,
-			options = {
+		var that = this;
+
+		if(!this.connected && this.queries[query].action != 'API_Authenticate'){
+			this.queries[query]._inQueue = true;
+			this.queries[query]._internalCB = cb;
+
+			if(typeof(this.queueInterval) === 'undefined'){
+				this.queueInterval = setInterval(function(){
+					that._pollForQueue.call(that);
+				}, this.settings.queuePollInterval);
+			}
+
+			return false;
+		}
+
+		var options = {
 				hostname: this.settings.realm + '.' + this.settings.domain,
 				port: 443,
 				path: '/db/' + (this.queries[query].options.dbid || 'main') + '?act=' + this.queries[query].action + (this.settings.useXML ? '' : this._assemblePayload.call(this, query)),
@@ -142,6 +175,7 @@ quickbase.prototype = {
 			},
 			request = https.request(options, function(res){
 				var xmlResponse = '';
+				that.queries[query]._inProgress = true;
 
 				res.on('data', function(chunk){
 					xmlResponse += chunk;
@@ -189,6 +223,7 @@ quickbase.prototype = {
 
 					if(status.code == 4 && typeof(that.badTicket) === 'undefined'){
 						that.badTicket = true;
+						that.connected = false;
 
 						that.api('API_Authenticate', {
 							username: that.settings.username,
@@ -201,7 +236,10 @@ quickbase.prototype = {
 							}
 						});
 					}else{
-						that.queries[query].inProgress = false;
+						that.queries[query]._inProgress = false;
+						that.queries[query]._completed = true;
+						that.queries[query].transmission.end = new Date();
+						that.queries[query].transmission.elapsed = that.queries[query].transmission.end - that.queries[query].transmission.start;
 
 						if(typeof(cb) === 'function'){
 							cb(
@@ -231,9 +269,6 @@ quickbase.prototype = {
 	},
 
 	_return: function(query, code, text, details, results){
-		this.queries[query].transmission.end = new Date();
-		this.queries[query].transmission.elapsed = (this.queries[query].transmission.end - this.queries[query].transmission.start) + ' ms';
-
 		var status = {
 				code: code || this.settings.status.code,
 				text: text || this.settings.status.text,
@@ -248,10 +283,13 @@ quickbase.prototype = {
 	},
 
 	api: function(action, options, callback){
-		var query = this.queries.length;
+		var query = options._queryIndex || this.queries.length;
 
-		this.queries.push({
-			inProgress: true,
+		this.queries[query] = {
+			_queryIndex: query,
+			_inQueue: false,
+			_inProgress: false,
+			_completed: false,
 			action: action,
 			options: options,
 			callback: callback,
@@ -262,7 +300,7 @@ quickbase.prototype = {
 				status: this.settings.status,
 				results: null
 			}
-		});
+		};
 
 		if(this.queries[query].action.match(/^_/) || this.queries[query].action == 'api'){
 			this._return.call(this, query, 1001, 'Invalid Action', 'Actions starting with _ are reservered');
@@ -290,7 +328,7 @@ quickbase.prototype.api.prototype = {
 			this.queries[query].options.hours = this.settings.hours;
 		}
 
-		this._transmit.call(this, query, function(err, results){
+		return this._transmit.call(this, query, function(err, results){
 			if(err.code == 0){
 				that.connected = true;
 				that.settings.ticket = results.ticket;
@@ -305,7 +343,7 @@ quickbase.prototype.api.prototype = {
 	API_DoQuery: function(query){
 		var that = this;
 
-		this._transmit.call(this, query, function(err, results){
+		return this._transmit.call(this, query, function(err, results){
 			if(err.code == 0){
 				var records = [];
 
