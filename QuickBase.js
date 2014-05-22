@@ -483,15 +483,16 @@ quickbase.prototype.api.prototype = {
 								there.error = true;
 
 								that._return(query, err.code, err.text, err.details, there.results);
-							}else
-							if(results.udata == (results.records.length - 1)){
-								that._return(query, null, null, null, there.results);
 							}else{
 								if(there.results == undefined){
 									there.results = [];
 								}
 
 								there.results.push(result);
+
+								if(result.udata == (results.records.length - 1)){
+									that._return(query, null, null, null, there.results);
+								}
 							}
 						});
 					}
