@@ -66,14 +66,6 @@ quickbase.prototype = {
 			this.queries[query].options.msInUTC = 1;
 		}
 
-		if(this.settings.includeRids){
-			this.queries[query].options.includeRids = 1;
-		}
-
-		if(this.settings.fmt != ''){
-			this.queries[query].options.fmt = this.settings.fmt;
-		}
-
 		for(var option in this.queries[query].options){
 			this.queries[query].options[option] = this._prepareOption.call(this, option, this.queries[query].options[option]);
 		}
@@ -112,19 +104,26 @@ quickbase.prototype = {
 			builder = new xml.Builder({
 				rootName: 'qdbapi',
 				renderOpts: {
-					'pretty': false,
-					'strict': false,
-					'async': false
+					'pretty': false
 				}
-			});
+			}),
+			dbid = this.queries[query].options.dbid;
+
+		delete this.queries[query].options.dbid;
 
 		if(this.settings.useXML){
-			return builder.buildObject(this.queries[query].options);
+			try{
+				payload = builder.buildObject(this.queries[query].options);
+			}catch(e){
+				// Do Nothing
+			}
+		}else{
+			for(var option in this.queries[query].options){
+				payload += '&' + option + '=' + this.queries[query].options[option];
+			}
 		}
 
-		for(var option in this.queries[query].options){
-			payload += '&' + option + '=' + this.queries[query].options[option];
-		}
+		this.queries[query].options.dbid = dbid;
 
 		return payload;
 	},
@@ -207,7 +206,7 @@ quickbase.prototype = {
 							result = result.qdbapi;
 
 							try {
-								status.code = result.errcode[0];
+								status.code = parseInt(result.errcode[0]);
 								status.text = result.errtext[0];
 								status.details = result.errdetail[0];
 							}catch(e){
@@ -347,9 +346,21 @@ quickbase.prototype.api.prototype = {
 	API_DoQuery: function(query){
 		var that = this;
 
+		if(this.settings.fmt != '' && typeof(this.queries[query].options.fmt) === 'undefined'){
+			this.queries[query].options.fmt = this.settings.fmt;
+		}
+
+		if(this.settings.includeRids){
+			this.queries[query].options.includeRids = 1;
+		}
+
 		return this._transmit.call(this, query, function(err, results){
 			if(err.code == 0){
 				var records = [];
+
+				if(typeof(results.table.records.record) === 'object' && typeof(results.table.records.record.length) === 'undefined'){
+					results.table.records.record = [results.table.records.record];
+				}
 
 				for(var i = 0; i < results.table.records.record.length; i++){
 					var record = results.table.records.record[i];
@@ -381,6 +392,18 @@ quickbase.prototype.api.prototype = {
 				that.queries[query].callback.call(that, err, results);
 			}
 		});
+	},
+
+	API_EditRecord: function(query){
+		this.queries[query].options.field = [];
+
+		for(var i = 0; i < this.queries[query].options.fields.length; i++){
+			this.queries[query].options.field.push(this.queries[query].options.fields[i]);
+		}
+
+		delete this.queries[query].options.fields;
+
+		return this._transmit.call(this, query);
 	}
 };
 
@@ -394,15 +417,38 @@ quickbase.prototype._prepareOption.prototype = {
 	},
 
 	clist: function(value){
-		return this._prepareOption.prototype._joinIfArray(value);
+		return this._joinIfArray(value, '.');
+	},
+
+	clist_output: function(value){
+		return this._joinIfArray(value, '.');
 	},
 
 	slist: function(value){
-		return this._prepareOption.prototype._joinIfArray(value);
+		return this._joinIfArray(value, '.');
 	},
 
 	options: function(value){
-		return this._prepareOption.prototype._joinIfArray(value);
+		return this._joinIfArray(value, '.');
+	},
+
+	field: function(value){
+		for(var i = 0; i < value.length; i++){
+			var newValue = {
+				$: {},
+				_: value[i].value
+			};
+
+			if(parseFloat(value[i].fid) !== NaN && parseFloat(value[i].fid) == value[i].fid){
+				newValue.$.fid = value[i].fid;
+			}else{
+				newValue.$.name = value[i].fid;
+			}
+
+			value[i] = newValue;
+		}
+
+		return value;
 	}
 };
 
