@@ -261,7 +261,7 @@ quickbase.prototype = {
 			});
 
 		request.on('error', function(err){
-			that._return.call(this, query, 1003, 'Error in Request', err.message);
+			that._return.call(that, query, 1003, 'Error in Request', err.message);
 		});
 
 		if(this.settings.useXML){
