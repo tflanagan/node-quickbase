@@ -3,12 +3,12 @@
 	"engines": {
 		"node": ">=0.10.*"
 	},
-	"version": "0.0.5",
+	"version": "0.0.6",
 	"description": "A lightweight, very flexible QuickBase API",
 	"main": "QuickBase.js",
 	"dependencies": {
 		"underscore": "1.6.0",
-		"xml2js": "0.4.3"
+		"xml2js": "0.4.4"
 	},
 	"devDependencies": {},
 	"keywords": [
