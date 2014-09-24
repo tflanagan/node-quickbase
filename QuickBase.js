@@ -394,6 +394,18 @@ quickbase.prototype.api.prototype = {
 		});
 	},
 
+	API_AddRecord: function(query){
+		this.queries[query].options.field = [];
+
+		for(var i = 0; i < this.queries[query].options.fields.length; i++){
+			this.queries[query].options.field.push(this.queries[query].options.fields[i]);
+		}
+
+		delete this.queries[query].options.fields;
+
+		return this._transmit.call(this, query);
+	},
+
 	API_EditRecord: function(query){
 		this.queries[query].options.field = [];
 
