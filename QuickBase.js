@@ -415,6 +415,54 @@ var https = require('https'),
 			return this._transmit.call(this, query);
 		};
 
+		quickbase.prototype.api.prototype.API_ImportFromCSV = function(query){
+			if(!this.queries[query].options.clist && this.queries[query].options.records_csv instanceof Array){
+				var records = this.queries[query].options.records_csv,
+					clist = [],
+					recordsCSV = [],
+					localRecord = [],
+					localVal,
+					i = 0,
+					o = 0,
+					p = -1;
+
+				for(; i < records.length; ++i){
+					if(clist.indexOf(records[i].fid) === -1){
+						clist.push(records[i].fid);
+					}
+				}
+
+				for(; i < records.length; ++i){
+					localRecord = [];
+
+					for(o = 0; o < clist.length; ++o){
+						p = indexOfObj(records[i], 'fid', clist[o]);
+
+						localVal = p !== -1 ? records[i][p].value : '';
+
+						if(isNaN(localVal) || !isFinite(localVal) || localVal.match(/e/)){
+							if(localVal.match(/e/)){
+								localVal = localVal.toString();
+							}
+
+							localVal.replace('"', '""').replace('&', '&amp;');
+
+							localVal = '"' + localVal + '"';
+						}
+
+						localRecord.push(localVal);
+					}
+
+					recordsCSV.push(localRecord.join(','));
+				}
+
+				this.queries[query].options.clist = clist;
+				this.queries[query].options.records_csv = recordsCSV;
+			}
+
+			return this._transmit.call(this, query);
+		};
+
 		quickbase.prototype.api.prototype.QueryEdit = function(query){
 			var that = this;
 
@@ -553,6 +601,10 @@ var https = require('https'),
 			return this._joinIfArray(value, '.');
 		};
 
+		quickbase.prototype._prepareOption.prototype.records_csv = function(value){
+			return this._joinIfArray(value, '\n');
+		};
+
 		quickbase.prototype._prepareOption.prototype.slist = function(value){
 			return this._joinIfArray(value, '.');
 		};
@@ -579,6 +631,50 @@ var https = require('https'),
 
 			return value;
 		};
+
+		function indexOfObj(obj, key, value){
+			if(typeof obj != 'object' || !(obj instanceof Array)){
+				return -1;
+			}
+
+			var result,
+				o = 0,
+				i = 0;
+
+			for(; i < obj.length; ++i){
+				if(typeof key == 'object' || key instanceof Array){
+					result = new Array(key.length);
+					result = setAll(result, false);
+
+					for(o = 0; o < result.length; ++o){
+						if(obj[i][key[o]] === value[o]){
+							result[o] = true;
+						}
+					}
+
+					if(result.indexOf(false) === -1){
+						return i;
+					}
+				}else{
+					if(obj[i][key] === value){
+						return i;
+					}
+				}
+			}
+
+			return -1;
+		}
+
+		function setAll(arr, value){
+			var n = arr.length,
+				i = 0;
+
+			for(; i < n; ++i){
+				arr[i] = value;
+			}
+
+			return arr;
+		}
 
 		return quickbase;
 	})();
