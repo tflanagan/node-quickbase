@@ -233,37 +233,37 @@ var xml = require('xml2js'),
 			return this;
 		};
 
-		actions.prototype.API_Authenticate = function(apiPayload){
-			apiPayload.origCallback = apiPayload.callback;
-			apiPayload.callback = function(err, results){
+		actions.prototype.API_Authenticate = function(request){
+			request.origCallback = request.callback;
+			request.callback = function(err, results){
 				if(err.errcode !== settings.status.errcode){
-					apiPayload.origCallback(err);
+					request.origCallback(err);
 
 					return false;
 				}
 
 				settings.ticket = results.ticket;
 
-				apiPayload.origCallback(settings.status, results);
+				request.origCallback(settings.status, results);
 			};
 
-			new transmit(apiPayload);
+			new transmit(request);
 		};
 
-		actions.prototype.API_DoQuery = function(apiPayload){
+		actions.prototype.API_DoQuery = function(request){
 			if(settings.flags.returnPercentage){
-				apiPayload.payload.returnPercentage = 1;
+				request.payload.returnPercentage = 1;
 			}
 
 			if(settings.flags.includeRids){
-				apiPayload.payload.includeRids = 1;
+				request.payload.includeRids = 1;
 			}
 
 			if(settings.flags.fmt){
-				apiPayload.payload.fmt = settings.flags.fmt;
+				request.payload.fmt = settings.flags.fmt;
 			}
 
-			new transmit(apiPayload);
+			new transmit(request);
 		};
 
 		return quickbase;
