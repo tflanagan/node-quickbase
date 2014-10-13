@@ -197,6 +197,13 @@ var xml = require('xml2js'),
 
 			for(arg in payload){
 				try {
+					if(arg === 'fields'){
+						arg = 'field';
+						payload[arg] = payload['fields'];
+
+						delete payload['fields'];
+					}
+
 					payload[arg] = this[arg](payload[arg]);
 				}catch(err){
 					// Do Nothing
@@ -224,6 +231,25 @@ var xml = require('xml2js'),
 
 		preparePayload.prototype.records_csv = function(val){
 			return val instanceof Array ? val.join('\n') : val;
+		};
+
+		preparePayload.prototype.field = function(val){
+			for(var i = 0; i < val.length; i++){
+				var newValue = {
+					$: {},
+					_: val[i].value
+				};
+
+				if(parseFloat(val[i].fid) !== NaN && parseFloat(val[i].fid) == val[i].fid){
+					newValue.$.fid = val[i].fid;
+				}else{
+					newValue.$.name = val[i].fid;
+				}
+
+				val[i] = newValue;
+			}
+
+			return val;
 		};
 
 		/* Customized API Calls */
