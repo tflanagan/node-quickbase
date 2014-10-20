@@ -8,7 +8,6 @@ Upgrading from v0.0.* to v0.1.*
 Upgrading from v0.0.* to v0.1.* has potential to break code. v0.1.0 is a complete rewrite, losing a lot of extra baggage.
 
 Things removed:
-* Handling Bad Ticket errors behind the scenes
 * QueryEdit API calls
 * Unstructured ImportFromCSV API calls
 

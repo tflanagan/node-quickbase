@@ -9,38 +9,48 @@ var xml = require('xml2js'),
 			};
 
 		var quickbase = function(options, callback){
-			var defaults = {
-				realm: 'www',
-				domain: 'quickbase.com',
-				username: '',
-				password: '',
-				appToken: '',
-				hours: 12,
+			var that = this,
+				defaults = {
+					realm: 'www',
+					domain: 'quickbase.com',
+					username: '',
+					password: '',
+					appToken: '',
+					hours: 12,
 
-				flags: {
-					useXML: true,
-					msInUTC: true,
-					includeRids: true,
-					returnPercentage: false,
-					fmt: 'structured'
-				},
+					flags: {
+						useXML: true,
+						msInUTC: true,
+						includeRids: true,
+						returnPercentage: false,
+						fmt: 'structured'
+					},
 
-				status: {
-					errcode: 0,
-					errtext: 'No error',
-					errdetail: ''
-				},
+					status: {
+						errcode: 0,
+						errtext: 'No error',
+						errdetail: ''
+					},
 
-				autoStart: true,
-				connected: false
-			};
+					errorCodes: {
+						badTicket: 4
+					},
+
+					autoStart: true,
+					connected: false,
+					handlingBadTicket: false,
+					maxAuthRetries: 3,
+					authRetriesI: 0
+				};
 
 			settings = utilities.mergeObjects(settings, defaults, options || {});
 
 			if(settings.autoStart){
 				if(settings.ticket !== ''){
+					settings.connected = true;
+
 					if(typeof(callback) === 'function'){
-						callback();
+						callback(settings.status, settings.ticket);
 					}
 				}else
 				if(settings.username && settings.password){
@@ -53,6 +63,19 @@ var xml = require('xml2js'),
 			}
 
 			this.on('authenticated', this.processQueue);
+			this.on('bad-ticket', function(){
+				if(!settings.handlingBadTicket){
+					settings.handlingBadTicket = true;
+
+					that.api('API_Authenticate', {
+						username: settings.username,
+						password: settings.password,
+						hours: settings.hours
+					}, function(){
+						settings.handlingBadTicket = false;
+					});
+				}
+			})
 
 			return this;
 		};
@@ -153,8 +176,16 @@ var xml = require('xml2js'),
 									errdetail: result.errdetail
 								};
 
-								that.emit('error', err);
-								options.callback(err);
+								if(err.errcode === settings.errorCodes.badTicket){
+									settings.connected = false;
+
+									queue.push(options);
+
+									that.emit('bad-ticket');
+								}else{
+									that.emit('error', err);
+									options.callback(err);
+								}
 
 								return false;
 							}
@@ -312,6 +343,24 @@ var xml = require('xml2js'),
 		actions.prototype.API_Authenticate = function(payload){
 			var that = this;
 
+			if(settings.authRetriesI >= settings.maxAuthRetries){
+				var err = {
+					errcode: 1002,
+					errtext: 'Max Authenticated Attempts Reached',
+					errdetail: 'The process has exceeded the maximum allowed Authentication attempts'
+				};
+
+				settings.connected = false;
+				settings.authRetriesI = 0;
+
+				payload.callback(err);
+				this.emit('error', err);
+
+				return false;
+			}
+
+			++settings.authRetriesI;
+
 			payload.origCallback = payload.callback;
 			payload.callback = function(err, results){
 				if(err.errcode !== settings.status.errcode){
@@ -322,6 +371,7 @@ var xml = require('xml2js'),
 
 				settings.ticket = results.ticket;
 				settings.connected = true;
+				settings.authRetriesI = 0;
 
 				that.emit('authenticated', settings.ticket);
 				payload.origCallback(settings.status, settings.ticket);
