@@ -3,9 +3,10 @@ var xml = require('xml2js'),
 	events = require('./lib/events.js'),
 	utilities = require('./lib/utilities.js'),
 	quickbase = (function(){
-		var settings = {
-			ticket: ''
-		};
+		var queue = [],
+			settings = {
+				ticket: ''
+			};
 
 		var quickbase = function(options, callback){
 			var defaults = {
@@ -30,7 +31,8 @@ var xml = require('xml2js'),
 					errdetail: ''
 				},
 
-				autoStart: true
+				autoStart: true,
+				connected: false
 			};
 
 			settings = utilities.mergeObjects(settings, defaults, options || {});
@@ -49,6 +51,8 @@ var xml = require('xml2js'),
 					}, callback);
 				}
 			}
+
+			this.on('authenticated', this.processQueue);
 
 			return this;
 		};
@@ -78,17 +82,31 @@ var xml = require('xml2js'),
 					callback: callback
 				};
 
-			if(actions.prototype[action]){
-				transaction = new actions(action, payload);
+			if(!settings.connected && action !== 'API_Authenticate'){
+				queue.push(payload);
 			}else{
-				transaction = new transmit(payload);
+				if(actions.prototype[action]){
+					transaction = new actions(action, payload);
+				}else{
+					transaction = new transmit(payload);
+				}
+
+				transaction.onAny(function(type){
+					var args = buildEventArgs(type, arguments);
+
+					that.emit.apply(that, args);
+				});
 			}
+		};
 
-			transaction.onAny(function(type){
-				var args = buildEventArgs(type, arguments);
+		quickbase.prototype.processQueue = function(){
+			var request;
 
-				that.emit.apply(that, args);
-			});
+			while(queue.length > 0){
+				request = queue.shift();
+
+				this.api(request.action, request.payload, request.callback);
+			}
 		};
 
 		var transmit = function(options){
@@ -303,6 +321,7 @@ var xml = require('xml2js'),
 				}
 
 				settings.ticket = results.ticket;
+				settings.connected = true;
 
 				that.emit('authenticated', settings.ticket);
 				payload.origCallback(settings.status, settings.ticket);

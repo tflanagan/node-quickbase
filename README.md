@@ -3,12 +3,11 @@ node-quickbase
 
 A lightweight, very flexible QuickBase API
 
-Upgrading from < v0.1.0
+Upgrading from v0.0.* to v0.1.*
 ------------------------
-Upgrading from any version under v0.1.0 has potential to break code. v0.1.0 is a complete rewrite, losing a lot of extra baggage.
+Upgrading from v0.0.* to v0.1.* has potential to break code. v0.1.0 is a complete rewrite, losing a lot of extra baggage.
 
-Things removed from v0.1.0:
-* Queuing queries until authenticated
+Things removed:
 * Handling Bad Ticket errors behind the scenes
 * QueryEdit API calls
 * Unstructured ImportFromCSV API calls
@@ -57,6 +56,25 @@ qb.on('error', function(err){
 
 qb.on('authenticated', function(ticket){
 	console.log('Authenticated Event');
+});
+
+// These requests are queued until the 'authenticated' event fires
+qb.api('API_DoQuery', {
+	dbid: 'bby2j1bme',
+	clist: ['1', '2', '3'],
+	query: "{'3'.EX.'50'}"
+}, function(err, results){
+	console.log(err, results);
+});
+
+qb.api('API_AddRecord', {
+	dbid: 'bby2j1bme',
+	fields: [
+		{fid: 6, value: 'test value'},
+		{fid: 7, value: 'test value 2'}
+	]
+}, function(err, results){
+	console.log(err, results);
 });
 ```
 
