@@ -45,23 +45,6 @@ var xml = require('xml2js'),
 
 			settings = utilities.mergeObjects(settings, defaults, options || {});
 
-			if(settings.autoStart){
-				if(settings.ticket !== ''){
-					settings.connected = true;
-
-					if(typeof(callback) === 'function'){
-						callback(settings.status, settings.ticket);
-					}
-				}else
-				if(settings.username && settings.password){
-					this.api('API_Authenticate', {
-						username: settings.username,
-						password: settings.password,
-						hours: settings.hours
-					}, callback);
-				}
-			}
-
 			this.on('authenticated', this.processQueue);
 			this.on('bad-ticket', function(){
 				if(!settings.handlingBadTicket){
@@ -75,7 +58,25 @@ var xml = require('xml2js'),
 						settings.handlingBadTicket = false;
 					});
 				}
-			})
+			});
+
+			if(settings.autoStart){
+				if(settings.ticket !== ''){
+					settings.connected = true;
+					this.emit('authenticated', settings.ticket);
+
+					if(typeof(callback) === 'function'){
+						callback(settings.status, settings.ticket);
+					}
+				}else
+				if(settings.username && settings.password){
+					this.api('API_Authenticate', {
+						username: settings.username,
+						password: settings.password,
+						hours: settings.hours
+					}, callback);
+				}
+			}
 
 			return this;
 		};
