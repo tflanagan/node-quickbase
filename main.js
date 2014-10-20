@@ -1,5 +1,6 @@
 var xml = require('xml2js'),
 	https = require('https'),
+	events = require('./lib/events.js'),
 	utilities = require('./lib/utilities.js'),
 	quickbase = (function(){
 		var settings = {
@@ -52,6 +53,8 @@ var xml = require('xml2js'),
 			return this;
 		};
 
+		quickbase.prototype.__proto__ = events.EventEmitter2.prototype;
+
 		quickbase.prototype.setSettings = function(newSettings){
 			settings = utilities.mergeObjects(settings, newSettings || {});
 
@@ -67,21 +70,30 @@ var xml = require('xml2js'),
 				callback = function(){};
 			}
 
-			var payload = {
-				action: action,
-				payload: payload,
-				callback: callback
-			};
+			var that = this,
+				transaction,
+				payload = {
+					action: action,
+					payload: payload,
+					callback: callback
+				};
 
 			if(actions.prototype[action]){
-				new actions(action, payload);
+				transaction = new actions(action, payload);
 			}else{
-				new transmit(payload);
+				transaction = new transmit(payload);
 			}
+
+			transaction.onAny(function(type){
+				var args = buildEventArgs(type, arguments);
+
+				that.emit.apply(that, args);
+			});
 		};
 
 		var transmit = function(options){
-			var payload = this.assemblePayload(options.payload),
+			var that = this,
+				payload = this.assemblePayload(options.payload),
 				reqOpts = {
 					hostname: [settings.realm, settings.domain].join('.'),
 					port: 443,
@@ -102,11 +114,14 @@ var xml = require('xml2js'),
 					response.on('end', function(){
 						xml.parseString(xmlResponse, function(err, result){
 							if(err || result === null){
-								options.callback({
+								var err = {
 									errcode: 1001,
 									errtext: 'Error Parsing XML',
 									errdetail: err
-								});
+								};
+
+								that.emit('error', err);
+								options.callback(err);
 
 								return false;
 							}
@@ -114,11 +129,14 @@ var xml = require('xml2js'),
 							result = utilities.cleanXML(result.qdbapi);
 
 							if(result.errcode !== settings.status.errcode){
-								options.callback({
+								var err = {
 									errcode: result.errcode,
 									errtext: result.errtext,
 									errdetail: result.errdetail
-								});
+								};
+
+								that.emit('error', err);
+								options.callback(err);
 
 								return false;
 							}
@@ -129,11 +147,14 @@ var xml = require('xml2js'),
 				});
 
 			request.on('error', function(err){
-				options.callback({
+				err = {
 					errcode: 1000,
 					errtext: 'Error Processing Request',
 					errdetail: err
-				});
+				};
+
+				that.emit('error', err);
+				options.callback(err);
 			});
 
 			if(settings.flags.useXML){
@@ -144,6 +165,8 @@ var xml = require('xml2js'),
 
 			return this;
 		};
+
+		transmit.prototype.__proto__ = events.EventEmitter2.prototype;
 
 		transmit.prototype.assemblePayload = function(payload){
 			payload = new preparePayload(payload);
@@ -254,42 +277,67 @@ var xml = require('xml2js'),
 
 		/* Customized API Calls */
 		var actions = function(action, payload){
-			this[action](payload);
+			var that = this,
+				transaction = this[action](payload);
+
+			transaction.onAny(function(type){
+				var args = buildEventArgs(type, arguments);
+
+				that.emit.apply(that, args);
+			});
 
 			return this;
 		};
 
-		actions.prototype.API_Authenticate = function(request){
-			request.origCallback = request.callback;
-			request.callback = function(err, results){
+		actions.prototype.__proto__ = events.EventEmitter2.prototype;
+
+		actions.prototype.API_Authenticate = function(payload){
+			var that = this;
+
+			payload.origCallback = payload.callback;
+			payload.callback = function(err, results){
 				if(err.errcode !== settings.status.errcode){
-					request.origCallback(err);
+					payload.origCallback(err);
 
 					return false;
 				}
 
 				settings.ticket = results.ticket;
 
-				request.origCallback(settings.status, results);
+				that.emit('authenticated', settings.ticket);
+				payload.origCallback(settings.status, settings.ticket);
 			};
 
-			new transmit(request);
+			return new transmit(payload);
 		};
 
-		actions.prototype.API_DoQuery = function(request){
+		actions.prototype.API_DoQuery = function(payload){
 			if(settings.flags.returnPercentage){
-				request.payload.returnPercentage = 1;
+				payload.payload.returnPercentage = 1;
 			}
 
 			if(settings.flags.includeRids){
-				request.payload.includeRids = 1;
+				payload.payload.includeRids = 1;
 			}
 
 			if(settings.flags.fmt){
-				request.payload.fmt = settings.flags.fmt;
+				payload.payload.fmt = settings.flags.fmt;
 			}
 
-			new transmit(request);
+			return new transmit(payload);
+		};
+
+		function buildEventArgs(type){
+			var l = arguments.length,
+				args = new Array(l - 1);
+
+			for(var i = 1; i < l; ++i){
+				args[i - 1] = arguments[i];
+			}
+
+			args.unshift(type);
+
+			return args;
 		};
 
 		return quickbase;
