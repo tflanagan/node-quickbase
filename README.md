@@ -13,7 +13,7 @@ Things removed:
 
 Some of these features may come back into the fold in future releases, sorry for any inconvenience. 
 
-Setup
+Example
 -----
 
 ```js
@@ -76,6 +76,68 @@ qb.api('API_AddRecord', {
 	console.log(err, results);
 });
 ```
+
+Inner Workings
+--------------
+###Constructor
+
+```new quickbase(<object> options[, <function> callback]);```
+
+```
+Options = {
+    realm: 'www',
+	domain: 'quickbase.com',
+	username: '',
+	password: '',
+	appToken: '',
+	hours: 12,
+
+	flags: {
+		useXML: true,
+		msInUTC: true,
+		includeRids: true,
+		returnPercentage: false,
+		fmt: 'structured'
+	},
+
+	autoStart: true
+}
+```
+```callback(err, ticket)``` is optional.
+
+###setSettings
+
+```quickbase.setSettings(<object> options); ```
+
+Upserts the internal settings variable.
+
+###getSettings
+
+```quickbase.getSettings(); ```
+
+Returns the internal settings variable.
+
+###api
+```quickbase.api(<string> action, <object> payload[, <function> callback]);```
+
+```action``` = API Action String, ie: ```API_DoQuery```, ```API_EditRecord```, etc
+
+```payload``` = Object of XML elements and values, ie:
+```
+Payload = {
+    dbid: 'aabbccdde',
+    clist: '1.2.3',
+    slist: '3',
+    options: 'num-5'
+}
+```
+
+```callback(err, results)``` is optional.
+
+###processQueue
+```quickbase.processQueue(); ```
+
+Processes all queue'd requests. Is fired internally whenever a successful API_Authenticate is completed.
 
 License
 -------
