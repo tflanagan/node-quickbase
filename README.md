@@ -3,7 +3,7 @@ node-quickbase
 
 A lightweight, very flexible QuickBase API
 
-Upgradeing from < v0.1.0
+Upgrading from < v0.1.0
 ------------------------
 Upgrading from any version under v0.1.0 has potential to break code. v0.1.0 is a complete rewrite, losing a lot of extra baggage.
 
@@ -30,6 +30,8 @@ var qb = new quickbase({
 	// You can use an already established session by providing a ticket
 	// ticket: ''
 }, function(err, results){
+	console.log('Authenticated callback');
+
 	qb.api('API_DoQuery', {
 		dbid: 'bby2j1bme',
 		clist: ['1', '2', '3'],
@@ -47,6 +49,14 @@ var qb = new quickbase({
 	}, function(err, results){
 		console.log(err, results);
 	});
+});
+
+qb.on('error', function(err){
+	console.error('Error Occured Event', err);
+});
+
+qb.on('authenticated', function(ticket){
+	console.log('Authenticated Event');
 });
 ```
 
