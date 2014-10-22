@@ -42,7 +42,8 @@ var xml = require('xml2js'),
 					connected: false,
 					handlingBadTicket: false,
 					maxAuthRetries: 3,
-					authRetriesI: 0
+					authRetriesI: 0,
+					noErrorReturnNull: false
 				};
 
 			settings = utilities.mergeObjects(settings, defaults, options || {});
@@ -68,7 +69,7 @@ var xml = require('xml2js'),
 					this.emit('authenticated', settings.ticket);
 
 					if(typeof(callback) === 'function'){
-						callback(settings.status, settings.ticket);
+						callback(settings.noErrorReturnNull ? null : settings.status, settings.ticket);
 					}
 				}else
 				if(settings.username && settings.password){
@@ -193,7 +194,7 @@ var xml = require('xml2js'),
 								return false;
 							}
 
-							options.callback(settings.status, result);
+							options.callback(settings.noErrorReturnNull ? null : settings.status, result);
 						});
 					});
 				},
@@ -379,7 +380,7 @@ var xml = require('xml2js'),
 				settings.authRetriesI = 0;
 
 				that.emit('authenticated', settings.ticket);
-				payload.origCallback(settings.status, settings.ticket);
+				payload.origCallback(settings.noErrorReturnNull ? null : settings.status, settings.ticket);
 			};
 
 			return new transmit(payload);
