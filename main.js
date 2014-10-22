@@ -149,7 +149,8 @@ var xml = require('xml2js'),
 						'QUICKBASE-ACTION': options.action
 					}
 				},
-				requestCallback = function(response){
+				protocol = settings.useSSL ? https : http,
+				request = protocol.request(reqOpts, function requestCallback(response){
 					var xmlResponse = '';
 
 					response.on('data', function(chunk){
@@ -197,8 +198,7 @@ var xml = require('xml2js'),
 							options.callback(settings.noErrorReturnNull ? null : settings.status, result);
 						});
 					});
-				},
-				request = settings.useSSL ? https.request(reqOpts, requestCallback) : http.request(reqOpts, requestCallback);
+				});
 
 			request.on('error', function(err){
 				err = {
