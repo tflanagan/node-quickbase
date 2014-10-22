@@ -1,4 +1,5 @@
 var xml = require('xml2js'),
+	http = require('http'),
 	https = require('https'),
 	events = require('./lib/events.js'),
 	utilities = require('./lib/utilities.js'),
@@ -17,6 +18,7 @@ var xml = require('xml2js'),
 					password: '',
 					appToken: '',
 					hours: 12,
+					useSSL: false,
 
 					flags: {
 						useXML: true,
@@ -138,7 +140,7 @@ var xml = require('xml2js'),
 				payload = this.assemblePayload(options.payload),
 				reqOpts = {
 					hostname: [settings.realm, settings.domain].join('.'),
-					port: 443,
+					port: settings.useSSL ? 443 : 80,
 					path: '/db/' + (options.payload.dbid || 'main') + '?act=' + options.action + (!settings.flags.useXML ? payload : ''),
 					method: settings.flags.useXML ? 'POST' : 'GET',
 					headers: {
@@ -146,7 +148,7 @@ var xml = require('xml2js'),
 						'QUICKBASE-ACTION': options.action
 					}
 				},
-				request = https.request(reqOpts, function(response){
+				requestCallback = function(response){
 					var xmlResponse = '';
 
 					response.on('data', function(chunk){
@@ -194,7 +196,8 @@ var xml = require('xml2js'),
 							options.callback(settings.status, result);
 						});
 					});
-				});
+				},
+				request = settings.useSSL ? https.request(reqOpts, requestCallback) : http.request(reqOpts, requestCallback);
 
 			request.on('error', function(err){
 				err = {
@@ -268,18 +271,15 @@ var xml = require('xml2js'),
 		var preparePayload = function(payload){
 			var arg;
 
+			if(payload.fields !== undefined){
+				payload.field = payload.fields;
+
+				delete payload.fields;
+			}
+
 			for(arg in payload){
-				try {
-					if(arg === 'fields'){
-						arg = 'field';
-						payload[arg] = payload['fields'];
-
-						delete payload['fields'];
-					}
-
+				if(typeof(this[arg]) === 'function'){
 					payload[arg] = this[arg](payload[arg]);
-				}catch(err){
-					// Do Nothing
 				}
 			}
 
@@ -307,8 +307,12 @@ var xml = require('xml2js'),
 		};
 
 		preparePayload.prototype.field = function(val){
-			for(var i = 0; i < val.length; i++){
-				var newValue = {
+			var newValue = {},
+				l = val.length,
+				i = 0;
+
+			for(; i < l; ++i){
+				newValue = {
 					$: {},
 					_: val[i].value
 				};
@@ -397,7 +401,7 @@ var xml = require('xml2js'),
 			return new transmit(payload);
 		};
 
-		function buildEventArgs(type){
+		function buildEventArgs(type, arguments){
 			var l = arguments.length,
 				args = new Array(l - 1);
 
