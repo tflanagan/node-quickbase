@@ -18,7 +18,7 @@ var xml = require('xml2js'),
 					password: '',
 					appToken: '',
 					hours: 12,
-					useSSL: false,
+					useSSL: true,
 
 					flags: {
 						useXML: true,
