@@ -369,7 +369,7 @@ var xml = require('xml2js'),
 
 			payload.origCallback = payload.callback;
 			payload.callback = function(err, results){
-				if(err.errcode !== settings.status.errcode){
+				if(err !== null && err.errcode !== settings.status.errcode){
 					payload.origCallback(err);
 
 					return false;
