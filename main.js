@@ -1,4 +1,5 @@
 var xml = require('xml2js'),
+	util = require('util'),
 	http = require('http'),
 	https = require('https'),
 	events = require('./lib/events.js'),
@@ -84,7 +85,7 @@ var xml = require('xml2js'),
 			return this;
 		};
 
-		quickbase.prototype.__proto__ = events.EventEmitter2.prototype;
+		util.inherits(quickbase, events.EventEmitter2);
 
 		quickbase.prototype.setSettings = function(newSettings){
 			settings = utilities.mergeObjects(settings, newSettings || {});
@@ -220,7 +221,7 @@ var xml = require('xml2js'),
 			return this;
 		};
 
-		transmit.prototype.__proto__ = events.EventEmitter2.prototype;
+		util.inherits(transmit, events.EventEmitter2);
 
 		transmit.prototype.assemblePayload = function(payload){
 			payload = new preparePayload(payload);
@@ -344,7 +345,7 @@ var xml = require('xml2js'),
 			return this;
 		};
 
-		actions.prototype.__proto__ = events.EventEmitter2.prototype;
+		util.inherits(actions, events.EventEmitter2);
 
 		actions.prototype.API_Authenticate = function(payload){
 			var that = this;
@@ -404,9 +405,10 @@ var xml = require('xml2js'),
 
 		function buildEventArgs(type, arguments){
 			var l = arguments.length,
-				args = new Array(l - 1);
+				args = new Array(l - 1),
+				i = 1;
 
-			for(var i = 1; i < l; ++i){
+			for(; i < l; ++i){
 				args[i - 1] = arguments[i];
 			}
 
