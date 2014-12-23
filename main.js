@@ -66,18 +66,21 @@ var xml = require('xml2js'),
 			if(settings.autoStart){
 				if(settings.ticket !== ''){
 					settings.connected = true;
-					this.emit('authenticated', settings.ticket);
 
 					if(typeof(callback) === 'function'){
-						callback(settings.noErrorReturnNull ? null : settings.status, settings.ticket);
+						setTimeout(function(){
+							callback(settings.status, settings.ticket);
+						});
 					}
 				}else
 				if(settings.username && settings.password){
-					this.api('API_Authenticate', {
-						username: settings.username,
-						password: settings.password,
-						hours: settings.hours
-					}, callback);
+					setTimeout(function(){
+						that.api('API_Authenticate', {
+							username: settings.username,
+							password: settings.password,
+							hours: settings.hours
+						}, callback);
+					});
 				}
 			}
 
