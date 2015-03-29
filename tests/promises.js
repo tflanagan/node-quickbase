@@ -10,13 +10,14 @@ testSession.api('API_Authenticate', {
 	password: 'Ga,mmd!1'
 }).then(function(response){
 	testSession.settings.ticket = response.ticket;
-}).then(function(){
-	return testSession.api('API_DoQuery', {
-		dbid: 'biy2j7bme',
-		clist: 'a'
-	});
-}).then(function(response){
-	console.log(response);
+
+	for(var i = 0, l = 50; i < l; ++i){
+		testSession.api('API_DoQuery', {
+			dbid: 'biy2j7bme',
+			clist: 'a'
+		});
+	}
 }).catch(function(err){
 	console.error(err);
+	console.error(err.stack);
 });

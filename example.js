@@ -19,5 +19,5 @@ testSession.api('API_Authenticate', {
 }).then(function(response){
 	console.log(response);
 }).catch(function(err){
-	console.error(err);
+	console.error(err.stack);
 });

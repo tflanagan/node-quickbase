@@ -30,40 +30,37 @@ var xml = require('xml2js'),
 		};
 
 		quickbase.prototype.api = function(action, options){
-			var that = this,
-				request = new quickbaseRequest(action, options);
+			var that = this;
 
-			return request
-				.startPromiseChain()
-				.bind(utilities.mergeObjects(request, this))
-				.then(request.addFlags)
-				.then(request.prepareOptions)
-				.then(request.constructPayload)
-				.then(request.send);
+			return Promise.using(new quickbaseRequest(that, action, options), function(request){
+				return Promise.resolve()
+					.bind(request)
+					.then(request.addFlags)
+					.then(request.prepareOptions)
+					.then(request.constructPayload)
+					.then(request.send);
+			});
 		};
 
-		var quickbaseRequest = function(action, options){
+		var quickbaseRequest = function(parent, action, options){
+			this.parent = parent;
 			this.action = action;
 			this.options = options;
 
 			return this;
 		};
 
-		quickbaseRequest.prototype.startPromiseChain = function(){
-			return Promise.resolve();
-		};
-
 		quickbaseRequest.prototype.addFlags = function(){
-			if(this.settings.flags.msInUTC){
+			if(this.parent.settings.flags.msInUTC){
 				this.options.msInUTC = 1;
 			}
 
-			if(this.settings.appToken){
-				this.options.apptoken = this.settings.appToken;
+			if(this.parent.settings.appToken){
+				this.options.apptoken = this.parent.settings.appToken;
 			}
 
-			if(this.settings.ticket){
-				this.options.ticket = this.settings.ticket;
+			if(this.parent.settings.ticket){
+				this.options.ticket = this.parent.settings.ticket;
 			}
 
 			return Promise.resolve();
@@ -86,7 +83,7 @@ var xml = require('xml2js'),
 				}
 			});
 
-			if(this.settings.flags.useXML){
+			if(this.parent.settings.flags.useXML){
 				this.payload = builder.buildObject(this.options);
 			}else{
 				var arg;
@@ -104,16 +101,16 @@ var xml = require('xml2js'),
 
 			return new Promise(function(resolve, reject){
 				var reqOpts = {
-						hostname: [ that.settings.realm, that.settings.domain ].join('.'),
-						port: that.settings.useSSL ? 443 : 80,
-						path: '/db/' + (that.options.dbid || 'main') + '?act=' + that.action + (!that.settings.flags.useXML ? that.payload : ''),
-						method: that.settings.flags.useXML ? 'POST' : 'GET',
+						hostname: [ that.parent.settings.realm, that.parent.settings.domain ].join('.'),
+						port: that.parent.settings.useSSL ? 443 : 80,
+						path: '/db/' + (that.options.dbid || 'main') + '?act=' + that.action + (!that.parent.settings.flags.useXML ? that.payload : ''),
+						method: that.parent.settings.flags.useXML ? 'POST' : 'GET',
 						headers: {
 							'Content-Type': 'application/xml',
 							'QUICKBASE-ACTION': that.action
 						}
 					},
-					protocol = that.settings.useSSL ? https : http,
+					protocol = that.parent.settings.useSSL ? https : http,
 					request = protocol.request(reqOpts, function(response){
 						var xmlResponse = '';
 
@@ -129,7 +126,7 @@ var xml = require('xml2js'),
 
 								result = utilities.cleanXML(result.qdbapi);
 
-								if(result.errcode !== that.settings.status.errcode){
+								if(result.errcode !== that.parent.settings.status.errcode){
 									return reject(new quickbaseError(result.errcode, result.errtext, result.errdetail));
 								}
 
@@ -142,7 +139,7 @@ var xml = require('xml2js'),
 					reject(new quickbaseError(1000, 'Error Processing Request', err));
 				});
 
-				if(that.settings.flags.useXML){
+				if(that.parent.settings.flags.useXML){
 					request.write(that.payload);
 				}
 
