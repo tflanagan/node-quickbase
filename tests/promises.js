@@ -1,4 +1,3 @@
-// npm install tflanagan/node-quickbase || npm install quickbase
 var quickbase = require('../main.js');
 
 var testSession = new quickbase({

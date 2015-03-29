@@ -1,33 +1,37 @@
 {
-	"name": "quickbase",
-	"engines": {
-		"node": ">=0.10.*"
-	},
-	"version": "0.1.3",
-	"description": "A lightweight, very flexible QuickBase API",
-	"main": "main.js",
-	"dependencies": {
-		"xml2js": "0.4.4"
-	},
-	"devDependencies": {},
-	"keywords": [
-		"QuickBase",
-		"qb",
-		"quickbase",
-		"api"
-	],
-	"git": "git://github.com/tflanagan/node-quickbase.git#master",
-	"repository": {
-		"type": "git",
-		"url": "git://github.com/tflanagan/node-quickbase.git"
-	},
-	"homepage": "https://github.com/tflanagan/node-quickbase",
-	"bugs": {
-		"url": "https://github.com/tflanagan/node-quickbase/issues"
-	},
-	"author": {
-		"name": "Tristian Flanagan",
-		"email": "tristian.flanagan@comcast.net"
-	},
-	"license": "Apache-2.0"
+  "name": "quickbase",
+  "engines": {
+    "node": ">=0.10.*"
+  },
+  "version": "0.2.0",
+  "description": "A lightweight, very flexible QuickBase API",
+  "main": "main.js",
+  "scripts": {
+    "test": "node ./tests/promises.js"
+  },
+  "dependencies": {
+    "bluebird": "^2.9.20",
+    "xml2js": "0.4.4"
+  },
+  "devDependencies": {},
+  "keywords": [
+    "QuickBase",
+    "qb",
+    "quickbase",
+    "api"
+  ],
+  "git": "git://github.com/tflanagan/node-quickbase.git#master",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/tflanagan/node-quickbase.git"
+  },
+  "homepage": "https://github.com/tflanagan/node-quickbase",
+  "bugs": {
+    "url": "https://github.com/tflanagan/node-quickbase/issues"
+  },
+  "author": {
+    "name": "Tristian Flanagan",
+    "email": "tristian.flanagan@comcast.net"
+  },
+  "license": "Apache-2.0"
 }
