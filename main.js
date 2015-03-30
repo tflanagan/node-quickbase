@@ -30,16 +30,13 @@ var xml = require('xml2js'),
 		};
 
 		quickbase.prototype.api = function(action, options){
-			var that = this;
+			var request = new quickbaseRequest(this, action, options);
 
-			return Promise.using(new quickbaseRequest(that, action, options), function(request){
-				return Promise.resolve()
-					.bind(request)
-					.then(request.addFlags)
-					.then(request.prepareOptions)
-					.then(request.constructPayload)
-					.then(request.send);
-			});
+			return Promise.bind(request)
+				.then(request.addFlags)
+				.then(request.prepareOptions)
+				.then(request.constructPayload)
+				.then(request.send);
 		};
 
 		var quickbaseRequest = function(parent, action, options){

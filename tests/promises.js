@@ -11,12 +11,14 @@ testSession.api('API_Authenticate', {
 }).then(function(response){
 	testSession.settings.ticket = response.ticket;
 
-	for(var i = 0, l = 50; i < l; ++i){
-		testSession.api('API_DoQuery', {
+	// for(var i = 0, l = 50; i < l; ++i){
+		return testSession.api('API_DoQuery', {
 			dbid: 'biy2j7bme',
 			clist: 'a'
 		});
-	}
+	// }
+}).then(function(){
+	console.log(arguments);
 }).catch(function(err){
 	console.error(err);
 	console.error(err.stack);
