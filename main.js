@@ -13,7 +13,10 @@ var xml = require('xml2js'),
 
 			flags: {
 				useXML: true,
-				msInUTC: true
+				msInUTC: true,
+				includeRids: true,
+				returnPercentage: false,
+				fmt: 'structured'
 			},
 
 			status: {
@@ -60,11 +63,25 @@ var xml = require('xml2js'),
 				this.options.ticket = this.parent.settings.ticket;
 			}
 
+			if(this.parent.settings.flags.returnPercentage){
+				this.options.returnPercentage = 1;
+			}
+
+			if(this.parent.settings.flags.includeRids){
+				this.options.includeRids = 1;
+			}
+
+			if(this.parent.settings.flags.fmt){
+				this.options.fmt = this.parent.settings.flags.fmt;
+			}
+
 			return Promise.resolve();
 		};
 
 		quickbaseRequest.prototype.prepareOptions = function(){
 			var newOptions = new prepareOptions(this.options);
+
+			newOptions.prepare();
 
 			this.options = newOptions.options;
 
@@ -105,7 +122,8 @@ var xml = require('xml2js'),
 						headers: {
 							'Content-Type': 'application/xml',
 							'QUICKBASE-ACTION': that.action
-						}
+						},
+						agent: false
 					},
 					protocol = that.parent.settings.useSSL ? https : http,
 					request = protocol.request(reqOpts, function(response){

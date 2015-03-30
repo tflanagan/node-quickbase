@@ -1,3 +1,4 @@
+// npm install tflanagan/node-quickbase || npm install quickbase
 var quickbase = require('../main.js');
 
 var testSession = new quickbase({
@@ -8,18 +9,32 @@ var testSession = new quickbase({
 testSession.api('API_Authenticate', {
 	username: 'tflanagan@datacollaborative.com',
 	password: 'Ga,mmd!1'
-}).then(function(response){
-	testSession.settings.ticket = response.ticket;
+}).then(function(result){
+	testSession.settings.ticket = result.ticket;
 
-	// for(var i = 0, l = 50; i < l; ++i){
-		return testSession.api('API_DoQuery', {
-			dbid: 'biy2j7bme',
-			clist: 'a'
-		});
-	// }
+	return testSession.api('API_DoQuery', {
+		dbid: 'biy2j7bme',
+		clist: '3.12',
+		options: 'num-5'
+	}).then(function(result){
+		return result.table.records;
+	});
+}).map(function(record){
+	return testSession.api('API_EditRecord', {
+		dbid: 'biy2j7bme',
+		rid: record.$.rid,
+		fields: [
+			{ fid: 12, value: record.f[1]._ }
+		]
+	});
 }).then(function(){
-	console.log(arguments);
+	return testSession.api('API_DoQuery', {
+		dbid: 'biy2j7bme',
+		clist: '3.12',
+		options: 'num-5'
+	});
+}).then(function(result){
+	console.log(result);
 }).catch(function(err){
-	console.error(err);
-	console.error(err.stack);
+	console.error(err, err.stack);
 });

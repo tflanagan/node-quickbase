@@ -1,5 +1,5 @@
 // npm install tflanagan/node-quickbase || npm install quickbase
-var quickbase = require('../main.js');
+var quickbase = require('quickbase');
 
 var testSession = new quickbase({
 	realm: 'www',
@@ -9,20 +9,32 @@ var testSession = new quickbase({
 testSession.api('API_Authenticate', {
 	username: '*****',
 	password: '*****'
-}).then(function(response){
-	testSession.settings.ticket = response.ticket;
+}).then(function(result){
+	testSession.settings.ticket = result.ticket;
+
+	return testSession.api('API_DoQuery', {
+		dbid: '*****',
+		clist: '3.12',
+		options: 'num-5'
+	}).then(function(result){
+		return result.table.records;
+	});
+}).map(function(record){
+	return testSession.api('API_EditRecord', {
+		dbid: '*****',
+		rid: record.$.rid,
+		fields: [
+			{ fid: 12, value: record.f[1]._ }
+		]
+	});
 }).then(function(){
 	return testSession.api('API_DoQuery', {
-		dbid: 'byi72jemb',
-		clist: 'a'
+		dbid: '*****',
+		clist: '3.12',
+		options: 'num-5'
 	});
-}).then(function(response){
-	console.log(response);
+}).then(function(result){
+	console.log(result);
 }).catch(function(err){
-<<<<<<< HEAD
-	console.error(err.stack);
+	console.error(err, err.stack);
 });
-=======
-	console.error(err);
-});
->>>>>>> origin/promises
