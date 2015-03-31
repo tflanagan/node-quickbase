@@ -10,8 +10,6 @@ testSession.api('API_Authenticate', {
 	username: '*****',
 	password: '*****'
 }).then(function(result){
-	testSession.settings.ticket = result.ticket;
-
 	return testSession.api('API_DoQuery', {
 		dbid: '*****',
 		clist: '3.12',
