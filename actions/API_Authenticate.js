@@ -42,6 +42,8 @@ module.exports = function(context){
 
 						// Only reason we need a custom action...
 						that.parent.settings.ticket = result.ticket;
+						that.parent.settings.username = that.options.username;
+						that.parent.settings.password = that.options.password;
 
 						resolve(result);
 					});

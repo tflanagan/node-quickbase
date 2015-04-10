@@ -22,7 +22,9 @@ var xml = require('xml2js'),
 				errcode: 0,
 				errtext: 'No error',
 				errdetail: ''
-			}
+			},
+
+			maxErrorRetryAttempts: 3
 		};
 
 		var quickbase = function(options){
@@ -31,8 +33,9 @@ var xml = require('xml2js'),
 			return this;
 		};
 
-		quickbase.prototype.api = function(action, options){
-			var request = new quickbaseRequest(this, action, options);
+		quickbase.prototype.api = function(action, options, nErr){
+			var that = this,
+				request = new quickbaseRequest(this, action, options);
 
 			return Promise.bind(request)
 				.then(request.addFlags)
@@ -44,6 +47,23 @@ var xml = require('xml2js'),
 					}else{
 						return actions.default(this);
 					}
+				})
+				.catch(function(err){
+					if(nErr === undefined || nErr < that.settings.maxErrorRetryAttempts){
+						if(err.code === 1000){
+							return that.api(action, options, nErr ? ++nErr : 1);
+						}else
+						if(err.code === 4 && that.settings.username && that.settings.password){
+							return that.api('API_Authenticate', {
+								username: that.settings.username,
+								password: that.settings.password
+							}).then(function(){
+								return that.api(action, options, nErr ? ++nErr : 1);
+							});
+						}
+					}
+
+					return err;
 				});
 		};
 
