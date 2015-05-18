@@ -63,7 +63,7 @@ var xml = require('xml2js'),
 						}
 					}
 
-					return err;
+					return Promise.reject(err);
 				});
 		};
 
