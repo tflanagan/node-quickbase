@@ -213,7 +213,7 @@ var quickbase = (function(){
 		},
 
 		maxErrorRetryAttempts: 3,
-		connectionLimit: 1,
+		connectionLimit: 10,
 		errorOnConnectionLimit: false
 	};
 
