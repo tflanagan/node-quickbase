@@ -3,9 +3,6 @@ node-quickbase
 
 A lightweight, very flexible QuickBase API
 
-####Callback Style: v0.1.*
-####Promises Style: v0.2.*
-
 License
 -------
 
