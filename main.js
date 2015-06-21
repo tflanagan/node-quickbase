@@ -194,7 +194,7 @@ var QuickbaseError = (function(){
 })();
 
 /* Main Class */
-var quickbase = (function(){
+var QuickBase = (function(){
 	var defaults = {
 		realm: 'www',
 		domain: 'quickbase.com',
@@ -546,4 +546,4 @@ quickbase.actions = actions;
 quickbase.prepareOptions = prepareOptions;
 
 /* Export Module */
-module.exports = quickbase;
+module.exports = QuickBase;
