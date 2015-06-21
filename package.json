@@ -3,12 +3,9 @@
   "engines": {
     "node": ">=0.10.*"
   },
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "A lightweight, very flexible QuickBase API",
   "main": "main.js",
-  "scripts": {
-    "test": "node ./tests/promises.js"
-  },
   "dependencies": {
     "bluebird": "^2.9.30",
     "xml2js": "^0.4.9"
