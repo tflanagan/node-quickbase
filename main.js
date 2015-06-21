@@ -406,7 +406,7 @@ var QueryBuilder = (function(){
 
 /* Actions */
 var actions = (function(){
-	var action = function(context, callback){
+	var process = function(context, callback){
 		var that = context,
 			reqOpts = {
 				hostname: [ that.parent.settings.realm, that.parent.settings.domain ].join('.'),
@@ -446,7 +446,7 @@ var actions = (function(){
 	return {
 		API_Authenticate: function(context){
 			return new Promise(function(resolve, reject){
-				action(context, function(err, result){
+				process(context, function(err, result){
 					if(err){
 						return reject(new QuickbaseError(1000, 'Error Processing Request', err));
 					}
@@ -468,7 +468,7 @@ var actions = (function(){
 		},
 		default: function(context){
 			return new Promise(function(resolve, reject){
-				action(context, function(err, result){
+				process(context, function(err, result){
 					if(err){
 						return reject(new QuickbaseError(1000, 'Error Processing Request', err));
 					}
@@ -482,7 +482,8 @@ var actions = (function(){
 					resolve(result);
 				});
 			});
-		}
+		},
+		process: process
 	};
 })();
 
@@ -544,6 +545,7 @@ QuickBase.QuickbaseError = QuickbaseError;
 /* Expose Methods */
 QuickBase.actions = actions;
 QuickBase.prepareOptions = prepareOptions;
+QuickBase.cleanXML = cleanXML;
 
 /* Export Module */
 module.exports = QuickBase;
