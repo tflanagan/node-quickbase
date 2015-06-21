@@ -537,13 +537,13 @@ var prepareOptions = {
 };
 
 /* Expose Instances */
-quickbase.QueryBuilder = QueryBuilder;
-quickbase.Throttle = Throttle;
-quickbase.QuickbaseError = QuickbaseError;
+QuickBase.QueryBuilder = QueryBuilder;
+QuickBase.Throttle = Throttle;
+QuickBase.QuickbaseError = QuickbaseError;
 
 /* Expose Methods */
-quickbase.actions = actions;
-quickbase.prepareOptions = prepareOptions;
+QuickBase.actions = actions;
+QuickBase.prepareOptions = prepareOptions;
 
 /* Export Module */
 module.exports = QuickBase;
