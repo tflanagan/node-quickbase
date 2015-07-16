@@ -453,7 +453,7 @@ var actions = (function(){
 
 					result = cleanXML(result.qdbapi);
 
-					if(result.errcode !== context.parent.settings.status.errcode){
+					if(parseInt(result.errcode) !== context.parent.settings.status.errcode){
 						return reject(new QuickbaseError(result.errcode, result.errtext, result.errdetail));
 					}
 
