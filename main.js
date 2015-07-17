@@ -395,6 +395,7 @@ var QueryBuilder = (function(){
 		if(this.parent.settings.flags.useXML === true){
 			this.payload = builder.buildObject(this.options);
 		}else{
+			this.payload = '';
 			for(var arg in this.options){
 				this.payload += '&' + arg + '=' + this.options[arg];
 			}
