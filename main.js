@@ -390,6 +390,8 @@ var QueryBuilder = (function(){
 			}
 		});
 
+		this.payload = '';
+
 		if(this.parent.settings.flags.useXML === true){
 			this.payload = builder.buildObject(this.options);
 		}else{
