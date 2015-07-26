@@ -260,6 +260,10 @@ var Throttle = (function(){
 	throttle.prototype.acquire = function(callback){
 		var that = this;
 
+		if(this.maxConnections === -1){
+			return Promise.resolve(callback());
+		}
+
 		if(this.numConnections >= this.maxConnections){
 			if(this.errorOnConnectionLimit){
 				return Promise.reject(new QuickbaseError(1001, 'No Connections Available', 'Maximum Number of Connections Reached'));
