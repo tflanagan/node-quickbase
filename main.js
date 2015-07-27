@@ -170,6 +170,21 @@ var mergeObjects = function(){
 	return newObj;
 };
 
+var helpers = {
+	getFieldValue: function(record, fid){
+		var i = 0,
+			l = record.f.length;
+
+		for(; i < l; ++i){
+			if(record.f[i].$.id === fid){
+				return record.f[i]._;
+			}
+		}
+
+		return undefined;
+	}
+};
+
 /* Error Handling */
 var QuickbaseError = (function(){
 	var quickbaseError = function(code, name, message){
@@ -552,6 +567,7 @@ QuickBase.QuickbaseError = QuickbaseError;
 QuickBase.actions = actions;
 QuickBase.prepareOptions = prepareOptions;
 QuickBase.cleanXML = cleanXML;
+QuickBase.helpers = helpers;
 
 /* Export Module */
 module.exports = QuickBase;
