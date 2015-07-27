@@ -3,11 +3,36 @@ node-quickbase
 
 A lightweight, very flexible QuickBase API
 
+Install
+-------
+```
+# Latest Stable Release
+$ npm install quickbase
+
+# Latest Commit
+$ npm install tflanagan/node-quickbase
+```
+
+Browserify
+----------
+This library works out of the box with Browserify, this is not heavily tested, please use caution and report any bugs.
+```
+$ cd node_modules/node-quickbase
+$ browserify -r ./main.js:quickbase > quickbase.browserify.js
+```
+
+```html
+<script type="text/javascript" src="node_modules/node-quickbase/quickbase.browserify.js"></script>
+<script type="text/javascript">
+	var QuickBase = require('quickbase');
+
+	...
+</script>
+```
+
 Example
 -------
-
 ```javascript
-// npm install tflanagan/node-quickbase || npm install quickbase
 var QuickBase = require('quickbase');
 
 var quickbase = new QuickBase({
