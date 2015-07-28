@@ -1,13 +1,13 @@
 {
   "name": "quickbase",
   "engines": {
-    "node": ">=0.10.*"
+    "node": ">=0.12.*"
   },
-  "version": "0.3.4",
+  "version": "0.4.0",
   "description": "A lightweight, very flexible QuickBase API",
   "main": "main.js",
   "dependencies": {
-    "bluebird": "^2.9.30",
+    "bluebird": "^2.9.34",
     "xml2js": "^0.4.9"
   },
   "devDependencies": {},

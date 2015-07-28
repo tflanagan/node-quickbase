@@ -170,21 +170,6 @@ var mergeObjects = function(){
 	return newObj;
 };
 
-var helpers = {
-	getFieldValue: function(record, fid){
-		var i = 0,
-			l = record.f.length;
-
-		for(; i < l; ++i){
-			if(record.f[i].$.id === fid){
-				return record.f[i]._;
-			}
-		}
-
-		return undefined;
-	}
-};
-
 /* Error Handling */
 var QuickbaseError = (function(){
 	var quickbaseError = function(code, name, message){
@@ -316,16 +301,79 @@ var QueryBuilder = (function(){
 
 		this.nErr = 0;
 
+		if(!actions.hasOwnProperty(this.action)){
+			action = 'default';
+		}
+
 		return Promise.bind(this)
 			.then(this.addFlags)
 			.then(this.processOptions)
 			.then(this.constructPayload)
 			.then(function(){
-				if(actions.hasOwnProperty(this.action)){
-					return actions[this.action](this);
-				}else{
-					return actions.default(this);
+				if(typeof(actions[action]) !== 'undefined'){
+					if(typeof(actions[action]) === 'function'){
+						return actions[action](this);
+					}else
+					if(typeof(actions[action].request) === 'function'){
+						return actions[action].request(this);
+					}
 				}
+
+				return Promise.resolve();
+			})
+			.then(function(){
+				var that = this;
+
+				return new Promise(function(resolve, reject){
+					var reqOpts = {
+							hostname: [ that.parent.settings.realm, that.parent.settings.domain ].join('.'),
+							port: that.parent.settings.useSSL ? 443 : 80,
+							path: '/db/' + (that.options.dbid || 'main') + '?act=' + that.action + (!that.parent.settings.flags.useXML ? that.payload : ''),
+							method: that.parent.settings.flags.useXML ? 'POST' : 'GET',
+							headers: {
+								'Content-Type': 'application/xml',
+								'QUICKBASE-ACTION': that.action
+							},
+							agent: false
+						},
+						protocol = that.parent.settings.useSSL ? https : http,
+						request = protocol.request(reqOpts, function(response){
+							var xmlResponse = '';
+
+							response.on('data', function(chunk){
+								xmlResponse += chunk;
+							});
+
+							response.on('end', function(){
+								xml.parseString(xmlResponse, function(err, result){
+									if(err){
+										return reject(new QuickbaseError(1000, 'Error Processing Request', err));
+									}
+
+									result = cleanXML(result.qdbapi);
+
+									resolve(result);
+								});
+							});
+						});
+
+					if(that.parent.settings.flags.useXML === true){
+						request.write(that.payload);
+					}
+
+					request.on('error', function(err){
+						reject(err);
+					});
+
+					request.end();
+				});
+			})
+			.then(function(result){
+				if(typeof(actions[action]) === 'object' && typeof(actions[action].response) === 'function'){
+					return actions[action].response(this, result);
+				}
+
+				return Promise.resolve(result);
 			})
 			.catch(function(err){
 				++this.nErr;
@@ -427,88 +475,89 @@ var QueryBuilder = (function(){
 
 /* Actions */
 var actions = (function(){
-	var process = function(context, callback){
-		var that = context,
-			reqOpts = {
-				hostname: [ that.parent.settings.realm, that.parent.settings.domain ].join('.'),
-				port: that.parent.settings.useSSL ? 443 : 80,
-				path: '/db/' + (that.options.dbid || 'main') + '?act=' + that.action + (!that.parent.settings.flags.useXML ? that.payload : ''),
-				method: that.parent.settings.flags.useXML ? 'POST' : 'GET',
-				headers: {
-					'Content-Type': 'application/xml',
-					'QUICKBASE-ACTION': that.action
-				},
-				agent: false
-			},
-			protocol = that.parent.settings.useSSL ? https : http,
-			request = protocol.request(reqOpts, function(response){
-				var xmlResponse = '';
-
-				response.on('data', function(chunk){
-					xmlResponse += chunk;
-				});
-
-				response.on('end', function(){
-					xml.parseString(xmlResponse, callback);
-				});
-			});
-
-		if(that.parent.settings.flags.useXML === true){
-			request.write(that.payload);
-		}
-
-		request.on('error', function(err){
-			callback(err, null);
-		});
-
-		request.end();
-	};
-
 	return {
-		API_Authenticate: function(context){
-			return new Promise(function(resolve, reject){
-				process(context, function(err, result){
-					if(err){
-						return reject(new QuickbaseError(1000, 'Error Processing Request', err));
-					}
+		API_Authenticate: {
+			response: function(context, result){
+				if(result.errcode !== context.parent.settings.status.errcode){
+					return Promise.reject(new QuickbaseError(result.errcode, result.errtext, result.errdetail));
+				}
 
-					result = cleanXML(result.qdbapi);
+				/* Only reason we need a custom action... */
+				context.parent.settings.ticket = result.ticket;
+				context.parent.settings.username = context.options.username;
+				context.parent.settings.password = context.options.password;
 
-					if(result.errcode !== context.parent.settings.status.errcode){
-						return reject(new QuickbaseError(result.errcode, result.errtext, result.errdetail));
-					}
-
-					// Only reason we need a custom action...
-					context.parent.settings.ticket = result.ticket;
-					context.parent.settings.username = context.options.username;
-					context.parent.settings.password = context.options.password;
-
-					resolve(result);
-				});
-			});
+				return Promise.resolve(result);
+			}
 		},
-		default: function(context){
-			return new Promise(function(resolve, reject){
-				process(context, function(err, result){
-					if(err){
-						return reject(new QuickbaseError(1000, 'Error Processing Request', err));
+		API_DoQuery: {
+			response: function(context, result){
+				if(result.errcode !== context.parent.settings.status.errcode){
+					return Promise.reject(new QuickbaseError(result.errcode, result.errtext, result.errdetail));
+				}
+
+				/* XML is _so_ butt ugly... Let's try to make some sense of it
+				 * Turn this:
+				 * 	{
+				 * 		$: { rid: 1 },
+				 * 		f: [ 
+				 * 			{ $: { id: 3 }, _: 1 } ],
+				 * 			{ $: { id: 6 }, _: 'Test Value' }
+				 * 		]
+				 * 	}
+				 *
+				 * Into this:
+				 * 	{
+				 * 		3: 1,
+				 * 		6: 'Test Value'
+				 * 	}
+				*/
+				var unparsedRecords = result.table.records,
+					i = 0, l = unparsedRecords.length,
+					o = 0, k = 0,
+					parsedRecords = [],
+					unparsedRecord = {},
+					parsedRecord = {},
+					field = {};
+
+				if(l !== 0){
+					for(; i < l; ++i){
+						unparsedRecord = unparsedRecords[i];
+						parsedRecord = {};
+
+						for(o = 0, k = unparsedRecord.f.length; o < k; ++o){
+							field = unparsedRecord.f[o];
+
+							parsedRecord[field.$.id] = field._;
+						}
+
+						parsedRecords.push(parsedRecord);
 					}
 
-					result = cleanXML(result.qdbapi);
+					result.table.records = parsedRecords;
+				}
 
-					if(result.errcode !== context.parent.settings.status.errcode){
-						return reject(new QuickbaseError(result.errcode, result.errtext, result.errdetail));
-					}
-
-					resolve(result);
-				});
-			});
+				return Promise.resolve(result);
+			}
 		},
-		process: process
+		default: {
+			/*
+			request: function(context){
+				// Do Nothing
+			},
+			*/
+			response: function(context, result){
+				if(result.errcode !== context.parent.settings.status.errcode){
+					return Promise.reject(new QuickbaseError(result.errcode, result.errtext, result.errdetail));
+				}
+
+				return Promise.resolve(result);
+			}
+		}
 	};
 })();
 
-/* Option Handling */
+/* Parameter Handling */
 var prepareOptions = {
 	clist: function(val){
 		return val instanceof Array ? val.join('.') : val;
@@ -567,7 +616,6 @@ QuickBase.QuickbaseError = QuickbaseError;
 QuickBase.actions = actions;
 QuickBase.prepareOptions = prepareOptions;
 QuickBase.cleanXML = cleanXML;
-QuickBase.helpers = helpers;
 
 /* Export Module */
 module.exports = QuickBase;
