@@ -388,21 +388,22 @@ var QueryBuilder = (function(){
 	};
 
 	queryBuilder.prototype.processQuery = function(){
-		var that = this;
+		var that = this,
+			parentSettings = that.parent.settings;
 
 		return new Promise(function(resolve, reject){
 			var reqOpts = {
-					hostname: [ that.parent.settings.realm, that.parent.settings.domain ].join('.'),
-					port: that.parent.settings.useSSL ? 443 : 80,
-					path: '/db/' + (that.options.dbid || 'main') + '?act=' + that.action + (!that.parent.settings.flags.useXML ? that.payload : ''),
-					method: that.parent.settings.flags.useXML ? 'POST' : 'GET',
+					hostname: [ parentSettings.realm, parentSettings.domain ].join('.'),
+					port: parentSettings.useSSL ? 443 : 80,
+					path: '/db/' + (that.options.dbid || 'main') + '?act=' + that.action + (!parentSettings.flags.useXML ? that.payload : ''),
+					method: parentSettings.flags.useXML ? 'POST' : 'GET',
 					headers: {
 						'Content-Type': 'application/xml',
 						'QUICKBASE-ACTION': that.action
 					},
 					agent: false
 				},
-				protocol = that.parent.settings.useSSL ? https : http,
+				protocol = parentSettings.useSSL ? https : http,
 				request = protocol.request(reqOpts, function(response){
 					var xmlResponse = '';
 
@@ -418,12 +419,16 @@ var QueryBuilder = (function(){
 
 							result = cleanXML(result.qdbapi);
 
+							if(result.errcode !== parentSettings.status.errcode){
+								return reject(new QuickbaseError(result.errcode, result.errtext, result.errdetail));
+							}
+
 							resolve(result);
 						});
 					});
 				});
 
-			if(that.parent.settings.flags.useXML === true){
+			if(parentSettings.flags.useXML === true){
 				request.write(that.payload);
 			}
 
@@ -497,11 +502,6 @@ var actions = (function(){
 	return {
 		API_Authenticate: {
 			response: function(context, result){
-				if(result.errcode !== context.parent.settings.status.errcode){
-					return Promise.reject(new QuickbaseError(result.errcode, result.errtext, result.errdetail));
-				}
-
-				/* Only reason we need a custom action... */
 				context.parent.settings.ticket = result.ticket;
 				context.parent.settings.username = context.options.username;
 				context.parent.settings.password = context.options.password;
@@ -511,10 +511,6 @@ var actions = (function(){
 		},
 		API_DoQuery: {
 			response: function(context, result){
-				if(result.errcode !== context.parent.settings.status.errcode){
-					return Promise.reject(new QuickbaseError(result.errcode, result.errtext, result.errdetail));
-				}
-
 				/* XML is _so_ butt ugly... Let's try to make some sense of it
 				 * Turn this:
 				 * 	{
@@ -564,16 +560,14 @@ var actions = (function(){
 		default: {
 			/*
 			request: function(context){
-				// Do Nothing
+				// Do stuff prior to the request
 			},
-			*/
 			response: function(context, result){
-				if(result.errcode !== context.parent.settings.status.errcode){
-					return Promise.reject(new QuickbaseError(result.errcode, result.errtext, result.errdetail));
-				}
+				// Do Stuff with the result before resolving the api call
 
 				return Promise.resolve(result);
 			}
+			*/
 		}
 	};
 })();
