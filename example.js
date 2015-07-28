@@ -20,9 +20,9 @@ quickbase.api('API_Authenticate', {
 }).map(function(record){
 	return quickbase.api('API_EditRecord', {
 		dbid: '*****',
-		rid: record.$.rid,
+		rid: record[3],
 		fields: [
-			{ fid: 12, value: record.f[1]._ }
+			{ fid: 12, value: record[12] }
 		]
 	});
 }).then(function(){
