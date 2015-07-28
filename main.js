@@ -301,93 +301,27 @@ var QueryBuilder = (function(){
 
 		this.nErr = 0;
 
-		if(!actions.hasOwnProperty(this.action)){
-			action = 'default';
-		}
-
 		return Promise.bind(this)
 			.then(this.addFlags)
 			.then(this.processOptions)
 			.then(this.constructPayload)
-			.then(function(){
-				if(typeof(actions[action]) !== 'undefined'){
-					if(typeof(actions[action]) === 'function'){
-						return actions[action](this);
-					}else
-					if(typeof(actions[action].request) === 'function'){
-						return actions[action].request(this);
-					}
-				}
-
-				return Promise.resolve();
-			})
-			.then(function(){
-				var that = this;
-
-				return new Promise(function(resolve, reject){
-					var reqOpts = {
-							hostname: [ that.parent.settings.realm, that.parent.settings.domain ].join('.'),
-							port: that.parent.settings.useSSL ? 443 : 80,
-							path: '/db/' + (that.options.dbid || 'main') + '?act=' + that.action + (!that.parent.settings.flags.useXML ? that.payload : ''),
-							method: that.parent.settings.flags.useXML ? 'POST' : 'GET',
-							headers: {
-								'Content-Type': 'application/xml',
-								'QUICKBASE-ACTION': that.action
-							},
-							agent: false
-						},
-						protocol = that.parent.settings.useSSL ? https : http,
-						request = protocol.request(reqOpts, function(response){
-							var xmlResponse = '';
-
-							response.on('data', function(chunk){
-								xmlResponse += chunk;
-							});
-
-							response.on('end', function(){
-								xml.parseString(xmlResponse, function(err, result){
-									if(err){
-										return reject(new QuickbaseError(1000, 'Error Processing Request', err));
-									}
-
-									result = cleanXML(result.qdbapi);
-
-									resolve(result);
-								});
-							});
-						});
-
-					if(that.parent.settings.flags.useXML === true){
-						request.write(that.payload);
-					}
-
-					request.on('error', function(err){
-						reject(err);
-					});
-
-					request.end();
-				});
-			})
-			.then(function(result){
-				if(typeof(actions[action]) === 'object' && typeof(actions[action].response) === 'function'){
-					return actions[action].response(this, result);
-				}
-
-				return Promise.resolve(result);
-			})
+			.then(this.actionRequest)
+			.then(this.processQuery)
+			.then(this.actionResponse)
 			.catch(function(err){
 				++this.nErr;
 
-				var parent = this.parent;
+				var parent = this.parent,
+					parentSettings = parent.settings;
 
-				if(this.nErr < parent.settings.maxErrorRetryAttempts){
+				if(this.nErr < parentSettings.maxErrorRetryAttempts){
 					if([1000, 1001].indexOf(err.code) !== -1){
 						return parent.api(this.action, this.options);
 					}else
-					if(err.code === 4 && parent.settings.hasOwnProperty('username') && parent.settings.hasOwnProperty('password')){
+					if(err.code === 4 && parentSettings.hasOwnProperty('username') && parentSettings.hasOwnProperty('password')){
 						return parent.api('API_Authenticate', {
-							username: parent.settings.username,
-							password: parent.settings.password
+							username: parentSettings.username,
+							password: parentSettings.password
 						}).then(function(){
 							return parent.api(this.action, this.options);
 						});
@@ -396,6 +330,39 @@ var QueryBuilder = (function(){
 
 				return Promise.reject(err);
 			});
+	};
+
+	queryBuilder.prototype.actionRequest = function(){
+		var action = this.action;
+
+		if(!actions.hasOwnProperty(action)){
+			action = 'default';
+		}
+
+		if(typeof(actions[action]) !== 'undefined'){
+			if(typeof(actions[action]) === 'function'){
+				return actions[action](this);
+			}else
+			if(typeof(actions[action].request) === 'function'){
+				return actions[action].request(this);
+			}
+		}
+
+		return Promise.resolve();
+	};
+
+	queryBuilder.prototype.actionResponse = function(result){
+		var action = this.action;
+
+		if(!actions.hasOwnProperty(action)){
+			action = 'default';
+		}
+
+		if(typeof(actions[action]) === 'object' && typeof(actions[action].response) === 'function'){
+			return actions[action].response(this, result);
+		}
+
+		return Promise.resolve(result);
 	};
 
 	queryBuilder.prototype.addFlags = function(){
@@ -426,28 +393,6 @@ var QueryBuilder = (function(){
 		return Promise.resolve();
 	};
 
-	queryBuilder.prototype.processOptions = function(){
-		if(this.options.hasOwnProperty('fields')){
-			this.options.field = this.options.fields;
-
-			delete this.options.fields;
-		}
-
-		var k = Object.keys(this.options),
-			i = 0, l = k.length,
-			current;
-
-		for(; i < l; ++i){
-			current = k[i];
-
-			if(prepareOptions.hasOwnProperty(current)){
-				this.options[current] = prepareOptions[current](this.options[current]);
-			}
-		}
-
-		return Promise.resolve();
-	};
-
 	queryBuilder.prototype.constructPayload = function(){
 		var builder = new xml.Builder({
 			rootName: 'qdbapi',
@@ -464,6 +409,76 @@ var QueryBuilder = (function(){
 		}else{
 			for(var arg in this.options){
 				this.payload += '&' + arg + '=' + this.options[arg];
+			}
+		}
+
+		return Promise.resolve();
+	};
+
+	queryBuilder.prototype.processQuery = function(){
+		var that = this;
+
+		return new Promise(function(resolve, reject){
+			var reqOpts = {
+					hostname: [ that.parent.settings.realm, that.parent.settings.domain ].join('.'),
+					port: that.parent.settings.useSSL ? 443 : 80,
+					path: '/db/' + (that.options.dbid || 'main') + '?act=' + that.action + (!that.parent.settings.flags.useXML ? that.payload : ''),
+					method: that.parent.settings.flags.useXML ? 'POST' : 'GET',
+					headers: {
+						'Content-Type': 'application/xml',
+						'QUICKBASE-ACTION': that.action
+					},
+					agent: false
+				},
+				protocol = that.parent.settings.useSSL ? https : http,
+				request = protocol.request(reqOpts, function(response){
+					var xmlResponse = '';
+
+					response.on('data', function(chunk){
+						xmlResponse += chunk;
+					});
+
+					response.on('end', function(){
+						xml.parseString(xmlResponse, function(err, result){
+							if(err){
+								return reject(new QuickbaseError(1000, 'Error Processing Request', err));
+							}
+
+							result = cleanXML(result.qdbapi);
+
+							resolve(result);
+						});
+					});
+				});
+
+			if(that.parent.settings.flags.useXML === true){
+				request.write(that.payload);
+			}
+
+			request.on('error', function(err){
+				reject(err);
+			});
+
+			request.end();
+		});
+	};
+
+	queryBuilder.prototype.processOptions = function(){
+		if(this.options.hasOwnProperty('fields')){
+			this.options.field = this.options.fields;
+
+			delete this.options.fields;
+		}
+
+		var k = Object.keys(this.options),
+			i = 0, l = k.length,
+			current;
+
+		for(; i < l; ++i){
+			current = k[i];
+
+			if(prepareOptions.hasOwnProperty(current)){
+				this.options[current] = prepareOptions[current](this.options[current]);
 			}
 		}
 
@@ -559,7 +574,7 @@ var actions = (function(){
 	};
 })();
 
-/* Parameter Handling */
+/* Option Handling */
 var prepareOptions = {
 	clist: function(val){
 		return val instanceof Array ? val.join('.') : val;
