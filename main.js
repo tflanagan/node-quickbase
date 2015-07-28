@@ -236,7 +236,7 @@ var QuickBase = (function(){
 		var that = this;
 
 		return this.throttle.acquire(function(){
-			return new QueryBuilder(that, action, options);
+			return (new QueryBuilder(that, action, options)).run();
 		});
 	};
 
@@ -301,35 +301,7 @@ var QueryBuilder = (function(){
 
 		this.nErr = 0;
 
-		return Promise.bind(this)
-			.then(this.addFlags)
-			.then(this.processOptions)
-			.then(this.constructPayload)
-			.then(this.actionRequest)
-			.then(this.processQuery)
-			.then(this.actionResponse)
-			.catch(function(err){
-				++this.nErr;
-
-				var parent = this.parent,
-					parentSettings = parent.settings;
-
-				if(this.nErr < parentSettings.maxErrorRetryAttempts){
-					if([1000, 1001].indexOf(err.code) !== -1){
-						return parent.api(this.action, this.options);
-					}else
-					if(err.code === 4 && parentSettings.hasOwnProperty('username') && parentSettings.hasOwnProperty('password')){
-						return parent.api('API_Authenticate', {
-							username: parentSettings.username,
-							password: parentSettings.password
-						}).then(function(){
-							return parent.api(this.action, this.options);
-						});
-					}
-				}
-
-				return Promise.reject(err);
-			});
+		return this;
 	};
 
 	queryBuilder.prototype.actionRequest = function(){
@@ -483,6 +455,38 @@ var QueryBuilder = (function(){
 		}
 
 		return Promise.resolve();
+	};
+
+	queryBuilder.prototype.run = function(){
+		return Promise.bind(this)
+			.then(this.addFlags)
+			.then(this.processOptions)
+			.then(this.constructPayload)
+			.then(this.actionRequest)
+			.then(this.processQuery)
+			.then(this.actionResponse)
+			.catch(function(err){
+				++this.nErr;
+
+				var parent = this.parent,
+					parentSettings = parent.settings;
+
+				if(this.nErr < parentSettings.maxErrorRetryAttempts){
+					if([1000, 1001].indexOf(err.code) !== -1){
+						return parent.api(this.action, this.options);
+					}else
+					if(err.code === 4 && parentSettings.hasOwnProperty('username') && parentSettings.hasOwnProperty('password')){
+						return parent.api('API_Authenticate', {
+							username: parentSettings.username,
+							password: parentSettings.password
+						}).then(function(){
+							return parent.api(this.action, this.options);
+						});
+					}
+				}
+
+				return Promise.reject(err);
+			});
 	};
 
 	return queryBuilder;
