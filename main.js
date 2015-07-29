@@ -538,9 +538,11 @@ var actions = (function(){
 				if(l !== 0){
 					for(; i < l; ++i){
 						unparsedRecord = unparsedRecords[i];
-						parsedRecord = {
-							rid: unparsedRecord.$.rid
-						};
+						parsedRecord = {};
+
+						if(context.parent.settings.flags.includeRids){
+							parsedRecord.rid = unparsedRecord.$.rid;
+						}
 
 						for(o = 0, k = unparsedRecord.f.length; o < k; ++o){
 							field = unparsedRecord.f[o];
