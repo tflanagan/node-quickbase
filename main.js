@@ -583,93 +583,93 @@ var prepareOptions = {
 	*/
 
 	/* Common to All */
-	apptoken: function(val){
-		return val;
-	},
+	// apptoken: function(val){
+	// 	return val;
+	// },
 
-	dbid: function(val){
-		return val;
-	},
+	// dbid: function(val){
+	// 	return val;
+	// },
 
-	ticket: function(val){
-		return val;
-	},
+	// ticket: function(val){
+	// 	return val;
+	// },
 
-	udata: function(val){
-		return val;
-	},
+	// udata: function(val){
+	// 	return val;
+	// },
 
 	/* API Specific Options */
 
 	/* API_ChangeGroupInfo, API_CreateGroup */
-	accountId: function(val){
-		return val;
-	},
+	// accountId: function(val){
+	// 	return val;
+	// },
 
 	/* API_AddField */
-	add_to_forms: function(val){
-		return val;
-	},
+	// add_to_forms: function(val){
+	// 	return val;
+	// },
 
 	/* API_GrantedDBs */
-	adminOnly: function(val){
-		return val;
-	},
+	// adminOnly: function(val){
+	// 	return val;
+	// },
 
 	/* API_GrantedGroups */
-	adminonly: function(val){
-		return val;
-	},
+	// adminonly: function(val){
+	// 	return val;
+	// },
 
 	/* API_SetFieldProperties */
-	allow_new_choices: function(val){
-		return val;
-	},
+	// allow_new_choices: function(val){
+	// 	return val;
+	// },
 
 	/* API_AddUserToGroup */
-	allowAdminAccess: function(val){
-		return val;
-	},
+	// allowAdminAccess: function(val){
+	// 	return val;
+	// },
 
 	/* API_SetFieldProperties */
-	allowHTML: function(val){
-		return val;
-	},
+	// allowHTML: function(val){
+	// 	return val;
+	// },
 
 	/* API_RemoveGroupFromRole */
-	allRoles: function(val){
-		return val;
-	},
+	// allRoles: function(val){
+	// 	return val;
+	// },
 
 	/* API_SetFieldProperties */
-	appears_by_default: function(val){
-		return val;
-	},
+	// appears_by_default: function(val){
+	// 	return val;
+	// },
 
 	/* API_SetFieldProperties */
-	'append-only': function(val){
-		return val;
-	},
+	// 'append-only': function(val){
+	// 	return val;
+	// },
 
 	/* API_SetFieldProperties */
-	blank_is_zero: function(val){
-		return val;
-	},
+	// blank_is_zero: function(val){
+	// 	return val;
+	// },
 
 	/* API_SetFieldProperties */
-	bold: function(val){
-		return val;
-	},
+	// bold: function(val){
+	// 	return val;
+	// },
 
 	/* API_FieldAddChoices, API_FieldRemoveChoices */
-	choice: function(val){
-		return val;
-	},
+	// choice: function(val){
+	// 	return val;
+	// },
 
 	/* API_SetFieldProperties */
-	choices: function(val){
-		return val;
-	},
+	// choices: function(val){
+	// 	return val;
+	// },
 
 	/* API_DoQuery, API_GenResultsTable, API_ImportFromCSV */
 	clist: function(val){
@@ -682,144 +682,144 @@ var prepareOptions = {
 	},
 
 	/* API_SetFieldProperties */
-	comma_start: function(val){
-		return val;
-	},
+	// comma_start: function(val){
+	// 	return val;
+	// },
 
 	/* API_CopyMasterDetail */
-	copyfid: function(val){
-		return val;
-	},
+	// copyfid: function(val){
+	// 	return val;
+	// },
 
 	/* API_CreateDatabase */
-	createapptoken: function(val){
-		return val;
-	},
+	// createapptoken: function(val){
+	// 	return val;
+	// },
 
 	/* API_SetFieldProperties */
-	currency_format: function(val){
-		return val;
-	},
+	// currency_format: function(val){
+	// 	return val;
+	// },
 
 	/* API_SetFieldProperties */
-	currency_symbol: function(val){
-		return val;
-	},
+	// currency_symbol: function(val){
+	// 	return val;
+	// },
 
 	/* API_CreateDatabase */
-	dbdesc: function(val){
-		return val;
-	},
+	// dbdesc: function(val){
+	// 	return val;
+	// },
 
 	/* API_CreateDatabase, API_FindDBByName */
-	dbname: function(val){
-		return val;
-	},
+	// dbname: function(val){
+	// 	return val;
+	// },
 
 	/* API_SetFieldProperties */
-	decimal_places: function(val){
-		return val;
-	},
+	// decimal_places: function(val){
+	// 	return val;
+	// },
 
 	/* API_SetFieldProperties */
-	default_today: function(val){
-		return val;
-	},
+	// default_today: function(val){
+	// 	return val;
+	// },
 
 	/* API_SetFieldProperties */
-	default_value: function(val){
-		return val;
-	},
+	// default_value: function(val){
+	// 	return val;
+	// },
 
 	/* API_ChangeGroupInfo, API_CopyGroup, API_CreateGroup */
-	description: function(val){
-		return val;
-	},
+	// description: function(val){
+	// 	return val;
+	// },
 
 	/* API_CopyMasterDetail */
-	destrid: function(val){
-		return val;
-	},
+	// destrid: function(val){
+	// 	return val;
+	// },
 
 	/* API_GetRecordAsHTML */
-	dfid: function(val){
-		return val;
-	},
+	// dfid: function(val){
+	// 	return val;
+	// },
 
 	/* API_SetFieldProperties */
-	display_as_button: function(val){
-		return val;
-	},
+	// display_as_button: function(val){
+	// 	return val;
+	// },
 
 	/* API_SetFieldProperties */
-	display_dow: function(val){
-		return val;
-	},
+	// display_dow: function(val){
+	// 	return val;
+	// },
 
 	/* API_SetFieldProperties */
-	display_month: function(val){
-		return val;
-	},
+	// display_month: function(val){
+	// 	return val;
+	// },
 
 	/* API_SetFieldProperties */
-	display_relative: function(val){
-		return val;
-	},
+	// display_relative: function(val){
+	// 	return val;
+	// },
 
 	/* API_SetFieldProperties */
-	display_time: function(val){
-		return val;
-	},
+	// display_time: function(val){
+	// 	return val;
+	// },
 
 	/* API_SetFieldProperties */
-	display_zone: function(val){
-		return val;
-	},
+	// display_zone: function(val){
+	// 	return val;
+	// },
 
 	/* API_AddRecord, API_EditRecord */
-	disprec: function(val){
-		return val;
-	},
+	// disprec: function(val){
+	// 	return val;
+	// },
 
 	/* API_SetFieldProperties */
-	does_average: function(val){
-		return val;
-	},
+	// does_average: function(val){
+	// 	return val;
+	// },
 
 	/* API_SetFieldProperties */
-	does_total: function(val){
-		return val;
-	},
+	// does_total: function(val){
+	// 	return val;
+	// },
 
 	/* API_SetFieldProperties */
-	doesdatacopy: function(val){
-		return val;
-	},
+	// doesdatacopy: function(val){
+	// 	return val;
+	// },
 
 	/* API_GetUserInfo, API_ProvisionUser */
-	email: function(val){
-		return val;
-	},
+	// email: function(val){
+	// 	return val;
+	// },
 
 	/* API_CloneDatabase */
-	excludefiles: function(val){
-		return val;
-	},
+	// excludefiles: function(val){
+	// 	return val;
+	// },
 
 	/* API_GrantedDBs */
-	excludeparents: function(val){
-		return val;
-	},
+	// excludeparents: function(val){
+	// 	return val;
+	// },
 
 	/* API_AddRecord, API_EditRecord */
-	fform: function(val){
-		return val;
-	},
+	// fform: function(val){
+	// 	return val;
+	// },
 
 	/* API_DeleteField, API_FieldAddChoices, API_FieldRemoveChoices, API_SetFieldProperties, API_SetKeyField */
-	fid: function(val){
-		return val;
-	},
+	// fid: function(val){
+	// 	return val;
+	// },
 
 	/* API_AddRecord, API_EditRecord, API_GenAddRecordForm, API_UploadFile */
 	field: function(val){
@@ -855,169 +855,169 @@ var prepareOptions = {
 	},
 
 	/* API_SetFieldProperties */
-	fieldhelp: function(val){
-		return val;
-	},
+	// fieldhelp: function(val){
+	// 	return val;
+	// },
 
 	/* API_SetFieldProperties */
-	find_enabled: function(val){
-		return val;
-	},
+	// find_enabled: function(val){
+	// 	return val;
+	// },
 
 	/* API_DoQuery */
-	fmt: function(val){
-		return val;
-	},
+	// fmt: function(val){
+	// 	return val;
+	// },
 
 	/* API_ProvisionUser */
-	fname: function(val){
-		return val;
-	},
+	// fname: function(val){
+	// 	return val;
+	// },
 
 	/* API_SetFieldProperties */
-	formula: function(val){
-		return val;
-	},
+	// formula: function(val){
+	// 	return val;
+	// },
 
 	/* API_CopyGroup */
-	gacct: function(val){
-		return val;
-	},
+	// gacct: function(val){
+	// 	return val;
+	// },
 
 	/* API_AddGroupToRole, API_AddSubGroup, API_AddUserToGroup, API_ChangeGroupInfo, API_CopyGroup, API_DeleteGroup, API_GetGroupRole, API_GetUsersInGroup, API_GrantedDBsForGroup, API_RemoveGroupFromRole, API_RemoveSubgroup, API_RemoveUserFromGroup */
-	gid: function(val){
-		return val;
-	},
+	// gid: function(val){
+	// 	return val;
+	// },
 
 	/* API_SetFieldProperties */
-	has_extension: function(val){
-		return val;
-	},
+	// has_extension: function(val){
+	// 	return val;
+	// },
 
 	/* API_Authenticate */
-	hours: function(val){
-		return val;
-	},
+	// hours: function(val){
+	// 	return val;
+	// },
 
 	/* API_RunImport */
-	id: function(val){
-		return val;
-	},
+	// id: function(val){
+	// 	return val;
+	// },
 
 	/* API_AddRecord, API_EditRecord */
-	ignoreError: function(val){
-		return val;
-	},
+	// ignoreError: function(val){
+	// 	return val;
+	// },
 
 	/* API_GetUserRole */
-	inclgrps: function(val){
-		return val;
-	},
+	// inclgrps: function(val){
+	// 	return val;
+	// },
 
 	/* API_GetUsersInGroup */
-	includeAllMgrs: function(val){
-		return val;
-	},
+	// includeAllMgrs: function(val){
+	// 	return val;
+	// },
 
 	/* API_GrantedDBs */
-	includeancestors: function(val){
-		return val;
-	},
+	// includeancestors: function(val){
+	// 	return val;
+	// },
 
 	/* API_DoQuery */
-	includeRids: function(val){
-		return val;
-	},
+	// includeRids: function(val){
+	// 	return val;
+	// },
 
 	/* API_GenResultsTable */
-	jht: function(val){
-		return val;
-	},
+	// jht: function(val){
+	// 	return val;
+	// },
 
 	/* API_GenResultsTable */
-	jsa: function(val){
-		return val;
-	},
+	// jsa: function(val){
+	// 	return val;
+	// },
 
 	/* API_CloneDatabase */
-	keepData: function(val){
-		return val;
-	},
+	// keepData: function(val){
+	// 	return val;
+	// },
 
 	/* API_ChangeRecordOwner, API_DeleteRecord, API_EditRecord, API_GetRecordInfo */
-	key: function(val){
-		return val;
-	},
+	// key: function(val){
+	// 	return val;
+	// },
 
 	/* API_AddField, API_SetFieldProperties */
-	label: function(val){
-		return val;
-	},
+	// label: function(val){
+	// 	return val;
+	// },
 
 	/* API_ProvisionUser */
-	lname: function(val){
-		return val;
-	},
+	// lname: function(val){
+	// 	return val;
+	// },
 
 	/* API_SetFieldProperties */
-	maxlength: function(val){
-		return val;
-	},
+	// maxlength: function(val){
+	// 	return val;
+	// },
 
 	/* API_AddField */
-	mode: function(val){
-		return val;
-	},
+	// mode: function(val){
+	// 	return val;
+	// },
 
 	/* API_AddRecord, API_EditRecord, API_ImportFromCSV */
-	msInUTC: function(val){
-		return val;
-	},
+	// msInUTC: function(val){
+	// 	return val;
+	// },
 
 	/* API_ChangeGroupInfo, API_CopyGroup, API_CreateGroup */
-	name: function(val){
-		return val;
-	},
+	// name: function(val){
+	// 	return val;
+	// },
 
 	/* API_RenameApp */
-	newappname: function(val){
-		return val;
-	},
+	// newappname: function(val){
+	// 	return val;
+	// },
 
 	/* API_CloneDatabase */
-	newdbdesc: function(val){
-		return val;
-	},
+	// newdbdesc: function(val){
+	// 	return val;
+	// },
 
 	/* API_CloneDatabase */
-	newdbname: function(val){
-		return val;
-	},
+	// newdbname: function(val){
+	// 	return val;
+	// },
 
 	/* API_ChangeManager */
-	newmgr: function(val){
-		return val;
-	},
+	// newmgr: function(val){
+	// 	return val;
+	// },
 
 	/* API_ChangeRecordOwner */
-	newowner: function(val){
-		return val;
-	},
+	// newowner: function(val){
+	// 	return val;
+	// },
 
 	/* API_ChangeUserRole */
-	newroleid: function(val){
-		return val;
-	},
+	// newroleid: function(val){
+	// 	return val;
+	// },
 
 	/* API_SetFieldProperties */
-	no_wrap: function(val){
-		return val;
-	},
+	// no_wrap: function(val){
+	// 	return val;
+	// },
 
 	/* API_SetFieldProperties */
-	numberfmt: function(val){
-		return val;
-	},
+	// numberfmt: function(val){
+	// 	return val;
+	// },
 
 	/* API_DoQuery, API_GenResultsTable */
 	options: function(val){
@@ -1025,59 +1025,59 @@ var prepareOptions = {
 	},
 
 	/* API_AddReplaceDBPage */
-	pagebody: function(val){
-		return val;
-	},
+	// pagebody: function(val){
+	// 	return val;
+	// },
 
 	/* API_AddReplaceDBPage */
-	pageid: function(val){
-		return val;
-	},
+	// pageid: function(val){
+	// 	return val;
+	// },
 
 	/* API_GetDBPage */
-	pageID: function(val){
-		return val;
-	},
+	// pageID: function(val){
+	// 	return val;
+	// },
 
 	/* API_AddReplaceDBPage */
-	pagename: function(val){
-		return val;
-	},
+	// pagename: function(val){
+	// 	return val;
+	// },
 
 	/* API_AddReplaceDBPage */
-	pagetype: function(val){
-		return val;
-	},
+	// pagetype: function(val){
+	// 	return val;
+	// },
 
 	/* API_FindDBByName */
-	ParentsOnly: function(val){
-		return val;
-	},
+	// ParentsOnly: function(val){
+	// 	return val;
+	// },
 
 	/* API_Authenticate */
-	password: function(val){
-		return val;
-	},
+	// password: function(val){
+	// 	return val;
+	// },
 
 	/* API_CreateTable */
-	pnoun: function(val){
-		return val;
-	},
+	// pnoun: function(val){
+	// 	return val;
+	// },
 
 	/* API_DoQuery, API_GenResultsTable, API_PurgeRecords */
-	qid: function(val){
-		return val;
-	},
+	// qid: function(val){
+	// 	return val;
+	// },
 
 	/* API_DoQuery, API_GenResultsTable, API_PurgeRecords */
-	qname: function(val){
-		return val;
-	},
+	// qname: function(val){
+	// 	return val;
+	// },
 
 	/* API_DoQuery, API_DoQueryCount, API_GenResultsTable, API_PurgeRecords */
-	query: function(val){
-		return val;
-	},
+	// query: function(val){
+	// 	return val;
+	// },
 
 	/* API_ImportFromCSV */
 	records_csv: function(val){
@@ -1085,39 +1085,39 @@ var prepareOptions = {
 	},
 
 	/* API_CopyMasterDetail */
-	recurse: function(val){
-		return val;
-	},
+	// recurse: function(val){
+	// 	return val;
+	// },
 
 	/* API_CopyMasterDetail */
-	relfids: function(val){
-		return val;
-	},
+	// relfids: function(val){
+	// 	return val;
+	// },
 
 	/* API_SetFieldProperties */
-	required: function(val){
-		return val;
-	},
+	// required: function(val){
+	// 	return val;
+	// },
 
 	/* API_DoQuery */
-	returnpercentage: function(val){
-		return val;
-	},
+	// returnpercentage: function(val){
+	// 	return val;
+	// },
 
 	/* API_ChangeRecordOwner, API_DeleteRecord, API_EditRecord, API_GetRecordAsHTML, API_GetRecordInfo, API_UploadFile */
-	rid: function(val){
-		return val;
-	},
+	// rid: function(val){
+	// 	return val;
+	// },
 
 	/* API_AddGroupToRole, API_AddUserToRole, API_ChangeUserRole, API_ProvisionUser, API_RemoveGroupFromRole, API_RemoveUserFromRole */
-	roleid: function(val){
-		return val;
-	},
+	// roleid: function(val){
+	// 	return val;
+	// },
 
 	/* API_ImportFromCSV */
-	skipfirst: function(val){
-		return val;
-	},
+	// skipfirst: function(val){
+	// 	return val;
+	// },
 
 	/* API_DoQuery, API_GenResultsTable */
 	slist: function(val){
@@ -1125,79 +1125,79 @@ var prepareOptions = {
 	},
 
 	/* API_SetFieldProperties */
-	sort_as_given: function(val){
-		return val;
-	},
+	// sort_as_given: function(val){
+	// 	return val;
+	// },
 
 	/* API_CopyMasterDetail */
-	sourcerid: function(val){
-		return val;
-	},
+	// sourcerid: function(val){
+	// 	return val;
+	// },
 
 	/* API_AddSubGroup, API_RemoveSubgroup */
-	subgroupid: function(val){
-		return val;
-	},
+	// subgroupid: function(val){
+	// 	return val;
+	// },
 
 	/* API_CreateTable */
-	tname: function(val){
-		return val;
-	},
+	// tname: function(val){
+	// 	return val;
+	// },
 
 	/* API_AddField */
-	type: function(val){
-		return val;
-	},
+	// type: function(val){
+	// 	return val;
+	// },
 
 	/* API_SetFieldProperties */
-	unique: function(val){
-		return val;
-	},
+	// unique: function(val){
+	// 	return val;
+	// },
 
 	/* API_EditRecord */
-	update_id: function(val){
-		return val;
-	},
+	// update_id: function(val){
+	// 	return val;
+	// },
 
 	/* API_AddUserToGroup, API_AddUserToRole, API_ChangeUserRole, API_GetUserRole, API_GrantedGroups, API_RemoveUserFromGroup, API_RemoveUserFromRole, API_SendInvitation */
-	userid: function(val){
-		return val;
-	},
+	// userid: function(val){
+	// 	return val;
+	// },
 
 	/* API_Authenticate */
-	username: function(val){
-		return val;
-	},
+	// username: function(val){
+	// 	return val;
+	// },
 
 	/* API_CloneDatabase */
-	usersandroles: function(val){
-		return val;
-	},
+	// usersandroles: function(val){
+	// 	return val;
+	// },
 
 	/* API_SendInvitation */
-	usertext: function(val){
-		return val;
-	},
+	// usertext: function(val){
+	// 	return val;
+	// },
 
 	/* API_SetDBVar */
-	value: function(val){
-		return val;
-	},
+	// value: function(val){
+	// 	return val;
+	// },
 
 	/* API_GetDBVar, API_SetDBVar */
-	varname: function(val){
-		return val;
-	},
+	// varname: function(val){
+	// 	return val;
+	// },
 
 	/* API_SetFieldProperties */
-	width: function(val){
-		return val;
-	},
+	// width: function(val){
+	// 	return val;
+	// },
 
 	/* API_GrantedDBs */
-	withembeddedtables: function(val){
-		return val;
-	}
+	// withembeddedtables: function(val){
+	// 	return val;
+	// }
 };
 
 /* Expose Instances */
