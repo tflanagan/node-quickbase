@@ -466,8 +466,8 @@ var QueryBuilder = (function(){
 		return Promise.bind(this)
 			.then(this.addFlags)
 			.then(this.processOptions)
-			.then(this.constructPayload)
 			.then(this.actionRequest)
+			.then(this.constructPayload)
 			.then(this.processQuery)
 			.then(this.actionResponse)
 			.catch(function(err){
