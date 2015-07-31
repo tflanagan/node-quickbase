@@ -41,7 +41,7 @@ var cleanXML = function(xml){
 		node, value, singulars,
 		l = -1, i = -1, s = -1, e = -1,
 		isInt = /^-?\s*\d+$/,
-		isDig = /^(-?\s*\d*\.?\d*)$/,
+		isDig = /^(-?\s*\d+\.?\d*)$/,
 		radix = 10;
 
 	for(; o < k; ++o){
@@ -103,6 +103,8 @@ var cleanXML = function(xml){
 						}
 					}
 				}
+			}else{
+				xml[node] = value;
 			}
 		}
 	}
