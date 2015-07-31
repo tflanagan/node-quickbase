@@ -727,42 +727,85 @@ var actions = {
 				 * 		}
 				 * 	}
 				*/
-				var unparsedRecords = result.table.records,
-					i = 0, l = unparsedRecords.length,
+				var unparsedItems = result.table.records,
+					i = 0, l = unparsedItems.length,
 					o = 0, k = 0,
-					parsedRecords = [],
-					unparsedRecord = {},
-					parsedRecord = {},
-					field = {},
-					fid = 0;
+					parsedItems = [],
+					unparsedItem = {},
+					parsedItem = {},
+					items = [],
+					item = {},
+					id = 0;
 
 				if(l !== 0){
 					for(; i < l; ++i){
-						unparsedRecord = unparsedRecords[i];
-						parsedRecord = {};
+						unparsedItem = unparsedItems[i];
+						parsedItem = {};
 
 						if(context.options.includeRids){
-							parsedRecord.rid = unparsedRecord.$.rid;
+							parsedItem.rid = unparsedItem.$.rid;
 						}
 
-						for(o = 0, k = unparsedRecord.f.length; o < k; ++o){
-							field = unparsedRecord.f[o];
-							fid = field.$.id;
+						for(o = 0, k = unparsedItem.f.length; o < k; ++o){
+							item = unparsedItem.f[o];
+							id = item.$.id;
 
-							if(field.hasOwnProperty('url')){
-								parsedRecord[fid] = {
-									filename: field._,
-									url: field.url
+							if(item.hasOwnProperty('url')){
+								parsedItem[id] = {
+									filename: item._,
+									url: item.url
 								};
 							}else{
-								parsedRecord[fid] = field._;
+								parsedItem[id] = item._;
 							}
 						}
 
-						parsedRecords.push(parsedRecord);
+						parsedItems.push(parsedItem);
 					}
 
-					result.table.records = parsedRecords;
+					result.table.records = parsedItems;
+				}
+
+				unparsedItems = result.table.queries;
+				l = unparsedItems.length;
+
+				if(l !== 0){
+					parsedItems = [];
+
+					for(i = 0; i < l; ++i){
+						unparsedItem = unparsedItems[i];
+
+						unparsedItem.id = unparsedItem.$.id;
+
+						delete unparsedItem.$;
+
+						parsedItems.push(unparsedItem);
+					}
+
+					result.table.queries = parsedItems;
+				}
+
+				unparsedItems = result.table.fields;
+				l = unparsedItems.length;
+
+				if(l !== 0){
+					parsedItems = [];
+
+					for(i = 0; i < l; ++i){
+						unparsedItem = unparsedItems[i];
+
+						items = Object.keys(unparsedItem.$);
+
+						for(o = 0, k = items.length; o < k; ++o){
+							unparsedItem[items[o]] = unparsedItem.$[items[o]];
+						}
+
+						delete unparsedItem.$;
+
+						parsedItems.push(unparsedItem);
+					}
+
+					result.table.fields = parsedItems;
 				}
 			}else
 			if(context.options.includeRids){
