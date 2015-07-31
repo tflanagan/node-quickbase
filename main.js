@@ -321,6 +321,9 @@ var QueryBuilder = (function(){
 			if(typeof(actions[action].request) === 'function'){
 				return actions[action].request(this);
 			}
+		}else
+		if(typeof(actions.default.request) === 'function'){
+			return actions.default.request(this);
 		}
 
 		return Promise.resolve();
@@ -335,6 +338,9 @@ var QueryBuilder = (function(){
 
 		if(typeof(actions[action]) === 'object' && typeof(actions[action].response) === 'function'){
 			return actions[action].response(this, result);
+		}else
+		if(typeof(actions.default.response) === 'function'){
+			return actions.default.response(this, result);
 		}
 
 		return Promise.resolve(result);
@@ -507,107 +513,119 @@ var QueryBuilder = (function(){
 })();
 
 /* Actions */
-var actions = (function(){
-	return {
-		API_Authenticate: {
-			response: function(context, result){
-				context.parent.settings.ticket = result.ticket;
-				context.parent.settings.username = context.options.username;
-				context.parent.settings.password = context.options.password;
+var actions = {
 
-				return Promise.resolve(result);
-			}
-		},
-		API_DoQuery: {
-			response: function(context, result){
-				if(context.options.hasOwnProperty('fmt') && context.options.fmt === 'structured'){
-					/* XML is _so_ butt ugly... Let's try to make some sense of it
-					 * Turn this:
-					 * 	{
-					 * 		$: { rid: 1 },
-					 * 		f: [
-					 * 			{ $: { id: 3 }, _: 1 } ],
-					 * 			{ $: { id: 6 }, _: 'Test Value' }
-					 * 			{ $: { id: 7 }, _: 'filename.png', url: 'https://www.quickbase.com/' }
-					 * 		]
-					 * 	}
-					 *
-					 * Into this:
-					 * 	{
-					 * 		3: 1,
-					 * 		6: 'Test Value',
-					 * 		7: {
-					 * 			filename: 'filename.png',
-					 * 			url: 'https://www.quickbase.com/'
-					 * 		}
-					 * 	}
-					*/
-					var unparsedRecords = result.table.records,
-						i = 0, l = unparsedRecords.length,
-						o = 0, k = 0,
-						parsedRecords = [],
-						unparsedRecord = {},
-						parsedRecord = {},
-						field = {},
-						fid = 0;
+	/* NOTICE:
+	 * When an actions request or response does nothing, comment the function out.
+	 * Will increase performance by cutting out an unnecessary function execution.
+	*/
 
-					if(l !== 0){
-						for(; i < l; ++i){
-							unparsedRecord = unparsedRecords[i];
-							parsedRecord = {};
+	API_Authenticate: {
+		// request: function(context){
+		// 	return Promise.resolve();
+		// },
+		response: function(context, result){
+			context.parent.settings.ticket = result.ticket;
+			context.parent.settings.username = context.options.username;
+			context.parent.settings.password = context.options.password;
 
-							if(context.options.includeRids){
-								parsedRecord.rid = unparsedRecord.$.rid;
-							}
+			return Promise.resolve(result);
+		}
+	},
+	API_DoQuery: {
+		// request: function(context){
+		// 	return Promise.resolve();
+		// },
+		response: function(context, result){
+			if(context.options.hasOwnProperty('fmt') && context.options.fmt === 'structured'){
+				/* XML is _so_ butt ugly... Let's try to make some sense of it
+				 * Turn this:
+				 * 	{
+				 * 		$: { rid: 1 },
+				 * 		f: [
+				 * 			{ $: { id: 3 }, _: 1 } ],
+				 * 			{ $: { id: 6 }, _: 'Test Value' }
+				 * 			{ $: { id: 7 }, _: 'filename.png', url: 'https://www.quickbase.com/' }
+				 * 		]
+				 * 	}
+				 *
+				 * Into this:
+				 * 	{
+				 * 		3: 1,
+				 * 		6: 'Test Value',
+				 * 		7: {
+				 * 			filename: 'filename.png',
+				 * 			url: 'https://www.quickbase.com/'
+				 * 		}
+				 * 	}
+				*/
+				var unparsedRecords = result.table.records,
+					i = 0, l = unparsedRecords.length,
+					o = 0, k = 0,
+					parsedRecords = [],
+					unparsedRecord = {},
+					parsedRecord = {},
+					field = {},
+					fid = 0;
 
-							for(o = 0, k = unparsedRecord.f.length; o < k; ++o){
-								field = unparsedRecord.f[o];
-								fid = field.$.id;
+				if(l !== 0){
+					for(; i < l; ++i){
+						unparsedRecord = unparsedRecords[i];
+						parsedRecord = {};
 
-								if(field.hasOwnProperty('url')){
-									parsedRecord[fid] = {
-										filename: field._,
-										url: field.url
-									};
-								}else{
-									parsedRecord[fid] = field._;
-								}
-							}
-
-							parsedRecords.push(parsedRecord);
+						if(context.options.includeRids){
+							parsedRecord.rid = unparsedRecord.$.rid;
 						}
 
-						result.table.records = parsedRecords;
-					}
-				}else
-				if(context.options.includeRids){
-					var i = 0,
-						l = result.record.length;
+						for(o = 0, k = unparsedRecord.f.length; o < k; ++o){
+							field = unparsedRecord.f[o];
+							fid = field.$.id;
 
-					for(; i < l; ++i){
-						result.record[i].rid = result.record[i].$.rid;
+							if(field.hasOwnProperty('url')){
+								parsedRecord[fid] = {
+									filename: field._,
+									url: field.url
+								};
+							}else{
+								parsedRecord[fid] = field._;
+							}
+						}
 
-						delete result.record[i].$;
+						parsedRecords.push(parsedRecord);
 					}
+
+					result.table.records = parsedRecords;
 				}
+			}else
+			if(context.options.includeRids){
+				var i = 0,
+					l = result.record.length;
 
-				return Promise.resolve(result);
-			}
-		},
-		default: {
-			/*
-			request: function(context){
-				// Do stuff prior to the request
-			},
-			response: function(context, result){
-				// Do Stuff with the result before resolving the api call
+				for(; i < l; ++i){
+					result.record[i].rid = result.record[i].$.rid;
 
-				return Promise.resolve(result);
+					delete result.record[i].$;
+				}
 			}
-			*/
+
+			return Promise.resolve(result);
 		}
-	};
-})();
+	},
+	default: {
+		/*
+		request: function(context){
+			// Do stuff prior to the request
+
+			return Promise.resolve();
+		},
+		response: function(context, result){
+			// Do Stuff with the result before resolving the api call
+
+			return Promise.resolve(result);
+		}
+		*/
+	}
+};
 
 /* Option Handling */
 var prepareOptions = {
