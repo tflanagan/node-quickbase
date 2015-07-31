@@ -210,7 +210,8 @@ var QuickBase = (function(){
 			msInUTC: true,
 			includeRids: true,
 			returnPercentage: false,
-			fmt: 'structured'
+			fmt: 'structured',
+			encoding: 'UTF-8'
 		},
 
 		status: {
@@ -362,13 +363,19 @@ var QueryBuilder = (function(){
 			this.options.fmt = this.parent.settings.flags.fmt;
 		}
 
+		if(!this.options.hasOwnProperty('encoding') && this.parent.settings.flags.encoding){
+			this.options.encoding = this.parent.settings.flags.encoding;
+		}
+
 		return Promise.resolve();
 	};
 
 	queryBuilder.prototype.constructPayload = function(){
 		var builder = new xml.Builder({
 			rootName: 'qdbapi',
-			headless: true,
+			xmldec: {
+				encoding: this.options.encoding
+			},
 			renderOpts: {
 				pretty: false
 			}
