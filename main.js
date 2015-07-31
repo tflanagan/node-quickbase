@@ -705,7 +705,7 @@ var actions = {
 			return Promise.resolve();
 		},
 		response: function(context, result){
-			var unparsedItems = []
+			var unparsedItems = [],
 				i = 0, l = 0,
 				o = 0, k = 0,
 				parsedItems = [],
