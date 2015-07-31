@@ -518,63 +518,75 @@ var actions = (function(){
 		},
 		API_DoQuery: {
 			response: function(context, result){
-				/* XML is _so_ butt ugly... Let's try to make some sense of it
-				 * Turn this:
-				 * 	{
-				 * 		$: { rid: 1 },
-				 * 		f: [ 
-				 * 			{ $: { id: 3 }, _: 1 } ],
-				 * 			{ $: { id: 6 }, _: 'Test Value' }
-				 * 			{ $: { id: 7 }, _: 'filename.png', url: 'https://www.quickbase.com/' }
-				 * 		]
-				 * 	}
-				 *
-				 * Into this:
-				 * 	{
-				 * 		3: 1,
-				 * 		6: 'Test Value',
-				 * 		7: {
-				 * 			filename: 'filename.png',
-				 * 			url: 'https://www.quickbase.com/'
-				 * 		}
-				 * 	}
-				*/
-				var unparsedRecords = result.table.records,
-					i = 0, l = unparsedRecords.length,
-					o = 0, k = 0,
-					parsedRecords = [],
-					unparsedRecord = {},
-					parsedRecord = {},
-					field = {},
-					fid = 0;
+				if(context.options.hasOwnProperty('fmt') && context.options.fmt === 'structured'){
+					/* XML is _so_ butt ugly... Let's try to make some sense of it
+					 * Turn this:
+					 * 	{
+					 * 		$: { rid: 1 },
+					 * 		f: [
+					 * 			{ $: { id: 3 }, _: 1 } ],
+					 * 			{ $: { id: 6 }, _: 'Test Value' }
+					 * 			{ $: { id: 7 }, _: 'filename.png', url: 'https://www.quickbase.com/' }
+					 * 		]
+					 * 	}
+					 *
+					 * Into this:
+					 * 	{
+					 * 		3: 1,
+					 * 		6: 'Test Value',
+					 * 		7: {
+					 * 			filename: 'filename.png',
+					 * 			url: 'https://www.quickbase.com/'
+					 * 		}
+					 * 	}
+					*/
+					var unparsedRecords = result.table.records,
+						i = 0, l = unparsedRecords.length,
+						o = 0, k = 0,
+						parsedRecords = [],
+						unparsedRecord = {},
+						parsedRecord = {},
+						field = {},
+						fid = 0;
 
-				if(l !== 0){
-					for(; i < l; ++i){
-						unparsedRecord = unparsedRecords[i];
-						parsedRecord = {};
+					if(l !== 0){
+						for(; i < l; ++i){
+							unparsedRecord = unparsedRecords[i];
+							parsedRecord = {};
 
-						if(context.parent.settings.flags.includeRids){
-							parsedRecord.rid = unparsedRecord.$.rid;
-						}
-
-						for(o = 0, k = unparsedRecord.f.length; o < k; ++o){
-							field = unparsedRecord.f[o];
-							fid = field.$.id;
-
-							if(field.hasOwnProperty('url')){
-								parsedRecord[fid] = {
-									filename: field._,
-									url: field.url
-								};
-							}else{
-								parsedRecord[fid] = field._;
+							if(context.options.includeRids){
+								parsedRecord.rid = unparsedRecord.$.rid;
 							}
+
+							for(o = 0, k = unparsedRecord.f.length; o < k; ++o){
+								field = unparsedRecord.f[o];
+								fid = field.$.id;
+
+								if(field.hasOwnProperty('url')){
+									parsedRecord[fid] = {
+										filename: field._,
+										url: field.url
+									};
+								}else{
+									parsedRecord[fid] = field._;
+								}
+							}
+
+							parsedRecords.push(parsedRecord);
 						}
 
-						parsedRecords.push(parsedRecord);
+						result.table.records = parsedRecords;
 					}
+				}else
+				if(context.options.includeRids){
+					var i = 0,
+						l = result.record.length;
 
-					result.table.records = parsedRecords;
+					for(; i < l; ++i){
+						result.record[i].rid = result.record[i].$.rid;
+
+						delete result.record[i].$;
+					}
 				}
 
 				return Promise.resolve(result);
