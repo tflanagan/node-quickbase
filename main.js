@@ -705,6 +705,16 @@ var actions = {
 			return Promise.resolve();
 		},
 		response: function(context, result){
+			var unparsedItems = []
+				i = 0, l = 0,
+				o = 0, k = 0,
+				parsedItems = [],
+				unparsedItem = {},
+				parsedItem = {},
+				items = [],
+				item = {},
+				id = 0;
+
 			if(context.options.hasOwnProperty('fmt') && context.options.fmt === 'structured'){
 				/* XML is _so_ butt ugly... Let's try to make some sense of it
 				 * Turn this:
@@ -727,15 +737,9 @@ var actions = {
 				 * 		}
 				 * 	}
 				*/
-				var unparsedItems = result.table.records,
-					i = 0, l = unparsedItems.length,
-					o = 0, k = 0,
-					parsedItems = [],
-					unparsedItem = {},
-					parsedItem = {},
-					items = [],
-					item = {},
-					id = 0;
+
+				unparsedItems = result.table.records;
+				l = unparsedItems.length;
 
 				if(l !== 0){
 					for(; i < l; ++i){
@@ -809,10 +813,7 @@ var actions = {
 				}
 			}else
 			if(context.options.includeRids){
-				var i = 0,
-					l = result.record.length;
-
-				for(; i < l; ++i){
+				for(i = 0, l = result.record.length; i < l; ++i){
 					result.record[i].rid = result.record[i].$.rid;
 
 					delete result.record[i].$;
