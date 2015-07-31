@@ -359,18 +359,6 @@ var QueryBuilder = (function(){
 			this.options.ticket = this.parent.settings.ticket;
 		}
 
-		if(!this.options.hasOwnProperty('returnPercentage') && this.parent.settings.flags.returnPercentage){
-			this.options.returnPercentage = 1;
-		}
-
-		if(!this.options.hasOwnProperty('includeRids') && this.parent.settings.flags.includeRids){
-			this.options.includeRids = 1;
-		}
-
-		if(!this.options.hasOwnProperty('fmt') && this.parent.settings.flags.fmt){
-			this.options.fmt = this.parent.settings.flags.fmt;
-		}
-
 		if(!this.options.hasOwnProperty('encoding') && this.parent.settings.flags.encoding){
 			this.options.encoding = this.parent.settings.flags.encoding;
 		}
@@ -701,9 +689,21 @@ var actions = {
 		// }
 	},
 	API_DoQuery: {
-		// request: function(context){
-		// 	return Promise.resolve();
-		// },
+		request: function(context){
+			if(!context.options.hasOwnProperty('returnPercentage') && context.parent.settings.flags.returnPercentage){
+				context.options.returnPercentage = 1;
+			}
+
+			if(!context.options.hasOwnProperty('fmt') && context.parent.settings.flags.fmt){
+				context.options.fmt = context.parent.settings.flags.fmt;
+			}
+
+			if(!context.options.hasOwnProperty('includeRids') && context.parent.settings.flags.includeRids){
+				context.options.includeRids = 1;
+			}
+
+			return Promise.resolve();
+		},
 		response: function(context, result){
 			if(context.options.hasOwnProperty('fmt') && context.options.fmt === 'structured'){
 				/* XML is _so_ butt ugly... Let's try to make some sense of it
