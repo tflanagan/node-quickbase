@@ -525,13 +525,18 @@ var actions = (function(){
 				 * 		f: [ 
 				 * 			{ $: { id: 3 }, _: 1 } ],
 				 * 			{ $: { id: 6 }, _: 'Test Value' }
+				 * 			{ $: { id: 7 }, _: 'filename.png', url: 'https://www.quickbase.com/' }
 				 * 		]
 				 * 	}
 				 *
 				 * Into this:
 				 * 	{
 				 * 		3: 1,
-				 * 		6: 'Test Value'
+				 * 		6: 'Test Value',
+				 * 		7: {
+				 * 			filename: 'filename.png',
+				 * 			url: 'https://www.quickbase.com/'
+				 * 		}
 				 * 	}
 				*/
 				var unparsedRecords = result.table.records,
@@ -540,7 +545,8 @@ var actions = (function(){
 					parsedRecords = [],
 					unparsedRecord = {},
 					parsedRecord = {},
-					field = {};
+					field = {},
+					fid = 0;
 
 				if(l !== 0){
 					for(; i < l; ++i){
@@ -553,8 +559,16 @@ var actions = (function(){
 
 						for(o = 0, k = unparsedRecord.f.length; o < k; ++o){
 							field = unparsedRecord.f[o];
+							fid = field.$.id;
 
-							parsedRecord[field.$.id] = field._;
+							if(field.hasOwnProperty('url')){
+								parsedRecord[fid] = {
+									filename: field._,
+									url: field.url
+								};
+							}else{
+								parsedRecord[fid] = field._;
+							}
 						}
 
 						parsedRecords.push(parsedRecord);
