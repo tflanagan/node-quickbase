@@ -174,7 +174,7 @@ var mergeObjects = function(){
 
 /* Error Handling */
 var QuickbaseError = (function(){
-	var quickbaseError = function(code, name, message){
+	var QuickbaseError = function(code, name, message){
 		this.code = code;
 		this.name = name;
 		this.message = message;
@@ -190,9 +190,9 @@ var QuickbaseError = (function(){
 		return this;
 	};
 
-	inherits(quickbaseError, Error);
+	inherits(QuickbaseError, Error);
 
-	return quickbaseError;
+	return QuickbaseError;
 })();
 
 /* Main Class */
@@ -227,7 +227,7 @@ var QuickBase = (function(){
 		errorOnConnectionLimit: false
 	};
 
-	var quickbase = function(options){
+	var QuickBase = function(options){
 		this.settings = mergeObjects(defaults, options || {});
 
 		this.throttle = new Throttle(this.settings.connectionLimit, this.settings.errorOnConnectionLimit);
@@ -235,7 +235,7 @@ var QuickBase = (function(){
 		return this;
 	};
 
-	quickbase.prototype.api = function(action, options){
+	QuickBase.prototype.api = function(action, options){
 		var that = this;
 
 		return this.throttle.acquire(function(){
@@ -243,12 +243,12 @@ var QuickBase = (function(){
 		});
 	};
 
-	return quickbase;
+	return QuickBase;
 })();
 
 /* Throttle */
 var Throttle = (function(){
-	var throttle = function(maxConnections, errorOnConnectionLimit){
+	var Throttle = function(maxConnections, errorOnConnectionLimit){
 		var that = this;
 
 		this.maxConnections = maxConnections;
@@ -260,7 +260,7 @@ var Throttle = (function(){
 		return this;
 	};
 
-	throttle.prototype.acquire = function(callback){
+	Throttle.prototype.acquire = function(callback){
 		var that = this;
 
 		if(this.maxConnections === -1){
@@ -292,12 +292,12 @@ var Throttle = (function(){
 		});
 	};
 
-	return throttle;
+	return Throttle;
 })();
 
 /* Request Handling */
 var QueryBuilder = (function(){
-	var queryBuilder = function(parent, action, options){
+	var QueryBuilder = function(parent, action, options){
 		this.parent = parent;
 		this.action = action;
 		this.options = options;
@@ -307,7 +307,7 @@ var QueryBuilder = (function(){
 		return this;
 	};
 
-	queryBuilder.prototype.actionRequest = function(){
+	QueryBuilder.prototype.actionRequest = function(){
 		var action = this.action;
 
 		if(!actions.hasOwnProperty(action)){
@@ -329,7 +329,7 @@ var QueryBuilder = (function(){
 		return Promise.resolve();
 	};
 
-	queryBuilder.prototype.actionResponse = function(result){
+	QueryBuilder.prototype.actionResponse = function(result){
 		var action = this.action;
 
 		if(!actions.hasOwnProperty(action)){
@@ -346,7 +346,7 @@ var QueryBuilder = (function(){
 		return Promise.resolve(result);
 	};
 
-	queryBuilder.prototype.addFlags = function(){
+	QueryBuilder.prototype.addFlags = function(){
 		if(!this.options.hasOwnProperty('msInUTC') && this.parent.settings.flags.msInUTC){
 			this.options.msInUTC = 1;
 		}
@@ -366,7 +366,7 @@ var QueryBuilder = (function(){
 		return Promise.resolve();
 	};
 
-	queryBuilder.prototype.constructPayload = function(){
+	QueryBuilder.prototype.constructPayload = function(){
 		var builder = new xml.Builder({
 			rootName: 'qdbapi',
 			xmldec: {
@@ -390,7 +390,7 @@ var QueryBuilder = (function(){
 		return Promise.resolve();
 	};
 
-	queryBuilder.prototype.processQuery = function(){
+	QueryBuilder.prototype.processQuery = function(){
 		var that = this,
 			parentSettings = that.parent.settings;
 
@@ -443,7 +443,7 @@ var QueryBuilder = (function(){
 		});
 	};
 
-	queryBuilder.prototype.processOptions = function(){
+	QueryBuilder.prototype.processOptions = function(){
 		if(this.options.hasOwnProperty('fields')){
 			this.options.field = this.options.fields;
 
@@ -465,7 +465,7 @@ var QueryBuilder = (function(){
 		return Promise.resolve();
 	};
 
-	queryBuilder.prototype.run = function(){
+	QueryBuilder.prototype.run = function(){
 		return Promise.bind(this)
 			.then(this.addFlags)
 			.then(this.processOptions)
@@ -497,7 +497,7 @@ var QueryBuilder = (function(){
 			});
 	};
 
-	return queryBuilder;
+	return QueryBuilder;
 })();
 
 /* Actions */
@@ -1796,4 +1796,15 @@ QuickBase.prepareOptions = prepareOptions;
 QuickBase.cleanXML = cleanXML;
 
 /* Export Module */
-module.exports = QuickBase;
+if(typeof(module) !== 'undefined' && module.exports){
+	module.exports = QuickBase;
+}else
+if(typeof(define) === 'function' && define.amd){
+	define('QuickBase', [], function(){
+		return QuickBase;
+	});
+}
+
+if(typeof(global) !== 'undefined' && typeof(window) !== 'undefined' && global === window){
+	global.QuickBase = QuickBase;
+}

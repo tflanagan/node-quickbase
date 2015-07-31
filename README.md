@@ -17,14 +17,17 @@ Browserify
 ----------
 This library works out of the box with Browserify, this is not heavily tested, please use caution and report any bugs.
 ```
-$ cd node_modules/node-quickbase
-$ browserify -r ./main.js:quickbase > quickbase.browserify.js
+$ npm install quickbase
+$ browserify node_modules/node-quickbase > quickbase.browserify.js
 ```
 
 ```html
-<script type="text/javascript" src="node_modules/node-quickbase/quickbase.browserify.js"></script>
+<script type="text/javascript" src="quickbase.browserify.js"></script>
 <script type="text/javascript">
-	var QuickBase = require('quickbase');
+	var quickbase = new QuickBase({
+		realm: 'www',
+		appToken: '*****'
+	});
 
 	...
 </script>
