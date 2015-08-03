@@ -957,9 +957,18 @@ var actions = {
 		// request: function(context){
 		// 	return Promise.resolve();
 		// },
-		// response: function(context, result){
-		// 	return Promise.resolve(result);
-		// }
+		response: function(context, result){
+			if(result.roles){
+				for(var i = 0, l = result.roles.length; i < l; ++i){
+					result.roles[i] = {
+						id: result.roles[i].$.id,
+						name: result.roles[i]._
+					};
+				}
+			}
+
+			return Promise.resolve(result);
+		}
 	},
 	API_GetNumRecords: {
 		// request: function(context){
