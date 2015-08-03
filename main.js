@@ -416,19 +416,23 @@ var QueryBuilder = (function(){
 					});
 
 					response.on('end', function(){
-						xml.parseString(xmlResponse, function(err, result){
-							if(err){
-								return reject(new QuickbaseError(1000, 'Error Processing Request', err));
-							}
+						if(response.headers === 'application/xml'){
+							xml.parseString(xmlResponse, function(err, result){
+								if(err){
+									return reject(new QuickbaseError(1000, 'Error Processing Request', err));
+								}
 
-							result = cleanXML(result.qdbapi);
+								result = cleanXML(result.qdbapi);
 
-							if(result.errcode !== settings.status.errcode){
-								return reject(new QuickbaseError(result.errcode, result.errtext, result.errdetail));
-							}
+								if(result.errcode !== settings.status.errcode){
+									return reject(new QuickbaseError(result.errcode, result.errtext, result.errdetail));
+								}
 
-							resolve(result);
-						});
+								resolve(result);
+							});
+						}else{
+							resolve(xmlResponse);
+						}
 					});
 				});
 
