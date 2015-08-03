@@ -112,6 +112,21 @@ var cleanXML = function(xml){
 	return xml;
 };
 
+var flattenXMLAttributes = function(obj){
+	if(obj.$){
+		var props = Object.keys(obj.$),
+			i = 0, l = props.length;
+
+		for(; i < l; ++i){
+			obj[props[i]] = obj.$[props[i]];
+		}
+
+		delete obj.$;
+	}
+
+	return obj;
+};
+
 var mergeObjects = function(){
 	var overwrite = true,
 		nObjs = arguments.length,
@@ -416,7 +431,7 @@ var QueryBuilder = (function(){
 					});
 
 					response.on('end', function(){
-						if(response.headers === 'application/xml'){
+						if(response.headers['content-type'] === 'application/xml'){
 							xml.parseString(xmlResponse, function(err, result){
 								if(err){
 									return reject(new QuickbaseError(1000, 'Error Processing Request', err));
@@ -913,16 +928,12 @@ var actions = {
 		// },
 		response: function(context, result){
 			if(result.app){
-				result.app.id = result.app.$.id;
-
-				delete result.app.$;
+				result.app = flattenXMLAttributes(result.app);
 			}
 
 			if(result.tables){
 				for(var i = 0, l = result.tables.length; i < l; ++i){
-					result.tables[i].id = result.tables[i].$.id;
-
-					delete result.tables[i].$;
+					result.tables[i] = flattenXMLAttributes(result.tables[i]);
 				}
 			}
 
@@ -1182,9 +1193,13 @@ var actions = {
 		// request: function(context){
 		// 	return Promise.resolve();
 		// },
-		// response: function(context, result){
-		// 	return Promise.resolve(result);
-		// }
+		response: function(context, result){
+			if(result.users){
+				result.users = flattenXMLAttributes(result.users);
+			}
+
+			return Promise.resolve(result);
+		}
 	},
 	default: {
 		/*
