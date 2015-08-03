@@ -855,14 +855,17 @@ var actions = {
 						}
 					}
 
-					for(i = 0, l = result.table.variables.length; i < l; ++i){
-						result.table.variables[i] = {
-							name: result.table.variables[i].$.name,
-							value: result.table.variables[i]._
-						};
+					var variables = result.table.variables,
+						variable = {},
+						newVars = {};
 
-						delete result.table.variables[i].$;
+					for(i = 0, l = variables.length; i < l; ++i){
+						variable = variables[i];
+
+						newVars[variable.$.name] = variable._;
 					}
+
+					result.table.variables = newVars;
 				}
 			}else{
 				if(!(result.record instanceof Array)){
@@ -893,6 +896,16 @@ var actions = {
 						// XML returned from QuickBase at Application level is "\r\n      "
 						if(result.chdbids === ''){
 							result.chdbids = [];
+						}
+					}
+				}
+
+				if(result.hasOwnProperty('variables')){
+					if(!(result.variables instanceof Array)){
+						// Support Case #480141
+						// XML returned from QuickBase at Application level is "\r\n      "
+						if(result.variables === ''){
+							result.variables = {};
 						}
 					}
 				}
