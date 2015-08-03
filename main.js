@@ -1019,7 +1019,7 @@ var actions = {
 		// },
 		response: function(context, result){
 			if(result.roles){
-				for(var i = 0, l = result.roles.length; ++i){
+				for(var i = 0, l = result.roles.length; i < l; ++i){
 					result.roles[i] = flattenXMLAttributes(result.roles[i]);
 
 					result.roles[i].access = {
@@ -1052,7 +1052,7 @@ var actions = {
 		// },
 		response: function(context, result){
 			if(result.roles){
-				for(var i = 0, l = result.roles.length; ++i){
+				for(var i = 0, l = result.roles.length; i < l; ++i){
 					result.roles[i] = flattenXMLAttributes(result.roles[i]);
 
 					result.roles[i].access = {
@@ -1082,20 +1082,22 @@ var actions = {
 			if(result.group){
 				result.group = flattenXMLAttributes(result.group);
 
+				var i = 0, l = 0;
+
 				if(result.group.users){
-					for(var i = 0, l = result.group.users.length; ++i){
+					for(i = 0, l = result.group.users.length; i < l; ++i){
 						result.group.users[i] = flattenXMLAttributes(result.group.users[i]);
 					}
 				}
 
 				if(result.group.managers){
-					for(var i = 0, l = result.group.managers.length; ++i){
+					for(i = 0, l = result.group.managers.length; i < l; ++i){
 						result.group.managers[i] = flattenXMLAttributes(result.group.managers[i]);
 					}
 				}
 
 				if(result.group.subgroups){
-					for(var i = 0, l = result.group.subgroups.length; ++i){
+					for(i = 0, l = result.group.subgroups.length; i < l; ++i){
 						result.group.subgroups[i] = flattenXMLAttributes(result.group.subgroups[i]);
 					}
 				}
@@ -1126,7 +1128,7 @@ var actions = {
 		// },
 		response: function(context, result){
 			if(result.groups){
-				for(var i = 0, l = result.groups.length; ++i){
+				for(var i = 0, l = result.groups.length; i < l; ++i){
 					result.groups[i] = flattenXMLAttributes(result.groups[i]);
 				}
 			}
