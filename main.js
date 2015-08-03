@@ -1057,9 +1057,31 @@ var actions = {
 		// request: function(context){
 		// 	return Promise.resolve();
 		// },
-		// response: function(context, result){
-		// 	return Promise.resolve(result);
-		// }
+		response: function(context, result){
+			if(result.group){
+				result.group = flattenXMLAttributes(result.group);
+
+				if(result.group.users){
+					for(var i = 0, l = result.group.users.length; ++i){
+						result.group.users[i] = flattenXMLAttributes(result.group.users[i]);
+					}
+				}
+
+				if(result.group.managers){
+					for(var i = 0, l = result.group.managers.length; ++i){
+						result.group.managers[i] = flattenXMLAttributes(result.group.managers[i]);
+					}
+				}
+
+				if(result.group.subgroups){
+					for(var i = 0, l = result.group.subgroups.length; ++i){
+						result.group.subgroups[i] = flattenXMLAttributes(result.group.subgroups[i]);
+					}
+				}
+			}
+
+			return Promise.resolve(result);
+		}
 	},
 	API_GrantedGroups: {
 		// request: function(context){
