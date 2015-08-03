@@ -1025,9 +1025,13 @@ var actions = {
 		// request: function(context){
 		// 	return Promise.resolve();
 		// },
-		// response: function(context, result){
-		// 	return Promise.resolve(result);
-		// }
+		response: function(context, result){
+			if(result.user){
+				result.user = flattenXMLAttributes(result.user);
+			}
+
+			return Promise.resolve(result);
+		}
 	},
 	API_GetUserRole: {
 		// request: function(context){
