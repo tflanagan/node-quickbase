@@ -1017,9 +1017,22 @@ var actions = {
 		// request: function(context){
 		// 	return Promise.resolve();
 		// },
-		// response: function(context, result){
-		// 	return Promise.resolve(result);
-		// }
+		response: function(context, result){
+			if(result.roles){
+				for(var i = 0, l = result.roles.length; ++i){
+					result.roles[i] = flattenXMLAttributes(result.roles[i]);
+
+					result.roles[i].access = {
+						id: result.roles[i].access.$.id,
+						name: result.roles[i].access._
+					};
+
+					delete result.roles[i].access.$;
+				}
+			}
+
+			return Promise.resolve(result);
+		}
 	},
 	API_GetUserInfo: {
 		// request: function(context){
