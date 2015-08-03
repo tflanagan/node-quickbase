@@ -654,9 +654,15 @@ var actions = {
 		// request: function(context){
 		// 	return Promise.resolve();
 		// },
-		// response: function(context, result){
-		// 	return Promise.resolve(result);
-		// }
+		response: function(context, result){
+			if(result.group){
+				result.group.id = result.group.$.id;
+
+				delete result.group.$;
+			}
+
+			return Promise.resolve(result);
+		}
 	},
 	API_CreateTable: {
 		// request: function(context){
