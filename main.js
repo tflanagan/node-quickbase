@@ -911,9 +911,23 @@ var actions = {
 		// request: function(context){
 		// 	return Promise.resolve();
 		// },
-		// response: function(context, result){
-		// 	return Promise.resolve(result);
-		// }
+		response: function(context, result){
+			if(result.app){
+				result.app.id = result.app.$.id;
+
+				delete result.app.$;
+			}
+
+			if(result.tables){
+				for(var i = 0, l = result.tables.length; i < l; ++i){
+					result.tables[i].id = result.tables[i].$.id;
+
+					delete result.tables[i].$;
+				}
+			}
+
+			return Promise.resolve(result);
+		}
 	},
 	API_GetDBPage: {
 		// request: function(context){
