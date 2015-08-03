@@ -1033,9 +1033,29 @@ var actions = {
 		// request: function(context){
 		// 	return Promise.resolve();
 		// },
-		// response: function(context, result){
-		// 	return Promise.resolve(result);
-		// }
+		response: function(context, result){
+			if(result.roles){
+				for(var i = 0, l = result.roles.length; ++i){
+					result.roles[i] = flattenXMLAttributes(result.roles[i]);
+
+					result.roles[i].access = {
+						id: result.roles[i].access.$.id,
+						name: result.roles[i].access._
+					};
+
+					delete result.roles[i].access.$;
+
+					result.roles[i].member = {
+						type: result.roles[i].member.$.type,
+						name: result.roles[i].member._
+					};
+
+					delete result.roles[i].member.$;
+				}
+			}
+
+			return Promise.resolve(result);
+		}
 	},
 	API_GetUsersInGroup: {
 		// request: function(context){
