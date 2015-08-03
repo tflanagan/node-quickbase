@@ -1065,9 +1065,15 @@ var actions = {
 		// request: function(context){
 		// 	return Promise.resolve();
 		// },
-		// response: function(context, result){
-		// 	return Promise.resolve(result);
-		// }
+		response: function(context, result){
+			if(result.groups){
+				for(var i = 0, l = result.groups.length; ++i){
+					result.groups[i] = flattenXMLAttributes(result.groups[i]);
+				}
+			}
+
+			return Promise.resolve(result);
+		}
 	},
 	API_ImportFromCSV: {
 		// request: function(context){
