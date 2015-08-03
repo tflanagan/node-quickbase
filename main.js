@@ -520,6 +520,130 @@ var QueryBuilder = (function(){
 	return QueryBuilder;
 })();
 
+/* XML Node Parsers */
+var xmlNodeParsers = {
+	fields: function(val){
+		if(!(val instanceof Array)){
+			// Support Case #480141
+			// XML returned from QuickBase at Application level is "\r\n      "
+			if(val === ''){
+				val = [];
+			}else{
+				val = [ val ];
+			}
+		}
+
+		for(var i = 0, l = val.length; i < l; ++i){
+			val[i] = flattenXMLAttributes(val[i]);
+
+			// Support Case #480141
+			// XML returned from QuickBase inserts '<br />' after every line in formula fields.
+			if(typeof(val[i].formula) === 'object'){
+				val[i].formula = val[i].formula._;
+			}
+		}
+
+		return val;
+	},
+	group: function(val){
+		val = flattenXMLAttributes(val);
+
+		var i = 0, l = 0;
+
+		if(val.hasOwnProperty('users')){
+			for(i = 0, l = val.users.length; i < l; ++i){
+				val.users[i] = flattenXMLAttributes(val.users[i]);
+			}
+		}
+
+		if(val.hasOwnProperty('managers')){
+			for(i = 0, l = val.managers.length; i < l; ++i){
+				val.managers[i] = flattenXMLAttributes(val.managers[i]);
+			}
+		}
+
+		if(val.hasOwnProperty('subgroups')){
+			for(i = 0, l = val.subgroups.length; i < l; ++i){
+				val.subgroups[i] = flattenXMLAttributes(val.subgroups[i]);
+			}
+		}
+
+		return val;
+	},
+	queries: function(val){
+		if(!(val instanceof Array)){
+			// Support Case #480141
+			// XML returned from QuickBase at Application level is "\r\n      "
+			if(val === ''){
+				val = [];
+			}else{
+				val = [ val ];
+			}
+		}
+
+		for(var i = 0, l = val.length; i < l; ++i){
+			val[i] = flattenXMLAttributes(val[i]);
+		}
+	},
+	roles: function(val){
+		var i = 0, l = val.length,
+			roles = [],
+			curRole = {};
+
+		for(; i < l; ++i){
+			curRole = {
+				id: val[i].$.id
+			};
+
+			if(val[i]._){
+				curRole.name = val[i]._;
+			}else{
+				if(val[i].hasOwnProperty('access')){
+					curRole.access = {
+						id: val[i].access.$.id,
+						name: val[i].access._
+					};
+				}
+
+				if(val[i].hasOwnProperty('member')){
+					curRole.member = {
+						type: val[i].member.$.type,
+						name: val[i].member._
+					};
+				}
+			}
+
+			roles.push(curRole);
+		}
+
+		return roles;
+	},
+	variables: function(val){
+		val = val.var;
+
+		if(!(val instanceof Array)){
+			// Support Case #480141
+			// XML returned from QuickBase at Application level is "\r\n      "
+			if(val === ''){
+				val = [];
+			}else{
+				val = [ val ];
+			}
+		}
+
+		var variable = {},
+			newVars = {};
+
+		for(i = 0, l = val.length; i < l; ++i){
+			variable = val[i];
+
+			newVars[variable.$.name] = variable._;
+		}
+
+		return newVars;
+	}
+};
+
 /* Actions */
 var actions = {
 
@@ -645,9 +769,7 @@ var actions = {
 		// },
 		response: function(context, result){
 			if(result.hasOwnProperty('group')){
-				result.group.id = result.group.$.id;
-
-				delete result.group.$;
+				result.group = xmlNodeParsers.group(result.group);
 			}
 
 			return Promise.resolve(result);
@@ -675,9 +797,7 @@ var actions = {
 		// },
 		response: function(context, result){
 			if(result.hasOwnProperty('group')){
-				result.group.id = result.group.$.id;
-
-				delete result.group.$;
+				result.group = xmlNodeParsers.group(result.group);
 			}
 
 			return Promise.resolve(result);
@@ -811,61 +931,15 @@ var actions = {
 				}
 
 				if(result.table.hasOwnProperty('queries')){
-					if(!(result.table.queries instanceof Array)){
-						// Support Case #480141
-						// XML returned from QuickBase at Application level is "\r\n      "
-						if(result.table.queries === ''){
-							result.table.queries = [];
-						}else{
-							result.table.queries = [ result.table.queries ];
-						}
-					}
-
-					for(i = 0, l = result.table.queries.length; i < l; ++i){
-						result.table.queries[i] = flattenXMLAttributes(result.table.queries[i]);
-					}
+					result.table.queries = xmlNodeParsers.queries(result.table.queries);
 				}
 
 				if(result.table.hasOwnProperty('fields')){
-					if(!(result.table.fields instanceof Array)){
-						// Support Case #480141
-						// XML returned from QuickBase at Application level is "\r\n      "
-						if(result.table.fields === ''){
-							result.table.fields = [];
-						}else{
-							result.table.fields = [ result.table.fields ];
-						}
-					}
-
-					for(i = 0, l = result.table.fields.length; i < l; ++i){
-						result.table.fields[i] = flattenXMLAttributes(result.table.fields[i]);
-					}
+					result.table.fields = xmlNodeParsers.fields(result.table.fields);
 				}
 
 				if(result.table.hasOwnProperty('variables')){
-					result.table.variables = result.table.variables.var;
-
-					if(!(result.table.variables instanceof Array)){
-						// Support Case #480141
-						// XML returned from QuickBase at Application level is "\r\n      "
-						if(result.table.variables === ''){
-							result.table.variables = [];
-						}else{
-							result.table.variables = [ result.table.variables ];
-						}
-					}
-
-					var variables = result.table.variables,
-						variable = {},
-						newVars = {};
-
-					for(i = 0, l = variables.length; i < l; ++i){
-						variable = variables[i];
-
-						newVars[variable.$.name] = variable._;
-					}
-
-					result.table.variables = newVars;
+					result.table.variables = xmlNodeParsers.variables(result.table.variables);
 				}
 			}else{
 				if(!(result.record instanceof Array)){
@@ -1026,12 +1100,7 @@ var actions = {
 		// },
 		response: function(context, result){
 			if(result.hasOwnProperty('roles')){
-				for(var i = 0, l = result.roles.length; i < l; ++i){
-					result.roles[i] = {
-						id: result.roles[i].$.id,
-						name: result.roles[i]._
-					};
-				}
+				result.roles = xmlNodeParsers.roles(result.roles);
 			}
 
 			return Promise.resolve(result);
@@ -1051,45 +1120,6 @@ var actions = {
 		// },
 		response: function(context, result){
 			var i = 0, l = 0;
-
-			if(result.table.hasOwnProperty('variables')){
-				result.table.variables = result.table.variables.var;
-
-				if(!(result.table.variables instanceof Array)){
-					// Support Case #480141
-					// XML returned from QuickBase at Application level is "\r\n      "
-					if(result.table.variables === ''){
-						result.table.variables = [];
-					}else{
-						result.table.variables = [ result.table.variables ];
-					}
-				}
-
-				for(i = 0, l = result.table.variables.length; i < l; ++i){
-					result.table.variables[i] = {
-						name: result.table.variables[i].$.name,
-						value: result.table.variables[i]._
-					};
-
-					delete result.table.variables[i].$;
-				}
-			}
-
-			if(result.table.hasOwnProperty('queries')){
-				if(!(result.table.queries instanceof Array)){
-					// Support Case #480141
-					// XML returned from QuickBase at Application level is "\r\n      "
-					if(result.table.queries === ''){
-						result.table.queries = [];
-					}else{
-						result.table.queries = [ result.table.queries ];
-					}
-				}
-
-				for(i = 0, l = result.table.queries.length; i < l; ++i){
-					result.table.queries[i] = flattenXMLAttributes(result.table.queries[i]);
-				}
-			}
 
 			if(result.table.hasOwnProperty('chdbids')){
 				if(!(result.table.chdbids instanceof Array)){
@@ -1112,26 +1142,16 @@ var actions = {
 				}
 			}
 
+			if(result.table.hasOwnProperty('variables')){
+				result.table.variables = xmlNodeParsers.variables(result.table.variables);
+			}
+
+			if(result.table.hasOwnProperty('queries')){
+				result.table.queries = xmlNodeParsers.queries(result.table.queries);
+			}
+
 			if(result.table.hasOwnProperty('fields')){
-				if(!(result.table.fields instanceof Array)){
-					// Support Case #480141
-					// XML returned from QuickBase at Application level is "\r\n      "
-					if(result.table.fields === ''){
-						result.table.fields = [];
-					}else{
-						result.table.fields = [ result.table.fields ];
-					}
-				}
-
-				for(i = 0, l = result.table.fields.length; i < l; ++i){
-					result.table.fields[i] = flattenXMLAttributes(result.table.fields[i]);
-
-					// Support Case #480141
-					// XML returned from QuickBase inserts '<br />' after every line in formula fields.
-					if(typeof(result.table.fields[i].formula) === 'object'){
-						result.table.fields[i].formula = result.table.fields[i].formula._;
-					}
-				}
+				result.table.fields = xmlNodeParsers.fields(result.table.fields);
 			}
 
 			return Promise.resolve(result);
@@ -1159,16 +1179,7 @@ var actions = {
 		// },
 		response: function(context, result){
 			if(result.hasOwnProperty('roles')){
-				for(var i = 0, l = result.roles.length; i < l; ++i){
-					result.roles[i] = flattenXMLAttributes(result.roles[i]);
-
-					result.roles[i].access = {
-						id: result.roles[i].access.$.id,
-						name: result.roles[i].access._
-					};
-
-					delete result.roles[i].access.$;
-				}
+				result.roles = xmlNodeParsers.roles(result.roles);				
 			}
 
 			return Promise.resolve(result);
@@ -1192,23 +1203,7 @@ var actions = {
 		// },
 		response: function(context, result){
 			if(result.hasOwnProperty('roles')){
-				for(var i = 0, l = result.roles.length; i < l; ++i){
-					result.roles[i] = flattenXMLAttributes(result.roles[i]);
-
-					result.roles[i].access = {
-						id: result.roles[i].access.$.id,
-						name: result.roles[i].access._
-					};
-
-					delete result.roles[i].access.$;
-
-					result.roles[i].member = {
-						type: result.roles[i].member.$.type,
-						name: result.roles[i].member._
-					};
-
-					delete result.roles[i].member.$;
-				}
+				result.roles = xmlNodeParsers.roles(result.roles);
 			}
 
 			return Promise.resolve(result);
@@ -1220,27 +1215,7 @@ var actions = {
 		// },
 		response: function(context, result){
 			if(result.hasOwnProperty('group')){
-				result.group = flattenXMLAttributes(result.group);
-
-				var i = 0, l = 0;
-
-				if(result.group.hasOwnProperty('users')){
-					for(i = 0, l = result.group.users.length; i < l; ++i){
-						result.group.users[i] = flattenXMLAttributes(result.group.users[i]);
-					}
-				}
-
-				if(result.group.hasOwnProperty('managers')){
-					for(i = 0, l = result.group.managers.length; i < l; ++i){
-						result.group.managers[i] = flattenXMLAttributes(result.group.managers[i]);
-					}
-				}
-
-				if(result.group.hasOwnProperty('subgroups')){
-					for(i = 0, l = result.group.subgroups.length; i < l; ++i){
-						result.group.subgroups[i] = flattenXMLAttributes(result.group.subgroups[i]);
-					}
-				}
+				result.group = xmlNodeParsers.group(result.group);
 			}
 
 			return Promise.resolve(result);
@@ -2059,6 +2034,7 @@ QuickBase.QuickbaseError = QuickbaseError;
 QuickBase.actions = actions;
 QuickBase.prepareOptions = prepareOptions;
 QuickBase.cleanXML = cleanXML;
+QuickBase.xmlNodeParsers = xmlNodeParsers;
 
 /* Export Module */
 if(typeof(module) !== 'undefined' && module.exports){
