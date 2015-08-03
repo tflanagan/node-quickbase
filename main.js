@@ -301,6 +301,7 @@ var QueryBuilder = (function(){
 		this.parent = parent;
 		this.action = action;
 		this.options = options;
+		this.settings = mergeObjects({}, parent.settings);
 
 		this.nErr = 0;
 
@@ -392,21 +393,21 @@ var QueryBuilder = (function(){
 
 	QueryBuilder.prototype.processQuery = function(){
 		var that = this,
-			parentSettings = that.parent.settings;
+			settings = that.settings;
 
 		return new Promise(function(resolve, reject){
 			var reqOpts = {
-					hostname: [ parentSettings.realm, parentSettings.domain ].join('.'),
-					port: parentSettings.useSSL ? 443 : 80,
-					path: '/db/' + (that.options.dbid || 'main') + '?act=' + that.action + (!parentSettings.flags.useXML ? that.payload : ''),
-					method: parentSettings.flags.useXML ? 'POST' : 'GET',
+					hostname: [ settings.realm, settings.domain ].join('.'),
+					port: settings.useSSL ? 443 : 80,
+					path: '/db/' + (that.options.dbid || 'main') + '?act=' + that.action + (!settings.flags.useXML ? that.payload : ''),
+					method: settings.flags.useXML ? 'POST' : 'GET',
 					headers: {
 						'Content-Type': 'application/xml',
 						'QUICKBASE-ACTION': that.action
 					},
 					agent: false
 				},
-				protocol = parentSettings.useSSL ? https : http,
+				protocol = settings.useSSL ? https : http,
 				request = protocol.request(reqOpts, function(response){
 					var xmlResponse = '';
 
@@ -422,7 +423,7 @@ var QueryBuilder = (function(){
 
 							result = cleanXML(result.qdbapi);
 
-							if(result.errcode !== parentSettings.status.errcode){
+							if(result.errcode !== settings.status.errcode){
 								return reject(new QuickbaseError(result.errcode, result.errtext, result.errdetail));
 							}
 
@@ -431,7 +432,7 @@ var QueryBuilder = (function(){
 					});
 				});
 
-			if(parentSettings.flags.useXML === true){
+			if(settings.flags.useXML === true){
 				request.write(that.payload);
 			}
 
@@ -565,9 +566,12 @@ var actions = {
 		// }
 	},
 	API_Authenticate: {
-		// request: function(context){
-		// 	return Promise.resolve();
-		// },
+		request: function(context){
+			// API_Authenticate can only happen over SSL
+			context.settings.useSSL = true;
+
+			return Promise.resolve();
+		},
 		response: function(context, result){
 			context.parent.settings.ticket = result.ticket;
 			context.parent.settings.username = context.options.username;
