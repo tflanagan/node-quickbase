@@ -993,9 +993,51 @@ var actions = {
 		// request: function(context){
 		// 	return Promise.resolve();
 		// },
-		// response: function(context, result){
-		// 	return Promise.resolve(result);
-		// }
+		response: function(context, result){
+			var i = 0, l = 0;
+
+			if(result.table.variables){
+				for(i = 0, l = result.table.variables.length; i < l; ++i){
+					result.table.variables[i] = {
+						name: result.table.variables[i].$.name,
+						value: result.table.variables[i]._
+					};
+
+					delete result.table.variables[i].$;
+				}
+			}
+
+			if(result.table.queries){
+				for(i = 0, l = result.table.queries.length; i < l; ++i){
+					result.table.queries[i] = flattenXMLAttributes(result.table.queries[i]);
+				}
+			}
+
+			if(result.table.chdbids){
+				for(i = 0, l = result.table.chdbids.length; i < l; ++i){
+					result.table.chdbids[i] = {
+						name: result.table.chdbids[i].$.name,
+						dbid: result.table.chdbids[i]._
+					};
+
+					delete result.table.chdbids[i].$;
+				}
+			}
+
+			if(result.table.fields){
+				for(i = 0, l = result.table.fields.length; i < l; ++i){
+					result.table.fields[i] = flattenXMLAttributes(result.table.fields[i]);
+
+					// Bug #480141
+					// XML returned from QuickBase inserts '<br />' after every line in formula fields.
+					if(typeof(result.table.fields[i].formula) === 'object'){
+						result.table.fields[i].formula = result.table.fields[i].formula._;
+					}
+				}
+			}
+
+			return Promise.resolve(result);
+		}
 	},
 	API_GetRecordAsHTML: {
 		// request: function(context){
