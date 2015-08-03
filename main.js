@@ -1041,22 +1041,6 @@ var actions = {
 		// request: function(context){
 		// 	return Promise.resolve();
 		// },
-		// response: function(context, result){
-		// 	return Promise.resolve(result);
-		// }
-	},
-	API_GrantedDBs: {
-		// request: function(context){
-		// 	return Promise.resolve();
-		// },
-		// response: function(context, result){
-		// 	return Promise.resolve(result);
-		// }
-	},
-	API_GrantedDBsForGroup: {
-		// request: function(context){
-		// 	return Promise.resolve();
-		// },
 		response: function(context, result){
 			if(result.group){
 				result.group = flattenXMLAttributes(result.group);
@@ -1082,6 +1066,22 @@ var actions = {
 
 			return Promise.resolve(result);
 		}
+	},
+	API_GrantedDBs: {
+		// request: function(context){
+		// 	return Promise.resolve();
+		// },
+		// response: function(context, result){
+		// 	return Promise.resolve(result);
+		// }
+	},
+	API_GrantedDBsForGroup: {
+		// request: function(context){
+		// 	return Promise.resolve();
+		// },
+		// response: function(context, result){
+		// 	return Promise.resolve(result);
+		// }
 	},
 	API_GrantedGroups: {
 		// request: function(context){
