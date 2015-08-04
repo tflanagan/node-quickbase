@@ -1330,9 +1330,27 @@ var actions = {
 		// request: function(context){
 		// 	return Promise.resolve();
 		// },
-		// response: function(context, result){
-		// 	return Promise.resolve(result);
-		// }
+		response: function(context, result){
+			if(result.hasOwnProperty('file_fields')){
+				result.file_fields = result.file_fields.field;
+
+				if(!(result.file_fields instanceof Array)){
+					// Support Case #480141
+					// XML returned from QuickBase at Application level is "\r\n      "
+					if(result.file_fields === ''){
+						result.file_fields = [];
+					}else{
+						result.file_fields = [ result.file_fields ];
+					}
+				}
+
+				for(var i = 0, l = result.file_fields.length; i < l; ++i){
+					result.file_fields[i] = flattenXMLAttributes(result.file_fields[i]);
+				}
+			}
+
+			return Promise.resolve(result);
+		}
 	},
 	API_UserRoles: {
 		// request: function(context){
