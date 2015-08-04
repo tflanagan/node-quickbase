@@ -615,62 +615,62 @@ var actions = {
 	 * Will increase performance by cutting out an unnecessary function execution.
 	*/
 
-	API_AddField: {
+	// API_AddField: {
 		// request: function(context){
 		// 	return Promise.resolve();
 		// },
 		// response: function(context, result){
 		// 	return Promise.resolve(result);
 		// }
-	},
-	API_AddGroupToRole: {
+	// },
+	// API_AddGroupToRole: {
 		// request: function(context){
 		// 	return Promise.resolve();
 		// },
 		// response: function(context, result){
 		// 	return Promise.resolve(result);
 		// }
-	},
-	API_AddRecord: {
+	// },
+	// API_AddRecord: {
 		// request: function(context){
 		// 	return Promise.resolve();
 		// },
 		// response: function(context, result){
 		// 	return Promise.resolve(result);
 		// }
-	},
-	API_AddReplaceDBPage: {
+	// },
+	// API_AddReplaceDBPage: {
 		// request: function(context){
 		// 	return Promise.resolve();
 		// },
 		// response: function(context, result){
 		// 	return Promise.resolve(result);
 		// }
-	},
-	API_AddSubGroup: {
+	// },
+	// API_AddSubGroup: {
 		// request: function(context){
 		// 	return Promise.resolve();
 		// },
 		// response: function(context, result){
 		// 	return Promise.resolve(result);
 		// }
-	},
-	API_AddUserToGroup: {
+	// },
+	// API_AddUserToGroup: {
 		// request: function(context){
 		// 	return Promise.resolve();
 		// },
 		// response: function(context, result){
 		// 	return Promise.resolve(result);
 		// }
-	},
-	API_AddUserToRole: {
+	// },
+	// API_AddUserToRole: {
 		// request: function(context){
 		// 	return Promise.resolve();
 		// },
 		// response: function(context, result){
 		// 	return Promise.resolve(result);
 		// }
-	},
+	// },
 	API_Authenticate: {
 		request: function(context){
 			// API_Authenticate can only happen over SSL
@@ -686,46 +686,46 @@ var actions = {
 			return Promise.resolve(result);
 		}
 	},
-	API_ChangeGroupInfo: {
+	// API_ChangeGroupInfo: {
 		// request: function(context){
 		// 	return Promise.resolve();
 		// },
 		// response: function(context, result){
 		// 	return Promise.resolve(result);
 		// }
-	},
-	API_ChangeManager: {
+	// },
+	// API_ChangeManager: {
 		// request: function(context){
 		// 	return Promise.resolve();
 		// },
 		// response: function(context, result){
 		// 	return Promise.resolve(result);
 		// }
-	},
-	API_ChangeRecordOwner: {
+	// },
+	// API_ChangeRecordOwner: {
 		// request: function(context){
 		// 	return Promise.resolve();
 		// },
 		// response: function(context, result){
 		// 	return Promise.resolve(result);
 		// }
-	},
-	API_ChangeUserRole: {
+	// },
+	// API_ChangeUserRole: {
 		// request: function(context){
 		// 	return Promise.resolve();
 		// },
 		// response: function(context, result){
 		// 	return Promise.resolve(result);
 		// }
-	},
-	API_CloneDatabase: {
+	// },
+	// API_CloneDatabase: {
 		// request: function(context){
 		// 	return Promise.resolve();
 		// },
 		// response: function(context, result){
 		// 	return Promise.resolve(result);
 		// }
-	},
+	// },
 	API_CopyGroup: {
 		// request: function(context){
 		// 	return Promise.resolve();
@@ -738,22 +738,22 @@ var actions = {
 			return Promise.resolve(result);
 		}
 	},
-	API_CopyMasterDetail: {
+	// API_CopyMasterDetail: {
 		// request: function(context){
 		// 	return Promise.resolve();
 		// },
 		// response: function(context, result){
 		// 	return Promise.resolve(result);
 		// }
-	},
-	API_CreateDatabase: {
+	// },
+	// API_CreateDatabase: {
 		// request: function(context){
 		// 	return Promise.resolve();
 		// },
 		// response: function(context, result){
 		// 	return Promise.resolve(result);
 		// }
-	},
+	// },
 	API_CreateGroup: {
 		// request: function(context){
 		// 	return Promise.resolve();
@@ -766,46 +766,46 @@ var actions = {
 			return Promise.resolve(result);
 		}
 	},
-	API_CreateTable: {
+	// API_CreateTable: {
 		// request: function(context){
 		// 	return Promise.resolve();
 		// },
 		// response: function(context, result){
 		// 	return Promise.resolve(result);
 		// }
-	},
-	API_DeleteDatabase: {
+	// },
+	// API_DeleteDatabase: {
 		// request: function(context){
 		// 	return Promise.resolve();
 		// },
 		// response: function(context, result){
 		// 	return Promise.resolve(result);
 		// }
-	},
-	API_DeleteField: {
+	// },
+	// API_DeleteField: {
 		// request: function(context){
 		// 	return Promise.resolve();
 		// },
 		// response: function(context, result){
 		// 	return Promise.resolve(result);
 		// }
-	},
-	API_DeleteGroup: {
+	// },
+	// API_DeleteGroup: {
 		// request: function(context){
 		// 	return Promise.resolve();
 		// },
 		// response: function(context, result){
 		// 	return Promise.resolve(result);
 		// }
-	},
-	API_DeleteRecord: {
+	// },
+	// API_DeleteRecord: {
 		// request: function(context){
 		// 	return Promise.resolve();
 		// },
 		// response: function(context, result){
 		// 	return Promise.resolve(result);
 		// }
-	},
+	// },
 	API_DoQuery: {
 		request: function(context){
 			if(!context.options.hasOwnProperty('returnPercentage') && context.settings.flags.returnPercentage){
@@ -951,70 +951,70 @@ var actions = {
 			return Promise.resolve(result);
 		}
 	},
-	API_DoQueryCount: {
+	// API_DoQueryCount: {
 		// request: function(context){
 		// 	return Promise.resolve();
 		// },
 		// response: function(context, result){
 		// 	return Promise.resolve(result);
 		// }
-	},
-	API_EditRecord: {
+	// },
+	// API_EditRecord: {
 		// request: function(context){
 		// 	return Promise.resolve();
 		// },
 		// response: function(context, result){
 		// 	return Promise.resolve(result);
 		// }
-	},
-	API_FieldAddChoices: {
+	// },
+	// API_FieldAddChoices: {
 		// request: function(context){
 		// 	return Promise.resolve();
 		// },
 		// response: function(context, result){
 		// 	return Promise.resolve(result);
 		// }
-	},
-	API_FieldRemoveChoices: {
+	// },
+	// API_FieldRemoveChoices: {
 		// request: function(context){
 		// 	return Promise.resolve();
 		// },
 		// response: function(context, result){
 		// 	return Promise.resolve(result);
 		// }
-	},
-	API_FindDBByName: {
+	// },
+	// API_FindDBByName: {
 		// request: function(context){
 		// 	return Promise.resolve();
 		// },
 		// response: function(context, result){
 		// 	return Promise.resolve(result);
 		// }
-	},
-	API_GenAddRecordForm: {
+	// },
+	// API_GenAddRecordForm: {
 		// request: function(context){
 		// 	return Promise.resolve();
 		// },
 		// response: function(context, result){
 		// 	return Promise.resolve(result);
 		// }
-	},
-	API_GenResultsTable: {
+	// },
+	// API_GenResultsTable: {
 		// request: function(context){
 		// 	return Promise.resolve();
 		// },
 		// response: function(context, result){
 		// 	return Promise.resolve(result);
 		// }
-	},
-	API_GetAncestorInfo: {
+	// },
+	// API_GetAncestorInfo: {
 		// request: function(context){
 		// 	return Promise.resolve();
 		// },
 		// response: function(context, result){
 		// 	return Promise.resolve(result);
 		// }
-	},
+	// },
 	API_GetAppDTMInfo: {
 		// request: function(context){
 		// 	return Promise.resolve();
@@ -1033,30 +1033,30 @@ var actions = {
 			return Promise.resolve(result);
 		}
 	},
-	API_GetDBPage: {
+	// API_GetDBPage: {
 		// request: function(context){
 		// 	return Promise.resolve();
 		// },
 		// response: function(context, result){
 		// 	return Promise.resolve(result);
 		// }
-	},
-	API_GetDBInfo: {
+	// },
+	// API_GetDBInfo: {
 		// request: function(context){
 		// 	return Promise.resolve();
 		// },
 		// response: function(context, result){
 		// 	return Promise.resolve(result);
 		// }
-	},
-	API_GetDBVar: {
+	// },
+	// API_GetDBVar: {
 		// request: function(context){
 		// 	return Promise.resolve();
 		// },
 		// response: function(context, result){
 		// 	return Promise.resolve(result);
 		// }
-	},
+	// },
 	API_GetGroupRole: {
 		// request: function(context){
 		// 	return Promise.resolve();
@@ -1069,14 +1069,14 @@ var actions = {
 			return Promise.resolve(result);
 		}
 	},
-	API_GetNumRecords: {
+	// API_GetNumRecords: {
 		// request: function(context){
 		// 	return Promise.resolve();
 		// },
 		// response: function(context, result){
 		// 	return Promise.resolve(result);
 		// }
-	},
+	// },
 	API_GetSchema: {
 		// request: function(context){
 		// 	return Promise.resolve();
@@ -1120,22 +1120,22 @@ var actions = {
 			return Promise.resolve(result);
 		}
 	},
-	API_GetRecordAsHTML: {
+	// API_GetRecordAsHTML: {
 		// request: function(context){
 		// 	return Promise.resolve();
 		// },
 		// response: function(context, result){
 		// 	return Promise.resolve(result);
 		// }
-	},
-	API_GetRecordInfo: {
+	// },
+	// API_GetRecordInfo: {
 		// request: function(context){
 		// 	return Promise.resolve();
 		// },
 		// response: function(context, result){
 		// 	return Promise.resolve(result);
 		// }
-	},
+	// },
 	API_GetRoleInfo: {
 		// request: function(context){
 		// 	return Promise.resolve();
@@ -1184,22 +1184,22 @@ var actions = {
 			return Promise.resolve(result);
 		}
 	},
-	API_GrantedDBs: {
+	// API_GrantedDBs: {
 		// request: function(context){
 		// 	return Promise.resolve();
 		// },
 		// response: function(context, result){
 		// 	return Promise.resolve(result);
 		// }
-	},
-	API_GrantedDBsForGroup: {
+	// },
+	// API_GrantedDBsForGroup: {
 		// request: function(context){
 		// 	return Promise.resolve();
 		// },
 		// response: function(context, result){
 		// 	return Promise.resolve(result);
 		// }
-	},
+	// },
 	API_GrantedGroups: {
 		// request: function(context){
 		// 	return Promise.resolve();
@@ -1214,118 +1214,118 @@ var actions = {
 			return Promise.resolve(result);
 		}
 	},
-	API_ImportFromCSV: {
+	// API_ImportFromCSV: {
 		// request: function(context){
 		// 	return Promise.resolve();
 		// },
 		// response: function(context, result){
 		// 	return Promise.resolve(result);
 		// }
-	},
-	API_ProvisionUser: {
+	// },
+	// API_ProvisionUser: {
 		// request: function(context){
 		// 	return Promise.resolve();
 		// },
 		// response: function(context, result){
 		// 	return Promise.resolve(result);
 		// }
-	},
-	API_PurgeRecords: {
+	// },
+	// API_PurgeRecords: {
 		// request: function(context){
 		// 	return Promise.resolve();
 		// },
 		// response: function(context, result){
 		// 	return Promise.resolve(result);
 		// }
-	},
-	API_RemoveGroupFromRole: {
+	// },
+	// API_RemoveGroupFromRole: {
 		// request: function(context){
 		// 	return Promise.resolve();
 		// },
 		// response: function(context, result){
 		// 	return Promise.resolve(result);
 		// }
-	},
-	API_RemoveSubgroup: {
+	// },
+	// API_RemoveSubgroup: {
 		// request: function(context){
 		// 	return Promise.resolve();
 		// },
 		// response: function(context, result){
 		// 	return Promise.resolve(result);
 		// }
-	},
-	API_RemoveUserFromGroup: {
+	// },
+	// API_RemoveUserFromGroup: {
 		// request: function(context){
 		// 	return Promise.resolve();
 		// },
 		// response: function(context, result){
 		// 	return Promise.resolve(result);
 		// }
-	},
-	API_RemoveUserFromRole: {
+	// },
+	// API_RemoveUserFromRole: {
 		// request: function(context){
 		// 	return Promise.resolve();
 		// },
 		// response: function(context, result){
 		// 	return Promise.resolve(result);
 		// }
-	},
-	API_RenameApp: {
+	// },
+	// API_RenameApp: {
 		// request: function(context){
 		// 	return Promise.resolve();
 		// },
 		// response: function(context, result){
 		// 	return Promise.resolve(result);
 		// }
-	},
-	API_RunImport: {
+	// },
+	// API_RunImport: {
 		// request: function(context){
 		// 	return Promise.resolve();
 		// },
 		// response: function(context, result){
 		// 	return Promise.resolve(result);
 		// }
-	},
-	API_SendInvitation: {
+	// },
+	// API_SendInvitation: {
 		// request: function(context){
 		// 	return Promise.resolve();
 		// },
 		// response: function(context, result){
 		// 	return Promise.resolve(result);
 		// }
-	},
-	API_SetDBVar: {
+	// },
+	// API_SetDBVar: {
 		// request: function(context){
 		// 	return Promise.resolve();
 		// },
 		// response: function(context, result){
 		// 	return Promise.resolve(result);
 		// }
-	},
-	API_SetFieldProperties: {
+	// },
+	// API_SetFieldProperties: {
 		// request: function(context){
 		// 	return Promise.resolve();
 		// },
 		// response: function(context, result){
 		// 	return Promise.resolve(result);
 		// }
-	},
-	API_SetKeyField: {
+	// },
+	// API_SetKeyField: {
 		// request: function(context){
 		// 	return Promise.resolve();
 		// },
 		// response: function(context, result){
 		// 	return Promise.resolve(result);
 		// }
-	},
-	API_SignOut: {
+	// },
+	// API_SignOut: {
 		// request: function(context){
 		// 	return Promise.resolve();
 		// },
 		// response: function(context, result){
 		// 	return Promise.resolve(result);
 		// }
-	},
+	// },
 	API_UploadFile: {
 		// request: function(context){
 		// 	return Promise.resolve();
