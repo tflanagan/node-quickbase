@@ -24,26 +24,20 @@ var xml = require('xml2js'),
 /* Native Extensions */
 Object.defineProperty(Object.prototype, 'extend', {
 	enumerable: false,
-	value: function(source){
-		var that = this,
-			sources = Array.prototype.slice.call(arguments),
-			i = 0, l = sources.length,
+	value: function(){
+		var that = this;
 
-			extend = function(obj){
-				var props = Object.getOwnPropertyNames(obj),
-					o = 0, k = props.length,
-					descriptor;
+		Array.prototype.slice.call(arguments).map(function(source){
+			var props = Object.getOwnPropertyNames(source),
+				i = 0, l = props.length,
+				prop;
 
-				for(; o < k; ++o){
-					descriptor = Object.getOwnPropertyDescriptor(obj, props[o]);
+			for(; i < l; ++i){
+				prop = props[i];
 
-					Object.defineProperty(that, props[o], descriptor);
-				}
-			};
-
-		for(; i < l; ++i){
-			extend(sources[i]);
-		}
+				Object.defineProperty(that, prop, Object.getOwnPropertyDescriptor(source, prop));
+			}
+		});
 
 		return this;
 	}
