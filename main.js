@@ -35,7 +35,11 @@ Object.defineProperty(Object.prototype, 'extend', {
 			for(; i < l; ++i){
 				prop = props[i];
 
-				Object.defineProperty(that, prop, Object.getOwnPropertyDescriptor(source, prop));
+				if(that.hasOwnProperty(prop) && typeof(that[prop]) === 'object'){
+					that[prop] = that[prop].extend(source[prop]);
+				}else{
+					Object.defineProperty(that, prop, Object.getOwnPropertyDescriptor(source, prop));
+				}
 			}
 		});
 
