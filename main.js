@@ -361,7 +361,7 @@ var QueryBuilder = (function(){
 			this.payload = builder.buildObject(this.options);
 		}else{
 			for(var args = Object.keys(this.options), i = 0, l = args.length; i < l; ++i){
-				this.payload += '&' + args[i] + '=' + this.options[args[i]];
+				this.payload += '&' + args[i] + '=' + encodeURIComponent(this.options[args[i]]);
 			}
 		}
 
