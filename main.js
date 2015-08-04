@@ -600,9 +600,10 @@ var xmlNodeParsers = {
 		}
 
 		var variable = {},
-			newVars = {};
+			newVars = {},
+			i = 0, l = val.length;
 
-		for(i = 0, l = val.length; i < l; ++i){
+		for(; i < l; ++i){
 			variable = val[i];
 
 			newVars[variable.$.name] = variable._;
@@ -856,7 +857,7 @@ var actions = {
 				if(result.table.hasOwnProperty('records')){
 					var o = 0, k = 0, fid = 0,
 						records = [], fields = [],
-						attrs = {}, record = {}, field = {}
+						attrs = {}, record = {}, field = {};
 
 					if(!(result.table.records instanceof Array)){
 						// Support Case #480141
