@@ -20,7 +20,7 @@ Browserify
 This library works out of the box with Browserify, this is not heavily tested, please use caution and report any bugs.
 ```
 $ npm install quickbase
-$ browserify node_modules/node-quickbase > quickbase.browserify.js
+$ browserify node_modules/quickbase > quickbase.browserify.js
 ```
 
 ```html
