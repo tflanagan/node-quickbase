@@ -21,6 +21,34 @@ var xml = require('xml2js'),
 	https = require('https'),
 	Promise = require('bluebird');
 
+/* Native Extensions */
+Object.defineProperty(Object.prototype, 'extend', {
+	enumerable: false,
+	value: function(source){
+		var that = this,
+			sources = Array.prototype.slice.call(arguments),
+			i = 0, l = sources.length,
+
+			extend = function(obj){
+				var props = Object.getOwnPropertyNames(obj),
+					o = 0, k = props.length,
+					descriptor;
+
+				for(; o < k; ++o){
+					descriptor = Object.getOwnPropertyDescriptor(obj, props[o]);
+
+					Object.defineProperty(that, props[o], descriptor);
+				}
+			};
+
+		for(; i < l; ++i){
+			extend(sources[i]);
+		}
+
+		return this;
+	}
+});
+
 /* Helpers */
 var inherits = function(ctor, superCtor){
 	ctor.super_ = superCtor;
@@ -127,66 +155,6 @@ var flattenXMLAttributes = function(obj){
 	return obj;
 };
 
-var mergeObjects = function(){
-	var overwrite = true,
-		nObjs = arguments.length,
-		newObj = [],
-		i = 0, d;
-
-	if(typeof(arguments[nObjs - 1]) === 'boolean'){
-		overwrite = arguments[nObjs - 1];
-		--nObjs;
-	}
-
-	for(; i < nObjs; ++i){
-		if(!(arguments[i] instanceof Array) && (arguments[i] instanceof Object)){
-			newObj = {};
-
-			break;
-		}
-	}
-
-	for(i = 0; i < nObjs; ++i){
-		if(!arguments[i + 1] || typeof(arguments[i + 1]) === 'boolean'){
-			continue;
-		}
-
-		for(d in arguments[i + 1]){
-			if(arguments[i].hasOwnProperty(d) && arguments[i + 1].hasOwnProperty(d)){
-				if(typeof(arguments[i][d]) === 'object' && typeof(arguments[i + 1][d]) === 'object'){
-					newObj[d] = mergeObjects(arguments[i][d], arguments[i + 1][d], overwrite);
-				}else
-				if(overwrite){
-					newObj[d] = arguments[i + 1][d];
-				}else{
-					if(newObj[d] instanceof Array){
-						newObj[d].push(arguments[i + 1][d]);
-					}else{
-						newObj[d] = [arguments[i][d], arguments[i + 1][d]];
-					}
-				}
-			}else
-			if(arguments[i + 1].hasOwnProperty(d) && typeof(arguments[i + 1][d]) === 'object'){
-				newObj[d] = mergeObjects(arguments[i + 1][d] instanceof Array ? [] : {}, arguments[i + 1][d], overwrite);
-			}else{
-				newObj[d] = arguments[i + 1][d];
-			}
-		}
-
-		for(d in arguments[i]){
-			if(!(d in arguments[i + 1]) && arguments[i].hasOwnProperty(d)){
-				if(typeof(arguments[i + 1][d]) === 'object'){
-					newObj[d] = mergeObjects(arguments[i][d] instanceof Array ? [] : {}, arguments[i][d], overwrite);
-				}else{
-					newObj[d] = arguments[i][d];
-				}
-			}
-		}
-	}
-
-	return newObj;
-};
-
 /* Error Handling */
 var QuickbaseError = (function(){
 	var QuickbaseError = function(code, name, message){
@@ -243,7 +211,7 @@ var QuickBase = (function(){
 	};
 
 	var QuickBase = function(options){
-		this.settings = mergeObjects(defaults, options || {});
+		this.settings = ({}).extend(defaults, options || {});
 
 		this.throttle = new Throttle(this.settings.connectionLimit, this.settings.errorOnConnectionLimit);
 
@@ -254,7 +222,7 @@ var QuickBase = (function(){
 		var that = this;
 
 		return this.throttle.acquire(function(){
-			return (new QueryBuilder(that, action, options)).run();
+			return (new QueryBuilder(that, action, options || {})).run();
 		});
 	};
 
@@ -316,7 +284,7 @@ var QueryBuilder = (function(){
 		this.parent = parent;
 		this.action = action;
 		this.options = options;
-		this.settings = mergeObjects({}, parent.settings);
+		this.settings = ({}).extend(parent.settings);
 
 		this.nErr = 0;
 
@@ -363,20 +331,20 @@ var QueryBuilder = (function(){
 	};
 
 	QueryBuilder.prototype.addFlags = function(){
-		if(!this.options.hasOwnProperty('msInUTC') && this.parent.settings.flags.msInUTC){
+		if(!this.options.hasOwnProperty('msInUTC') && this.settings.flags.msInUTC){
 			this.options.msInUTC = 1;
 		}
 
-		if(!this.options.hasOwnProperty('appToken') && this.parent.settings.appToken){
-			this.options.apptoken = this.parent.settings.appToken;
+		if(!this.options.hasOwnProperty('appToken') && this.settings.appToken){
+			this.options.apptoken = this.settings.appToken;
 		}
 
-		if(!this.options.hasOwnProperty('ticket') && this.parent.settings.ticket){
-			this.options.ticket = this.parent.settings.ticket;
+		if(!this.options.hasOwnProperty('ticket') && this.settings.ticket){
+			this.options.ticket = this.settings.ticket;
 		}
 
-		if(!this.options.hasOwnProperty('encoding') && this.parent.settings.flags.encoding){
-			this.options.encoding = this.parent.settings.flags.encoding;
+		if(!this.options.hasOwnProperty('encoding') && this.settings.flags.encoding){
+			this.options.encoding = this.settings.flags.encoding;
 		}
 
 		return Promise.resolve();
@@ -395,7 +363,7 @@ var QueryBuilder = (function(){
 
 		this.payload = '';
 
-		if(this.parent.settings.flags.useXML === true){
+		if(this.settings.flags.useXML === true){
 			this.payload = builder.buildObject(this.options);
 		}else{
 			for(var arg in this.options){
@@ -499,7 +467,7 @@ var QueryBuilder = (function(){
 				var parent = this.parent,
 					parentSettings = parent.settings;
 
-				if(this.nErr < parentSettings.maxErrorRetryAttempts){
+				if(this.nErr < this.settings.maxErrorRetryAttempts){
 					if([1000, 1001].indexOf(err.code) !== -1){
 						return parent.api(this.action, this.options);
 					}else
@@ -845,15 +813,15 @@ var actions = {
 	},
 	API_DoQuery: {
 		request: function(context){
-			if(!context.options.hasOwnProperty('returnPercentage') && context.parent.settings.flags.returnPercentage){
+			if(!context.options.hasOwnProperty('returnPercentage') && context.settings.flags.returnPercentage){
 				context.options.returnPercentage = 1;
 			}
 
-			if(!context.options.hasOwnProperty('fmt') && context.parent.settings.flags.fmt){
-				context.options.fmt = context.parent.settings.flags.fmt;
+			if(!context.options.hasOwnProperty('fmt') && context.settings.flags.fmt){
+				context.options.fmt = context.settings.flags.fmt;
 			}
 
-			if(!context.options.hasOwnProperty('includeRids') && context.parent.settings.flags.includeRids){
+			if(!context.options.hasOwnProperty('includeRids') && context.settings.flags.includeRids){
 				context.options.includeRids = 1;
 			}
 
