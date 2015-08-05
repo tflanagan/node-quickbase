@@ -22,30 +22,32 @@ var xml = require('xml2js'),
 	Promise = require('bluebird');
 
 /* Native Extensions */
-Object.defineProperty(Object.prototype, 'extend', {
-	enumerable: false,
-	value: function(){
-		var that = this;
+if(!Object.hasOwnProperty('extend')){
+	Object.defineProperty(Object.prototype, 'extend', {
+		enumerable: false,
+		value: function(){
+			var that = this;
 
-		Array.prototype.slice.call(arguments).map(function(source){
-			var props = Object.getOwnPropertyNames(source),
-				i = 0, l = props.length,
-				prop;
+			Array.prototype.slice.call(arguments).map(function(source){
+				var props = Object.getOwnPropertyNames(source),
+					i = 0, l = props.length,
+					prop;
 
-			for(; i < l; ++i){
-				prop = props[i];
+				for(; i < l; ++i){
+					prop = props[i];
 
-				if(that.hasOwnProperty(prop) && typeof(that[prop]) === 'object'){
-					that[prop] = that[prop].extend(source[prop]);
-				}else{
-					Object.defineProperty(that, prop, Object.getOwnPropertyDescriptor(source, prop));
+					if(that.hasOwnProperty(prop) && typeof(that[prop]) === 'object'){
+						that[prop] = that[prop].extend(source[prop]);
+					}else{
+						Object.defineProperty(that, prop, Object.getOwnPropertyDescriptor(source, prop));
+					}
 				}
-			}
-		});
+			});
 
-		return this;
-	}
-});
+			return this;
+		}
+	});
+}
 
 /* Helpers */
 var inherits = function(ctor, superCtor){
