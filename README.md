@@ -20,8 +20,19 @@ Browserify
 This library works out of the box with Browserify, this is not heavily tested, please use caution and report any bugs.
 ```
 $ npm install quickbase
+$ npm install -g browserify
 $ browserify node_modules/quickbase > quickbase.browserify.js
 ```
+The file Browserify creates is ~547KB. It exposes the QuickBase and Promise objects to the global namespace.
+
+Minifying the file results in a ~219KB file.
+
+```
+$ npm install -g minifier
+$ minify --output quickbase.browserify.min.js quickbase.browserify.js
+```
+
+The use is the same as in Nodejs, but there is no need to ```require('quickbase')```.
 
 ```html
 <script type="text/javascript" src="quickbase.browserify.js"></script>
