@@ -873,6 +873,10 @@ var actions = {
 						fields = result.table.records[i].f;
 						attrs = result.table.records[i].$;
 
+						if(!(fields instanceof Array)){
+							fields = [ fields ];
+						}
+
 						record = {};
 
 						if(context.options.includeRids){
@@ -1031,6 +1035,10 @@ var actions = {
 			}
 
 			if(result.hasOwnProperty('tables')){
+				if(!(result.tables instanceof Array)){
+					result.tables = [ result.tables ];
+				}
+
 				for(var i = 0, l = result.tables.length; i < l; ++i){
 					result.tables[i] = flattenXMLAttributes(result.tables[i]);
 				}
@@ -1212,6 +1220,10 @@ var actions = {
 		// },
 		response: function(context, result){
 			if(result.hasOwnProperty('groups')){
+				if(!(result.groups instanceof Array)){
+					result.groups = [ result.groups ];
+				}
+
 				for(var i = 0, l = result.groups.length; i < l; ++i){
 					result.groups[i] = flattenXMLAttributes(result.groups[i]);
 				}
