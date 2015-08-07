@@ -17,15 +17,15 @@ $ npm install tflanagan/node-quickbase
 
 Browserify
 ----------
-This library works out of the box with Browserify, this is not heavily tested, please use caution and report any bugs.
+This library works out of the box with Browserify.
 ```
 $ npm install quickbase
 $ npm install -g browserify
 $ browserify node_modules/quickbase > quickbase.browserify.js
 ```
-The file Browserify creates is ~547KB. It exposes the QuickBase and Promise objects to the global namespace.
+The file Browserify creates is ~550KB. It exposes the QuickBase and Promise objects to the global namespace.
 
-Minifying the file results in a ~219KB file.
+Minifying the file results in a ~220KB file.
 
 ```
 $ npm install -g minifier
