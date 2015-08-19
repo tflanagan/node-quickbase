@@ -107,8 +107,10 @@ var cleanXML = function(xml){
 
 			if(value.match(isDig)){
 				if(value.match(isInt)){
-					if(Math.abs(parseInt(value, radix)) <= 9007199254740991){
-						xml[node] = parseInt(value, radix);
+					l = parseInt(value, radix);
+
+					if(Math.abs(l) <= 9007199254740991){
+						xml[node] = l;
 					}
 				}else{
 					l = value.length;
