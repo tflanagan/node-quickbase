@@ -540,6 +540,19 @@ var xmlNodeParsers = {
 
 		return val;
 	},
+	lusers: function(val){
+		var i = 0, l = val.length,
+			lusers = [];
+
+		for(; i < l; ++i){
+			lusers.push({
+				id: val[i].$.id,
+				name: val[i]._
+			});
+		}
+
+		return lusers;
+	},
 	queries: function(val){
 		if(!(val instanceof Array)){
 			// Support Case #480141
@@ -915,6 +928,10 @@ var actions = {
 
 				if(result.table.hasOwnProperty('variables')){
 					result.table.variables = xmlNodeParsers.variables(result.table.variables);
+				}
+
+				if(result.table.hasOwnProperty('lusers')){
+					result.table.lusers = xmlNodeParsers.lusers(result.table.lusers);
 				}
 			}else{
 				if(!(result.record instanceof Array)){
