@@ -143,7 +143,7 @@ var cleanXML = function(xml){
 };
 
 var flattenXMLAttributes = function(obj){
-	if(obj.$){
+	if(obj.hasOwnProperty('$')){
 		var props = Object.keys(obj.$),
 			i = 0, l = props.length;
 
