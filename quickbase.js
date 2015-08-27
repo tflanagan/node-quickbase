@@ -567,6 +567,8 @@ var xmlNodeParsers = {
 		for(var i = 0, l = val.length; i < l; ++i){
 			val[i] = flattenXMLAttributes(val[i]);
 		}
+
+		return val;
 	},
 	roles: function(val){
 		var i = 0, l = val.length,
