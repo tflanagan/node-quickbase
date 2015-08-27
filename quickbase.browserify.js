@@ -18503,22 +18503,30 @@ var actions = {
 			return Promise.resolve(result);
 		}
 	},
-	// API_GrantedDBs: {
+	API_GrantedDBs: {
 		// request: function(context){
 		// 	return Promise.resolve();
 		// },
-		// response: function(context, result){
-		// 	return Promise.resolve(result);
-		// }
-	// },
-	// API_GrantedDBsForGroup: {
+		response: function(context, result){
+			if(result.hasOwnProperty('databases')){
+				result.databases = result.databases.dbinfo;
+			}
+
+			return Promise.resolve(result);
+		}
+	},
+	API_GrantedDBsForGroup: {
 		// request: function(context){
 		// 	return Promise.resolve();
 		// },
-		// response: function(context, result){
-		// 	return Promise.resolve(result);
-		// }
-	// },
+		response: function(context, result){
+			if(result.hasOwnProperty('databases')){
+				result.databases = result.databases.dbinfo;
+			}
+
+			return Promise.resolve(result);
+		}
+	},
 	API_GrantedGroups: {
 		// request: function(context){
 		// 	return Promise.resolve();
