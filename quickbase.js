@@ -1251,14 +1251,35 @@ var actions = {
 			return Promise.resolve(result);
 		}
 	},
-	// API_ImportFromCSV: {
+	API_ImportFromCSV: {
 		// request: function(context){
 		// 	return Promise.resolve();
 		// },
-		// response: function(context, result){
-		// 	return Promise.resolve(result);
-		// }
-	// },
+		response: function(context, result){
+			if(result.hasOwnProperty('rids')){
+				var i = 0, l = result.rids.length,
+					rids = [],
+					record, rid;
+
+				for(; i < l; ++i){
+					record = result.rids[i];
+					rid = {
+						rid: record._
+					};
+
+					if(record.$ && record.$.update_id){
+						rid.update_id = record.$.update_id;
+					}
+
+					rids.push(rid);
+				}
+
+				result.rids = rids;
+			}
+
+			return Promise.resolve(result);
+		}
+	},
 	// API_ProvisionUser: {
 		// request: function(context){
 		// 	return Promise.resolve();

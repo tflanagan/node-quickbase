@@ -17393,8 +17393,10 @@ var cleanXML = function(xml){
 
 			if(value.match(isDig)){
 				if(value.match(isInt)){
-					if(Math.abs(parseInt(value, radix)) <= 9007199254740991){
-						xml[node] = parseInt(value, radix);
+					l = parseInt(value, radix);
+
+					if(Math.abs(l) <= 9007199254740991){
+						xml[node] = l;
 					}
 				}else{
 					l = value.length;
@@ -17427,7 +17429,7 @@ var cleanXML = function(xml){
 };
 
 var flattenXMLAttributes = function(obj){
-	if(obj.$){
+	if(obj.hasOwnProperty('$')){
 		var props = Object.keys(obj.$),
 			i = 0, l = props.length;
 
@@ -17824,6 +17826,19 @@ var xmlNodeParsers = {
 
 		return val;
 	},
+	lusers: function(val){
+		var i = 0, l = val.length,
+			lusers = [];
+
+		for(; i < l; ++i){
+			lusers.push({
+				id: val[i].$.id,
+				name: val[i]._
+			});
+		}
+
+		return lusers;
+	},
 	queries: function(val){
 		if(!(val instanceof Array)){
 			// Support Case #480141
@@ -18200,6 +18215,10 @@ var actions = {
 				if(result.table.hasOwnProperty('variables')){
 					result.table.variables = xmlNodeParsers.variables(result.table.variables);
 				}
+
+				if(result.table.hasOwnProperty('lusers')){
+					result.table.lusers = xmlNodeParsers.lusers(result.table.lusers);
+				}
 			}else{
 				if(!(result.record instanceof Array)){
 					// Support Case #480141
@@ -18518,14 +18537,35 @@ var actions = {
 			return Promise.resolve(result);
 		}
 	},
-	// API_ImportFromCSV: {
+	API_ImportFromCSV: {
 		// request: function(context){
 		// 	return Promise.resolve();
 		// },
-		// response: function(context, result){
-		// 	return Promise.resolve(result);
-		// }
-	// },
+		response: function(context, result){
+			if(result.hasOwnProperty('rids')){
+				var i = 0, l = result.rids.length,
+					rids = [],
+					record, rid;
+
+				for(; i < l; ++i){
+					record = result.rids[i];
+					rid = {
+						rid: record._
+					};
+
+					if(record.$ && record.$.update_id){
+						rid.update_id = record.$.update_id;
+					}
+
+					rids.push(rid);
+				}
+
+				result.rids = rids;
+			}
+
+			return Promise.resolve(result);
+		}
+	},
 	// API_ProvisionUser: {
 		// request: function(context){
 		// 	return Promise.resolve();
