@@ -3,7 +3,7 @@
   "engines": {
     "node": ">=0.12.*"
   },
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A lightweight, very flexible QuickBase API",
   "main": "quickbase.js",
   "dependencies": {

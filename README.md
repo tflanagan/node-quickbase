@@ -5,6 +5,8 @@ node-quickbase
 
 A lightweight, very flexible QuickBase API
 
+[API Documentation](https://github.com/tflanagan/node-quickbase/blob/master/documentation/api.md)
+
 Install
 -------
 ```
