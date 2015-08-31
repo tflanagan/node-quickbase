@@ -3,12 +3,12 @@
   "engines": {
     "node": ">=0.12.*"
   },
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A lightweight, very flexible QuickBase API",
   "main": "quickbase.js",
   "dependencies": {
     "bluebird": "^2.9.34",
-    "xml2js": "^0.4.10"
+    "xml2js": "^0.4.11"
   },
   "devDependencies": {},
   "keywords": [
