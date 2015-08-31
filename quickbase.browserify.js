@@ -12079,7 +12079,7 @@ module.exports = ret;
         if (this.options.async) {
           this.remaining = str;
           setImmediate(this.processAsync);
-          this.saxParser;
+          return this.saxParser;
         }
         return this.saxParser.write(str).close();
       } catch (_error) {
@@ -17688,7 +17688,9 @@ var QueryBuilder = (function(){
 
 					response.on('end', function(){
 						if(response.headers['content-type'] === 'application/xml'){
-							xml.parseString(xmlResponse, function(err, result){
+							xml.parseString(xmlResponse, {
+								async: true
+							}, function(err, result){
 								if(err){
 									return reject(new QuickbaseError(1000, 'Error Processing Request', err));
 								}
