@@ -352,6 +352,47 @@ var QueryBuilder = (function(){
 		return Promise.resolve();
 	};
 
+	QueryBuilder.prototype.catchError = function(err){
+		++this.nErr;
+
+		var that = this,
+			parent = this.parent,
+			parentSettings = parent.settings;
+
+		if(this.nErr < this.settings.maxErrorRetryAttempts){
+			if([1000, 1001].indexOf(err.code) !== -1){
+				return Promise.bind(this)
+					.then(this.processQuery)
+					.then(this.actionResponse)
+					.catch(this.catchError);
+			}else
+			if(
+				err.code === 4 &&
+				parentSettings.hasOwnProperty('username') && parentSettings.username !== '' &&
+				parentSettings.hasOwnProperty('password') && parentSettings.password !== ''
+			){
+				return parent.api('API_Authenticate', {
+					username: parentSettings.username,
+					password: parentSettings.password
+				}).then(function(results){
+					parentSettings.ticket = results.ticket;
+					that.settings.ticket = results.ticket;
+					that.options.ticket = results.ticket;
+
+					return results;
+				})
+					.bind(this)
+					.then(this.addFlags)
+					.then(this.constructPayload)
+					.then(this.processQuery)
+					.then(this.actionResponse)
+					.catch(this.catchError);
+			}
+		}
+
+		return Promise.reject(err);
+	};
+
 	QueryBuilder.prototype.constructPayload = function(){
 		var builder = new xml.Builder({
 			rootName: 'qdbapi',
@@ -465,28 +506,7 @@ var QueryBuilder = (function(){
 			.then(this.constructPayload)
 			.then(this.processQuery)
 			.then(this.actionResponse)
-			.catch(function(err){
-				++this.nErr;
-
-				var parent = this.parent,
-					parentSettings = parent.settings;
-
-				if(this.nErr < this.settings.maxErrorRetryAttempts){
-					if([1000, 1001].indexOf(err.code) !== -1){
-						return parent.api(this.action, this.options);
-					}else
-					if(err.code === 4 && parentSettings.hasOwnProperty('username') && parentSettings.hasOwnProperty('password')){
-						return parent.api('API_Authenticate', {
-							username: parentSettings.username,
-							password: parentSettings.password
-						}).then(function(){
-							return parent.api(this.action, this.options);
-						});
-					}
-				}
-
-				return Promise.reject(err);
-			});
+			.catch(this.catchError);
 	};
 
 	return QueryBuilder;

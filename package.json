@@ -3,12 +3,12 @@
   "engines": {
     "node": ">=0.12.*"
   },
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "A lightweight, very flexible QuickBase API",
   "main": "quickbase.js",
   "dependencies": {
     "bluebird": "^2.9.34",
-    "xml2js": "^0.4.11"
+    "xml2js": "tflanagan/node-xml2js"
   },
   "devDependencies": {},
   "keywords": [
@@ -30,5 +30,8 @@
     "name": "Tristian Flanagan",
     "email": "tristian.flanagan@comcast.net"
   },
+  "contributors": [
+    "Tristian Flanagan (https://github.com/tflanagan)"
+  ],
   "license": "Apache-2.0"
 }
