@@ -26,9 +26,15 @@ if(!Object.hasOwnProperty('extend')){
 	Object.defineProperty(Object.prototype, 'extend', {
 		enumerable: false,
 		value: function(){
-			var that = this;
+			var that = this,
+				args = new Array(arguments.length),
+				i = 0, l = args.length;
 
-			Array.prototype.slice.call(arguments).map(function(source){
+			for(; i < l; ++i){
+				args[i] = arguments[i];
+			}
+
+			args.map(function(source){
 				var props = Object.getOwnPropertyNames(source),
 					i = 0, l = props.length,
 					prop;
