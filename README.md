@@ -25,9 +25,11 @@ $ npm install quickbase
 $ npm install -g browserify
 $ browserify node_modules/quickbase > quickbase.browserify.js
 ```
-The file Browserify creates is ~550KB. It exposes the QuickBase and Promise objects to the global namespace.
+This exposes the QuickBase object to the global namespace (```window.QuickBase || QuickBase```).
 
-Minifying the file results in a ~220KB file.
+__Warning: Native Browser Promises do not share the same functionality as Bluebird Promises!__
+
+Chaining functions off of an ```.api()``` function call uses the Bluebird Promise Library. Declaring a ```new Promise()``` uses Native Browser Promises (if available).
 
 ```
 $ npm install -g minifier
