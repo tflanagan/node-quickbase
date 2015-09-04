@@ -28,27 +28,28 @@ if(!Object.hasOwnProperty('extend')){
 		value: function(){
 			var that = this,
 				args = new Array(arguments.length),
-				i = 0, l = args.length;
+				i = 0, l = args.length,
+				extend = function(source){
+					var props = Object.getOwnPropertyNames(source),
+						i = 0, l = props.length,
+						prop;
+
+					for(; i < l; ++i){
+						prop = props[i];
+
+						if(that.hasOwnProperty(prop) && typeof(that[prop]) === 'object'){
+							that[prop] = that[prop].extend(source[prop]);
+						}else{
+							Object.defineProperty(that, prop, Object.getOwnPropertyDescriptor(source, prop));
+						}
+					}
+				};
 
 			for(; i < l; ++i){
 				args[i] = arguments[i];
+
+				extend(args[i]);
 			}
-
-			args.map(function(source){
-				var props = Object.getOwnPropertyNames(source),
-					i = 0, l = props.length,
-					prop;
-
-				for(; i < l; ++i){
-					prop = props[i];
-
-					if(that.hasOwnProperty(prop) && typeof(that[prop]) === 'object'){
-						that[prop] = that[prop].extend(source[prop]);
-					}else{
-						Object.defineProperty(that, prop, Object.getOwnPropertyDescriptor(source, prop));
-					}
-				}
-			});
 
 			return this;
 		}
