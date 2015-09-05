@@ -1,6 +1,6 @@
 {
   "name": "quickbase",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "A lightweight, very flexible QuickBase API",
   "keywords": [
     "QuickBase",
