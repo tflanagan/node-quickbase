@@ -1,37 +1,55 @@
 {
   "name": "quickbase",
-  "engines": {
-    "node": ">=0.12.*"
-  },
   "version": "1.0.6",
   "description": "A lightweight, very flexible QuickBase API",
-  "main": "quickbase.js",
-  "dependencies": {
-    "bluebird": "^2.9.34",
-    "xml2js": "^0.4.12"
-  },
-  "devDependencies": {},
   "keywords": [
     "QuickBase",
     "quickbase",
     "qb",
     "api"
   ],
-  "git": "git://github.com/tflanagan/node-quickbase.git#master",
+  "homepage": "https://github.com/tflanagan/node-quickbase",
+  "bugs": {
+    "url": "https://github.com/tflanagan/node-quickbase/issues",
+    "email": "tristian.flanagan@comcast.net"
+  },
+  "license": "Apache-2.0",
+  "author": {
+    "name": "Tristian Flanagan",
+    "url": "https://github.com/tflanagan",
+    "email": "tristian.flanagan@comcast.net"
+  },
+  "maintainers": [
+    {
+      "name": "tflanagan",
+      "url": "https://github.com/tflanagan",
+      "email": "tristian.flanagan@comcast.net"
+    }
+  ],
+  "contributors": [
+    "Tristian Flanagan <tristian.flanagan@comcast.net> (https://github.com/tflanagan)"
+  ],
+  "main": "quickbase.js",
   "repository": {
     "type": "git",
     "url": "git://github.com/tflanagan/node-quickbase.git"
   },
-  "homepage": "https://github.com/tflanagan/node-quickbase",
-  "bugs": {
-    "url": "https://github.com/tflanagan/node-quickbase/issues"
+  "scripts": {
+    "build": "browserify quickbase.js > quickbase.browserify.js && cat devTools\\LICENSE.js > quickbase.browserify.min.js && minify quickbase.browserify.js >> quickbase.browserify.min.js",
+    "release-patch": "npm run build && git add -A . && git commit -m \"Release Patch Build\" && npm version patch -m \"Release Patch %s\" && npm publish && git push --follow-tags",
+    "release-minor": "npm run build && git add -A . && git commit -m \"Release Minor Build\" && npm version minor -m \"Release Minor %s\" && npm publish && git push --follow-tags",
+    "release-major": "npm run build && git add -A . && git commit -m \"Release Major Build\" && npm version major -m \"Release Major %s\" && npm publish && git push --follow-tags"
   },
-  "author": {
-    "name": "Tristian Flanagan",
-    "email": "tristian.flanagan@comcast.net"
+  "dependencies": {
+    "bluebird": "^2.9.34",
+    "xml2js": "^0.4.12"
   },
-  "contributors": [
-    "Tristian Flanagan (https://github.com/tflanagan)"
-  ],
-  "license": "Apache-2.0"
+  "devDependencies": {
+    "browserify": "*",
+    "minify": "*"
+  },
+  "engines": {
+    "node": ">=0.12.*"
+  },
+  "git": "git://github.com/tflanagan/node-quickbase.git#master"
 }
