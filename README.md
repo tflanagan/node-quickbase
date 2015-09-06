@@ -33,7 +33,7 @@ Chaining functions off of an ```.api()``` function call uses the Bluebird Promis
 
 ```
 $ npm install -g minifier
-$ minify --output quickbase.browserify.min.js quickbase.browserify.js
+$ minify quickbase.browserify.js > quickbase.browserify.min.js
 ```
 
 The use is the same as in Nodejs, but there is no need to ```require('quickbase')```.
