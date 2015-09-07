@@ -22,7 +22,7 @@ var xml = require('xml2js'),
 	Promise = require('bluebird');
 
 /* Native Extensions */
-if(!Object.hasOwnProperty('extend')){
+if(!Object.hasOwnProperty('extend') && Object.extend === undefined){
 	Object.defineProperty(Object.prototype, 'extend', {
 		enumerable: false,
 		value: function(){
