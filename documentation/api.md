@@ -100,7 +100,7 @@ quickbase.api('API_AddField', {
 	label: 'Label',     /* Required                       */
 	mode: 'virtual',    /* Required for Lookup or Formula */
 	type: 'formula'     /* Required                       */
-}).then(function(results){
+}).then((results) => {
 	/* results = {
 	 * 	action: 'API_AddField',
 	 * 	errcode: 0,
@@ -109,7 +109,7 @@ quickbase.api('API_AddField', {
 	 * 	label: 'Label'
 	 * }
 	*/
-}).catch(function(error){
+}).catch((error) => {
 	// Handle error
 });
 ```
@@ -121,14 +121,14 @@ quickbase.api('API_AddGroupToRole', {
 	dbid: 'bddnn3uz9',  /* Required */
 	gid: '345889.ksld', /* Required */
 	roleid: 12          /* Required */
-}).then(function(results){
+}).then((results) => {
 	/* results = {
 	 * 	action: 'API_AddGroupToRole',
 	 * 	errcode: 0,
 	 * 	errtext: 'No error'
 	 * }
 	*/
-}).catch(function(error){
+}).catch((error) => {
 	// Handle error
 });
 ```
@@ -145,7 +145,7 @@ quickbase.api('API_AddRecord', {
 	fform: false,
 	ignoreError: false,
 	msInUTC: false
-}).then(function(results){
+}).then((results) => {
 	/* results = {
 	 * 	action: 'API_AddRecord',
 	 * 	errcode: 0,
@@ -154,7 +154,7 @@ quickbase.api('API_AddRecord', {
 	 * 	update_id: 1206177014451
 	 * }
 	*/
-}).catch(function(error){
+}).catch((error) => {
 	// Handle error
 });
 ```
@@ -168,7 +168,7 @@ quickbase.api('API_AddReplaceDBPage', {
 	pageid: 12,               /* Required for updating pages */
 	pagetype: 1,              /* Required */
 	pagebody: '<html></html>' /* Required */
-}).then(function(results){
+}).then((results) => {
 	/* results = {
 	 * 	action: 'API_AddReplaceDBPage',
 	 * 	errcode: 0,
@@ -176,7 +176,7 @@ quickbase.api('API_AddReplaceDBPage', {
 	 * 	pageID: 12
 	 * }
 	*/
-}).catch(function(error){
+}).catch((error) => {
 	// Handle error
 });
 ```
@@ -187,14 +187,14 @@ quickbase.api('API_AddReplaceDBPage', {
 quickbase.api('API_AddSubGroup', {
 	gid: '345889.sdfs',       /* Required */
 	subgroupid: '820935.ksjf' /* Required */
-}).then(function(results){
+}).then((results) => {
 	/* results = {
 	 * 	action: 'API_AddSubGroup',
 	 * 	errcode: 0,
 	 * 	errtext: 'No error'
 	 * }
 	*/
-}).catch(function(error){
+}).catch((error) => {
 	// Handle error
 });
 ```
@@ -206,14 +206,14 @@ quickbase.api('API_AddUserToGroup', {
 	gid: '345889.sdfd',    /* Required */
 	userid: '898790.qntp', /* Required */
 	allowAdminAccess: false
-}).then(function(results){
+}).then((results) => {
 	/* results = {
 	 * 	action: 'API_AddUserToGroup',
 	 * 	errcode: 0,
 	 * 	errtext: 'No error'
 	 * }
 	*/
-}).catch(function(error){
+}).catch((error) => {
 	// Handle error
 });
 ```
@@ -225,14 +225,14 @@ quickbase.api('API_AddUserToRole', {
 	dbid: 'bddnn3uz9',     /* Required */
 	userid: '112245.efy7', /* Required */
 	roleid: 10             /* Required */
-}).then(function(results){
+}).then((results) => {
 	/* results = {
 	 * 	action: 'API_AddUserToRole',
 	 * 	errcode: 0,
 	 * 	errtext: 'No error'
 	 * }
 	*/
-}).catch(function(error){
+}).catch((error) => {
 	// Handle error
 });
 ```
@@ -244,7 +244,7 @@ quickbase.api('API_Authenticate', {
 	username: 'PTBarnum',  /* Required */
 	password: 'TopSecret', /* Required */
 	hours: 12
-}).then(function(results){
+}).then((results) => {
 	/* results = {
 	 * 	action: 'API_Authenticate',
 	 * 	errcode: 0,
@@ -253,7 +253,7 @@ quickbase.api('API_Authenticate', {
 	 * 	userid: '112245.efy7'
 	 * }
 	*/
-}).catch(function(error){
+}).catch((error) => {
 	// Handle error
 });
 ```
@@ -267,14 +267,14 @@ quickbase.api('API_ChangeGroupInfo', {
 	description: 'Team Leaders for the Acme division',
 	accountID: 456789,
 	allowsAdminAccess: false
-}).then(function(results){
+}).then((results) => {
 	/* results = {
 	 * 	action: 'API_ChangeGroupInfo',
 	 * 	errcode: 0,
 	 * 	errtext: 'No error'
 	 * }
 	*/
-}).catch(function(error){
+}).catch((error) => {
 	// Handle error
 });
 ```
@@ -284,14 +284,14 @@ quickbase.api('API_ChangeGroupInfo', {
 ```javascript
 quickbase.api('API_ChangeManager', {
 	newmgr: 'angela_leon@gmail.com' /* Required */
-}).then(function(results){
+}).then((results) => {
 	/* results = {
 	 * 	action: 'API_ChangeManager',
 	 * 	errcode: 0,
 	 * 	errtext: 'No error'
 	 * }
 	*/
-}).catch(function(error){
+}).catch((error) => {
 	// Handle error
 });
 ```
@@ -303,14 +303,14 @@ quickbase.api('API_ChangeRecordOwner', {
 	dbid: 'bddnn3uz9', /* Required */
 	rid: 3,            /* Required */
 	newowner: 'Muggsy' /* Required */
-}).then(function(results){
+}).then((results) => {
 	/* results = {
 	 * 	action: 'API_ChangeRecordOwner',
 	 * 	errcode: 0,
 	 * 	errtext: 'No error'
 	 * }
 	*/
-}).catch(function(error){
+}).catch((error) => {
 	// Handle error
 });
 ```
@@ -323,14 +323,14 @@ quickbase.api('API_ChangeUserRole', {
 	userid: '112248.5nzg', /* Required */
 	roleid: 11,            /* Required */
 	newroleid: 12          /* Required */
-}).then(function(results){
+}).then((results) => {
 	/* results = {
 	 * 	action: 'API_ChangeUserRole',
 	 * 	errcode: 0,
 	 * 	errtext: 'No error'
 	 * }
 	*/
-}).catch(function(error){
+}).catch((error) => {
 	// Handle error
 });
 ```
@@ -345,7 +345,7 @@ quickbase.api('API_CloneDatabase', {
 	keepData: true,
 	exludeFiles: true,
 	usersandroles: false
-}).then(function(results){
+}).then((results) => {
 	/* results = {
 	 * 	action: 'API_CloneDatabase',
 	 * 	errcode: 0,
@@ -353,7 +353,7 @@ quickbase.api('API_CloneDatabase', {
 	 * 	newdbid: 'bddnc6pn7'
 	 * }
 	*/
-}).catch(function(error){
+}).catch((error) => {
 	// Handle error
 });
 ```
@@ -366,7 +366,7 @@ quickbase.api('API_CopyGroup', {
 	name: 'SalesTeamLeadsCopy',                                /* Required */
 	description: 'Copy of the current Sales Team Leads Group',
 	gacct: ''
-}).then(function(results){
+}).then((results) => {
 	/* results = {
 	 * 	action: 'API_CopyGroup',
 	 * 	errcode: 0,
@@ -379,7 +379,7 @@ quickbase.api('API_CopyGroup', {
 	 * 	}
 	 * }
 	*/
-}).catch(function(error){
+}).catch((error) => {
 	// Handle error
 });
 ```
@@ -394,7 +394,7 @@ quickbase.api('API_CopyMasterDetail', {
 	copyfid: 6,         /* Required */
 	recurse: true,
 	relfids: 'all'
-}).then(function(results){
+}).then((results) => {
 	/* results = {
 	 * 	action: 'API_CopyMasterDetail',
 	 * 	errcode: 0,
@@ -403,7 +403,7 @@ quickbase.api('API_CopyMasterDetail', {
 	 * 	numcreated: 4
 	 * }
 	*/
-}).catch(function(error){
+}).catch((error) => {
 	// Handle error
 });
 ```
@@ -415,7 +415,7 @@ quickbase.api('API_CreateDatabase', {
 	dbname: 'FuelCharter',                   /* Required */
 	dbdesc: 'Vehicle and Fuel Cost Tracker',
 	createapptoken: true
-}).then(function(results){
+}).then((results) => {
 	/* results = {
 	 * 	action: 'API_CreateDatabase',
 	 * 	errcode: 0,
@@ -425,7 +425,7 @@ quickbase.api('API_CreateDatabase', {
 	 * 	apptoken: 'cmzaaz3dgdmmwwksdb7zcd7a9wg'
 	 * }
 	*/
-}).catch(function(error){
+}).catch((error) => {
 	// Handle error
 });
 ```
@@ -437,7 +437,7 @@ quickbase.api('API_CreateGroup', {
 	name: 'MarketingSupport',                             /* Required */
 	description: 'Support staff for sr marketing group',
 	accountID: 456789
-}).then(function(results){
+}).then((results) => {
 	/* results = {
 	 * 	action: 'API_CreateGroup',
 	 * 	errcode: 0,
@@ -450,7 +450,7 @@ quickbase.api('API_CreateGroup', {
 	 * 	}
 	 * }
 	*/
-}).catch(function(error){
+}).catch((error) => {
 	// Handle error
 });
 ```
@@ -462,7 +462,7 @@ quickbase.api('API_CreateTable', {
 	dbid: 'bddnn3uz9',        /* Required */
 	tname: 'My Vehicle List', /* Required */
 	pnoun: 'Vehicles'         /* Required */
-}).then(function(results){
+}).then((results) => {
 	/* results = {
 	 * 	action: 'API_CreateTable',
 	 * 	errcode: 0,
@@ -470,7 +470,7 @@ quickbase.api('API_CreateTable', {
 	 * 	newDBID: 'bddfa5nbx'
 	 * }
 	*/
-}).catch(function(error){
+}).catch((error) => {
 	// Handle error
 });
 ```
@@ -480,14 +480,14 @@ quickbase.api('API_CreateTable', {
 ```javascript
 quickbase.api('API_DeleteDatabase', {
 	dbid: 'bddnn3uz9' /* Required */
-}).then(function(results){
+}).then((results) => {
 	/* results = {
 	 * 	action: 'API_DeleteDatabase',
 	 * 	errcode: 0,
 	 * 	errtext: 'No error'
 	 * }
 	*/
-}).catch(function(error){
+}).catch((error) => {
 	// Handle error
 });
 ```
@@ -498,14 +498,14 @@ quickbase.api('API_DeleteDatabase', {
 quickbase.api('API_DeleteField', {
 	dbid: 'bddnn3uz9', /* Required */
 	fid: 6             /* Required */
-}).then(function(results){
+}).then((results) => {
 	/* results = {
 	 * 	action: 'API_DeleteField',
 	 * 	errcode: 0,
 	 * 	errtext: 'No error'
 	 * }
 	*/
-}).catch(function(error){
+}).catch((error) => {
 	// Handle error
 });
 ```
@@ -515,14 +515,14 @@ quickbase.api('API_DeleteField', {
 ```javascript
 quickbase.api('API_DeleteGroup', {
 	gid: '345889.skef' /* Required */
-}).then(function(results){
+}).then((results) => {
 	/* results = {
 	 * 	action: 'API_DeleteGroup',
 	 * 	errcode: 0,
 	 * 	errtext: 'No error'
 	 * }
 	*/
-}).catch(function(error){
+}).catch((error) => {
 	// Handle error
 });
 ```
@@ -533,7 +533,7 @@ quickbase.api('API_DeleteGroup', {
 quickbase.api('API_DeleteRecord', {
 	dbid: 'bddnn3uz9', /* Required */
 	rid: 6
-}).then(function(results){
+}).then((results) => {
 	/* results = {
 	 * 	action: 'API_DeleteRecord',
 	 * 	errcode: 0,
@@ -541,7 +541,7 @@ quickbase.api('API_DeleteRecord', {
 	 * 	rid: 6
 	 * }
 	*/
-}).catch(function(error){
+}).catch((error) => {
 	// Handle error
 });
 ```
@@ -560,7 +560,7 @@ quickbase.api('API_DoQuery', {
 	fmt: 'structured',
 	returnpercentage: true,
 	includeRids: true
-}).then(function(results){
+}).then((results) => {
 	/* results = {
 	 * 	action: 'API_DoQuery',
 	 * 	errcode: 0,
@@ -638,7 +638,7 @@ quickbase.api('API_DoQuery', {
 	 * 	}
 	 * }
 	*/
-}).catch(function(error){
+}).catch((error) => {
 	// Handle error
 });
 ```
@@ -649,7 +649,7 @@ quickbase.api('API_DoQuery', {
 quickbase.api('API_DoQueryCount', {
 	dbid: 'bddnn3uz9',            /* Required */
 	query: "{'7'.XCT.'blue car'}" /* Required */
-}).then(function(results){
+}).then((results) => {
 	/* results = {
 	 * 	action: 'API_DoQueryCount',
 	 * 	errcode: 0,
@@ -657,7 +657,7 @@ quickbase.api('API_DoQueryCount', {
 	 * 	numMatches: 1
 	 * }
 	*/
-}).catch(function(error){
+}).catch((error) => {
 	// Handle error
 });
 ```
@@ -677,7 +677,7 @@ quickbase.api('API_EditRecord', {
 	fform: false,
 	ignoreError: false,
 	msInUTC: true
-}).then(function(results){
+}).then((results) => {
 	/* results = {
 	 * 	action: 'API_EditRecord',
 	 * 	errcode: 0,
@@ -687,7 +687,7 @@ quickbase.api('API_EditRecord', {
 	 * 	update_id: 1205700275470
 	 * }
 	*/
-}).catch(function(error){
+}).catch((error) => {
 	// Handle error
 });
 ```
@@ -699,7 +699,7 @@ quickbase.api('API_FieldAddChoices', {
 	dbid: 'bddnn3uz9',  /* Required */
 	fid: 11,            /* Required */
 	choice: 'Don Tomas' /* Required */
-}).then(function(results){
+}).then((results) => {
 	/* results = {
 	 * 	action: 'API_FieldAddChoices',
 	 * 	errcode: 0,
@@ -709,7 +709,7 @@ quickbase.api('API_FieldAddChoices', {
 	 * 	numadded: 1
 	 * }
 	*/
-}).catch(function(error){
+}).catch((error) => {
 	// Handle error
 });
 ```
@@ -721,7 +721,7 @@ quickbase.api('API_FieldRemoveChoices', {
 	dbid: 'bddnn3uz9', /* Required */
 	fid: 11,           /* Required */
 	choice: 'Black'    /* Required */
-}).then(function(results){
+}).then((results) => {
 	/* results = {
 	 * 	action: 'API_FieldRemoveChoices',
 	 * 	errcode: 0,
@@ -731,7 +731,7 @@ quickbase.api('API_FieldRemoveChoices', {
 	 * 	numremoved: 1
 	 * }
 	*/
-}).catch(function(error){
+}).catch((error) => {
 	// Handle error
 });
 ```
@@ -742,7 +742,7 @@ quickbase.api('API_FieldRemoveChoices', {
 quickbase.api('API_FindDBByName', {
 	dbname: 'TestTable', /* Required */
 	ParentsOnly: false
-}).then(function(results){
+}).then((results) => {
 	/* results = {
 	 * 	action: 'API_FindDBByName',
 	 * 	errcode: 0,
@@ -750,7 +750,7 @@ quickbase.api('API_FindDBByName', {
 	 * 	dbid: 'bdcagynhs'
 	 * }
 	*/
-}).catch(function(error){
+}).catch((error) => {
 	// Handle error
 });
 ```
@@ -763,9 +763,9 @@ quickbase.api('API_GenAddRecordForm', {
 	fields: [
 		{ name: 'Vehicle Make', value: 'Ford' }
 	]
-}).then(function(results){
+}).then((results) => {
 	/* results = '<html>...</html>' */
-}).catch(function(error){
+}).catch((error) => {
 	// Handle error
 });
 ```
@@ -783,9 +783,9 @@ quickbase.api('API_GenResultsTable', {
 	options: 'num-4.sortorder-D',              /* Required */
 	jht: 'n',                                  /* Required */
 	jsa: false,
-}).then(function(results){
+}).then((results) => {
 	/* results = '<html>...</html>'	*/
-}).catch(function(error){
+}).catch((error) => {
 	// Handle error
 });
 ```
@@ -795,7 +795,7 @@ quickbase.api('API_GenResultsTable', {
 ```javascript
 quickbase.api('API_GetAncestorInfo', {
 	dbid: 'bddnn3uz9' /* Required */
-}).then(function(results){
+}).then((results) => {
 	/* results = {
 	 * 	action: 'API_GetAncestorInfo',
 	 * 	errcode: 0,
@@ -804,7 +804,7 @@ quickbase.api('API_GetAncestorInfo', {
 	 * 	oldestancestorappid: 'bbyhxrmsv'
 	 * }
 	*/
-}).catch(function(error){
+}).catch((error) => {
 	// Handle error
 });
 ```
@@ -814,7 +814,7 @@ quickbase.api('API_GetAncestorInfo', {
 ```javascript
 quickbase.api('API_GetAppDTMInfo', {
 	dbid: 'bguin9b8e' /* Required */
-}).then(function(results){
+}).then((results) => {
 	/* results = {
 	 * 	action: 'API_GetAppDTMInfo',
 	 * 	errcode: 0,
@@ -836,7 +836,7 @@ quickbase.api('API_GetAppDTMInfo', {
 	 * 	]
 	 * }
 	*/
-}).catch(function(error){
+}).catch((error) => {
 	// Handle error
 });
 ```
@@ -847,9 +847,9 @@ quickbase.api('API_GetAppDTMInfo', {
 quickbase.api('API_GetDBPage', {
 	dbid: 'bguin9b8e', /* Required */
 	pageID: 3          /* Required */
-}).then(function(results){
+}).then((results) => {
 	/* results = '<html>...</html>' */
-}).catch(function(error){
+}).catch((error) => {
 	// Handle error
 });
 ```
@@ -859,7 +859,7 @@ quickbase.api('API_GetDBPage', {
 ```javascript
 quickbase.api('API_GetDBInfo', {
 	dbid: 'bguin9b8e' /* Required */
-}).then(function(results){
+}).then((results) => {
 	/* results = {
 	 * 	action: 'API_GetDBInfo',
 	 * 	errcode: 0,
@@ -875,7 +875,7 @@ quickbase.api('API_GetDBInfo', {
 	 * 	time_zone: '(UTC-08:00) Pacific Time (US & Canada)'
 	 * }
 	*/
-}).catch(function(error){
+}).catch((error) => {
 	// Handle error
 });
 ```
@@ -886,7 +886,7 @@ quickbase.api('API_GetDBInfo', {
 quickbase.api('API_GetDBVar', {
 	dbid: 'bguin9b8e',  /* Required */
 	varname: 'usercode' /* Required */
-}).then(function(results){
+}).then((results) => {
 	/* results = {
 	 * 	action: 'API_GetDBVar',
 	 * 	errcode: 0,
@@ -894,7 +894,7 @@ quickbase.api('API_GetDBVar', {
 	 * 	value: 12
 	 * }
 	*/
-}).catch(function(error){
+}).catch((error) => {
 	// Handle error
 });
 ```
@@ -905,7 +905,7 @@ quickbase.api('API_GetDBVar', {
 quickbase.api('API_GetGroupRole', {
 	dbid: 'bguin9b8e', /* Required */
 	gid: '345889.klsd' /* Required */
-}).then(function(results){
+}).then((results) => {
 	/* results = {
 	 * 	action: 'API_GetGroupRole',
 	 * 	errcode: 0,
@@ -919,7 +919,7 @@ quickbase.api('API_GetGroupRole', {
 	 * 	]
 	 * }
 	*/
-}).catch(function(error){
+}).catch((error) => {
 	// Handle error
 });
 ```
@@ -929,7 +929,7 @@ quickbase.api('API_GetGroupRole', {
 ```javascript
 quickbase.api('API_GetNumRecords', {
 	dbid: 'bguin9b8e' /* Required */
-}).then(function(results){
+}).then((results) => {
 	/* results = {
 	 * 	action: 'API_GetNumRecords',
 	 * 	errcode: 0,
@@ -937,7 +937,7 @@ quickbase.api('API_GetNumRecords', {
 	 * 	num_records: 17
 	 * }
 	*/
-}).catch(function(error){
+}).catch((error) => {
 	// Handle error
 });
 ```
@@ -947,7 +947,7 @@ quickbase.api('API_GetNumRecords', {
 ```javascript
 quickbase.api('API_GetSchema', {
 	dbid: 'bddnn3uz9' /* Required */
-}).then(function(results){
+}).then((results) => {
 	/* results = {
 	 * 	action: 'API_GetSchema',
 	 * 	errcode: 0,
@@ -1001,7 +1001,7 @@ quickbase.api('API_GetSchema', {
 	 * 	}
 	 * }
 	*/
-}).catch(function(error){
+}).catch((error) => {
 	// Handle error
 });
 ```
@@ -1013,9 +1013,9 @@ quickbase.api('API_GetRecordAsHTML', {
 	dbid: 'bguin9b8e', /* Required */
 	rid: 2,            /* Required */
 	dfid: 10
-}).then(function(results){
+}).then((results) => {
 	/* results = '<html>...</html>' */
-}).catch(function(error){
+}).catch((error) => {
 	// Handle error
 });
 ```
@@ -1026,7 +1026,7 @@ quickbase.api('API_GetRecordAsHTML', {
 quickbase.api('API_GetRecordInfo', {
 	dbid: 'bguin9b8e', /* Required */
 	rid: 2             /* Required */
-}).then(function(results){
+}).then((results) => {
 	/* results = {
 	 * 	action: 'API_GetRecordInfo',
 	 * 	errcode: 0,
@@ -1045,7 +1045,7 @@ quickbase.api('API_GetRecordInfo', {
 	 * 	]
 	 * }
 	*/
-}).catch(function(error){
+}).catch((error) => {
 	// Handle error
 });
 ```
@@ -1055,7 +1055,7 @@ quickbase.api('API_GetRecordInfo', {
 ```javascript
 quickbase.api('API_GetRoleInfo', {
 	dbid: 'bguin9b8e' /* Required */
-}).then(function(results){
+}).then((results) => {
 	/* results = {
 	 * 	action: 'API_GetRoleInfo',
 	 * 	errcode: 0,
@@ -1073,7 +1073,7 @@ quickbase.api('API_GetRoleInfo', {
 	 * 	]
 	 * }
 	*/
-}).catch(function(error){
+}).catch((error) => {
 	// Handle error
 });
 ```
@@ -1081,7 +1081,7 @@ quickbase.api('API_GetRoleInfo', {
 ### API_GetUserInfo
 [QuickBase Documentation &#8599;](https://www.quickbase.com/api-guide/index.html#getuserinfo.html)
 ```javascript
-quickbase.api('API_GetUserInfo').then(function(results){
+quickbase.api('API_GetUserInfo').then((results) => {
 	/* results = {
 	 * 	action: 'API_GetUserInfo',
 	 * 	errcode: 0,
@@ -1096,7 +1096,7 @@ quickbase.api('API_GetUserInfo').then(function(results){
 	 * 	}
 	 * }
 	*/
-}).catch(function(error){
+}).catch((error) => {
 	// Handle error
 });
 ```
@@ -1108,7 +1108,7 @@ quickbase.api('API_GetUserRole', {
 	dbid: 'bguin9b8e',     /* Required */
 	userid: '112245.efy7',
 	inclgrps: 1
-}).then(function(results){
+}).then((results) => {
 	/* results = {
 	 * 	action: 'API_GetUserRole',
 	 * 	errcode: 0,
@@ -1134,7 +1134,7 @@ quickbase.api('API_GetUserRole', {
 	 * 	}
 	 * }
 	*/
-}).catch(function(error){
+}).catch((error) => {
 	// Handle error
 });
 ```
@@ -1145,7 +1145,7 @@ quickbase.api('API_GetUserRole', {
 quickbase.api('API_GetUsersInGroup', {
 	gid: '2345.skdj',
 	includeAllMgrs: false
-}).then(function(results){
+}).then((results) => {
 	/* results = {
 	 * 	action: 'API_GetUsersInGroup',
 	 * 	errcode: 0,
@@ -1183,7 +1183,7 @@ quickbase.api('API_GetUsersInGroup', {
 	 * 	}
 	 * }
 	*/
-}).catch(function(error){
+}).catch((error) => {
 	// Handle error
 });
 ```
@@ -1196,7 +1196,7 @@ quickbase.api('API_GrantedDBs', {
 	excludeparents: 0,
 	includeancestors: 0,
 	withembeddedtables: 0
-}).then(function(results){
+}).then((results) => {
 	/* results = {
 	 * 	action: 'API_GrantedDBs',
 	 * 	errcode: 0,
@@ -1210,7 +1210,7 @@ quickbase.api('API_GrantedDBs', {
 	 * 	]
 	 * }
 	*/
-}).catch(function(error){
+}).catch((error) => {
 	// Handle error
 });
 ```
@@ -1220,7 +1220,7 @@ quickbase.api('API_GrantedDBs', {
 ```javascript
 quickbase.api('API_GrantedDBsForGroup', {
 	gid: '1217.dgpt' /* Required */
-}).then(function(results){
+}).then((results) => {
 	/* results = {
 	 * 	action: 'API_GrantedDBsForGroup',
 	 * 	errcode: 0,
@@ -1234,7 +1234,7 @@ quickbase.api('API_GrantedDBsForGroup', {
 	 * 	]
 	 * }
 	*/
-}).catch(function(error){
+}).catch((error) => {
 	// Handle error
 });
 ```
@@ -1245,7 +1245,7 @@ quickbase.api('API_GrantedDBsForGroup', {
 quickbase.api('API_GrantedGroups', {
 	userid: '930245.jlpw', /* Required */
 	adminonly: false
-}).then(function(results){
+}).then((results) => {
 	/* results = {
 	 * 	action: 'API_GrantedGroups',
 	 * 	errcode: 0,
@@ -1261,7 +1261,7 @@ quickbase.api('API_GrantedGroups', {
 	 * 	]
 	 * }
 	*/
-}).catch(function(error){
+}).catch((error) => {
 	// Handle error
 });
 ```
@@ -1281,7 +1281,7 @@ quickbase.api('API_ImportFromCSV', {
 	clist_output: '',
 	skipfirst: false,
 	msInUTC: true
-}).then(function(results){
+}).then((results) => {
 	/* results = {
 	 * 	action: 'API_ImportFromCSV',
 	 * 	errcode: 0,
@@ -1300,7 +1300,7 @@ quickbase.api('API_ImportFromCSV', {
 	 * 	]
 	 * }
 	*/
-}).catch(function(error){
+}).catch((error) => {
 	// Handle error
 });
 ```
@@ -1314,7 +1314,7 @@ quickbase.api('API_ProvisionUser', {
 	roleid: 11,
 	fname: 'Margi',                 /* Required */
 	lname: 'Rita'                   /* Required */
-}).then(function(results){
+}).then((results) => {
 	/* results = {
 	 * 	action: 'API_ProvisionUser',
 	 * 	errcode: 0,
@@ -1322,7 +1322,7 @@ quickbase.api('API_ProvisionUser', {
 	 * 	userid: '112248.5nzg'
 	 * }
 	*/
-}).catch(function(error){
+}).catch((error) => {
 	// Handle error
 });
 ```
@@ -1335,7 +1335,7 @@ quickbase.api('API_PurgeRecords', {
 	query: ''
 	/* qid: 1            */
 	/* qname: 'List All' */
-}).then(function(results){
+}).then((results) => {
 	/* results = {
 	 * 	action: 'API_PurgeRecords',
 	 * 	errcode: 0,
@@ -1343,7 +1343,7 @@ quickbase.api('API_PurgeRecords', {
 	 * 	num_records_deleted: 21
 	 * }
 	*/
-}).catch(function(error){
+}).catch((error) => {
 	// Handle error
 });
 ```
@@ -1356,14 +1356,14 @@ quickbase.api('API_RemoveGroupFromRole', {
 	gid: '345889.sjkl',       /* Required */
 	roleid: 12,               /* Required */
 	allRoles: false	
-}).then(function(results){
+}).then((results) => {
 	/* results = {
 	 * 	action: 'API_RemoveGroupFromRole',
 	 * 	errcode: 0,
 	 * 	errtext: 'No error'
 	 * }
 	*/
-}).catch(function(error){
+}).catch((error) => {
 	// Handle error
 });
 ```
@@ -1376,14 +1376,14 @@ quickbase.api('API_RemoveSubgroup', {
 	gid: '345889.sjkl',       /* Required */
 	subgroupid: '345889.skld' /* Required */
 	
-}).then(function(results){
+}).then((results) => {
 	/* results = {
 	 * 	action: 'API_RemoveSubgroup',
 	 * 	errcode: 0,
 	 * 	errtext: 'No error'
 	 * }
 	*/
-}).catch(function(error){
+}).catch((error) => {
 	// Handle error
 });
 ```
@@ -1395,14 +1395,14 @@ quickbase.api('API_RemoveUserFromGroup', {
 	dbid: 'bguin9b8e',     /* Required */
 	gid: '345889.sjkl',    /* Required */
 	userid: '9380434.rtgf' /* Required */
-}).then(function(results){
+}).then((results) => {
 	/* results = {
 	 * 	action: 'API_RemoveUserFromGroup',
 	 * 	errcode: 0,
 	 * 	errtext: 'No error'
 	 * }
 	*/
-}).catch(function(error){
+}).catch((error) => {
 	// Handle error
 });
 ```
@@ -1414,14 +1414,14 @@ quickbase.api('API_RemoveUserFromRole', {
 	dbid: 'bguin9b8e',     /* Required */
 	userid: '112245.efy7', /* Required */
 	roleid: 11             /* Required */
-}).then(function(results){
+}).then((results) => {
 	/* results = {
 	 * 	action: 'API_RemoveUserFromRole',
 	 * 	errcode: 0,
 	 * 	errtext: 'No error'
 	 * }
 	*/
-}).catch(function(error){
+}).catch((error) => {
 	// Handle error
 });
 ```
@@ -1432,14 +1432,14 @@ quickbase.api('API_RemoveUserFromRole', {
 quickbase.api('API_RenameApp', {
 	dbid: 'bguin9b8e',     /* Required */
 	newappname: 'Refueler' /* Required */
-}).then(function(results){
+}).then((results) => {
 	/* results = {
 	 * 	action: 'API_RenameApp',
 	 * 	errcode: 0,
 	 * 	errtext: 'No error'
 	 * }
 	*/
-}).catch(function(error){
+}).catch((error) => {
 	// Handle error
 });
 ```
@@ -1450,7 +1450,7 @@ quickbase.api('API_RenameApp', {
 quickbase.api('API_RunImport', {
 	dbid: 'bguin9b8e', /* Required */
 	id: 10             /* Required */
-}).then(function(results){
+}).then((results) => {
 	/* results = {
 	 * 	action: 'API_RunImport',
 	 * 	errcode: 0,
@@ -1458,7 +1458,7 @@ quickbase.api('API_RunImport', {
 	 * 	import_status: '3 new records were created.'
 	 * }
 	*/
-}).catch(function(error){
+}).catch((error) => {
 	// Handle error
 });
 ```
@@ -1470,14 +1470,14 @@ quickbase.api('API_SendInvitation', {
 	dbid: 'bguin9b8e',     /* Required */
 	userid: '112249.ctdg', /* Required */
 	usertext: 'Welcome!'
-}).then(function(results){
+}).then((results) => {
 	/* results = {
 	 * 	action: 'API_SendInvitation',
 	 * 	errcode: 0,
 	 * 	errtext: 'No error'
 	 * }
 	*/
-}).catch(function(error){
+}).catch((error) => {
 	// Handle error
 });
 ```
@@ -1489,14 +1489,14 @@ quickbase.api('API_SetDBVar', {
 	dbid: 'bguin9b8e',   /* Required */
 	varname: 'usercode', /* Required */
 	value: 14            /* Required */
-}).then(function(results){
+}).then((results) => {
 	/* results = {
 	 * 	action: 'API_SetDBVar',
 	 * 	errcode: 0,
 	 * 	errtext: 'No error'
 	 * }
 	*/
-}).catch(function(error){
+}).catch((error) => {
 	// Handle error
 });
 ```
@@ -1508,7 +1508,7 @@ quickbase.api('API_SetFieldProperties', {
 	dbid: 'bguin9b8e',                    /* Required */
 	fid: 6,                               /* Required */
 	/* property_name: 'property value' */ /* Refer to QuickBase Documentation for a list of Properties */
-}).then(function(results){
+}).then((results) => {
 	/* results = {
 	 * 	action: 'API_SetFieldProperties',
 	 * 	errcode: 0,
@@ -1517,7 +1517,7 @@ quickbase.api('API_SetFieldProperties', {
 	 * 	fname: 'Business Phone Number'
 	 * }
 	*/
-}).catch(function(error){
+}).catch((error) => {
 	// Handle error
 });
 ```
@@ -1528,14 +1528,14 @@ quickbase.api('API_SetFieldProperties', {
 quickbase.api('API_SetKeyField', {
 	dbid: 'bguin9b8e', /* Required */
 	fid: 6             /* Required */
-}).then(function(results){
+}).then((results) => {
 	/* results = {
 	 * 	action: 'API_SetKeyField',
 	 * 	errcode: 0,
 	 * 	errtext: 'No error'
 	 * }
 	*/
-}).catch(function(error){
+}).catch((error) => {
 	// Handle error
 });
 ```
@@ -1543,14 +1543,14 @@ quickbase.api('API_SetKeyField', {
 ### API_SignOut
 [QuickBase Documentation &#8599;](https://www.quickbase.com/api-guide/index.html#signout.html)
 ```javascript
-quickbase.api('API_SignOut').then(function(results){
+quickbase.api('API_SignOut').then((results) => {
 	/* results = {
 	 * 	action: 'API_SignOut',
 	 * 	errcode: 0,
 	 * 	errtext: 'No error'
 	 * }
 	*/
-}).catch(function(error){
+}).catch((error) => {
 	// Handle error
 });
 ```
@@ -1566,7 +1566,7 @@ quickbase.api('API_UploadFile', {
 		filename: 'photo1.jpg',
 		value: 'base64'
 	}
-}).then(function(results){
+}).then((results) => {
 	/* results = {
 	 * 	action: 'API_UploadFile',
 	 * 	errcode: 0,
@@ -1581,7 +1581,7 @@ quickbase.api('API_UploadFile', {
 	 * 	]
 	 * }
 	*/
-}).catch(function(error){
+}).catch((error) => {
 	// Handle error
 });
 ```
@@ -1591,7 +1591,7 @@ quickbase.api('API_UploadFile', {
 ```javascript
 quickbase.api('API_UserRoles', {
 	dbid: 'bguin9b8e' /* Required */
-}).then(function(results){
+}).then((results) => {
 	/* results = {
 	 * 	action: 'API_UserRoles',
 	 * 	errcode: 0,
@@ -1619,7 +1619,7 @@ quickbase.api('API_UserRoles', {
 	 * 	]
 	 * }
 	*/
-}).catch(function(error){
+}).catch((error) => {
 	// Handle error
 });
 ```

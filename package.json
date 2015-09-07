@@ -1,14 +1,14 @@
 {
   "name": "quickbase",
-  "version": "1.0.7",
-  "description": "A lightweight, very flexible QuickBase API",
+  "version": "2.0.0",
+  "description": "A lightweight, very flexible QuickBase API (ES6, Promise)",
   "keywords": [
     "QuickBase",
     "quickbase",
     "qb",
     "api"
   ],
-  "homepage": "https://github.com/tflanagan/node-quickbase",
+  "homepage": "https://github.com/tflanagan/node-quickbase/tree/es6",
   "bugs": {
     "url": "https://github.com/tflanagan/node-quickbase/issues",
     "email": "tristian.flanagan@comcast.net"
@@ -32,10 +32,10 @@
   "main": "quickbase.js",
   "repository": {
     "type": "git",
-    "url": "git://github.com/tflanagan/node-quickbase.git"
+    "url": "git://github.com/tflanagan/node-quickbase.git#es6"
   },
   "scripts": {
-    "build": "browserify quickbase.js > quickbase.browserify.js && cat devTools\\LICENSE.js > quickbase.browserify.min.js && minify quickbase.browserify.js >> quickbase.browserify.min.js",
+    "build": "",
     "release-patch": "npm run build && git add -A . && git commit -m \"Release Patch Build\" && npm version patch -m \"Release Patch v%s\" && npm publish && git push --follow-tags",
     "release-minor": "npm run build && git add -A . && git commit -m \"Release Minor Build\" && npm version minor -m \"Release Minor v%s\" && npm publish && git push --follow-tags",
     "release-major": "npm run build && git add -A . && git commit -m \"Release Major Build\" && npm version major -m \"Release Major v%s\" && npm publish && git push --follow-tags"
@@ -51,5 +51,5 @@
   "engines": {
     "node": ">=0.12.*"
   },
-  "git": "git://github.com/tflanagan/node-quickbase.git#master"
+  "git": "git://github.com/tflanagan/node-quickbase.git#es6"
 }

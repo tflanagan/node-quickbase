@@ -5,49 +5,13 @@ node-quickbase
 
 A lightweight, very flexible QuickBase API
 
-[API Documentation](https://github.com/tflanagan/node-quickbase/blob/master/documentation/api.md)
+[API Documentation](https://github.com/tflanagan/node-quickbase/blob/es6/documentation/api.md)
 
 Install
 -------
 ```
-# Latest Stable Release
-$ npm install quickbase
-
 # Latest Commit
-$ npm install tflanagan/node-quickbase
-```
-
-Browserify
-----------
-This library works out of the box with Browserify.
-```
-$ npm install quickbase
-$ npm install -g browserify
-$ browserify node_modules/quickbase > quickbase.browserify.js
-```
-This exposes the QuickBase object to the global namespace (```window.QuickBase || QuickBase```).
-
-__Warning: Native Browser Promises do not share the same functionality as Bluebird Promises!__
-
-Chaining functions off of an ```.api()``` function call uses the Bluebird Promise Library. Declaring a ```new Promise()``` uses Native Browser Promises (if available).
-
-```
-$ npm install -g minifier
-$ minify quickbase.browserify.js > quickbase.browserify.min.js
-```
-
-The use is the same as in Nodejs, but there is no need to ```require('quickbase')```.
-
-```html
-<script type="text/javascript" src="quickbase.browserify.js"></script>
-<script type="text/javascript">
-	var quickbase = new QuickBase({
-		realm: 'www',
-		appToken: '*****'
-	});
-
-	...
-</script>
+$ npm install tflanagan/node-quickbase#es6
 ```
 
 Example
@@ -63,15 +27,15 @@ var quickbase = new QuickBase({
 quickbase.api('API_Authenticate', {
 	username: '*****',
 	password: '*****'
-}).then(function(result){
+}).then((result) => {
 	return quickbase.api('API_DoQuery', {
 		dbid: '*****',
 		clist: '3.12',
 		options: 'num-5'
-	}).then(function(result){
+	}).then((result) => {
 		return result.table.records;
 	});
-}).map(function(record){
+}).each((record) => {
 	return quickbase.api('API_EditRecord', {
 		dbid: '*****',
 		rid: record[3],
@@ -79,15 +43,15 @@ quickbase.api('API_Authenticate', {
 			{ fid: 12, value: record[12] }
 		]
 	});
-}).then(function(){
+}).then(() => {
 	return quickbase.api('API_DoQuery', {
 		dbid: '*****',
 		clist: '3.12',
 		options: 'num-5'
 	});
-}).then(function(result){
+}).then((result) => {
 	console.log(result);
-}).catch(function(err){
+}).catch((err) => {
 	console.error(err);
 });
 ```
