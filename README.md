@@ -5,13 +5,16 @@ node-quickbase
 
 A lightweight, very flexible QuickBase API
 
-[API Documentation](https://github.com/tflanagan/node-quickbase/blob/es6/documentation/api.md)
+[API Documentation](https://github.com/tflanagan/node-quickbase/blob/master/documentation/api.md)
 
 Install
 -------
 ```
+# Latest Stable Release
+$ npm install quickbase
+
 # Latest Commit
-$ npm install tflanagan/node-quickbase#es6
+$ npm install tflanagan/node-quickbase
 ```
 
 Browserify
