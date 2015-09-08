@@ -49,7 +49,7 @@
     "minify": "*"
   },
   "engines": {
-    "node": ">=0.12.*"
+    "node": ">=0.12.* <0.12"
   },
   "git": "git://github.com/tflanagan/node-quickbase.git#master"
 }
