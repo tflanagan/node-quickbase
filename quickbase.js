@@ -379,7 +379,7 @@ class QueryBuilder {
 		if(this.settings.flags.useXML === true){
 			this.payload = builder.buildObject(this.options);
 		}else{
-			Object.keys().forEach((arg) => {
+			Object.keys(this.options).forEach((arg) => {
 				this.payload += '&' + arg + '=' + encodeURIComponent(this.options[arg]);
 			});
 		}
