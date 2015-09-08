@@ -35,7 +35,7 @@
     "url": "git://github.com/tflanagan/node-quickbase.git"
   },
   "scripts": {
-    "build": "browserify quickbase.js > quickbase.browserify.js && cat devTools\\LICENSE.js > quickbase.browserify.min.js && minify quickbase.browserify.js >> quickbase.browserify.min.js",
+    "build": "babel quickbase.js > quickbase.es5.js && browserify quickbase.es5.js > quickbase.browserify.js && cat devTools\\LICENSE.js > quickbase.browserify.min.js && minify quickbase.browserify.js >> quickbase.browserify.min.js",
     "release-patch": "npm run build && git add -A . && git commit -m \"Release Patch Build\" && npm version patch -m \"Release Patch v%s\" && npm publish && git push --follow-tags",
     "release-minor": "npm run build && git add -A . && git commit -m \"Release Minor Build\" && npm version minor -m \"Release Minor v%s\" && npm publish && git push --follow-tags",
     "release-major": "npm run build && git add -A . && git commit -m \"Release Major Build\" && npm version major -m \"Release Major v%s\" && npm publish && git push --follow-tags"
@@ -45,11 +45,12 @@
     "xml2js": "^0.4.12"
   },
   "devDependencies": {
+    "babel": "*",
     "browserify": "*",
     "minify": "*"
   },
   "engines": {
-    "node": ">=0.12.* <0.12"
+    "node": ">=4.0.*"
   },
-  "git": "git://github.com/tflanagan/node-quickbase.git#master"
+  "git": "git://github.com/tflanagan/node-quickbase.git"
 }

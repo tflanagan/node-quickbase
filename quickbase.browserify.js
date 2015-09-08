@@ -17502,39 +17502,50 @@ module.exports = property;
 'use strict';
 
 /* Dependencies */
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
 var xml = require('xml2js'),
-	http = require('http'),
-	https = require('https'),
-	Promise = require('bluebird');
+    http = require('http'),
+    https = require('https'),
+    Promise = require('bluebird');
 
 /* Native Extensions */
-if(!Object.hasOwnProperty('extend') && Object.extend === undefined){
+if (!Object.hasOwnProperty('extend') && Object.extend === undefined) {
+	Object.defineProperty(Object.prototype, '_extend', {
+		enumerable: false,
+		value: function value(source) {
+			var _this = this;
+
+			Object.getOwnPropertyNames(source).forEach(function (property) {
+				if (_this.hasOwnProperty(property) && typeof _this[property] === 'object') {
+					_this[property] = _this[property].extend(source[property]);
+				} else {
+					Object.defineProperty(_this, property, Object.getOwnPropertyDescriptor(source, property));
+				}
+			});
+
+			return this;
+		}
+	});
+
 	Object.defineProperty(Object.prototype, 'extend', {
 		enumerable: false,
-		value: function(){
-			var that = this,
-				args = new Array(arguments.length),
-				i = 0, l = args.length,
-				extend = function(source){
-					var props = Object.getOwnPropertyNames(source),
-						i = 0, l = props.length,
-						prop;
+		value: function value() {
+			var args = new Array(arguments.length),
+			    i = 0,
+			    l = args.length;
 
-					for(; i < l; ++i){
-						prop = props[i];
-
-						if(that.hasOwnProperty(prop) && typeof(that[prop]) === 'object'){
-							that[prop] = that[prop].extend(source[prop]);
-						}else{
-							Object.defineProperty(that, prop, Object.getOwnPropertyDescriptor(source, prop));
-						}
-					}
-				};
-
-			for(; i < l; ++i){
+			for (; i < l; ++i) {
 				args[i] = arguments[i];
 
-				extend(args[i]);
+				this._extend(args[i]);
 			}
 
 			return this;
@@ -17543,106 +17554,88 @@ if(!Object.hasOwnProperty('extend') && Object.extend === undefined){
 }
 
 /* Helpers */
-var inherits = function(ctor, superCtor){
-	ctor.super_ = superCtor;
+var cleanXML = function cleanXML(xml) {
+	var isInt = /^-?\s*\d+$/,
+	    isDig = /^(-?\s*\d+\.?\d*)$/,
+	    radix = 10;
 
-	ctor.prototype = Object.create(superCtor.prototype, {
-		constructor: {
-			value: ctor,
-			enumerable: false,
-			writable: true,
-			configurable: true
-		}
-	});
-};
+	Object.keys(xml).forEach(function (node) {
+		var value = undefined,
+		    singulars = undefined,
+		    l = -1,
+		    i = -1,
+		    s = -1,
+		    e = -1;
 
-var cleanXML = function(xml){
-	var keys = Object.keys(xml),
-		o = 0, k = keys.length,
-		node, value, singulars,
-		l = -1, i = -1, s = -1, e = -1,
-		isInt = /^-?\s*\d+$/,
-		isDig = /^(-?\s*\d+\.?\d*)$/,
-		radix = 10;
-
-	for(; o < k; ++o){
-		node = keys[o];
-
-		if(xml[node] instanceof Array && xml[node].length === 1){
+		if (xml[node] instanceof Array && xml[node].length === 1) {
 			xml[node] = xml[node][0];
 		}
 
-		if(xml[node] instanceof Object){
+		if (xml[node] instanceof Object) {
 			value = Object.keys(xml[node]);
 
-			if(value.length === 1){
+			if (value.length === 1) {
 				l = node.length;
 
-				singulars = [
-					node.substring(0, l - 1),
-					node.substring(0, l - 3) + 'y'
-				];
+				singulars = [node.substring(0, l - 1), node.substring(0, l - 3) + 'y'];
 
 				i = singulars.indexOf(value[0]);
 
-				if(i !== -1){
+				if (i !== -1) {
 					xml[node] = xml[node][singulars[i]];
 				}
 			}
 		}
 
-		if(typeof(xml[node]) === 'object'){
+		if (typeof xml[node] === 'object') {
 			xml[node] = cleanXML(xml[node]);
 		}
 
-		if(typeof(xml[node]) === 'string'){
+		if (typeof xml[node] === 'string') {
 			value = xml[node].trim();
 
-			if(value.match(isDig)){
-				if(value.match(isInt)){
+			if (value.match(isDig)) {
+				if (value.match(isInt)) {
 					l = parseInt(value, radix);
 
-					if(Math.abs(l) <= 9007199254740991){
+					if (Math.abs(l) <= 9007199254740991) {
 						xml[node] = l;
 					}
-				}else{
+				} else {
 					l = value.length;
 
-					if(l <= 15){
+					if (l <= 15) {
 						xml[node] = parseFloat(value);
-					}else{
-						for(i = 0, s = -1, e = -1; i < l && e - s <= 15; ++i){
-							if(value.charAt(i) > 0){
-								if(s === -1){
+					} else {
+						for (i = 0, s = -1, e = -1; i < l && e - s <= 15; ++i) {
+							if (value.charAt(i) > 0) {
+								if (s === -1) {
 									s = i;
-								}else{
+								} else {
 									e = i;
 								}
 							}
 						}
 
-						if(e - s <= 15){
+						if (e - s <= 15) {
 							xml[node] = parseFloat(value);
 						}
 					}
 				}
-			}else{
+			} else {
 				xml[node] = value;
 			}
 		}
-	}
+	});
 
 	return xml;
 };
 
-var flattenXMLAttributes = function(obj){
-	if(obj.hasOwnProperty('$')){
-		var props = Object.keys(obj.$),
-			i = 0, l = props.length;
-
-		for(; i < l; ++i){
-			obj[props[i]] = obj.$[props[i]];
-		}
+var flattenXMLAttributes = function flattenXMLAttributes(obj) {
+	if (obj.hasOwnProperty('$')) {
+		Object.keys(obj.$).forEach(function (property) {
+			obj[property] = obj.$[property];
+		});
 
 		delete obj.$;
 	}
@@ -17651,495 +17644,542 @@ var flattenXMLAttributes = function(obj){
 };
 
 /* Error Handling */
-var QuickbaseError = (function(){
-	var QuickbaseError = function(code, name, message){
+
+var QuickbaseError = (function (_Error) {
+	_inherits(QuickbaseError, _Error);
+
+	function QuickbaseError(code, name, message) {
+		_classCallCheck(this, QuickbaseError);
+
+		_get(Object.getPrototypeOf(QuickbaseError.prototype), 'constructor', this).call(this, name);
+
 		this.code = code;
 		this.name = name;
-		this.message = message;
-
-		if(this.message instanceof Object){
-			this.message = this.message._;
-		}
-
-		if(!this.hasOwnProperty('stack')){
-			this.stack = (new Error()).stack;
-		}
+		this.message = message || '';
 
 		return this;
-	};
+	}
 
-	inherits(QuickbaseError, Error);
-
+	/* Main Class */
 	return QuickbaseError;
-})();
+})(Error);
 
-/* Main Class */
-var QuickBase = (function(){
-	var defaults = {
-		realm: 'www',
-		domain: 'quickbase.com',
-		useSSL: true,
+var QuickBase = (function () {
+	function QuickBase(options) {
+		_classCallCheck(this, QuickBase);
 
-		username: '',
-		password: '',
-		appToken: '',
-		ticket: '',
+		var defaults = {
+			realm: 'www',
+			domain: 'quickbase.com',
+			useSSL: true,
 
-		flags: {
-			useXML: true,
-			msInUTC: true,
-			includeRids: true,
-			returnPercentage: false,
-			fmt: 'structured',
-			encoding: 'UTF-8'
-		},
+			username: '',
+			password: '',
+			appToken: '',
+			ticket: '',
 
-		status: {
-			errcode: 0,
-			errtext: 'No error',
-			errdetail: ''
-		},
+			flags: {
+				useXML: true,
+				msInUTC: true,
+				includeRids: true,
+				returnPercentage: false,
+				fmt: 'structured',
+				encoding: 'UTF-8'
+			},
 
-		maxErrorRetryAttempts: 3,
-		connectionLimit: 10,
-		errorOnConnectionLimit: false
-	};
+			status: {
+				errcode: 0,
+				errtext: 'No error',
+				errdetail: ''
+			},
 
-	var QuickBase = function(options){
+			maxErrorRetryAttempts: 3,
+			connectionLimit: 10,
+			errorOnConnectionLimit: false
+		};
+
 		this.settings = ({}).extend(defaults, options || {});
 
 		this.throttle = new Throttle(this.settings.connectionLimit, this.settings.errorOnConnectionLimit);
 
 		return this;
-	};
+	}
 
-	QuickBase.prototype.api = function(action, options){
-		var that = this;
+	/* Throttle */
 
-		return this.throttle.acquire(function(){
-			return (new QueryBuilder(that, action, options || {})).run();
-		});
-	};
+	_createClass(QuickBase, [{
+		key: 'api',
+		value: function api(action, options, callback) {
+			var _this2 = this;
+
+			var call = new Promise(function (resolve, reject) {
+				Promise.using(_this2.throttle.acquire(), function () {
+					var query = new QueryBuilder(_this2, action, options || {}, callback);
+
+					return query.addFlags().processOptions().actionRequest().constructPayload().processQuery().then(function (results) {
+						query.results = results;
+
+						query.actionResponse();
+
+						if (callback instanceof Function) {
+							callback(null, query.results);
+						} else {
+							resolve(query.results);
+						}
+					})['catch'](function (error) {
+						resolve(query.catchError(error));
+					});
+				})['catch'](function (error) {
+					if (callback instanceof Function) {
+						callback(error);
+					} else {
+						reject(error);
+					}
+				});
+			});
+
+			return callback instanceof Function ? this : call;
+		}
+	}]);
 
 	return QuickBase;
 })();
 
-/* Throttle */
-var Throttle = (function(){
-	var Throttle = function(maxConnections, errorOnConnectionLimit){
-		var that = this;
+var Throttle = (function () {
+	function Throttle(maxConnections, errorOnConnectionLimit) {
+		_classCallCheck(this, Throttle);
 
 		this.maxConnections = maxConnections;
 		this.errorOnConnectionLimit = errorOnConnectionLimit;
 
-		this.numConnections = 0;
-		this.pendingConnections = [];
+		this._numConnections = 0;
+		this._pendingConnections = [];
 
 		return this;
-	};
+	}
 
-	Throttle.prototype.acquire = function(callback){
-		var that = this;
+	/* Request Handling */
 
-		if(this.maxConnections === -1){
-			return Promise.resolve(callback());
-		}
+	_createClass(Throttle, [{
+		key: 'acquire',
+		value: function acquire() {
+			var _this3 = this;
 
-		if(this.numConnections >= this.maxConnections){
-			if(this.errorOnConnectionLimit){
-				return Promise.reject(new QuickbaseError(1001, 'No Connections Available', 'Maximum Number of Connections Reached'));
-			}
+			return new Promise(function (resolve, reject) {
+				if (_this3._numConnections >= _this3.maxConnections) {
+					if (_this3.errorOnConnectionLimit) {
+						reject(new QuickbaseError(1001, 'No Connections Available', 'Maximum Number of Connections Reached'));
+					} else {
+						_this3._pendingConnections.push({
+							resolve: resolve,
+							reject: reject
+						});
+					}
+				} else {
+					++_this3._numConnections;
 
-			return new Promise(function(resolve, reject){
-				that.pendingConnections.push(function(){
-					resolve(that.acquire(callback));
-				});
+					resolve();
+				}
+			}).disposer(function () {
+				--_this3._numConnections;
+
+				if (_this3._pendingConnections.length > 0) {
+					++_this3._numConnections;
+
+					_this3._pendingConnections.shift().resolve();
+				}
 			});
 		}
-
-		++that.numConnections;
-
-		return new Promise(function(resolve, reject){
-			resolve(callback());
-		}).finally(function(){
-			--that.numConnections;
-
-			if(that.pendingConnections.length > 0){
-				that.pendingConnections.shift()();
-			}
-		});
-	};
+	}]);
 
 	return Throttle;
 })();
 
-/* Request Handling */
-var QueryBuilder = (function(){
-	var QueryBuilder = function(parent, action, options){
+var QueryBuilder = (function () {
+	function QueryBuilder(parent, action, options, callback) {
+		_classCallCheck(this, QueryBuilder);
+
 		this.parent = parent;
 		this.action = action;
 		this.options = options;
+		this.callback = callback;
+
 		this.settings = ({}).extend(parent.settings);
 
-		this.nErr = 0;
+		this.results;
+
+		this._nErr = 0;
 
 		return this;
-	};
+	}
 
-	QueryBuilder.prototype.actionRequest = function(){
-		var action = this.action;
+	/* XML Node Parsers */
 
-		if(!actions.hasOwnProperty(action)){
-			action = 'default';
-		}
+	_createClass(QueryBuilder, [{
+		key: 'actionRequest',
+		value: function actionRequest() {
+			var action = this.action;
 
-		if(typeof(actions[action]) !== 'undefined'){
-			if(typeof(actions[action]) === 'function'){
-				return actions[action](this);
-			}else
-			if(typeof(actions[action].request) === 'function'){
-				return actions[action].request(this);
+			if (!actions.hasOwnProperty(action)) {
+				action = 'default';
 			}
-		}else
-		if(typeof(actions.default.request) === 'function'){
-			return actions.default.request(this);
+
+			if (typeof actions[action] !== 'undefined') {
+				if (typeof actions[action] === 'function') {
+					actions[action](this);
+				} else if (typeof actions[action].request === 'function') {
+					actions[action].request(this);
+				}
+			} else if (typeof actions['default'] !== 'undefined') {
+				if (typeof actions['default'] === 'function') {
+					actions['default'](this);
+				} else if (typeof actions['default'].request === 'function') {
+					actions['default'].request(this);
+				}
+			}
+
+			return this;
 		}
+	}, {
+		key: 'actionResponse',
+		value: function actionResponse() {
+			var action = this.action;
 
-		return Promise.resolve();
-	};
+			if (!actions.hasOwnProperty(action)) {
+				action = 'default';
+			}
 
-	QueryBuilder.prototype.actionResponse = function(result){
-		var action = this.action;
+			if (typeof actions[action] === 'object' && typeof actions[action].response === 'function') {
+				actions[action].response(this, this.results);
+			} else if (typeof actions['default'] === 'object' && typeof actions['default'].response === 'function') {
+				actions['default'].response(this, this.results);
+			}
 
-		if(!actions.hasOwnProperty(action)){
-			action = 'default';
+			return this;
 		}
+	}, {
+		key: 'addFlags',
+		value: function addFlags() {
+			if (!this.options.hasOwnProperty('msInUTC') && this.settings.flags.msInUTC) {
+				this.options.msInUTC = 1;
+			}
 
-		if(typeof(actions[action]) === 'object' && typeof(actions[action].response) === 'function'){
-			return actions[action].response(this, result);
-		}else
-		if(typeof(actions.default.response) === 'function'){
-			return actions.default.response(this, result);
+			if (!this.options.hasOwnProperty('appToken') && this.settings.appToken) {
+				this.options.apptoken = this.settings.appToken;
+			}
+
+			if (!this.options.hasOwnProperty('ticket') && this.settings.ticket) {
+				this.options.ticket = this.settings.ticket;
+			}
+
+			if (!this.options.hasOwnProperty('encoding') && this.settings.flags.encoding) {
+				this.options.encoding = this.settings.flags.encoding;
+			}
+
+			return this;
 		}
+	}, {
+		key: 'catchError',
+		value: function catchError(err) {
+			var _this4 = this;
 
-		return Promise.resolve(result);
-	};
+			++this._nErr;
 
-	QueryBuilder.prototype.addFlags = function(){
-		if(!this.options.hasOwnProperty('msInUTC') && this.settings.flags.msInUTC){
-			this.options.msInUTC = 1;
-		}
+			if (this._nErr < this.settings.maxErrorRetryAttempts) {
+				if ([1000, 1001].indexOf(err.code) !== -1) {
+					return this.processQuery().then(function (results) {
+						_this4.results = results;
 
-		if(!this.options.hasOwnProperty('appToken') && this.settings.appToken){
-			this.options.apptoken = this.settings.appToken;
-		}
+						_this4.actionResponse();
 
-		if(!this.options.hasOwnProperty('ticket') && this.settings.ticket){
-			this.options.ticket = this.settings.ticket;
-		}
+						if (_this4.callback instanceof Function) {
+							_this4.callback(null, _this4.results);
+						} else {
+							return _this4.results;
+						}
+					})['catch'](function (error) {
+						return _this4.catchError(error);
+					});
+				} else if (err.code === 4 && this.parent.settings.hasOwnProperty('username') && this.parent.settings.username !== '' && this.parent.settings.hasOwnProperty('password') && this.parent.settings.password !== '') {
+					return this.parent.api('API_Authenticate', {
+						username: this.parent.settings.username,
+						password: this.parent.settings.password
+					}).then(function (results) {
+						_this4.parent.settings.ticket = results.ticket;
+						_this4.settings.ticket = results.ticket;
+						_this4.options.ticket = results.ticket;
 
-		if(!this.options.hasOwnProperty('encoding') && this.settings.flags.encoding){
-			this.options.encoding = this.settings.flags.encoding;
-		}
+						return _this4.addFlags().constructPayload().processQuery().then(function (results) {
+							_this4.results = results;
 
-		return Promise.resolve();
-	};
+							_this4.actionResponse();
 
-	QueryBuilder.prototype.catchError = function(err){
-		++this.nErr;
+							if (_this4.callback instanceof Function) {
+								_this4.callback(null, _this4.results);
+							} else {
+								return _this4.results;
+							}
+						});
+					})['catch'](function (error) {
+						return _this4.catchError(error);
+					});
+				}
+			}
 
-		var that = this,
-			parent = this.parent,
-			parentSettings = parent.settings;
-
-		if(this.nErr < this.settings.maxErrorRetryAttempts){
-			if([1000, 1001].indexOf(err.code) !== -1){
-				return Promise.bind(this)
-					.then(this.processQuery)
-					.then(this.actionResponse)
-					.catch(this.catchError);
-			}else
-			if(
-				err.code === 4 &&
-				parentSettings.hasOwnProperty('username') && parentSettings.username !== '' &&
-				parentSettings.hasOwnProperty('password') && parentSettings.password !== ''
-			){
-				return parent.api('API_Authenticate', {
-					username: parentSettings.username,
-					password: parentSettings.password
-				}).then(function(results){
-					parentSettings.ticket = results.ticket;
-					that.settings.ticket = results.ticket;
-					that.options.ticket = results.ticket;
-
-					return results;
-				})
-					.bind(this)
-					.then(this.addFlags)
-					.then(this.constructPayload)
-					.then(this.processQuery)
-					.then(this.actionResponse)
-					.catch(this.catchError);
+			if (this.callback instanceof Function) {
+				this.callback(err);
+			} else {
+				throw err;
 			}
 		}
+	}, {
+		key: 'constructPayload',
+		value: function constructPayload() {
+			var _this5 = this;
 
-		return Promise.reject(err);
-	};
+			var builder = new xml.Builder({
+				rootName: 'qdbapi',
+				xmldec: {
+					encoding: this.options.encoding
+				},
+				renderOpts: {
+					pretty: false
+				}
+			});
 
-	QueryBuilder.prototype.constructPayload = function(){
-		var builder = new xml.Builder({
-			rootName: 'qdbapi',
-			xmldec: {
-				encoding: this.options.encoding
-			},
-			renderOpts: {
-				pretty: false
+			this.payload = '';
+
+			if (this.settings.flags.useXML === true) {
+				this.payload = builder.buildObject(this.options);
+			} else {
+				Object.keys(this.options).forEach(function (arg) {
+					_this5.payload += '&' + arg + '=' + encodeURIComponent(_this5.options[arg]);
+				});
 			}
-		});
 
-		this.payload = '';
-
-		if(this.settings.flags.useXML === true){
-			this.payload = builder.buildObject(this.options);
-		}else{
-			for(var args = Object.keys(this.options), i = 0, l = args.length; i < l; ++i){
-				this.payload += '&' + args[i] + '=' + encodeURIComponent(this.options[args[i]]);
-			}
+			return this;
 		}
+	}, {
+		key: 'processQuery',
+		value: function processQuery() {
+			var _this6 = this;
 
-		return Promise.resolve();
-	};
-
-	QueryBuilder.prototype.processQuery = function(){
-		var that = this,
-			settings = that.settings;
-
-		return new Promise(function(resolve, reject){
-			var reqOpts = {
-					hostname: [ settings.realm, settings.domain ].join('.'),
+			return new Promise(function (resolve, reject) {
+				var settings = _this6.settings,
+				    reqOpts = {
+					hostname: [settings.realm, settings.domain].join('.'),
 					port: settings.useSSL ? 443 : 80,
-					path: '/db/' + (that.options.dbid || 'main') + '?act=' + that.action + (!settings.flags.useXML ? that.payload : ''),
+					path: '/db/' + (_this6.options.dbid || 'main') + '?act=' + _this6.action + (!settings.flags.useXML ? _this6.payload : ''),
 					method: settings.flags.useXML ? 'POST' : 'GET',
 					headers: {
 						'Content-Type': 'application/xml',
-						'QUICKBASE-ACTION': that.action
+						'QUICKBASE-ACTION': _this6.action
 					},
 					agent: false
 				},
-				protocol = settings.useSSL ? https : http,
-				request = protocol.request(reqOpts, function(response){
+				    protocol = settings.useSSL ? https : http,
+				    request = protocol.request(reqOpts, function (response) {
 					var xmlResponse = '';
 
-					response.on('data', function(chunk){
+					response.on('data', function (chunk) {
 						xmlResponse += chunk;
 					});
 
-					response.on('end', function(){
-						if(response.headers['content-type'] === 'application/xml'){
+					response.on('end', function () {
+						if (response.headers['content-type'] === 'application/xml') {
 							xml.parseString(xmlResponse, {
 								async: true
-							}, function(err, result){
-								if(err){
+							}, function (err, result) {
+								if (err) {
 									return reject(new QuickbaseError(1000, 'Error Processing Request', err));
 								}
 
 								result = cleanXML(result.qdbapi);
 
-								if(result.errcode !== settings.status.errcode){
+								if (result.errcode !== settings.status.errcode) {
 									return reject(new QuickbaseError(result.errcode, result.errtext, result.errdetail));
 								}
 
 								resolve(result);
 							});
-						}else{
+						} else {
 							resolve(xmlResponse);
 						}
 					});
 				});
 
-			if(settings.flags.useXML === true){
-				request.write(that.payload);
+				if (settings.flags.useXML === true) {
+					request.write(_this6.payload);
+				}
+
+				request.on('error', function (err) {
+					reject(err);
+				});
+
+				request.end();
+			});
+		}
+	}, {
+		key: 'processOptions',
+		value: function processOptions() {
+			var _this7 = this;
+
+			if (this.options.hasOwnProperty('fields')) {
+				this.options.field = this.options.fields;
+
+				delete this.options.fields;
 			}
 
-			request.on('error', function(err){
-				reject(err);
+			var newOpts = {};
+
+			Object.keys(this.options).forEach(function (option) {
+				newOpts[option] = prepareOptions.hasOwnProperty(option) ? prepareOptions[option](_this7.options[option]) : newOpts[option] = _this7.options[option];
 			});
 
-			request.end();
-		});
-	};
+			this.options = newOpts;
 
-	QueryBuilder.prototype.processOptions = function(){
-		if(this.options.hasOwnProperty('fields')){
-			this.options.field = this.options.fields;
-
-			delete this.options.fields;
+			return this;
 		}
-
-		var k = Object.keys(this.options),
-			i = 0, l = k.length,
-			current;
-
-		for(; i < l; ++i){
-			current = k[i];
-
-			if(prepareOptions.hasOwnProperty(current)){
-				this.options[current] = prepareOptions[current](this.options[current]);
-			}
-		}
-
-		return Promise.resolve();
-	};
-
-	QueryBuilder.prototype.run = function(){
-		return Promise.bind(this)
-			.then(this.addFlags)
-			.then(this.processOptions)
-			.then(this.actionRequest)
-			.then(this.constructPayload)
-			.then(this.processQuery)
-			.then(this.actionResponse)
-			.catch(this.catchError);
-	};
+	}]);
 
 	return QueryBuilder;
 })();
 
-/* XML Node Parsers */
 var xmlNodeParsers = {
-	fields: function(val){
-		if(!(val instanceof Array)){
+	fields: function fields(val) {
+		if (!(val instanceof Array)) {
 			// Support Case #480141
-			// XML returned from QuickBase at Application level is "\r\n      "
-			if(val === ''){
+			// XML returned from QuickBase appends "\r\n      "
+			if (val === '') {
 				val = [];
-			}else{
-				val = [ val ];
+			} else {
+				val = [val];
 			}
 		}
 
-		for(var i = 0, l = val.length; i < l; ++i){
-			val[i] = flattenXMLAttributes(val[i]);
+		return val.map(function (value) {
+			value = flattenXMLAttributes(value);
 
 			// Support Case #480141
 			// XML returned from QuickBase inserts '<br />' after every line in formula fields.
-			if(typeof(val[i].formula) === 'object'){
-				val[i].formula = val[i].formula._;
+			if (typeof value.formula === 'object') {
+				value.formula = value.formula._;
 			}
-		}
 
-		return val;
+			return value;
+		});
 	},
-	group: function(val){
+	group: function group(val) {
 		val = flattenXMLAttributes(val);
 
-		var i = 0, l = 0;
-
-		if(val.hasOwnProperty('users')){
-			for(i = 0, l = val.users.length; i < l; ++i){
-				val.users[i] = flattenXMLAttributes(val.users[i]);
-			}
-		}
-
-		if(val.hasOwnProperty('managers')){
-			for(i = 0, l = val.managers.length; i < l; ++i){
-				val.managers[i] = flattenXMLAttributes(val.managers[i]);
-			}
-		}
-
-		if(val.hasOwnProperty('subgroups')){
-			for(i = 0, l = val.subgroups.length; i < l; ++i){
-				val.subgroups[i] = flattenXMLAttributes(val.subgroups[i]);
-			}
-		}
-
-		return val;
-	},
-	lusers: function(val){
-		var i = 0, l = val.length,
-			lusers = [];
-
-		for(; i < l; ++i){
-			lusers.push({
-				id: val[i].$.id,
-				name: val[i]._
+		if (val.hasOwnProperty('users')) {
+			val.users = val.users.map(function (user) {
+				return flattenXMLAttributes(user);
 			});
 		}
 
-		return lusers;
-	},
-	queries: function(val){
-		if(!(val instanceof Array)){
-			// Support Case #480141
-			// XML returned from QuickBase at Application level is "\r\n      "
-			if(val === ''){
-				val = [];
-			}else{
-				val = [ val ];
-			}
+		if (val.hasOwnProperty('managers')) {
+			val.managers = val.managers.map(function (manager) {
+				return flattenXMLAttributes(manager);
+			});
 		}
 
-		for(var i = 0, l = val.length; i < l; ++i){
-			val[i] = flattenXMLAttributes(val[i]);
+		if (val.hasOwnProperty('subgroups')) {
+			val.subgroups = val.subgroups.map(function (subgroup) {
+				return flattenXMLAttributes(subgroup);
+			});
 		}
 
 		return val;
 	},
-	roles: function(val){
-		var i = 0, l = val.length,
-			roles = [],
-			curRole = {};
+	lusers: function lusers(val) {
+		if (!(val instanceof Array)) {
+			// Support Case #480141
+			// XML returned from QuickBase appends "\r\n      "
+			if (val === '') {
+				val = [];
+			} else {
+				val = [val];
+			}
+		}
 
-		for(; i < l; ++i){
-			curRole = {
-				id: val[i].$.id
+		return val.map(function (value) {
+			return {
+				id: value.$.id,
+				name: value._
+			};
+		});
+	},
+	queries: function queries(val) {
+		if (!(val instanceof Array)) {
+			// Support Case #480141
+			// XML returned from QuickBase appends "\r\n      "
+			if (val === '') {
+				val = [];
+			} else {
+				val = [val];
+			}
+		}
+
+		return val.map(function (value) {
+			return flattenXMLAttributes(value);
+		});
+	},
+	roles: function roles(val) {
+		if (!(val instanceof Array)) {
+			// Support Case #480141
+			// XML returned from QuickBase appends "\r\n      "
+			if (val === '') {
+				val = [];
+			} else {
+				val = [val];
+			}
+		}
+
+		return val.map(function (value) {
+			var ret = {
+				id: value.$.id
 			};
 
-			if(val[i]._){
-				curRole.name = val[i]._;
-			}else{
-				if(val[i].hasOwnProperty('access')){
-					curRole.access = {
-						id: val[i].access.$.id,
-						name: val[i].access._
+			if (value._) {
+				ret.name = value._;
+			} else {
+				if (value.hasOwnProperty('access')) {
+					ret.access = {
+						id: value.access.$.id,
+						name: value.access._
 					};
 				}
 
-				if(val[i].hasOwnProperty('member')){
-					curRole.member = {
-						type: val[i].member.$.type,
-						name: val[i].member._
+				if (value.hasOwnProperty('member')) {
+					ret.member = {
+						type: value.member.$.type,
+						name: value.member._
 					};
 				}
 			}
 
-			roles.push(curRole);
-		}
-
-		return roles;
+			return ret;
+		});
 	},
-	variables: function(val){
-		val = val.var;
+	variables: function variables(val) {
+		val = val['var'];
 
-		if(!(val instanceof Array)){
+		if (!(val instanceof Array)) {
 			// Support Case #480141
-			// XML returned from QuickBase at Application level is "\r\n      "
-			if(val === ''){
+			// XML returned from QuickBase appends "\r\n      "
+			if (val === '') {
 				val = [];
-			}else{
-				val = [ val ];
+			} else {
+				val = [val];
 			}
 		}
 
-		var variable = {},
-			newVars = {},
-			i = 0, l = val.length;
+		var newVars = {};
 
-		for(; i < l; ++i){
-			variable = val[i];
-
-			newVars[variable.$.name] = variable._;
-		}
+		val.forEach(function (value) {
+			newVars[value.$.name] = value._;
+		});
 
 		return newVars;
 	}
@@ -18149,817 +18189,537 @@ var xmlNodeParsers = {
 var actions = {
 
 	/* NOTICE:
-	 * When an actions request or response does nothing, comment the function out.
-	 * Will increase performance by cutting out an unnecessary function execution.
-	*/
+  * When an actions request or response does nothing, comment the function out.
+  * Will increase performance by cutting out an unnecessary function execution.
+ */
 
 	// API_AddField: {
-		// request: function(context){
-		// 	return Promise.resolve();
-		// },
-		// response: function(context, result){
-		// 	return Promise.resolve(result);
-		// }
+	// request (query) { },
+	// response (query, results) { }
 	// },
 	// API_AddGroupToRole: {
-		// request: function(context){
-		// 	return Promise.resolve();
-		// },
-		// response: function(context, result){
-		// 	return Promise.resolve(result);
-		// }
+	// request (query) { },
+	// response (query, results) { }
 	// },
 	// API_AddRecord: {
-		// request: function(context){
-		// 	return Promise.resolve();
-		// },
-		// response: function(context, result){
-		// 	return Promise.resolve(result);
-		// }
+	// request (query) { },
+	// response (query, results) { }
 	// },
 	// API_AddReplaceDBPage: {
-		// request: function(context){
-		// 	return Promise.resolve();
-		// },
-		// response: function(context, result){
-		// 	return Promise.resolve(result);
-		// }
+	// request (query) { },
+	// response (query, results) { }
 	// },
 	// API_AddSubGroup: {
-		// request: function(context){
-		// 	return Promise.resolve();
-		// },
-		// response: function(context, result){
-		// 	return Promise.resolve(result);
-		// }
+	// request (query) { },
+	// response (query, results) { }
 	// },
 	// API_AddUserToGroup: {
-		// request: function(context){
-		// 	return Promise.resolve();
-		// },
-		// response: function(context, result){
-		// 	return Promise.resolve(result);
-		// }
+	// request (query) { },
+	// response (query, results) { }
 	// },
 	// API_AddUserToRole: {
-		// request: function(context){
-		// 	return Promise.resolve();
-		// },
-		// response: function(context, result){
-		// 	return Promise.resolve(result);
-		// }
+	// request (query) { },
+	// response (query, results) { }
 	// },
 	API_Authenticate: {
-		request: function(context){
+		request: function request(query) {
 			// API_Authenticate can only happen over SSL
-			context.settings.useSSL = true;
-
-			return Promise.resolve();
+			query.settings.useSSL = true;
 		},
-		response: function(context, result){
-			context.parent.settings.ticket = result.ticket;
-			context.parent.settings.username = context.options.username;
-			context.parent.settings.password = context.options.password;
-
-			return Promise.resolve(result);
+		response: function response(query, results) {
+			query.parent.settings.ticket = results.ticket;
+			query.parent.settings.username = query.options.username;
+			query.parent.settings.password = query.options.password;
 		}
 	},
 	// API_ChangeGroupInfo: {
-		// request: function(context){
-		// 	return Promise.resolve();
-		// },
-		// response: function(context, result){
-		// 	return Promise.resolve(result);
-		// }
+	// request (query) { },
+	// response (query, results) { }
 	// },
 	// API_ChangeManager: {
-		// request: function(context){
-		// 	return Promise.resolve();
-		// },
-		// response: function(context, result){
-		// 	return Promise.resolve(result);
-		// }
+	// request (query) { },
+	// response (query, results) { }
 	// },
 	// API_ChangeRecordOwner: {
-		// request: function(context){
-		// 	return Promise.resolve();
-		// },
-		// response: function(context, result){
-		// 	return Promise.resolve(result);
-		// }
+	// request (query) { },
+	// response (query, results) { }
 	// },
 	// API_ChangeUserRole: {
-		// request: function(context){
-		// 	return Promise.resolve();
-		// },
-		// response: function(context, result){
-		// 	return Promise.resolve(result);
-		// }
+	// request (query) { },
+	// response (query, results) { }
 	// },
 	// API_CloneDatabase: {
-		// request: function(context){
-		// 	return Promise.resolve();
-		// },
-		// response: function(context, result){
-		// 	return Promise.resolve(result);
-		// }
+	// request (query) { },
+	// response (query, results) { }
 	// },
 	API_CopyGroup: {
-		// request: function(context){
-		// 	return Promise.resolve();
-		// },
-		response: function(context, result){
-			if(result.hasOwnProperty('group')){
-				result.group = xmlNodeParsers.group(result.group);
+		// request (query) { },
+		response: function response(query, results) {
+			if (results.hasOwnProperty('group')) {
+				results.group = xmlNodeParsers.group(results.group);
 			}
-
-			return Promise.resolve(result);
 		}
 	},
 	// API_CopyMasterDetail: {
-		// request: function(context){
-		// 	return Promise.resolve();
-		// },
-		// response: function(context, result){
-		// 	return Promise.resolve(result);
-		// }
+	// request (query) { },
+	// response (query, results) { }
 	// },
 	// API_CreateDatabase: {
-		// request: function(context){
-		// 	return Promise.resolve();
-		// },
-		// response: function(context, result){
-		// 	return Promise.resolve(result);
-		// }
+	// request (query) { },
+	// response (query, results) { }
 	// },
 	API_CreateGroup: {
-		// request: function(context){
-		// 	return Promise.resolve();
-		// },
-		response: function(context, result){
-			if(result.hasOwnProperty('group')){
-				result.group = xmlNodeParsers.group(result.group);
+		// request (query) { },
+		response: function response(query, results) {
+			if (results.hasOwnProperty('group')) {
+				results.group = xmlNodeParsers.group(results.group);
 			}
-
-			return Promise.resolve(result);
 		}
 	},
 	// API_CreateTable: {
-		// request: function(context){
-		// 	return Promise.resolve();
-		// },
-		// response: function(context, result){
-		// 	return Promise.resolve(result);
-		// }
+	// request (query) { },
+	// response (query, results) { }
 	// },
 	// API_DeleteDatabase: {
-		// request: function(context){
-		// 	return Promise.resolve();
-		// },
-		// response: function(context, result){
-		// 	return Promise.resolve(result);
-		// }
+	// request (query) { },
+	// response (query, results) { }
 	// },
 	// API_DeleteField: {
-		// request: function(context){
-		// 	return Promise.resolve();
-		// },
-		// response: function(context, result){
-		// 	return Promise.resolve(result);
-		// }
+	// request (query) { },
+	// response (query, results) { }
 	// },
 	// API_DeleteGroup: {
-		// request: function(context){
-		// 	return Promise.resolve();
-		// },
-		// response: function(context, result){
-		// 	return Promise.resolve(result);
-		// }
+	// request (query) { },
+	// response (query, results) { }
 	// },
 	// API_DeleteRecord: {
-		// request: function(context){
-		// 	return Promise.resolve();
-		// },
-		// response: function(context, result){
-		// 	return Promise.resolve(result);
-		// }
+	// request (query) { },
+	// response (query, results) { }
 	// },
 	API_DoQuery: {
-		request: function(context){
-			if(!context.options.hasOwnProperty('returnPercentage') && context.settings.flags.returnPercentage){
-				context.options.returnPercentage = 1;
+		request: function request(query) {
+			if (!query.options.hasOwnProperty('returnPercentage') && query.settings.flags.returnPercentage) {
+				query.options.returnPercentage = 1;
 			}
 
-			if(!context.options.hasOwnProperty('fmt') && context.settings.flags.fmt){
-				context.options.fmt = context.settings.flags.fmt;
+			if (!query.options.hasOwnProperty('fmt') && query.settings.flags.fmt) {
+				query.options.fmt = query.settings.flags.fmt;
 			}
 
-			if(!context.options.hasOwnProperty('includeRids') && context.settings.flags.includeRids){
-				context.options.includeRids = 1;
+			if (!query.options.hasOwnProperty('includeRids') && query.settings.flags.includeRids) {
+				query.options.includeRids = 1;
 			}
-
-			return Promise.resolve();
 		},
-		response: function(context, result){
-			var i = 0, l = 0;
-
-			if(context.options.hasOwnProperty('fmt') && context.options.fmt === 'structured'){
+		response: function response(query, results) {
+			if (query.options.hasOwnProperty('fmt') && query.options.fmt === 'structured') {
 				/* XML is _so_ butt ugly... Let's try to make some sense of it
-				 * Turn this:
-				 * 	{
-				 * 		$: { rid: 1 },
-				 * 		f: [
-				 * 			{ $: { id: 3 }, _: 1 } ],
-				 * 			{ $: { id: 6 }, _: 'Test Value' }
-				 * 			{ $: { id: 7 }, _: 'filename.png', url: 'https://www.quickbase.com/' }
-				 * 		]
-				 * 	}
-				 *
-				 * Into this:
-				 * 	{
-				 * 		3: 1,
-				 * 		6: 'Test Value',
-				 * 		7: {
-				 * 			filename: 'filename.png',
-				 * 			url: 'https://www.quickbase.com/'
-				 * 		}
-				 * 	}
-				*/
+     * Turn this:
+     * 	{
+     * 		$: { rid: 1 },
+     * 		f: [
+     * 			{ $: { id: 3 }, _: 1 } ],
+     * 			{ $: { id: 6 }, _: 'Test Value' }
+     * 			{ $: { id: 7 }, _: 'filename.png', url: 'https://www.quickbase.com/' }
+     * 		]
+     * 	}
+     *
+     * Into this:
+     * 	{
+     * 		3: 1,
+     * 		6: 'Test Value',
+     * 		7: {
+     * 			filename: 'filename.png',
+     * 			url: 'https://www.quickbase.com/'
+     * 		}
+     * 	}
+    */
 
-				if(result.table.hasOwnProperty('records')){
-					var o = 0, k = 0, fid = 0,
-						records = [], fields = [],
-						attrs = {}, record = {}, field = {};
-
-					if(!(result.table.records instanceof Array)){
+				if (results.table.hasOwnProperty('records')) {
+					if (!(results.table.records instanceof Array)) {
 						// Support Case #480141
-						// XML returned from QuickBase at Application level is "\r\n      "
-						if(result.table.records === ''){
-							result.table.records = [];
-						}else{
-							result.table.records = [ result.table.records ];
+						// XML returned from QuickBase appends "\r\n      "
+						if (results.table.records === '') {
+							results.table.records = [];
+						} else {
+							results.table.records = [results.table.records];
 						}
 					}
 
-					for(i = 0, l = result.table.records.length; i < l; ++i){
-						fields = result.table.records[i].f;
-						attrs = result.table.records[i].$;
+					results.table.records = results.table.records.map(function (record) {
+						var ret = {};
 
-						if(!(fields instanceof Array)){
-							fields = [ fields ];
+						if (!(record.f instanceof Array)) {
+							record.f = [record.f];
 						}
 
-						record = {};
-
-						if(context.options.includeRids){
-							record.rid = attrs.rid;
+						if (query.options.includeRids) {
+							ret.rid = record.$.rid;
 						}
 
-						for(o = 0, k = fields.length; o < k; ++o){
-							field = fields[o];
-							fid = field.$.id;
+						record.f.forEach(function (field) {
+							var fid = field.$.id;
 
-							if(field.hasOwnProperty('url')){
-								record[fid] = {
+							if (field.hasOwnProperty('url')) {
+								ret[fid] = {
 									filename: field._,
 									url: field.url
 								};
-							}else{
-								record[fid] = field._;
+							} else {
+								ret[fid] = field._;
 							}
-						}
+						});
 
-						records.push(record);
-					}
-
-					result.table.records = records;
+						return ret;
+					});
 				}
 
-				if(result.table.hasOwnProperty('queries')){
-					result.table.queries = xmlNodeParsers.queries(result.table.queries);
+				if (results.table.hasOwnProperty('queries')) {
+					results.table.queries = xmlNodeParsers.queries(results.table.queries);
 				}
 
-				if(result.table.hasOwnProperty('fields')){
-					result.table.fields = xmlNodeParsers.fields(result.table.fields);
+				if (results.table.hasOwnProperty('fields')) {
+					results.table.fields = xmlNodeParsers.fields(results.table.fields);
 				}
 
-				if(result.table.hasOwnProperty('variables')){
-					result.table.variables = xmlNodeParsers.variables(result.table.variables);
+				if (results.table.hasOwnProperty('variables')) {
+					results.table.variables = xmlNodeParsers.variables(results.table.variables);
 				}
 
-				if(result.table.hasOwnProperty('lusers')){
-					result.table.lusers = xmlNodeParsers.lusers(result.table.lusers);
+				if (results.table.hasOwnProperty('lusers')) {
+					results.table.lusers = xmlNodeParsers.lusers(results.table.lusers);
 				}
-			}else{
-				if(!(result.record instanceof Array)){
+			} else {
+				if (!(results.record instanceof Array)) {
 					// Support Case #480141
-					// XML returned from QuickBase at Application level is "\r\n      "
-					if(result.record === ''){
-						result.record = [];
-					}else{
-						result.record = [ result.record ];
+					// XML returned from QuickBase appends "\r\n      "
+					if (results.record === '') {
+						results.record = [];
+					} else {
+						results.record = [results.record];
 					}
 				}
 
-				result.records = result.record;
+				results.records = results.record;
 
-				delete result.record;
+				delete results.record;
 
-				if(context.options.includeRids){
-					for(i = 0, l = result.records.length; i < l; ++i){
-						result.records[i].rid = result.records[i].$.rid;
+				if (query.options.includeRids) {
+					results.records.forEach(function (record) {
+						record.rid = record.$.rid;
 
-						delete result.records[i].$;
-					}
+						delete record.$;
+					});
 				}
 
-				if(result.hasOwnProperty('chdbids')){
-					if(!(result.chdbids instanceof Array)){
+				if (results.hasOwnProperty('chdbids')) {
+					if (!(results.chdbids instanceof Array)) {
 						// Support Case #480141
-						// XML returned from QuickBase at Application level is "\r\n      "
-						if(result.chdbids === ''){
-							result.chdbids = [];
+						// XML returned from QuickBase appends "\r\n      "
+						if (results.chdbids === '') {
+							results.chdbids = [];
 						}
 					}
 				}
 
-				if(result.hasOwnProperty('variables')){
-					if(!(result.variables instanceof Array)){
+				if (results.hasOwnProperty('variables')) {
+					if (!(results.variables instanceof Array)) {
 						// Support Case #480141
-						// XML returned from QuickBase at Application level is "\r\n      "
-						if(result.variables === ''){
-							result.variables = {};
+						// XML returned from QuickBase appends "\r\n      "
+						if (results.variables === '') {
+							results.variables = {};
 						}
 					}
 				}
 			}
-
-			return Promise.resolve(result);
 		}
 	},
 	// API_DoQueryCount: {
-		// request: function(context){
-		// 	return Promise.resolve();
-		// },
-		// response: function(context, result){
-		// 	return Promise.resolve(result);
-		// }
+	// request (query) { },
+	// response (query, results) { }
 	// },
 	// API_EditRecord: {
-		// request: function(context){
-		// 	return Promise.resolve();
-		// },
-		// response: function(context, result){
-		// 	return Promise.resolve(result);
-		// }
+	// request (query) { },
+	// response (query, results) { }
 	// },
 	// API_FieldAddChoices: {
-		// request: function(context){
-		// 	return Promise.resolve();
-		// },
-		// response: function(context, result){
-		// 	return Promise.resolve(result);
-		// }
+	// request (query) { },
+	// response (query, results) { }
 	// },
 	// API_FieldRemoveChoices: {
-		// request: function(context){
-		// 	return Promise.resolve();
-		// },
-		// response: function(context, result){
-		// 	return Promise.resolve(result);
-		// }
+	// request (query) { },
+	// response (query, results) { }
 	// },
 	// API_FindDBByName: {
-		// request: function(context){
-		// 	return Promise.resolve();
-		// },
-		// response: function(context, result){
-		// 	return Promise.resolve(result);
-		// }
+	// request (query) { },
+	// response (query, results) { }
 	// },
 	// API_GenAddRecordForm: {
-		// request: function(context){
-		// 	return Promise.resolve();
-		// },
-		// response: function(context, result){
-		// 	return Promise.resolve(result);
-		// }
+	// request (query) { },
+	// response (query, results) { }
 	// },
 	// API_GenResultsTable: {
-		// request: function(context){
-		// 	return Promise.resolve();
-		// },
-		// response: function(context, result){
-		// 	return Promise.resolve(result);
-		// }
+	// request (query) { },
+	// response (query, results) { }
 	// },
 	// API_GetAncestorInfo: {
-		// request: function(context){
-		// 	return Promise.resolve();
-		// },
-		// response: function(context, result){
-		// 	return Promise.resolve(result);
-		// }
+	// request (query) { },
+	// response (query, results) { }
 	// },
 	API_GetAppDTMInfo: {
-		// request: function(context){
-		// 	return Promise.resolve();
-		// },
-		response: function(context, result){
-			if(result.hasOwnProperty('app')){
-				result.app = flattenXMLAttributes(result.app);
+		// request (query) { },
+		response: function response(query, results) {
+			if (results.hasOwnProperty('app')) {
+				results.app = flattenXMLAttributes(results.app);
 			}
 
-			if(result.hasOwnProperty('tables')){
-				if(!(result.tables instanceof Array)){
-					result.tables = [ result.tables ];
+			if (results.hasOwnProperty('tables')) {
+				if (!(results.tables instanceof Array)) {
+					results.tables = [results.tables];
 				}
 
-				for(var i = 0, l = result.tables.length; i < l; ++i){
-					result.tables[i] = flattenXMLAttributes(result.tables[i]);
-				}
+				results.tables = results.tables.map(function (table) {
+					return flattenXMLAttributes(table);
+				});
 			}
-
-			return Promise.resolve(result);
 		}
 	},
 	// API_GetDBPage: {
-		// request: function(context){
-		// 	return Promise.resolve();
-		// },
-		// response: function(context, result){
-		// 	return Promise.resolve(result);
-		// }
+	// request (query) { },
+	// response (query, results) { }
 	// },
 	// API_GetDBInfo: {
-		// request: function(context){
-		// 	return Promise.resolve();
-		// },
-		// response: function(context, result){
-		// 	return Promise.resolve(result);
-		// }
+	// request (query) { },
+	// response (query, results) { }
 	// },
 	// API_GetDBVar: {
-		// request: function(context){
-		// 	return Promise.resolve();
-		// },
-		// response: function(context, result){
-		// 	return Promise.resolve(result);
-		// }
+	// request (query) { },
+	// response (query, results) { }
 	// },
 	API_GetGroupRole: {
-		// request: function(context){
-		// 	return Promise.resolve();
-		// },
-		response: function(context, result){
-			if(result.hasOwnProperty('roles')){
-				result.roles = xmlNodeParsers.roles(result.roles);
+		// request (query) { },
+		response: function response(query, results) {
+			if (results.hasOwnProperty('roles')) {
+				results.roles = xmlNodeParsers.roles(results.roles);
 			}
-
-			return Promise.resolve(result);
 		}
 	},
 	// API_GetNumRecords: {
-		// request: function(context){
-		// 	return Promise.resolve();
-		// },
-		// response: function(context, result){
-		// 	return Promise.resolve(result);
-		// }
+	// request (query) { },
+	// response (query, results) { }
 	// },
 	API_GetSchema: {
-		// request: function(context){
-		// 	return Promise.resolve();
-		// },
-		response: function(context, result){
-			var i = 0, l = 0;
-
-			if(result.table.hasOwnProperty('chdbids')){
-				if(!(result.table.chdbids instanceof Array)){
+		// request (query) { },
+		response: function response(query, results) {
+			if (results.table.hasOwnProperty('chdbids')) {
+				if (!(results.table.chdbids instanceof Array)) {
 					// Support Case #480141
-					// XML returned from QuickBase at Application level is "\r\n      "
-					if(result.table.chdbids === ''){
-						result.table.chdbids = [];
-					}else{
-						result.table.chdbids = [ result.table.chdbids ];
+					// XML returned from QuickBase appends "\r\n      "
+					if (results.table.chdbids === '') {
+						results.table.chdbids = [];
+					} else {
+						results.table.chdbids = [results.table.chdbids];
 					}
 				}
 
-				for(i = 0, l = result.table.chdbids.length; i < l; ++i){
-					result.table.chdbids[i] = {
-						name: result.table.chdbids[i].$.name,
-						dbid: result.table.chdbids[i]._
+				results.table.chdbids = results.table.chdbids.map(function (chdbid) {
+					return {
+						name: chdbid.$.name,
+						dbid: chdbid._
 					};
-
-					delete result.table.chdbids[i].$;
-				}
+				});
 			}
 
-			if(result.table.hasOwnProperty('variables')){
-				result.table.variables = xmlNodeParsers.variables(result.table.variables);
+			if (results.table.hasOwnProperty('variables')) {
+				results.table.variables = xmlNodeParsers.variables(results.table.variables);
 			}
 
-			if(result.table.hasOwnProperty('queries')){
-				result.table.queries = xmlNodeParsers.queries(result.table.queries);
+			if (results.table.hasOwnProperty('queries')) {
+				results.table.queries = xmlNodeParsers.queries(results.table.queries);
 			}
 
-			if(result.table.hasOwnProperty('fields')){
-				result.table.fields = xmlNodeParsers.fields(result.table.fields);
+			if (results.table.hasOwnProperty('fields')) {
+				results.table.fields = xmlNodeParsers.fields(results.table.fields);
 			}
-
-			return Promise.resolve(result);
 		}
 	},
 	// API_GetRecordAsHTML: {
-		// request: function(context){
-		// 	return Promise.resolve();
-		// },
-		// response: function(context, result){
-		// 	return Promise.resolve(result);
-		// }
+	// request (query) { },
+	// response (query, results) { }
 	// },
 	// API_GetRecordInfo: {
-		// request: function(context){
-		// 	return Promise.resolve();
-		// },
-		// response: function(context, result){
-		// 	return Promise.resolve(result);
-		// }
+	// request (query) { },
+	// response (query, results) { }
 	// },
 	API_GetRoleInfo: {
-		// request: function(context){
-		// 	return Promise.resolve();
-		// },
-		response: function(context, result){
-			if(result.hasOwnProperty('roles')){
-				result.roles = xmlNodeParsers.roles(result.roles);				
+		// request (query) { },
+		response: function response(query, results) {
+			if (results.hasOwnProperty('roles')) {
+				results.roles = xmlNodeParsers.roles(results.roles);
 			}
-
-			return Promise.resolve(result);
 		}
 	},
 	API_GetUserInfo: {
-		// request: function(context){
-		// 	return Promise.resolve();
-		// },
-		response: function(context, result){
-			if(result.hasOwnProperty('user')){
-				result.user = flattenXMLAttributes(result.user);
+		// request (query) { },
+		response: function response(query, results) {
+			if (results.hasOwnProperty('user')) {
+				results.user = flattenXMLAttributes(results.user);
 			}
-
-			return Promise.resolve(result);
 		}
 	},
 	API_GetUserRole: {
-		// request: function(context){
-		// 	return Promise.resolve();
-		// },
-		response: function(context, result){
-			if(result.hasOwnProperty('roles')){
-				result.roles = xmlNodeParsers.roles(result.roles);
+		// request (query) { },
+		response: function response(query, results) {
+			if (results.hasOwnProperty('roles')) {
+				results.roles = xmlNodeParsers.roles(results.roles);
 			}
-
-			return Promise.resolve(result);
 		}
 	},
 	API_GetUsersInGroup: {
-		// request: function(context){
-		// 	return Promise.resolve();
-		// },
-		response: function(context, result){
-			if(result.hasOwnProperty('group')){
-				result.group = xmlNodeParsers.group(result.group);
+		// request (query) { },
+		response: function response(query, results) {
+			if (results.hasOwnProperty('group')) {
+				results.group = xmlNodeParsers.group(results.group);
 			}
-
-			return Promise.resolve(result);
 		}
 	},
 	API_GrantedDBs: {
-		// request: function(context){
-		// 	return Promise.resolve();
-		// },
-		response: function(context, result){
-			if(result.hasOwnProperty('databases')){
-				result.databases = result.databases.dbinfo;
+		// request (query) { },
+		response: function response(query, results) {
+			if (results.hasOwnProperty('databases')) {
+				results.databases = results.databases.dbinfo;
 			}
-
-			return Promise.resolve(result);
 		}
 	},
 	API_GrantedDBsForGroup: {
-		// request: function(context){
-		// 	return Promise.resolve();
-		// },
-		response: function(context, result){
-			if(result.hasOwnProperty('databases')){
+		// request (query) { },
+		response: function response(query, results) {
+			if (result.hasOwnProperty('databases')) {
 				result.databases = result.databases.dbinfo;
 			}
-
-			return Promise.resolve(result);
 		}
 	},
 	API_GrantedGroups: {
-		// request: function(context){
-		// 	return Promise.resolve();
-		// },
-		response: function(context, result){
-			if(result.hasOwnProperty('groups')){
-				if(!(result.groups instanceof Array)){
-					result.groups = [ result.groups ];
+		// request (query) { },
+		response: function response(query, results) {
+			if (results.hasOwnProperty('groups')) {
+				if (!(results.groups instanceof Array)) {
+					results.groups = [results.groups];
 				}
 
-				for(var i = 0, l = result.groups.length; i < l; ++i){
-					result.groups[i] = flattenXMLAttributes(result.groups[i]);
-				}
+				results.groups = results.groups.map(function (group) {
+					return flattenXMLAttributes(group);
+				});
 			}
-
-			return Promise.resolve(result);
 		}
 	},
 	API_ImportFromCSV: {
-		// request: function(context){
-		// 	return Promise.resolve();
-		// },
-		response: function(context, result){
-			if(result.hasOwnProperty('rids')){
-				var i = 0, l = result.rids.length,
-					rids = [],
-					record, rid;
-
-				for(; i < l; ++i){
-					record = result.rids[i];
-					rid = {
+		// request (query) { },
+		response: function response(query, results) {
+			if (results.hasOwnProperty('rids')) {
+				results.rids = results.rids.map(function (record) {
+					var ret = {
 						rid: record._
 					};
 
-					if(record.$ && record.$.update_id){
-						rid.update_id = record.$.update_id;
+					if (record.$ && record.$.update_id) {
+						ret.update_id = record.$.update_id;
 					}
 
-					rids.push(rid);
-				}
-
-				result.rids = rids;
+					return ret;
+				});
 			}
-
-			return Promise.resolve(result);
 		}
 	},
 	// API_ProvisionUser: {
-		// request: function(context){
-		// 	return Promise.resolve();
-		// },
-		// response: function(context, result){
-		// 	return Promise.resolve(result);
-		// }
+	// request (query) { },
+	// response (query, results) { }
 	// },
 	// API_PurgeRecords: {
-		// request: function(context){
-		// 	return Promise.resolve();
-		// },
-		// response: function(context, result){
-		// 	return Promise.resolve(result);
-		// }
+	// request (query) { },
+	// response (query, results) { }
 	// },
 	// API_RemoveGroupFromRole: {
-		// request: function(context){
-		// 	return Promise.resolve();
-		// },
-		// response: function(context, result){
-		// 	return Promise.resolve(result);
-		// }
+	// request (query) { },
+	// response (query, results) { }
 	// },
 	// API_RemoveSubgroup: {
-		// request: function(context){
-		// 	return Promise.resolve();
-		// },
-		// response: function(context, result){
-		// 	return Promise.resolve(result);
-		// }
+	// request (query) { },
+	// response (query, results) { }
 	// },
 	// API_RemoveUserFromGroup: {
-		// request: function(context){
-		// 	return Promise.resolve();
-		// },
-		// response: function(context, result){
-		// 	return Promise.resolve(result);
-		// }
+	// request (query) { },
+	// response (query, results) { }
 	// },
 	// API_RemoveUserFromRole: {
-		// request: function(context){
-		// 	return Promise.resolve();
-		// },
-		// response: function(context, result){
-		// 	return Promise.resolve(result);
-		// }
+	// request (query) { },
+	// response (query, results) { }
 	// },
 	// API_RenameApp: {
-		// request: function(context){
-		// 	return Promise.resolve();
-		// },
-		// response: function(context, result){
-		// 	return Promise.resolve(result);
-		// }
+	// request (query) { },
+	// response (query, results) { }
 	// },
 	// API_RunImport: {
-		// request: function(context){
-		// 	return Promise.resolve();
-		// },
-		// response: function(context, result){
-		// 	return Promise.resolve(result);
-		// }
+	// request (query) { },
+	// response (query, results) { }
 	// },
 	// API_SendInvitation: {
-		// request: function(context){
-		// 	return Promise.resolve();
-		// },
-		// response: function(context, result){
-		// 	return Promise.resolve(result);
-		// }
+	// request (query) { },
+	// response (query, results) { }
 	// },
 	// API_SetDBVar: {
-		// request: function(context){
-		// 	return Promise.resolve();
-		// },
-		// response: function(context, result){
-		// 	return Promise.resolve(result);
-		// }
+	// request (query) { },
+	// response (query, results) { }
 	// },
 	// API_SetFieldProperties: {
-		// request: function(context){
-		// 	return Promise.resolve();
-		// },
-		// response: function(context, result){
-		// 	return Promise.resolve(result);
-		// }
+	// request (query) { },
+	// response (query, results) { }
 	// },
 	// API_SetKeyField: {
-		// request: function(context){
-		// 	return Promise.resolve();
-		// },
-		// response: function(context, result){
-		// 	return Promise.resolve(result);
-		// }
+	// request (query) { },
+	// response (query, results) { }
 	// },
 	// API_SignOut: {
-		// request: function(context){
-		// 	return Promise.resolve();
-		// },
-		// response: function(context, result){
-		// 	return Promise.resolve(result);
-		// }
+	// request (query) { },
+	// response (query, results) { }
 	// },
 	API_UploadFile: {
-		// request: function(context){
-		// 	return Promise.resolve();
-		// },
-		response: function(context, result){
-			if(result.hasOwnProperty('file_fields')){
-				result.file_fields = result.file_fields.field;
+		// request (query) { },
+		response: function response(query, results) {
+			if (results.hasOwnProperty('file_fields')) {
+				results.file_fields = results.file_fields.field;
 
-				if(!(result.file_fields instanceof Array)){
+				if (!(results.file_fields instanceof Array)) {
 					// Support Case #480141
-					// XML returned from QuickBase at Application level is "\r\n      "
-					if(result.file_fields === ''){
-						result.file_fields = [];
-					}else{
-						result.file_fields = [ result.file_fields ];
+					// XML returned from QuickBase appends "\r\n      "
+					if (results.file_fields === '') {
+						results.file_fields = [];
+					} else {
+						results.file_fields = [results.file_fields];
 					}
 				}
 
-				for(var i = 0, l = result.file_fields.length; i < l; ++i){
-					result.file_fields[i] = flattenXMLAttributes(result.file_fields[i]);
-				}
+				results.file_fields = results.file_fields.map(function (file) {
+					return flattenXMLAttributes(file);
+				});
 			}
-
-			return Promise.resolve(result);
 		}
 	},
 	API_UserRoles: {
-		// request: function(context){
-		// 	return Promise.resolve();
-		// },
-		response: function(context, result){
-			if(result.hasOwnProperty('users')){
-				result.users = flattenXMLAttributes(result.users);
+		// request (query) { },
+		response: function response(query, results) {
+			if (results.hasOwnProperty('users')) {
+				results.users = flattenXMLAttributes(results.users);
 			}
-
-			return Promise.resolve(result);
 		}
 	},
-	default: {
-		/*
-		request: function(context){
-			// Do stuff prior to the request
-
-			return Promise.resolve();
-		},
-		response: function(context, result){
-			// Do Stuff with the result before resolving the api call
-
-			return Promise.resolve(result);
-		}
-		*/
+	'default': {
+		/* request (query) {
+   * 	Do stuff prior to the request
+   * },
+   * response (query, results) {
+   * 	Do Stuff with the results before resolving the api call
+   * }
+  */
 	}
 };
 
@@ -18967,629 +18727,626 @@ var actions = {
 var prepareOptions = {
 
 	/* NOTICE:
-	 * When an option is a simple return of the value given, comment the function out.
-	 * This will increase performance, cutting out an unnecessary function execution.
-	*/
+  * When an option is a simple return of the value given, comment the function out.
+  * This will increase performance, cutting out an unnecessary function execution.
+ */
 
 	/* Common to All */
-	// apptoken: function(val){
+	// apptoken (val) {
 	// 	return val;
 	// },
 
-	// dbid: function(val){
+	// dbid (val) {
 	// 	return val;
 	// },
 
-	// ticket: function(val){
+	// ticket (val) {
 	// 	return val;
 	// },
 
-	// udata: function(val){
+	// udata (val) {
 	// 	return val;
 	// },
 
 	/* API Specific Options */
 
 	/* API_ChangeGroupInfo, API_CreateGroup */
-	// accountId: function(val){
+	// accountId (val) {
 	// 	return val;
 	// },
 
 	/* API_AddField */
-	// add_to_forms: function(val){
+	// add_to_forms (val) {
 	// 	return val;
 	// },
 
 	/* API_GrantedDBs */
-	// adminOnly: function(val){
+	// adminOnly (val) {
 	// 	return val;
 	// },
 
 	/* API_GrantedGroups */
-	// adminonly: function(val){
+	// adminonly (val) {
 	// 	return val;
 	// },
 
 	/* API_SetFieldProperties */
-	// allow_new_choices: function(val){
+	// allow_new_choices (val) {
 	// 	return val;
 	// },
 
 	/* API_AddUserToGroup */
-	// allowAdminAccess: function(val){
+	// allowAdminAccess (val) {
 	// 	return val;
 	// },
 
 	/* API_SetFieldProperties */
-	// allowHTML: function(val){
+	// allowHTML (val) {
 	// 	return val;
 	// },
 
 	/* API_RemoveGroupFromRole */
-	// allRoles: function(val){
+	// allRoles (val) {
 	// 	return val;
 	// },
 
 	/* API_SetFieldProperties */
-	// appears_by_default: function(val){
+	// appears_by_default (val) {
 	// 	return val;
 	// },
 
 	/* API_SetFieldProperties */
-	// 'append-only': function(val){
+	// 'append-only' (val) {
 	// 	return val;
 	// },
 
 	/* API_SetFieldProperties */
-	// blank_is_zero: function(val){
+	// blank_is_zero (val) {
 	// 	return val;
 	// },
 
 	/* API_SetFieldProperties */
-	// bold: function(val){
+	// bold (val) {
 	// 	return val;
 	// },
 
 	/* API_FieldAddChoices, API_FieldRemoveChoices */
-	// choice: function(val){
+	// choice (val) {
 	// 	return val;
 	// },
 
 	/* API_SetFieldProperties */
-	// choices: function(val){
+	// choices (val) {
 	// 	return val;
 	// },
 
 	/* API_DoQuery, API_GenResultsTable, API_ImportFromCSV */
-	clist: function(val){
+	clist: function clist(val) {
 		return val instanceof Array ? val.join('.') : val;
 	},
 
 	/* API_ImportFromCSV */
-	clist_output: function(val){
+	clist_output: function clist_output(val) {
 		return val instanceof Array ? val.join('.') : val;
 	},
 
 	/* API_SetFieldProperties */
-	// comma_start: function(val){
+	// comma_start (val) {
 	// 	return val;
 	// },
 
 	/* API_CopyMasterDetail */
-	// copyfid: function(val){
+	// copyfid (val) {
 	// 	return val;
 	// },
 
 	/* API_CreateDatabase */
-	// createapptoken: function(val){
+	// createapptoken (val) {
 	// 	return val;
 	// },
 
 	/* API_SetFieldProperties */
-	// currency_format: function(val){
+	// currency_format (val) {
 	// 	return val;
 	// },
 
 	/* API_SetFieldProperties */
-	// currency_symbol: function(val){
+	// currency_symbol (val) {
 	// 	return val;
 	// },
 
 	/* API_CreateDatabase */
-	// dbdesc: function(val){
+	// dbdesc (val) {
 	// 	return val;
 	// },
 
 	/* API_CreateDatabase, API_FindDBByName */
-	// dbname: function(val){
+	// dbname (val) {
 	// 	return val;
 	// },
 
 	/* API_SetFieldProperties */
-	// decimal_places: function(val){
+	// decimal_places (val) {
 	// 	return val;
 	// },
 
 	/* API_SetFieldProperties */
-	// default_today: function(val){
+	// default_today (val) {
 	// 	return val;
 	// },
 
 	/* API_SetFieldProperties */
-	// default_value: function(val){
+	// default_value (val) {
 	// 	return val;
 	// },
 
 	/* API_ChangeGroupInfo, API_CopyGroup, API_CreateGroup */
-	// description: function(val){
+	// description (val) {
 	// 	return val;
 	// },
 
 	/* API_CopyMasterDetail */
-	// destrid: function(val){
+	// destrid (val) {
 	// 	return val;
 	// },
 
 	/* API_GetRecordAsHTML */
-	// dfid: function(val){
+	// dfid (val) {
 	// 	return val;
 	// },
 
 	/* API_SetFieldProperties */
-	// display_as_button: function(val){
+	// display_as_button (val) {
 	// 	return val;
 	// },
 
 	/* API_SetFieldProperties */
-	// display_dow: function(val){
+	// display_dow (val) {
 	// 	return val;
 	// },
 
 	/* API_SetFieldProperties */
-	// display_month: function(val){
+	// display_month (val) {
 	// 	return val;
 	// },
 
 	/* API_SetFieldProperties */
-	// display_relative: function(val){
+	// display_relative (val) {
 	// 	return val;
 	// },
 
 	/* API_SetFieldProperties */
-	// display_time: function(val){
+	// display_time (val) {
 	// 	return val;
 	// },
 
 	/* API_SetFieldProperties */
-	// display_zone: function(val){
+	// display_zone (val) {
 	// 	return val;
 	// },
 
 	/* API_AddRecord, API_EditRecord */
-	// disprec: function(val){
+	// disprec (val) {
 	// 	return val;
 	// },
 
 	/* API_SetFieldProperties */
-	// does_average: function(val){
+	// does_average (val) {
 	// 	return val;
 	// },
 
 	/* API_SetFieldProperties */
-	// does_total: function(val){
+	// does_total (val) {
 	// 	return val;
 	// },
 
 	/* API_SetFieldProperties */
-	// doesdatacopy: function(val){
+	// doesdatacopy (val) {
 	// 	return val;
 	// },
 
 	/* API_GetUserInfo, API_ProvisionUser */
-	// email: function(val){
+	// email (val) {
 	// 	return val;
 	// },
 
 	/* API_CloneDatabase */
-	// excludefiles: function(val){
+	// excludefiles (val) {
 	// 	return val;
 	// },
 
 	/* API_GrantedDBs */
-	// excludeparents: function(val){
+	// excludeparents (val) {
 	// 	return val;
 	// },
 
 	/* API_AddRecord, API_EditRecord */
-	// fform: function(val){
+	// fform (val) {
 	// 	return val;
 	// },
 
 	/* API_DeleteField, API_FieldAddChoices, API_FieldRemoveChoices, API_SetFieldProperties, API_SetKeyField */
-	// fid: function(val){
+	// fid (val) {
 	// 	return val;
 	// },
 
 	/* API_AddRecord, API_EditRecord, API_GenAddRecordForm, API_UploadFile */
-	field: function(val){
-		var newValue = {},
-			curValue = {},
-			l = val.length,
-			i = 0;
+	field: function field(val) {
+		if (!(val instanceof Array)) {
+			val = [val];
+		}
 
-		for(; i < l; ++i){
-			curValue = val[i];
-
-			newValue = {
+		return val.map(function (value) {
+			var ret = {
 				$: {},
-				_: curValue.value
+				_: value.value
 			};
 
-			if(curValue.hasOwnProperty('fid')){
-				newValue.$.fid = curValue.fid;
+			if (value.hasOwnProperty('fid')) {
+				ret.$.fid = value.fid;
 			}
 
-			if(curValue.hasOwnProperty('name')){
-				newValue.$.name = curValue.name;
+			if (value.hasOwnProperty('name')) {
+				ret.$.name = value.name;
 			}
 
-			if(curValue.hasOwnProperty('filename')){
-				newValue.$.filename = curValue.filename;
+			if (value.hasOwnProperty('filename')) {
+				ret.$.filename = value.filename;
 			}
 
-			val[i] = newValue;
-		}
+			return ret;
+		});
 
 		return val;
 	},
 
 	/* API_SetFieldProperties */
-	// fieldhelp: function(val){
+	// fieldhelp (val) {
 	// 	return val;
 	// },
 
 	/* API_SetFieldProperties */
-	// find_enabled: function(val){
+	// find_enabled (val) {
 	// 	return val;
 	// },
 
 	/* API_DoQuery */
-	// fmt: function(val){
+	// fmt (val) {
 	// 	return val;
 	// },
 
 	/* API_ProvisionUser */
-	// fname: function(val){
+	// fname (val) {
 	// 	return val;
 	// },
 
 	/* API_SetFieldProperties */
-	// formula: function(val){
+	// formula (val) {
 	// 	return val;
 	// },
 
 	/* API_CopyGroup */
-	// gacct: function(val){
+	// gacct (val) {
 	// 	return val;
 	// },
 
 	/* API_AddGroupToRole, API_AddSubGroup, API_AddUserToGroup, API_ChangeGroupInfo, API_CopyGroup, API_DeleteGroup, API_GetGroupRole, API_GetUsersInGroup, API_GrantedDBsForGroup, API_RemoveGroupFromRole, API_RemoveSubgroup, API_RemoveUserFromGroup */
-	// gid: function(val){
+	// gid (val) {
 	// 	return val;
 	// },
 
 	/* API_SetFieldProperties */
-	// has_extension: function(val){
+	// has_extension (val) {
 	// 	return val;
 	// },
 
 	/* API_Authenticate */
-	// hours: function(val){
+	// hours (val) {
 	// 	return val;
 	// },
 
 	/* API_RunImport */
-	// id: function(val){
+	// id (val) {
 	// 	return val;
 	// },
 
 	/* API_AddRecord, API_EditRecord */
-	// ignoreError: function(val){
+	// ignoreError (val) {
 	// 	return val;
 	// },
 
 	/* API_GetUserRole */
-	// inclgrps: function(val){
+	// inclgrps (val) {
 	// 	return val;
 	// },
 
 	/* API_GetUsersInGroup */
-	// includeAllMgrs: function(val){
+	// includeAllMgrs (val) {
 	// 	return val;
 	// },
 
 	/* API_GrantedDBs */
-	// includeancestors: function(val){
+	// includeancestors (val) {
 	// 	return val;
 	// },
 
 	/* API_DoQuery */
-	// includeRids: function(val){
+	// includeRids (val) {
 	// 	return val;
 	// },
 
 	/* API_GenResultsTable */
-	// jht: function(val){
+	// jht (val) {
 	// 	return val;
 	// },
 
 	/* API_GenResultsTable */
-	// jsa: function(val){
+	// jsa (val) {
 	// 	return val;
 	// },
 
 	/* API_CloneDatabase */
-	// keepData: function(val){
+	// keepData (val) {
 	// 	return val;
 	// },
 
 	/* API_ChangeRecordOwner, API_DeleteRecord, API_EditRecord, API_GetRecordInfo */
-	// key: function(val){
+	// key (val) {
 	// 	return val;
 	// },
 
 	/* API_AddField, API_SetFieldProperties */
-	// label: function(val){
+	// label (val) {
 	// 	return val;
 	// },
 
 	/* API_ProvisionUser */
-	// lname: function(val){
+	// lname (val) {
 	// 	return val;
 	// },
 
 	/* API_SetFieldProperties */
-	// maxlength: function(val){
+	// maxlength (val) {
 	// 	return val;
 	// },
 
 	/* API_AddField */
-	// mode: function(val){
+	// mode (val) {
 	// 	return val;
 	// },
 
 	/* API_AddRecord, API_EditRecord, API_ImportFromCSV */
-	// msInUTC: function(val){
+	// msInUTC (val) {
 	// 	return val;
 	// },
 
 	/* API_ChangeGroupInfo, API_CopyGroup, API_CreateGroup */
-	// name: function(val){
+	// name (val) {
 	// 	return val;
 	// },
 
 	/* API_RenameApp */
-	// newappname: function(val){
+	// newappname (val) {
 	// 	return val;
 	// },
 
 	/* API_CloneDatabase */
-	// newdbdesc: function(val){
+	// newdbdesc (val) {
 	// 	return val;
 	// },
 
 	/* API_CloneDatabase */
-	// newdbname: function(val){
+	// newdbname (val) {
 	// 	return val;
 	// },
 
 	/* API_ChangeManager */
-	// newmgr: function(val){
+	// newmgr (val) {
 	// 	return val;
 	// },
 
 	/* API_ChangeRecordOwner */
-	// newowner: function(val){
+	// newowner (val) {
 	// 	return val;
 	// },
 
 	/* API_ChangeUserRole */
-	// newroleid: function(val){
+	// newroleid (val) {
 	// 	return val;
 	// },
 
 	/* API_SetFieldProperties */
-	// no_wrap: function(val){
+	// no_wrap (val) {
 	// 	return val;
 	// },
 
 	/* API_SetFieldProperties */
-	// numberfmt: function(val){
+	// numberfmt (val) {
 	// 	return val;
 	// },
 
 	/* API_DoQuery, API_GenResultsTable */
-	options: function(val){
+	options: function options(val) {
 		return val instanceof Array ? val.join('.') : val;
 	},
 
 	/* API_AddReplaceDBPage */
-	// pagebody: function(val){
+	// pagebody (val) {
 	// 	return val;
 	// },
 
 	/* API_AddReplaceDBPage */
-	// pageid: function(val){
+	// pageid (val) {
 	// 	return val;
 	// },
 
 	/* API_GetDBPage */
-	// pageID: function(val){
+	// pageID (val) {
 	// 	return val;
 	// },
 
 	/* API_AddReplaceDBPage */
-	// pagename: function(val){
+	// pagename (val) {
 	// 	return val;
 	// },
 
 	/* API_AddReplaceDBPage */
-	// pagetype: function(val){
+	// pagetype (val) {
 	// 	return val;
 	// },
 
 	/* API_FindDBByName */
-	// ParentsOnly: function(val){
+	// ParentsOnly (val) {
 	// 	return val;
 	// },
 
 	/* API_Authenticate */
-	// password: function(val){
+	// password (val) {
 	// 	return val;
 	// },
 
 	/* API_CreateTable */
-	// pnoun: function(val){
+	// pnoun (val) {
 	// 	return val;
 	// },
 
 	/* API_DoQuery, API_GenResultsTable, API_PurgeRecords */
-	// qid: function(val){
+	// qid (val) {
 	// 	return val;
 	// },
 
 	/* API_DoQuery, API_GenResultsTable, API_PurgeRecords */
-	// qname: function(val){
+	// qname (val) {
 	// 	return val;
 	// },
 
 	/* API_DoQuery, API_DoQueryCount, API_GenResultsTable, API_PurgeRecords */
-	// query: function(val){
+	// query (val) {
 	// 	return val;
 	// },
 
 	/* API_ImportFromCSV */
-	records_csv: function(val){
+	records_csv: function records_csv(val) {
 		return val instanceof Array ? val.join('\n') : val;
 	},
 
 	/* API_CopyMasterDetail */
-	// recurse: function(val){
+	// recurse (val) {
 	// 	return val;
 	// },
 
 	/* API_CopyMasterDetail */
-	// relfids: function(val){
+	// relfids (val) {
 	// 	return val;
 	// },
 
 	/* API_SetFieldProperties */
-	// required: function(val){
+	// required (val) {
 	// 	return val;
 	// },
 
 	/* API_DoQuery */
-	// returnpercentage: function(val){
+	// returnpercentage (val) {
 	// 	return val;
 	// },
 
 	/* API_ChangeRecordOwner, API_DeleteRecord, API_EditRecord, API_GetRecordAsHTML, API_GetRecordInfo, API_UploadFile */
-	// rid: function(val){
+	// rid (val) {
 	// 	return val;
 	// },
 
 	/* API_AddGroupToRole, API_AddUserToRole, API_ChangeUserRole, API_ProvisionUser, API_RemoveGroupFromRole, API_RemoveUserFromRole */
-	// roleid: function(val){
+	// roleid (val) {
 	// 	return val;
 	// },
 
 	/* API_ImportFromCSV */
-	// skipfirst: function(val){
+	// skipfirst (val) {
 	// 	return val;
 	// },
 
 	/* API_DoQuery, API_GenResultsTable */
-	slist: function(val){
+	slist: function slist(val) {
 		return val instanceof Array ? val.join('.') : val;
-	},
+	}
 
-	/* API_SetFieldProperties */
-	// sort_as_given: function(val){
-	// 	return val;
-	// },
-
-	/* API_CopyMasterDetail */
-	// sourcerid: function(val){
-	// 	return val;
-	// },
-
-	/* API_AddSubGroup, API_RemoveSubgroup */
-	// subgroupid: function(val){
-	// 	return val;
-	// },
-
-	/* API_CreateTable */
-	// tname: function(val){
-	// 	return val;
-	// },
-
-	/* API_AddField */
-	// type: function(val){
-	// 	return val;
-	// },
-
-	/* API_SetFieldProperties */
-	// unique: function(val){
-	// 	return val;
-	// },
-
-	/* API_EditRecord */
-	// update_id: function(val){
-	// 	return val;
-	// },
-
-	/* API_AddUserToGroup, API_AddUserToRole, API_ChangeUserRole, API_GetUserRole, API_GrantedGroups, API_RemoveUserFromGroup, API_RemoveUserFromRole, API_SendInvitation */
-	// userid: function(val){
-	// 	return val;
-	// },
-
-	/* API_Authenticate */
-	// username: function(val){
-	// 	return val;
-	// },
-
-	/* API_CloneDatabase */
-	// usersandroles: function(val){
-	// 	return val;
-	// },
-
-	/* API_SendInvitation */
-	// usertext: function(val){
-	// 	return val;
-	// },
-
-	/* API_SetDBVar */
-	// value: function(val){
-	// 	return val;
-	// },
-
-	/* API_GetDBVar, API_SetDBVar */
-	// varname: function(val){
-	// 	return val;
-	// },
-
-	/* API_SetFieldProperties */
-	// width: function(val){
-	// 	return val;
-	// },
-
-	/* API_GrantedDBs */
-	// withembeddedtables: function(val){
-	// 	return val;
-	// }
 };
 
 /* Expose Instances */
+/* API_SetFieldProperties */
+// sort_as_given (val) {
+// 	return val;
+// },
+
+/* API_CopyMasterDetail */
+// sourcerid (val) {
+// 	return val;
+// },
+
+/* API_AddSubGroup, API_RemoveSubgroup */
+// subgroupid (val) {
+// 	return val;
+// },
+
+/* API_CreateTable */
+// tname (val) {
+// 	return val;
+// },
+
+/* API_AddField */
+// type (val) {
+// 	return val;
+// },
+
+/* API_SetFieldProperties */
+// unique (val) {
+// 	return val;
+// },
+
+/* API_EditRecord */
+// update_id (val) {
+// 	return val;
+// },
+
+/* API_AddUserToGroup, API_AddUserToRole, API_ChangeUserRole, API_GetUserRole, API_GrantedGroups, API_RemoveUserFromGroup, API_RemoveUserFromRole, API_SendInvitation */
+// userid (val) {
+// 	return val;
+// },
+
+/* API_Authenticate */
+// username (val) {
+// 	return val;
+// },
+
+/* API_CloneDatabase */
+// usersandroles (val) {
+// 	return val;
+// },
+
+/* API_SendInvitation */
+// usertext (val) {
+// 	return val;
+// },
+
+/* API_SetDBVar */
+// value (val) {
+// 	return val;
+// },
+
+/* API_GetDBVar, API_SetDBVar */
+// varname (val) {
+// 	return val;
+// },
+
+/* API_SetFieldProperties */
+// width (val) {
+// 	return val;
+// },
+
+/* API_GrantedDBs */
+// withembeddedtables (val) {
+// 	return val;
+// }
 QuickBase.QueryBuilder = QueryBuilder;
 QuickBase.Throttle = Throttle;
 QuickBase.QuickbaseError = QuickbaseError;
@@ -19601,18 +19358,18 @@ QuickBase.cleanXML = cleanXML;
 QuickBase.xmlNodeParsers = xmlNodeParsers;
 
 /* Export Module */
-if(typeof(module) !== 'undefined' && module.exports){
+if (typeof module !== 'undefined' && module.exports) {
 	module.exports = QuickBase;
-}else
-if(typeof(define) === 'function' && define.amd){
-	define('QuickBase', [], function(){
+} else if (typeof define === 'function' && define.amd) {
+	define('QuickBase', [], function () {
 		return QuickBase;
 	});
 }
 
-if(typeof(global) !== 'undefined' && typeof(window) !== 'undefined' && global === window){
+if (typeof global !== 'undefined' && typeof window !== 'undefined' && global === window) {
 	global.QuickBase = QuickBase;
 }
+
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"bluebird":42,"http":29,"https":7,"xml2js":45}]},{},[123]);

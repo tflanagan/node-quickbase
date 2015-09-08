@@ -19,22 +19,19 @@ $ npm install tflanagan/node-quickbase
 
 Browserify
 ----------
-This library works out of the box with Browserify.
+This library works out of the box with Babel+Browserify.
 ```
 $ npm install quickbase
-$ npm install -g browserify
-$ browserify node_modules/quickbase > quickbase.browserify.js
+$ npm install -g babel browserify minifier
+$ babel quickbase.js > quickbase.es5.js
+$ browserify quickbase.es5.js > quickbase.browserify.js
+$ minify quickbase.browserify.js > quickbase.browserify.min.js
 ```
 This exposes the QuickBase object to the global namespace (```window.QuickBase || QuickBase```).
 
 __Warning: Native Browser Promises do not share the same functionality as Bluebird Promises!__
 
 Chaining functions off of an ```.api()``` function call uses the Bluebird Promise Library. Declaring a ```new Promise()``` uses Native Browser Promises (if available).
-
-```
-$ npm install -g minifier
-$ minify quickbase.browserify.js > quickbase.browserify.min.js
-```
 
 The use is the same as in Nodejs, but there is no need to ```require('quickbase')```.
 
@@ -60,18 +57,19 @@ var quickbase = new QuickBase({
 	appToken: '*****'
 });
 
+/* Promise Based */
 quickbase.api('API_Authenticate', {
 	username: '*****',
 	password: '*****'
-}).then(function(result){
+}).then((result) => {
 	return quickbase.api('API_DoQuery', {
 		dbid: '*****',
 		clist: '3.12',
 		options: 'num-5'
-	}).then(function(result){
+	}).then((result) => {
 		return result.table.records;
 	});
-}).map(function(record){
+}).each((record) => {
 	return quickbase.api('API_EditRecord', {
 		dbid: '*****',
 		rid: record[3],
@@ -79,16 +77,71 @@ quickbase.api('API_Authenticate', {
 			{ fid: 12, value: record[12] }
 		]
 	});
-}).then(function(){
+}).then(() => {
 	return quickbase.api('API_DoQuery', {
 		dbid: '*****',
 		clist: '3.12',
 		options: 'num-5'
 	});
-}).then(function(result){
+}).then((result) => {
 	console.log(result);
-}).catch(function(err){
+}).catch((err) => {
 	console.error(err);
+});
+
+/* Callback Based */
+quickbase.api('API_Authenticate', {
+	username: '*****',
+	password: '*****'
+}, (err, result) => {
+	if(err){
+		throw err;
+	}
+
+	quickbase.api('API_DoQuery', {
+		dbid: '*****',
+		clist: '3.12',
+		options: 'num-5'
+	}, (err, result) => {
+		if(err){
+			throw err;
+		}
+
+		let i = 0,
+			fin = () => {
+				++i;
+
+				if(i === result.table.records.length){
+					quickbase.api('API_DoQuery', {
+						dbid: '*****',
+						clist: '3.12',
+						options: 'num-5'
+					}, (err, result) => {
+						if(err){
+							throw err;
+						}
+
+						console.log('done');
+					})
+				}
+			};
+
+		result.table.records.forEach((record) => {
+			quickbase.api('API_EditRecord', {
+				dbid: '*****',
+				rid: record[3],
+				fields: [
+					{ fid: 12, value: record[12] }
+				]
+			}, (err, results) => {
+				if(err){
+					throw err;
+				}
+
+				fin();
+			});
+		});
+	});
 });
 ```
 
