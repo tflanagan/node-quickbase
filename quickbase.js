@@ -200,10 +200,41 @@ class QuickBase {
 		return this;
 	}
 
-	api (action, options) {
-		return Promise.using(this.throttle.acquire(), () => {
-			return (new QueryBuilder(this, action, options || {})).run();
+	api (action, options, callback) {
+		let call = new Promise((resolve, reject) => {
+			Promise.using(this.throttle.acquire(), () => {
+				let query = new QueryBuilder(this, action, options || {}, callback);
+
+				return query
+					.addFlags()
+					.processOptions()
+					.actionRequest()
+					.constructPayload()
+					.processQuery()
+					.then((results) => {
+						query.results = results;
+
+						query.actionResponse();
+
+						if(callback instanceof Function){
+							callback(null, query.results);
+						}else{
+							resolve(query.results);
+						}
+					})
+					.catch((error) => {
+						resolve(query.catchError(error));
+					});
+			}).catch((error) => {
+				if(callback instanceof Function){
+					callback(error);
+				}else{
+					reject(error);
+				}
+			});
 		});
+
+		return callback instanceof Function ? this : call;
 	}
 
 }
@@ -253,13 +284,17 @@ class Throttle {
 /* Request Handling */
 class QueryBuilder {
 
-	constructor (parent, action, options) {
+	constructor (parent, action, options, callback) {
 		this.parent = parent;
 		this.action = action;
 		this.options = options;
+		this.callback = callback;
+
 		this.settings = ({}).extend(parent.settings);
 
-		this.nErr = 0;
+		this.results;
+
+		this._nErr = 0;
 
 		return this;
 	}
@@ -273,20 +308,25 @@ class QueryBuilder {
 
 		if(typeof(actions[action]) !== 'undefined'){
 			if(typeof(actions[action]) === 'function'){
-				return actions[action](this);
+				actions[action](this);
 			}else
 			if(typeof(actions[action].request) === 'function'){
-				return actions[action].request(this);
+				actions[action].request(this);
 			}
 		}else
-		if(typeof(actions.default.request) === 'function'){
-			return actions.default.request(this);
+		if(typeof(actions.default) !== 'undefined'){
+			if(typeof(actions.default) === 'function'){
+				actions.default(this);
+			}else
+			if(typeof(actions.default.request) === 'function'){
+				actions.default.request(this);
+			}
 		}
 
-		return Promise.resolve();
+		return this;
 	}
 
-	actionResponse (result) {
+	actionResponse () {
 		let action = this.action;
 
 		if(!actions.hasOwnProperty(action)){
@@ -294,13 +334,13 @@ class QueryBuilder {
 		}
 
 		if(typeof(actions[action]) === 'object' && typeof(actions[action].response) === 'function'){
-			return actions[action].response(this, result);
+			actions[action].response(this, this.results);
 		}else
-		if(typeof(actions.default.response) === 'function'){
-			return actions.default.response(this, result);
+		if(typeof(actions.default) === 'object' && typeof(actions.default.response) === 'function'){
+			actions.default.response(this, this.results);
 		}
 
-		return Promise.resolve(result);
+		return this;
 	}
 
 	addFlags () {
@@ -320,47 +360,68 @@ class QueryBuilder {
 			this.options.encoding = this.settings.flags.encoding;
 		}
 
-		return Promise.resolve();
+		return this;
 	}
 
 	catchError (err) {
-		++this.nErr;
+		++this._nErr;
 
-		let parent = this.parent,
-			parentSettings = parent.settings;
-
-		if(this.nErr < this.settings.maxErrorRetryAttempts){
+		if(this._nErr < this.settings.maxErrorRetryAttempts){
 			if([1000, 1001].indexOf(err.code) !== -1){
-				return Promise.bind(this)
-					.then(this.processQuery)
-					.then(this.actionResponse)
-					.catch(this.catchError);
+				return this.processQuery()
+					.then((results) => {
+						this.results = results;
+
+						this.actionResponse();
+
+						if(this.callback instanceof Function){
+							this.callback(null, this.results);
+						}else{
+							return this.results;
+						}
+					})
+					.catch((error) => {
+						return this.catchError(error);
+					});
 			}else
 			if(
 				err.code === 4 &&
-				parentSettings.hasOwnProperty('username') && parentSettings.username !== '' &&
-				parentSettings.hasOwnProperty('password') && parentSettings.password !== ''
+				this.parent.settings.hasOwnProperty('username') && this.parent.settings.username !== '' &&
+				this.parent.settings.hasOwnProperty('password') && this.parent.settings.password !== ''
 			){
-				return parent.api('API_Authenticate', {
-					username: parentSettings.username,
-					password: parentSettings.password
+				return this.parent.api('API_Authenticate', {
+					username: this.parent.settings.username,
+					password: this.parent.settings.password
 				}).then((results) => {
-					parentSettings.ticket = results.ticket;
+					this.parent.settings.ticket = results.ticket;
 					this.settings.ticket = results.ticket;
 					this.options.ticket = results.ticket;
 
-					return results;
-				})
-					.bind(this)
-					.then(this.addFlags)
-					.then(this.constructPayload)
-					.then(this.processQuery)
-					.then(this.actionResponse)
-					.catch(this.catchError);
+					return this.addFlags()
+						.constructPayload()
+						.processQuery()
+						.then((results) => {
+							this.results = results;
+
+							this.actionResponse();
+
+							if(this.callback instanceof Function){
+								this.callback(null, this.results);
+							}else{
+								return this.results;
+							}
+						});
+				}).catch((error) => {
+					return this.catchError(error);
+				});
 			}
 		}
 
-		return Promise.reject(err);
+		if(this.callback instanceof Function){
+			this.callback(err);
+		}else{
+			throw err;
+		}
 	}
 
 	constructPayload () {
@@ -384,7 +445,7 @@ class QueryBuilder {
 			});
 		}
 
-		return Promise.resolve();
+		return this;
 	}
 
 	processQuery () {
@@ -459,18 +520,7 @@ class QueryBuilder {
 
 		this.options = newOpts;
 
-		return Promise.resolve();
-	}
-
-	run () {
-		return Promise.bind(this)
-			.then(this.addFlags)
-			.then(this.processOptions)
-			.then(this.actionRequest)
-			.then(this.constructPayload)
-			.then(this.processQuery)
-			.then(this.actionResponse)
-			.catch(this.catchError);
+		return this;
 	}
 
 }
@@ -625,214 +675,124 @@ let actions = {
 	*/
 
 	// API_AddField: {
-		// request (context) {
-		// 	return Promise.resolve();
-		// },
-		// response (context, result) {
-		// 	return Promise.resolve(result);
-		// }
+		// request (query) { },
+		// response (query, results) { }
 	// },
 	// API_AddGroupToRole: {
-		// request (context) {
-		// 	return Promise.resolve();
-		// },
-		// response (context, result) {
-		// 	return Promise.resolve(result);
-		// }
+		// request (query) { },
+		// response (query, results) { }
 	// },
 	// API_AddRecord: {
-		// request (context) {
-		// 	return Promise.resolve();
-		// },
-		// response (context, result) {
-		// 	return Promise.resolve(result);
-		// }
+		// request (query) { },
+		// response (query, results) { }
 	// },
 	// API_AddReplaceDBPage: {
-		// request (context) {
-		// 	return Promise.resolve();
-		// },
-		// response (context, result) {
-		// 	return Promise.resolve(result);
-		// }
+		// request (query) { },
+		// response (query, results) { }
 	// },
 	// API_AddSubGroup: {
-		// request (context) {
-		// 	return Promise.resolve();
-		// },
-		// response (context, result) {
-		// 	return Promise.resolve(result);
-		// }
+		// request (query) { },
+		// response (query, results) { }
 	// },
 	// API_AddUserToGroup: {
-		// request (context) {
-		// 	return Promise.resolve();
-		// },
-		// response (context, result) {
-		// 	return Promise.resolve(result);
-		// }
+		// request (query) { },
+		// response (query, results) { }
 	// },
 	// API_AddUserToRole: {
-		// request (context) {
-		// 	return Promise.resolve();
-		// },
-		// response (context, result) {
-		// 	return Promise.resolve(result);
-		// }
+		// request (query) { },
+		// response (query, results) { }
 	// },
 	API_Authenticate: {
-		request (context) {
+		request (query) {
 			// API_Authenticate can only happen over SSL
-			context.settings.useSSL = true;
-
-			return Promise.resolve();
+			query.settings.useSSL = true;
 		},
-		response (context, result) {
-			context.parent.settings.ticket = result.ticket;
-			context.parent.settings.username = context.options.username;
-			context.parent.settings.password = context.options.password;
-
-			return Promise.resolve(result);
+		response (query, results) {
+			query.parent.settings.ticket = results.ticket;
+			query.parent.settings.username = query.options.username;
+			query.parent.settings.password = query.options.password;
 		}
 	},
 	// API_ChangeGroupInfo: {
-		// request (context) {
-		// 	return Promise.resolve();
-		// },
-		// response (context, result) {
-		// 	return Promise.resolve(result);
-		// }
+		// request (query) { },
+		// response (query, results) { }
 	// },
 	// API_ChangeManager: {
-		// request (context) {
-		// 	return Promise.resolve();
-		// },
-		// response (context, result) {
-		// 	return Promise.resolve(result);
-		// }
+		// request (query) { },
+		// response (query, results) { }
 	// },
 	// API_ChangeRecordOwner: {
-		// request (context) {
-		// 	return Promise.resolve();
-		// },
-		// response (context, result) {
-		// 	return Promise.resolve(result);
-		// }
+		// request (query) { },
+		// response (query, results) { }
 	// },
 	// API_ChangeUserRole: {
-		// request (context) {
-		// 	return Promise.resolve();
-		// },
-		// response (context, result) {
-		// 	return Promise.resolve(result);
-		// }
+		// request (query) { },
+		// response (query, results) { }
 	// },
 	// API_CloneDatabase: {
-		// request (context) {
-		// 	return Promise.resolve();
-		// },
-		// response (context, result) {
-		// 	return Promise.resolve(result);
-		// }
+		// request (query) { },
+		// response (query, results) { }
 	// },
 	API_CopyGroup: {
-		// request (context) {
-		// 	return Promise.resolve();
-		// },
-		response (context, result) {
-			if(result.hasOwnProperty('group')){
-				result.group = xmlNodeParsers.group(result.group);
+		// request (query) { },
+		response (query, results) {
+			if(results.hasOwnProperty('group')){
+				results.group = xmlNodeParsers.group(results.group);
 			}
-
-			return Promise.resolve(result);
 		}
 	},
 	// API_CopyMasterDetail: {
-		// request (context) {
-		// 	return Promise.resolve();
-		// },
-		// response (context, result) {
-		// 	return Promise.resolve(result);
-		// }
+		// request (query) { },
+		// response (query, results) { }
 	// },
 	// API_CreateDatabase: {
-		// request (context) {
-		// 	return Promise.resolve();
-		// },
-		// response (context, result) {
-		// 	return Promise.resolve(result);
-		// }
+		// request (query) { },
+		// response (query, results) { }
 	// },
 	API_CreateGroup: {
-		// request (context) {
-		// 	return Promise.resolve();
-		// },
-		response (context, result) {
-			if(result.hasOwnProperty('group')){
-				result.group = xmlNodeParsers.group(result.group);
+		// request (query) { },
+		response (query, results) {
+			if(results.hasOwnProperty('group')){
+				results.group = xmlNodeParsers.group(results.group);
 			}
-
-			return Promise.resolve(result);
 		}
 	},
 	// API_CreateTable: {
-		// request (context) {
-		// 	return Promise.resolve();
-		// },
-		// response (context, result) {
-		// 	return Promise.resolve(result);
-		// }
+		// request (query) { },
+		// response (query, results) { }
 	// },
 	// API_DeleteDatabase: {
-		// request (context) {
-		// 	return Promise.resolve();
-		// },
-		// response (context, result) {
-		// 	return Promise.resolve(result);
-		// }
+		// request (query) { },
+		// response (query, results) { }
 	// },
 	// API_DeleteField: {
-		// request (context) {
-		// 	return Promise.resolve();
-		// },
-		// response (context, result) {
-		// 	return Promise.resolve(result);
-		// }
+		// request (query) { },
+		// response (query, results) { }
 	// },
 	// API_DeleteGroup: {
-		// request (context) {
-		// 	return Promise.resolve();
-		// },
-		// response (context, result) {
-		// 	return Promise.resolve(result);
-		// }
+		// request (query) { },
+		// response (query, results) { }
 	// },
 	// API_DeleteRecord: {
-		// request (context) {
-		// 	return Promise.resolve();
-		// },
-		// response (context, result) {
-		// 	return Promise.resolve(result);
-		// }
+		// request (query) { },
+		// response (query, results) { }
 	// },
 	API_DoQuery: {
-		request (context) {
-			if(!context.options.hasOwnProperty('returnPercentage') && context.settings.flags.returnPercentage){
-				context.options.returnPercentage = 1;
+		request (query) {
+			if(!query.options.hasOwnProperty('returnPercentage') && query.settings.flags.returnPercentage){
+				query.options.returnPercentage = 1;
 			}
 
-			if(!context.options.hasOwnProperty('fmt') && context.settings.flags.fmt){
-				context.options.fmt = context.settings.flags.fmt;
+			if(!query.options.hasOwnProperty('fmt') && query.settings.flags.fmt){
+				query.options.fmt = query.settings.flags.fmt;
 			}
 
-			if(!context.options.hasOwnProperty('includeRids') && context.settings.flags.includeRids){
-				context.options.includeRids = 1;
+			if(!query.options.hasOwnProperty('includeRids') && query.settings.flags.includeRids){
+				query.options.includeRids = 1;
 			}
-
-			return Promise.resolve();
 		},
-		response (context, result) {
-			if(context.options.hasOwnProperty('fmt') && context.options.fmt === 'structured'){
+		response (query, results) {
+			if(query.options.hasOwnProperty('fmt') && query.options.fmt === 'structured'){
 				/* XML is _so_ butt ugly... Let's try to make some sense of it
 				 * Turn this:
 				 * 	{
@@ -855,25 +815,25 @@ let actions = {
 				 * 	}
 				*/
 
-				if(result.table.hasOwnProperty('records')){
-					if(!(result.table.records instanceof Array)){
+				if(results.table.hasOwnProperty('records')){
+					if(!(results.table.records instanceof Array)){
 						// Support Case #480141
 						// XML returned from QuickBase appends "\r\n      "
-						if(result.table.records === ''){
-							result.table.records = [];
+						if(results.table.records === ''){
+							results.table.records = [];
 						}else{
-							result.table.records = [ result.table.records ];
+							results.table.records = [ results.table.records ];
 						}
 					}
 
-					result.table.records = result.table.records.map((record) => {
+					results.table.records = results.table.records.map((record) => {
 						let ret = {};
 
 						if(!(record.f instanceof Array)){
 							record.f = [ record.f ];
 						}
 
-						if(context.options.includeRids){
+						if(query.options.includeRids){
 							ret.rid = record.$.rid;
 						}
 
@@ -894,215 +854,155 @@ let actions = {
 					});
 				}
 
-				if(result.table.hasOwnProperty('queries')){
-					result.table.queries = xmlNodeParsers.queries(result.table.queries);
+				if(results.table.hasOwnProperty('queries')){
+					results.table.queries = xmlNodeParsers.queries(results.table.queries);
 				}
 
-				if(result.table.hasOwnProperty('fields')){
-					result.table.fields = xmlNodeParsers.fields(result.table.fields);
+				if(results.table.hasOwnProperty('fields')){
+					results.table.fields = xmlNodeParsers.fields(results.table.fields);
 				}
 
-				if(result.table.hasOwnProperty('variables')){
-					result.table.variables = xmlNodeParsers.variables(result.table.variables);
+				if(results.table.hasOwnProperty('variables')){
+					results.table.variables = xmlNodeParsers.variables(results.table.variables);
 				}
 
-				if(result.table.hasOwnProperty('lusers')){
-					result.table.lusers = xmlNodeParsers.lusers(result.table.lusers);
+				if(results.table.hasOwnProperty('lusers')){
+					results.table.lusers = xmlNodeParsers.lusers(results.table.lusers);
 				}
 			}else{
-				if(!(result.record instanceof Array)){
+				if(!(results.record instanceof Array)){
 					// Support Case #480141
 					// XML returned from QuickBase appends "\r\n      "
-					if(result.record === ''){
-						result.record = [];
+					if(results.record === ''){
+						results.record = [];
 					}else{
-						result.record = [ result.record ];
+						results.record = [ results.record ];
 					}
 				}
 
-				result.records = result.record;
+				results.records = results.record;
 
-				delete result.record;
+				delete results.record;
 
-				if(context.options.includeRids){
-					result.records.forEach((record) => {
+				if(query.options.includeRids){
+					results.records.forEach((record) => {
 						record.rid = record.$.rid;
 
 						delete record.$;
 					});
 				}
 
-				if(result.hasOwnProperty('chdbids')){
-					if(!(result.chdbids instanceof Array)){
+				if(results.hasOwnProperty('chdbids')){
+					if(!(results.chdbids instanceof Array)){
 						// Support Case #480141
 						// XML returned from QuickBase appends "\r\n      "
-						if(result.chdbids === ''){
-							result.chdbids = [];
+						if(results.chdbids === ''){
+							results.chdbids = [];
 						}
 					}
 				}
 
-				if(result.hasOwnProperty('variables')){
-					if(!(result.variables instanceof Array)){
+				if(results.hasOwnProperty('variables')){
+					if(!(results.variables instanceof Array)){
 						// Support Case #480141
 						// XML returned from QuickBase appends "\r\n      "
-						if(result.variables === ''){
-							result.variables = {};
+						if(results.variables === ''){
+							results.variables = {};
 						}
 					}
 				}
 			}
-
-			return Promise.resolve(result);
 		}
 	},
 	// API_DoQueryCount: {
-		// request (context) {
-		// 	return Promise.resolve();
-		// },
-		// response (context, result) {
-		// 	return Promise.resolve(result);
-		// }
+		// request (query) { },
+		// response (query, results) { }
 	// },
 	// API_EditRecord: {
-		// request (context) {
-		// 	return Promise.resolve();
-		// },
-		// response (context, result) {
-		// 	return Promise.resolve(result);
-		// }
+		// request (query) { },
+		// response (query, results) { }
 	// },
 	// API_FieldAddChoices: {
-		// request (context) {
-		// 	return Promise.resolve();
-		// },
-		// response (context, result) {
-		// 	return Promise.resolve(result);
-		// }
+		// request (query) { },
+		// response (query, results) { }
 	// },
 	// API_FieldRemoveChoices: {
-		// request (context) {
-		// 	return Promise.resolve();
-		// },
-		// response (context, result) {
-		// 	return Promise.resolve(result);
-		// }
+		// request (query) { },
+		// response (query, results) { }
 	// },
 	// API_FindDBByName: {
-		// request (context) {
-		// 	return Promise.resolve();
-		// },
-		// response (context, result) {
-		// 	return Promise.resolve(result);
-		// }
+		// request (query) { },
+		// response (query, results) { }
 	// },
 	// API_GenAddRecordForm: {
-		// request (context) {
-		// 	return Promise.resolve();
-		// },
-		// response (context, result) {
-		// 	return Promise.resolve(result);
-		// }
+		// request (query) { },
+		// response (query, results) { }
 	// },
 	// API_GenResultsTable: {
-		// request (context) {
-		// 	return Promise.resolve();
-		// },
-		// response (context, result) {
-		// 	return Promise.resolve(result);
-		// }
+		// request (query) { },
+		// response (query, results) { }
 	// },
 	// API_GetAncestorInfo: {
-		// request (context) {
-		// 	return Promise.resolve();
-		// },
-		// response (context, result) {
-		// 	return Promise.resolve(result);
-		// }
+		// request (query) { },
+		// response (query, results) { }
 	// },
 	API_GetAppDTMInfo: {
-		// request (context) {
-		// 	return Promise.resolve();
-		// },
-		response (context, result) {
-			if(result.hasOwnProperty('app')){
-				result.app = flattenXMLAttributes(result.app);
+		// request (query) { },
+		response (query, results) {
+			if(results.hasOwnProperty('app')){
+				results.app = flattenXMLAttributes(results.app);
 			}
 
-			if(result.hasOwnProperty('tables')){
-				if(!(result.tables instanceof Array)){
-					result.tables = [ result.tables ];
+			if(results.hasOwnProperty('tables')){
+				if(!(results.tables instanceof Array)){
+					results.tables = [ results.tables ];
 				}
 
-				result.tables = result.tables.map((table) => {
+				results.tables = results.tables.map((table) => {
 					return flattenXMLAttributes(table);
 				});
 			}
-
-			return Promise.resolve(result);
 		}
 	},
 	// API_GetDBPage: {
-		// request (context) {
-		// 	return Promise.resolve();
-		// },
-		// response (context, result) {
-		// 	return Promise.resolve(result);
-		// }
+		// request (query) { },
+		// response (query, results) { }
 	// },
 	// API_GetDBInfo: {
-		// request (context) {
-		// 	return Promise.resolve();
-		// },
-		// response (context, result) {
-		// 	return Promise.resolve(result);
-		// }
+		// request (query) { },
+		// response (query, results) { }
 	// },
 	// API_GetDBVar: {
-		// request (context) {
-		// 	return Promise.resolve();
-		// },
-		// response (context, result) {
-		// 	return Promise.resolve(result);
-		// }
+		// request (query) { },
+		// response (query, results) { }
 	// },
 	API_GetGroupRole: {
-		// request (context) {
-		// 	return Promise.resolve();
-		// },
-		response (context, result) {
-			if(result.hasOwnProperty('roles')){
-				result.roles = xmlNodeParsers.roles(result.roles);
+		// request (query) { },
+		response (query, results) {
+			if(results.hasOwnProperty('roles')){
+				results.roles = xmlNodeParsers.roles(results.roles);
 			}
-
-			return Promise.resolve(result);
 		}
 	},
 	// API_GetNumRecords: {
-		// request (context) {
-		// 	return Promise.resolve();
-		// },
-		// response (context, result) {
-		// 	return Promise.resolve(result);
-		// }
+		// request (query) { },
+		// response (query, results) { }
 	// },
 	API_GetSchema: {
-		// request (context) {
-		// 	return Promise.resolve();
-		// },
-		response (context, result) {
-			if(result.table.hasOwnProperty('chdbids')){
-				if(!(result.table.chdbids instanceof Array)){
+		// request (query) { },
+		response (query, results) {
+			if(results.table.hasOwnProperty('chdbids')){
+				if(!(results.table.chdbids instanceof Array)){
 					// Support Case #480141
 					// XML returned from QuickBase appends "\r\n      "
-					if(result.table.chdbids === ''){
-						result.table.chdbids = [];
+					if(results.table.chdbids === ''){
+						results.table.chdbids = [];
 					}else{
-						result.table.chdbids = [ result.table.chdbids ];
+						results.table.chdbids = [ results.table.chdbids ];
 					}
 				}
 
-				result.table.chdbids = result.table.chdbids.map((chdbid) => {
+				results.table.chdbids = results.table.chdbids.map((chdbid) => {
 					return {
 						name: chdbid.$.name,
 						dbid: chdbid._
@@ -1110,134 +1010,94 @@ let actions = {
 				});
 			}
 
-			if(result.table.hasOwnProperty('variables')){
-				result.table.variables = xmlNodeParsers.variables(result.table.variables);
+			if(results.table.hasOwnProperty('variables')){
+				results.table.variables = xmlNodeParsers.variables(results.table.variables);
 			}
 
-			if(result.table.hasOwnProperty('queries')){
-				result.table.queries = xmlNodeParsers.queries(result.table.queries);
+			if(results.table.hasOwnProperty('queries')){
+				results.table.queries = xmlNodeParsers.queries(results.table.queries);
 			}
 
-			if(result.table.hasOwnProperty('fields')){
-				result.table.fields = xmlNodeParsers.fields(result.table.fields);
+			if(results.table.hasOwnProperty('fields')){
+				results.table.fields = xmlNodeParsers.fields(results.table.fields);
 			}
-
-			return Promise.resolve(result);
 		}
 	},
 	// API_GetRecordAsHTML: {
-		// request (context) {
-		// 	return Promise.resolve();
-		// },
-		// response (context, result) {
-		// 	return Promise.resolve(result);
-		// }
+		// request (query) { },
+		// response (query, results) { }
 	// },
 	// API_GetRecordInfo: {
-		// request (context) {
-		// 	return Promise.resolve();
-		// },
-		// response (context, result) {
-		// 	return Promise.resolve(result);
-		// }
+		// request (query) { },
+		// response (query, results) { }
 	// },
 	API_GetRoleInfo: {
-		// request (context) {
-		// 	return Promise.resolve();
-		// },
-		response (context, result) {
-			if(result.hasOwnProperty('roles')){
-				result.roles = xmlNodeParsers.roles(result.roles);				
+		// request (query) { },
+		response (query, results) {
+			if(results.hasOwnProperty('roles')){
+				results.roles = xmlNodeParsers.roles(results.roles);				
 			}
-
-			return Promise.resolve(result);
 		}
 	},
 	API_GetUserInfo: {
-		// request (context) {
-		// 	return Promise.resolve();
-		// },
-		response (context, result) {
-			if(result.hasOwnProperty('user')){
-				result.user = flattenXMLAttributes(result.user);
+		// request (query) { },
+		response (query, results) {
+			if(results.hasOwnProperty('user')){
+				results.user = flattenXMLAttributes(results.user);
 			}
-
-			return Promise.resolve(result);
 		}
 	},
 	API_GetUserRole: {
-		// request (context) {
-		// 	return Promise.resolve();
-		// },
-		response (context, result) {
-			if(result.hasOwnProperty('roles')){
-				result.roles = xmlNodeParsers.roles(result.roles);
+		// request (query) { },
+		response (query, results) {
+			if(results.hasOwnProperty('roles')){
+				results.roles = xmlNodeParsers.roles(results.roles);
 			}
-
-			return Promise.resolve(result);
 		}
 	},
 	API_GetUsersInGroup: {
-		// request (context) {
-		// 	return Promise.resolve();
-		// },
-		response (context, result) {
-			if(result.hasOwnProperty('group')){
-				result.group = xmlNodeParsers.group(result.group);
+		// request (query) { },
+		response (query, results) {
+			if(results.hasOwnProperty('group')){
+				results.group = xmlNodeParsers.group(results.group);
 			}
-
-			return Promise.resolve(result);
 		}
 	},
 	API_GrantedDBs: {
-		// request (context) {
-		// 	return Promise.resolve();
-		// },
-		response (context, result) {
-			if(result.hasOwnProperty('databases')){
-				result.databases = result.databases.dbinfo;
+		// request (query) { },
+		response (query, results) {
+			if(results.hasOwnProperty('databases')){
+				results.databases = results.databases.dbinfo;
 			}
-
-			return Promise.resolve(result);
 		}
 	},
 	API_GrantedDBsForGroup: {
-		// request (context) {
-		// 	return Promise.resolve();
-		// },
-		response (context, result) {
+		// request (query) { },
+		response (query, results) {
 			if(result.hasOwnProperty('databases')){
 				result.databases = result.databases.dbinfo;
 			}
-
-			return Promise.resolve(result);
 		}
 	},
 	API_GrantedGroups: {
-		// request (context) {
-		// 	return Promise.resolve();
-		// },
-		response (context, result) {
-			if(result.hasOwnProperty('groups')){
-				if(!(result.groups instanceof Array)){
-					result.groups = [ result.groups ];
+		// request (query) { },
+		response (query, results) {
+			if(results.hasOwnProperty('groups')){
+				if(!(results.groups instanceof Array)){
+					results.groups = [ results.groups ];
 				}
 
-				result.groups = result.groups.map((group) => {
+				results.groups = results.groups.map((group) => {
 					return flattenXMLAttributes(group);
 				});
 			}
-
-			return Promise.resolve(result);
 		}
 	},
 	API_ImportFromCSV: {
-		// request (context) {
-		// 	return Promise.resolve();
-		// },
-		response (context, result) {
-			if(result.hasOwnProperty('rids')){
-				result.rids = result.rids.map((record) => {
+		// request (query) { },
+		response (query, results) {
+			if(results.hasOwnProperty('rids')){
+				results.rids = results.rids.map((record) => {
 					let ret = {
 						rid: record._
 					};
@@ -1249,164 +1109,97 @@ let actions = {
 					return ret;
 				});
 			}
-
-			return Promise.resolve(result);
 		}
 	},
 	// API_ProvisionUser: {
-		// request (context) {
-		// 	return Promise.resolve();
-		// },
-		// response (context, result) {
-		// 	return Promise.resolve(result);
-		// }
+		// request (query) { },
+		// response (query, results) { }
 	// },
 	// API_PurgeRecords: {
-		// request (context) {
-		// 	return Promise.resolve();
-		// },
-		// response (context, result) {
-		// 	return Promise.resolve(result);
-		// }
+		// request (query) { },
+		// response (query, results) { }
 	// },
 	// API_RemoveGroupFromRole: {
-		// request (context) {
-		// 	return Promise.resolve();
-		// },
-		// response (context, result) {
-		// 	return Promise.resolve(result);
-		// }
+		// request (query) { },
+		// response (query, results) { }
 	// },
 	// API_RemoveSubgroup: {
-		// request (context) {
-		// 	return Promise.resolve();
-		// },
-		// response (context, result) {
-		// 	return Promise.resolve(result);
-		// }
+		// request (query) { },
+		// response (query, results) { }
 	// },
 	// API_RemoveUserFromGroup: {
-		// request (context) {
-		// 	return Promise.resolve();
-		// },
-		// response (context, result) {
-		// 	return Promise.resolve(result);
-		// }
+		// request (query) { },
+		// response (query, results) { }
 	// },
 	// API_RemoveUserFromRole: {
-		// request (context) {
-		// 	return Promise.resolve();
-		// },
-		// response (context, result) {
-		// 	return Promise.resolve(result);
-		// }
+		// request (query) { },
+		// response (query, results) { }
 	// },
 	// API_RenameApp: {
-		// request (context) {
-		// 	return Promise.resolve();
-		// },
-		// response (context, result) {
-		// 	return Promise.resolve(result);
-		// }
+		// request (query) { },
+		// response (query, results) { }
 	// },
 	// API_RunImport: {
-		// request (context) {
-		// 	return Promise.resolve();
-		// },
-		// response (context, result) {
-		// 	return Promise.resolve(result);
-		// }
+		// request (query) { },
+		// response (query, results) { }
 	// },
 	// API_SendInvitation: {
-		// request (context) {
-		// 	return Promise.resolve();
-		// },
-		// response (context, result) {
-		// 	return Promise.resolve(result);
-		// }
+		// request (query) { },
+		// response (query, results) { }
 	// },
 	// API_SetDBVar: {
-		// request (context) {
-		// 	return Promise.resolve();
-		// },
-		// response (context, result) {
-		// 	return Promise.resolve(result);
-		// }
+		// request (query) { },
+		// response (query, results) { }
 	// },
 	// API_SetFieldProperties: {
-		// request (context) {
-		// 	return Promise.resolve();
-		// },
-		// response (context, result) {
-		// 	return Promise.resolve(result);
-		// }
+		// request (query) { },
+		// response (query, results) { }
 	// },
 	// API_SetKeyField: {
-		// request (context) {
-		// 	return Promise.resolve();
-		// },
-		// response (context, result) {
-		// 	return Promise.resolve(result);
-		// }
+		// request (query) { },
+		// response (query, results) { }
 	// },
 	// API_SignOut: {
-		// request (context) {
-		// 	return Promise.resolve();
-		// },
-		// response (context, result) {
-		// 	return Promise.resolve(result);
-		// }
+		// request (query) { },
+		// response (query, results) { }
 	// },
 	API_UploadFile: {
-		// request (context) {
-		// 	return Promise.resolve();
-		// },
-		response (context, result) {
-			if(result.hasOwnProperty('file_fields')){
-				result.file_fields = result.file_fields.field;
+		// request (query) { },
+		response (query, results) {
+			if(results.hasOwnProperty('file_fields')){
+				results.file_fields = results.file_fields.field;
 
-				if(!(result.file_fields instanceof Array)){
+				if(!(results.file_fields instanceof Array)){
 					// Support Case #480141
 					// XML returned from QuickBase appends "\r\n      "
-					if(result.file_fields === ''){
-						result.file_fields = [];
+					if(results.file_fields === ''){
+						results.file_fields = [];
 					}else{
-						result.file_fields = [ result.file_fields ];
+						results.file_fields = [ results.file_fields ];
 					}
 				}
 
-				result.file_fields = result.file_fields.map((file) => {
+				results.file_fields = results.file_fields.map((file) => {
 					return flattenXMLAttributes(file);
 				});
 			}
-
-			return Promise.resolve(result);
 		}
 	},
 	API_UserRoles: {
-		// request (context) {
-		// 	return Promise.resolve();
-		// },
-		response (context, result) {
-			if(result.hasOwnProperty('users')){
-				result.users = flattenXMLAttributes(result.users);
+		// request (query) { },
+		response (query, results) {
+			if(results.hasOwnProperty('users')){
+				results.users = flattenXMLAttributes(results.users);
 			}
-
-			return Promise.resolve(result);
 		}
 	},
 	default: {
-		/*
-		request (context) {
-			// Do stuff prior to the request
-
-			return Promise.resolve();
-		},
-		response (context, result) {
-			// Do Stuff with the result before resolving the api call
-
-			return Promise.resolve(result);
-		}
+		/* request (query) {
+		 * 	Do stuff prior to the request
+		 * },
+		 * response (query, results) {
+		 * 	Do Stuff with the results before resolving the api call
+		 * }
 		*/
 	}
 };
