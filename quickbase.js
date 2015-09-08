@@ -1847,3 +1847,7 @@ if(typeof(define) === 'function' && define.amd){
 		return QuickBase;
 	});
 }
+
+if(typeof(global) !== 'undefined' && typeof(window) !== 'undefined' && global === window){
+	global.QuickBase = QuickBase;
+}
