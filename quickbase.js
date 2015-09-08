@@ -388,10 +388,9 @@ class QueryBuilder {
 	}
 
 	processQuery () {
-		let settings = this.settings;
-
 		return new Promise((resolve, reject) => {
-			let reqOpts = {
+			let settings = this.settings,
+				reqOpts = {
 					hostname: [ settings.realm, settings.domain ].join('.'),
 					port: settings.useSSL ? 443 : 80,
 					path: '/db/' + (this.options.dbid || 'main') + '?act=' + this.action + (!settings.flags.useXML ? this.payload : ''),
@@ -833,8 +832,6 @@ let actions = {
 			return Promise.resolve();
 		},
 		response (context, result) {
-			let i = 0, l = 0;
-
 			if(context.options.hasOwnProperty('fmt') && context.options.fmt === 'structured'){
 				/* XML is _so_ butt ugly... Let's try to make some sense of it
 				 * Turn this:
@@ -1094,8 +1091,6 @@ let actions = {
 		// 	return Promise.resolve();
 		// },
 		response (context, result) {
-			let i = 0, l = 0;
-
 			if(result.table.hasOwnProperty('chdbids')){
 				if(!(result.table.chdbids instanceof Array)){
 					// Support Case #480141
