@@ -14,6 +14,36 @@ Install
 $ npm install tflanagan/node-quickbase#es6
 ```
 
+Browserify
+----------
+This library works out of the box with Babel+Browserify.
+```
+$ npm install quickbase
+$ npm install -g babel browserify minifier
+$ babel quickbase.js > quickbase.es5.js
+$ browserify quickbase.es5.js > quickbase.browserify.js
+$ minify quickbase.browserify.js > quickbase.browserify.min.js
+```
+This exposes the QuickBase object to the global namespace (```window.QuickBase || QuickBase```).
+
+__Warning: Native Browser Promises do not share the same functionality as Bluebird Promises!__
+
+Chaining functions off of an ```.api()``` function call uses the Bluebird Promise Library. Declaring a ```new Promise()``` uses Native Browser Promises (if available).
+
+The use is the same as in Nodejs, but there is no need to ```require('quickbase')```.
+
+```html
+<script type="text/javascript" src="quickbase.browserify.js"></script>
+<script type="text/javascript">
+	var quickbase = new QuickBase({
+		realm: 'www',
+		appToken: '*****'
+	});
+
+	...
+</script>
+```
+
 Example
 -------
 ```javascript
