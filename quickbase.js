@@ -254,8 +254,6 @@ class Throttle {
 
 	acquire () {
 		return new Promise((resolve, reject) => {
-			console.log(this._numConnections >= this.maxConnections, this.maxConnections !== -1);
-
 			if(this._numConnections >= this.maxConnections && this.maxConnections !== -1){
 				if(this.errorOnConnectionLimit){
 					reject(new QuickbaseError(1001, 'No Connections Available', 'Maximum Number of Connections Reached'));

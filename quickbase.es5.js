@@ -280,8 +280,6 @@ var Throttle = (function () {
 			var _this3 = this;
 
 			return new Promise(function (resolve, reject) {
-				console.log(_this3._numConnections >= _this3.maxConnections, _this3.maxConnections !== -1);
-
 				if (_this3._numConnections >= _this3.maxConnections && _this3.maxConnections !== -1) {
 					if (_this3.errorOnConnectionLimit) {
 						reject(new QuickbaseError(1001, 'No Connections Available', 'Maximum Number of Connections Reached'));
