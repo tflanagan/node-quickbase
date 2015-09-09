@@ -551,7 +551,7 @@ quickbase.api('API_DeleteRecord', {
 ```javascript
 quickbase.api('API_DoQuery', {
 	dbid: 'bddnn3uz9',                                            /* Required */
-	query: '{'5'.CT.'Ragnar Lodbrok'}AND{'5'.CT.'Acquisitions'}',
+	query: "{'5'.CT.'Ragnar Lodbrok'}AND{'5'.CT.'Acquisitions'}",
 	/* qid: 1, */
 	/* qname: 'List All', */
 	clist: '3',
