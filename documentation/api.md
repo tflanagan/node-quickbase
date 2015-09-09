@@ -1092,7 +1092,9 @@ quickbase.api('API_GetUserInfo').then((results) => {
 	 * 		lastName: 'Lodbrok',
 	 * 		login: 'Ragnar',
 	 * 		email: 'Ragnar-Lodbrok@paris.net',
-	 * 		screenName: 'Ragnar'
+	 * 		screenName: 'Ragnar',
+	 * 		externalAuth: 0,
+	 * 		isVerified: 1
 	 * 	}
 	 * }
 	*/
