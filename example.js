@@ -1,4 +1,4 @@
-// npm install tflanagan/node-quickbase#es6
+// npm install tflanagan/node-quickbase
 var QuickBase = require('quickbase');
 
 var quickbase = new QuickBase({

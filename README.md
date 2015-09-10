@@ -50,9 +50,9 @@ The use is the same as in Nodejs, but there is no need to ```require('quickbase'
 Example
 -------
 ```javascript
-var QuickBase = require('quickbase');
+const QuickBase = require('quickbase');
 
-var quickbase = new QuickBase({
+let quickbase = new QuickBase({
 	realm: 'www',
 	appToken: '*****'
 });
