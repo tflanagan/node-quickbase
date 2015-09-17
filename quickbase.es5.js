@@ -159,13 +159,13 @@ var flattenXMLAttributes = function flattenXMLAttributes(obj) {
 
 /* Error Handling */
 
-var QuickbaseError = (function (_Error) {
-	_inherits(QuickbaseError, _Error);
+var QuickBaseError = (function (_Error) {
+	_inherits(QuickBaseError, _Error);
 
-	function QuickbaseError(code, name, message) {
-		_classCallCheck(this, QuickbaseError);
+	function QuickBaseError(code, name, message) {
+		_classCallCheck(this, QuickBaseError);
 
-		_get(Object.getPrototypeOf(QuickbaseError.prototype), 'constructor', this).call(this, name);
+		_get(Object.getPrototypeOf(QuickBaseError.prototype), 'constructor', this).call(this, name);
 
 		this.code = code;
 		this.name = name;
@@ -175,7 +175,7 @@ var QuickbaseError = (function (_Error) {
 	}
 
 	/* Main Class */
-	return QuickbaseError;
+	return QuickBaseError;
 })(Error);
 
 var QuickBase = (function () {
@@ -282,7 +282,7 @@ var Throttle = (function () {
 			return new Promise(function (resolve, reject) {
 				if (_this3._numConnections >= _this3.maxConnections && _this3.maxConnections !== -1) {
 					if (_this3.errorOnConnectionLimit) {
-						reject(new QuickbaseError(1001, 'No Connections Available', 'Maximum Number of Connections Reached'));
+						reject(new QuickBaseError(1001, 'No Connections Available', 'Maximum Number of Connections Reached'));
 					} else {
 						_this3._pendingConnections.push({
 							resolve: resolve,
@@ -505,13 +505,13 @@ var QueryBuilder = (function () {
 								async: true
 							}, function (err, result) {
 								if (err) {
-									return reject(new QuickbaseError(1000, 'Error Processing Request', err));
+									return reject(new QuickBaseError(1000, 'Error Processing Request', err));
 								}
 
 								result = cleanXML(result.qdbapi);
 
 								if (result.errcode !== settings.status.errcode) {
-									return reject(new QuickbaseError(result.errcode, result.errtext, result.errdetail));
+									return reject(new QuickBaseError(result.errcode, result.errtext, result.errdetail));
 								}
 
 								resolve(result);
@@ -1863,7 +1863,7 @@ var prepareOptions = {
 // }
 QuickBase.QueryBuilder = QueryBuilder;
 QuickBase.Throttle = Throttle;
-QuickBase.QuickbaseError = QuickbaseError;
+QuickBase.QuickBaseError = QuickBaseError;
 
 /* Expose Methods */
 QuickBase.actions = actions;

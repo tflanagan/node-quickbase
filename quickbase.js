@@ -145,7 +145,7 @@ let flattenXMLAttributes = (obj) => {
 };
 
 /* Error Handling */
-class QuickbaseError extends Error {
+class QuickBaseError extends Error {
 
 	constructor (code, name, message) {
 		super(name);
@@ -256,7 +256,7 @@ class Throttle {
 		return new Promise((resolve, reject) => {
 			if(this._numConnections >= this.maxConnections && this.maxConnections !== -1){
 				if(this.errorOnConnectionLimit){
-					reject(new QuickbaseError(1001, 'No Connections Available', 'Maximum Number of Connections Reached'));
+					reject(new QuickBaseError(1001, 'No Connections Available', 'Maximum Number of Connections Reached'));
 				}else{
 					this._pendingConnections.push({
 						resolve: resolve,
@@ -476,13 +476,13 @@ class QueryBuilder {
 								async: true
 							}, (err, result) => {
 								if(err){
-									return reject(new QuickbaseError(1000, 'Error Processing Request', err));
+									return reject(new QuickBaseError(1000, 'Error Processing Request', err));
 								}
 
 								result = cleanXML(result.qdbapi);
 
 								if(result.errcode !== settings.status.errcode){
-									return reject(new QuickbaseError(result.errcode, result.errtext, result.errdetail));
+									return reject(new QuickBaseError(result.errcode, result.errtext, result.errdetail));
 								}
 
 								resolve(result);
@@ -1830,7 +1830,7 @@ let prepareOptions = {
 /* Expose Instances */
 QuickBase.QueryBuilder = QueryBuilder;
 QuickBase.Throttle = Throttle;
-QuickBase.QuickbaseError = QuickbaseError;
+QuickBase.QuickBaseError = QuickBaseError;
 
 /* Expose Methods */
 QuickBase.actions = actions;
