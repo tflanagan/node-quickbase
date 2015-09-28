@@ -1486,7 +1486,7 @@ var prepareOptions = {
 
 	/* API_AddRecord, API_EditRecord, API_GenAddRecordForm, API_UploadFile */
 	field: function field(val) {
-		if (!(val instanceof Array)) {
+		if (val instanceof Object) {
 			val = [val];
 		}
 
