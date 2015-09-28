@@ -18996,8 +18996,6 @@ var prepareOptions = {
 
 			return ret;
 		});
-
-		return val;
 	},
 
 	/* API_SetFieldProperties */
