@@ -41,7 +41,7 @@
     "release-major": "npm run build && git add -A . && git commit -m \"Release Major Build\" && npm version major -m \"Release Major v%s\" && npm publish && git push --follow-tags"
   },
   "dependencies": {
-    "bluebird": "^2.9.34",
+    "bluebird": "^2.10.1",
     "xml2js": "^0.4.12"
   },
   "devDependencies": {

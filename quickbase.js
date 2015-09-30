@@ -1453,7 +1453,7 @@ let prepareOptions = {
 
 	/* API_AddRecord, API_EditRecord, API_GenAddRecordForm, API_UploadFile */
 	field (val) {
-		if(val instanceof Object){
+		if(val instanceof Object && val.map === undefined){
 			val = [ val ];
 		}
 
