@@ -23,6 +23,24 @@ let fs = require('fs'),
 
 /* Globals */
 if(!!process.env.TRAVIS === false){
+	if(process.argv.length !== 7){
+		console.error([
+			'ERROR: Incorrect CI Test Usage.',
+			'',
+			'\t$ npm test <realm> <username> <password> <appToken> <dbid>',
+			'',
+			'\trealm:    www',
+			'\tusername: foo@bar.com',
+			'\tpassword: foobar',
+			'\tappToken: dn23iuct88jvbcx7v9vttp2an6',
+			'\tdbid:     bkcamms4m',
+			'\t          (must be a table dbid, not an application dbid)',
+			''
+		].join('\n'));
+
+		return process.exit(1);
+	}
+
 	process.env.realm    = process.argv[2];
 	process.env.username = process.argv[3];
 	process.env.password = process.argv[4];
