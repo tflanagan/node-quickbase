@@ -4940,20 +4940,22 @@ var rootParent = {}
  */
 Buffer.TYPED_ARRAY_SUPPORT = global.TYPED_ARRAY_SUPPORT !== undefined
   ? global.TYPED_ARRAY_SUPPORT
-  : (function () {
-      function Bar () {}
-      try {
-        var arr = new Uint8Array(1)
-        arr.foo = function () { return 42 }
-        arr.constructor = Bar
-        return arr.foo() === 42 && // typed array instances can be augmented
-            arr.constructor === Bar && // constructor can be set
-            typeof arr.subarray === 'function' && // chrome 9-10 lack `subarray`
-            arr.subarray(1, 1).byteLength === 0 // ie10 has broken `subarray`
-      } catch (e) {
-        return false
-      }
-    })()
+  : typedArraySupport()
+
+function typedArraySupport () {
+  function Bar () {}
+  try {
+    var arr = new Uint8Array(1)
+    arr.foo = function () { return 42 }
+    arr.constructor = Bar
+    return arr.foo() === 42 && // typed array instances can be augmented
+        arr.constructor === Bar && // constructor can be set
+        typeof arr.subarray === 'function' && // chrome 9-10 lack `subarray`
+        arr.subarray(1, 1).byteLength === 0 // ie10 has broken `subarray`
+  } catch (e) {
+    return false
+  }
+}
 
 function kMaxLength () {
   return Buffer.TYPED_ARRAY_SUPPORT
@@ -5907,7 +5909,7 @@ Buffer.prototype.writeUInt8 = function writeUInt8 (value, offset, noAssert) {
   offset = offset | 0
   if (!noAssert) checkInt(this, value, offset, 1, 0xff, 0)
   if (!Buffer.TYPED_ARRAY_SUPPORT) value = Math.floor(value)
-  this[offset] = value
+  this[offset] = (value & 0xff)
   return offset + 1
 }
 
@@ -5924,7 +5926,7 @@ Buffer.prototype.writeUInt16LE = function writeUInt16LE (value, offset, noAssert
   offset = offset | 0
   if (!noAssert) checkInt(this, value, offset, 2, 0xffff, 0)
   if (Buffer.TYPED_ARRAY_SUPPORT) {
-    this[offset] = value
+    this[offset] = (value & 0xff)
     this[offset + 1] = (value >>> 8)
   } else {
     objectWriteUInt16(this, value, offset, true)
@@ -5938,7 +5940,7 @@ Buffer.prototype.writeUInt16BE = function writeUInt16BE (value, offset, noAssert
   if (!noAssert) checkInt(this, value, offset, 2, 0xffff, 0)
   if (Buffer.TYPED_ARRAY_SUPPORT) {
     this[offset] = (value >>> 8)
-    this[offset + 1] = value
+    this[offset + 1] = (value & 0xff)
   } else {
     objectWriteUInt16(this, value, offset, false)
   }
@@ -5960,7 +5962,7 @@ Buffer.prototype.writeUInt32LE = function writeUInt32LE (value, offset, noAssert
     this[offset + 3] = (value >>> 24)
     this[offset + 2] = (value >>> 16)
     this[offset + 1] = (value >>> 8)
-    this[offset] = value
+    this[offset] = (value & 0xff)
   } else {
     objectWriteUInt32(this, value, offset, true)
   }
@@ -5975,7 +5977,7 @@ Buffer.prototype.writeUInt32BE = function writeUInt32BE (value, offset, noAssert
     this[offset] = (value >>> 24)
     this[offset + 1] = (value >>> 16)
     this[offset + 2] = (value >>> 8)
-    this[offset + 3] = value
+    this[offset + 3] = (value & 0xff)
   } else {
     objectWriteUInt32(this, value, offset, false)
   }
@@ -6028,7 +6030,7 @@ Buffer.prototype.writeInt8 = function writeInt8 (value, offset, noAssert) {
   if (!noAssert) checkInt(this, value, offset, 1, 0x7f, -0x80)
   if (!Buffer.TYPED_ARRAY_SUPPORT) value = Math.floor(value)
   if (value < 0) value = 0xff + value + 1
-  this[offset] = value
+  this[offset] = (value & 0xff)
   return offset + 1
 }
 
@@ -6037,7 +6039,7 @@ Buffer.prototype.writeInt16LE = function writeInt16LE (value, offset, noAssert) 
   offset = offset | 0
   if (!noAssert) checkInt(this, value, offset, 2, 0x7fff, -0x8000)
   if (Buffer.TYPED_ARRAY_SUPPORT) {
-    this[offset] = value
+    this[offset] = (value & 0xff)
     this[offset + 1] = (value >>> 8)
   } else {
     objectWriteUInt16(this, value, offset, true)
@@ -6051,7 +6053,7 @@ Buffer.prototype.writeInt16BE = function writeInt16BE (value, offset, noAssert) 
   if (!noAssert) checkInt(this, value, offset, 2, 0x7fff, -0x8000)
   if (Buffer.TYPED_ARRAY_SUPPORT) {
     this[offset] = (value >>> 8)
-    this[offset + 1] = value
+    this[offset + 1] = (value & 0xff)
   } else {
     objectWriteUInt16(this, value, offset, false)
   }
@@ -6063,7 +6065,7 @@ Buffer.prototype.writeInt32LE = function writeInt32LE (value, offset, noAssert) 
   offset = offset | 0
   if (!noAssert) checkInt(this, value, offset, 4, 0x7fffffff, -0x80000000)
   if (Buffer.TYPED_ARRAY_SUPPORT) {
-    this[offset] = value
+    this[offset] = (value & 0xff)
     this[offset + 1] = (value >>> 8)
     this[offset + 2] = (value >>> 16)
     this[offset + 3] = (value >>> 24)
@@ -6082,7 +6084,7 @@ Buffer.prototype.writeInt32BE = function writeInt32BE (value, offset, noAssert) 
     this[offset] = (value >>> 24)
     this[offset + 1] = (value >>> 16)
     this[offset + 2] = (value >>> 8)
-    this[offset + 3] = value
+    this[offset + 3] = (value & 0xff)
   } else {
     objectWriteUInt32(this, value, offset, false)
   }
@@ -9766,8 +9768,8 @@ exports.isBuffer = isBuffer;
 function objectToString(o) {
   return Object.prototype.toString.call(o);
 }
-}).call(this,{"isBuffer":require("F:\\projects\\Git\\node-quickbase\\node_modules\\browserify\\node_modules\\insert-module-globals\\node_modules\\is-buffer\\index.js")})
-},{"F:\\projects\\Git\\node-quickbase\\node_modules\\browserify\\node_modules\\insert-module-globals\\node_modules\\is-buffer\\index.js":10}],24:[function(require,module,exports){
+}).call(this,{"isBuffer":require("../../../../insert-module-globals/node_modules/is-buffer/index.js")})
+},{"../../../../insert-module-globals/node_modules/is-buffer/index.js":10}],24:[function(require,module,exports){
 (function (process){
 'use strict';
 module.exports = nextTick;
@@ -9843,7 +9845,12 @@ function deprecate (fn, msg) {
  */
 
 function config (name) {
-  if (!global.localStorage) return false;
+  // accessing global.localStorage can trigger a DOMException in sandboxed iframes
+  try {
+    if (!global.localStorage) return false;
+  } catch (_) {
+    return false;
+  }
   var val = global.localStorage[name];
   if (null == val) return false;
   return String(val).toLowerCase() === 'true';
@@ -10684,7 +10691,7 @@ var has = Object.prototype.hasOwnProperty;
 var toStr = Object.prototype.toString;
 var slice = Array.prototype.slice;
 var isArgs = require('./isArguments');
-var hasDontEnumBug = !({ 'toString': null }).propertyIsEnumerable('toString');
+var hasDontEnumBug = !({ toString: null }).propertyIsEnumerable('toString');
 var hasProtoEnumBug = function () {}.propertyIsEnumerable('prototype');
 var dontEnums = [
 	'toString',
@@ -10700,31 +10707,36 @@ var equalsConstructorPrototype = function (o) {
 	return ctor && ctor.prototype === o;
 };
 var blacklistedKeys = {
-	$window: true,
 	$console: true,
+	$frameElement: true,
+	$frames: true,
 	$parent: true,
 	$self: true,
-	$frames: true,
 	$webkitIndexedDB: true,
-	$webkitStorageInfo: true
+	$webkitStorageInfo: true,
+	$window: true
 };
 var hasAutomationEqualityBug = (function () {
 	/* global window */
 	if (typeof window === 'undefined') { return false; }
 	for (var k in window) {
-		if (!blacklistedKeys['$' + k] && has.call(window, k) && window[k] !== null && typeof window[k] === 'object') {
-			try {
-				equalsConstructorPrototype(window[k]);
-			} catch (e) {
-				return true;
+		try {
+			if (!blacklistedKeys['$' + k] && has.call(window, k) && window[k] !== null && typeof window[k] === 'object') {
+				try {
+					equalsConstructorPrototype(window[k]);
+				} catch (e) {
+					return true;
+				}
 			}
+		} catch (e) {
+			return true;
 		}
 	}
 	return false;
 }());
 var equalsConstructorPrototypeIfNotBuggy = function (o) {
 	/* global window */
-	if (typeof window === 'undefined' && !hasAutomationEqualityBug) {
+	if (typeof window === 'undefined' || !hasAutomationEqualityBug) {
 		return equalsConstructorPrototype(o);
 	}
 	try {
@@ -10777,9 +10789,7 @@ var keysShim = function keys(object) {
 };
 
 keysShim.shim = function shimObjectKeys() {
-	if (!Object.keys) {
-		Object.keys = keysShim;
-	} else {
+	if (Object.keys) {
 		var keysWorksWithArguments = (function () {
 			// Safari 5.0 bug
 			return (Object.keys(arguments) || '').length === 2;
@@ -10794,6 +10804,8 @@ keysShim.shim = function shimObjectKeys() {
 				}
 			};
 		}
+	} else {
+		Object.keys = keysShim;
 	}
 	return Object.keys || keysShim;
 };
@@ -12098,6 +12110,9 @@ function extend() {
                 if (typeof child === 'string' && _this.options.cdata && requiresCDATA(child)) {
                   element = element.ele(key).raw(wrapCDATA(child)).up();
                 } else {
+                  if(child === undefined || child === null){
+                    // child = '';
+                  }
                   element = element.ele(key, child.toString()).up();
                 }
               }
@@ -18065,7 +18080,11 @@ var QueryBuilder = (function () {
 			this.payload = '';
 
 			if (this.settings.flags.useXML === true) {
-				this.payload = builder.buildObject(this.options);
+				try {
+					this.payload = builder.buildObject(this.options);
+				} catch (err) {
+					throw new QuickBaseError(1002, 'Error Building XML', err);
+				}
 			} else {
 				Object.keys(this.options).forEach(function (arg) {
 					_this5.payload += '&' + arg + '=' + encodeURIComponent(_this5.options[arg]);

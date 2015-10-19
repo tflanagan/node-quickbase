@@ -464,7 +464,11 @@ var QueryBuilder = (function () {
 			this.payload = '';
 
 			if (this.settings.flags.useXML === true) {
-				this.payload = builder.buildObject(this.options);
+				try {
+					this.payload = builder.buildObject(this.options);
+				} catch (err) {
+					throw new QuickBaseError(1002, 'Error Building XML', err);
+				}
 			} else {
 				Object.keys(this.options).forEach(function (arg) {
 					_this5.payload += '&' + arg + '=' + encodeURIComponent(_this5.options[arg]);
