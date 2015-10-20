@@ -51,16 +51,21 @@ if(!!process.env.TRAVIS === false){
 /* Helpers */
 let getTests = () => {
 	return new Promise((resolve, reject) => {
-		try {
-			let tests = fs.readdirSync(__dirname)
-				.filter((test) => {
-					return test.indexOf('.') !== 0 && test !== 'runAll.js';
-				});
+		fs.readdir(__dirname, (err, tests) => {
+			if(err){
+				return reject(err);
+			}
+
+			tests = tests.reduce((tests, test) => {
+				if(test.indexOf('.') !== 0 && test !== 'runAll.js'){
+					tests.push(test);
+				}
+
+				return tests;
+			}, []);
 
 			resolve(tests);
-		}catch(err){
-			reject(err);
-		}
+		});
 	});
 };
 
