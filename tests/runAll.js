@@ -54,7 +54,7 @@ let getTests = () => {
 		try {
 			let tests = fs.readdirSync(__dirname)
 				.filter((test) => {
-					return test.indexOf('.') !== 1 && test !== 'runAll.js';
+					return test.indexOf('.') !== 0 && test !== 'runAll.js';
 				});
 
 			resolve(tests);
