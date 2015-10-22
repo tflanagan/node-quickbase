@@ -16,10 +16,10 @@
 'use strict';
 
 /* Dependencies */
-let xml = require('xml2js'),
-	http = require('http'),
-	https = require('https'),
-	Promise = require('bluebird');
+const xml = require('xml2js');
+const http = require('http');
+const https = require('https');
+const Promise = require('bluebird');
 
 /* Native Extensions */
 if(!Object.hasOwnProperty('extend') && Object.extend === undefined){
@@ -56,7 +56,7 @@ if(!Object.hasOwnProperty('extend') && Object.extend === undefined){
 }
 
 /* Helpers */
-let cleanXML = (xml) => {
+const cleanXML = (xml) => {
 	let isInt = /^-?\s*\d+$/,
 		isDig = /^(-?\s*\d+\.?\d*)$/,
 		radix = 10;
@@ -132,7 +132,7 @@ let cleanXML = (xml) => {
 	return xml;
 };
 
-let flattenXMLAttributes = (obj) => {
+const flattenXMLAttributes = (obj) => {
 	if(obj.hasOwnProperty('$')){
 		Object.keys(obj.$).forEach((property) => {
 			obj[property] = obj.$[property];
