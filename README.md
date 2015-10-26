@@ -15,7 +15,12 @@ $ npm install quickbase
 
 # Latest Commit
 $ npm install tflanagan/node-quickbase
+
+# Bower Install
+$ bower install quickbase
 ```
+
+Bower installation only includes the `quickbase.browserify.min.js` file.
 
 Browserify
 ----------
