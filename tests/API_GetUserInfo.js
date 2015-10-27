@@ -16,7 +16,25 @@
 'use strict';
 
 /* Dependencies */
-let QuickBase = require('../');
+const QuickBase = require('../');
+const common = require('./_common.js');
+
+/* Expected Structures */
+const expectedGetUserInfo = {
+	action: 'API_GetUserInfo',
+	errcode: 0,
+	errtext: 'No error',
+	user: {
+		id: '',
+		firstName: '',
+		lastName: '',
+		login: '',
+		email: '',
+		screenName: '',
+		externalAuth: 0,
+		isVerified: 1
+	}
+};
 
 /* Main */
 module.exports = function(pass, fail){
@@ -26,5 +44,9 @@ module.exports = function(pass, fail){
 		ticket: process.env.ticket
 	});
 
-	return qb.api('API_GetUserInfo').then(pass).catch(fail);
+	return qb.api('API_GetUserInfo').then((results) => {
+		common.objStrctEqual(results, expectedGetUserInfo, 'Mismatched API_GetUserInfo Data Structure');
+
+		return results;
+	}).then(pass).catch(fail);
 };

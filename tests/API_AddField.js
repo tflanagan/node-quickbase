@@ -16,7 +16,23 @@
 'use strict';
 
 /* Dependencies */
-let QuickBase = require('../');
+const QuickBase = require('../');
+const common = require('./_common.js');
+
+/* Expected Structures */
+const expectedAddField = {
+	action: 'API_AddField',
+	errcode: 0,
+	errtext: 'No error',
+	fid: 0,
+	label: 'Test Field'
+};
+
+const expectedDeleteField = {
+	action: 'API_DeleteField',
+	errcode: 0,
+	errtext: 'No error'
+};
 
 /* Main */
 module.exports = function(pass, fail){
@@ -31,9 +47,15 @@ module.exports = function(pass, fail){
 		label: 'Test Field',
 		type: 'text'
 	}).then((results) => {
+		common.objStrctEqual(results, expectedAddField, 'Mismatched API_AddField Data Structure');
+
 		return qb.api('API_DeleteField', {
 			dbid: process.env.dbid,
 			fid: results.fid
+		}).then((results) => {
+			common.objStrctEqual(results, expectedDeleteField, 'Mismatched API_DeleteField Data Structure');
+
+			return results;
 		});
 	}).then(pass).catch(fail);
 };

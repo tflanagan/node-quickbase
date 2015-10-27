@@ -16,7 +16,17 @@
 'use strict';
 
 /* Dependencies */
-let QuickBase = require('../');
+const QuickBase = require('../');
+const common = require('./_common.js');
+
+/* Expected Structures */
+const expectedAuthenticate = {
+	action: 'API_Authenticate',
+	errcode: 0,
+	errtext: 'No error',
+	ticket: '',
+	userid: ''
+};
 
 /* Main */
 module.exports = function(pass, fail){
@@ -28,5 +38,9 @@ module.exports = function(pass, fail){
 	return qb.api('API_Authenticate', {
 		username: process.env.username,
 		password: process.env.password
+	}).then((results) => {
+		common.objStrctEqual(results, expectedAuthenticate, 'Mismatched API_Authenticate Data Structure');
+
+		return results;
 	}).then(pass).catch(fail);
 };

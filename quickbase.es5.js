@@ -867,7 +867,11 @@ var actions = {
 						var ret = {};
 
 						if (!(record.f instanceof Array)) {
-							record.f = [record.f];
+							if (record.f === undefined) {
+								record.f = [];
+							} else {
+								record.f = [record.f];
+							}
 						}
 
 						if (query.options.includeRids) {

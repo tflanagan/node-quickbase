@@ -16,7 +16,24 @@
 'use strict';
 
 /* Dependencies */
-let QuickBase = require('../');
+const QuickBase = require('../');
+const common = require('./_common.js');
+
+/* Expected Structures */
+const expectedAddRecord = {
+	action: 'API_AddRecord',
+	errcode: 0,
+	errtext: 'No error',
+	rid: 0,
+	update_id: 0
+};
+
+const expectedDeleteRecord = {
+	action: 'API_DeleteRecord',
+	errcode: 0,
+	errtext: 'No error',
+	rid: 0
+};
 
 /* Main */
 module.exports = function(pass, fail){
@@ -29,9 +46,15 @@ module.exports = function(pass, fail){
 	return qb.api('API_AddRecord', {
 		dbid: process.env.dbid
 	}).then((results) => {
+		common.objStrctEqual(results, expectedAddRecord, 'Mismatched API_AddRecord Data Structure');
+
 		return qb.api('API_DeleteRecord', {
 			dbid: process.env.dbid,
 			rid: results.rid
+		}).then((results) => {
+			common.objStrctEqual(results, expectedDeleteRecord, 'Mismatched API_DeleteRecord Data Structure');
+
+			return results;
 		});
 	}).then(pass).catch(fail);
 };

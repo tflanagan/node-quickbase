@@ -16,10 +16,10 @@
 'use strict';
 
 /* Dependencies */
-let fs = require('fs'),
-	path = require('path'),
-	Promise = require('bluebird'),
-	QuickBase = require('../');
+const fs = require('fs');
+const path = require('path');
+const Promise = require('bluebird');
+const QuickBase = require('../');
 
 /* Globals */
 if(!!process.env.TRAVIS === false){
@@ -57,7 +57,7 @@ let getTests = () => {
 			}
 
 			tests = tests.reduce((tests, test) => {
-				if(test.indexOf('.') !== 0 && test !== 'runAll.js'){
+				if(test.indexOf('.') !== 0 && test !== 'runAll.js' && test !== '_common.js'){
 					tests.push(test);
 				}
 
@@ -93,7 +93,7 @@ getTests()
 	.map((test) => {
 		return runTest(test)
 			.then((results) => {
-				if(results.ticket){
+				if(results && results.ticket){
 					process.env.ticket = results.ticket;
 				}
 

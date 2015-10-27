@@ -16,7 +16,16 @@
 'use strict';
 
 /* Dependencies */
-let QuickBase = require('../');
+const QuickBase = require('../');
+const common = require('./_common.js');
+
+/* Expected Structures */
+const expectedDoQueryCount = {
+	action: 'API_DoQueryCount',
+	errcode: 0,
+	errtext: 'No error',
+	numMatches: 0
+};
 
 /* Main */
 module.exports = function(pass, fail){
@@ -29,5 +38,9 @@ module.exports = function(pass, fail){
 	return qb.api('API_DoQueryCount', {
 		dbid: process.env.dbid,
 		query: "{'3'.XEX.''}"
+	}).then((results) => {
+		common.objStrctEqual(results, expectedDoQueryCount, 'Mismatched API_DoQueryCount Data Structure');
+
+		return results;
 	}).then(pass).catch(fail);
 };
