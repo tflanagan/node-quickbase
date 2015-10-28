@@ -35,7 +35,7 @@ function objStrctEquiv(a, b){
 			return false;
 		}
 
-		if(typeof val === 'object' && !objStrctMatch(val, b[key])){
+		if(!objStrctMatch(val, b[key])){
 			return false;
 		}
 	}
