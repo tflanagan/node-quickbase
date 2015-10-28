@@ -22,20 +22,14 @@ function objStrctEquiv(a, b){
 		return false;
 	}
 
-	let keys = Object.keys(a),
-		l = keys.length,
-		i = 0,
-		key, val;
+	const keys = Object.keys(a);
+	const l = keys.length;
 
-	for(; i < l; ++i){
+	for(let i = 0, key, val; i < l; ++i){
 		key = keys[i];
 		val = a[key];
 
-		if(!b.hasOwnProperty(key)){
-			return false;
-		}
-
-		if(!objStrctMatch(val, b[key])){
+		if(!b.hasOwnProperty(key) || !objStrctMatch(val, b[key])){
 			return false;
 		}
 	}
