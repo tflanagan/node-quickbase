@@ -23,7 +23,7 @@ const QuickBase = require('../');
 
 /* Globals */
 if(!!process.env.TRAVIS === false){
-	if(process.argv.length !== 7){
+	if(process.argv.length !== 8){
 		console.error([
 			'ERROR: Incorrect CI Test Usage.',
 			'',
@@ -46,6 +46,7 @@ if(!!process.env.TRAVIS === false){
 	process.env.password = process.argv[4];
 	process.env.appToken = process.argv[5];
 	process.env.dbid     = process.argv[6];
+	process.env.appid    = process.argv[7];
 }
 
 /* Helpers */
