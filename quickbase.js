@@ -179,7 +179,8 @@ class QuickBase {
 				includeRids: true,
 				returnPercentage: false,
 				fmt: 'structured',
-				encoding: 'UTF-8'
+				encoding: 'UTF-8',
+				dbidAsParam: false
 			},
 
 			status: {
@@ -458,7 +459,7 @@ class QueryBuilder {
 				reqOpts = {
 					hostname: [ settings.realm, settings.domain ].join('.'),
 					port: settings.useSSL ? 443 : 80,
-					path: '/db/' + (this.options.dbid || 'main') + '?act=' + this.action + (!settings.flags.useXML ? this.payload : ''),
+					path: '/db/' + (this.options.dbid && !settings.flags.dbidAsParam ? this.options.dbid : 'main') + '?act=' + this.action + (!settings.flags.useXML ? this.payload : ''),
 					method: settings.flags.useXML ? 'POST' : 'GET',
 					headers: {
 						'Content-Type': 'application/xml',
@@ -955,7 +956,9 @@ let actions = {
 		// response (query, results) { }
 	// },
 	API_GetAppDTMInfo: {
-		// request (query) { },
+		request (query) {
+			query.settings.flags.dbidAsParam = true;
+		},
 		response (query, results) {
 			if(results.hasOwnProperty('app')){
 				results.app = flattenXMLAttributes(results.app);
@@ -1197,7 +1200,22 @@ let actions = {
 		// request (query) { },
 		response (query, results) {
 			if(results.hasOwnProperty('users')){
-				results.users = flattenXMLAttributes(results.users);
+
+				if(!(results.users instanceof Array)){
+					// Support Case #480141
+					// XML returned from QuickBase appends "\r\n      "
+					if(results.users === ''){
+						results.users = [];
+					}else{
+						results.users = [ results.users ];
+					}
+				}
+
+				results.users = results.users.map((user) => {
+					user.roles = xmlNodeParsers.roles(user.roles);
+
+					return flattenXMLAttributes(user);
+				});
 			}
 		}
 	},
