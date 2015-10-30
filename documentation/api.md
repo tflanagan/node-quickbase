@@ -467,7 +467,7 @@ quickbase.api('API_CreateTable', {
 	 * 	action: 'API_CreateTable',
 	 * 	errcode: 0,
 	 * 	errtext: 'No error',
-	 * 	newDBID: 'bddfa5nbx'
+	 * 	newdbid: 'bddfa5nbx'
 	 * }
 	*/
 }).catch((error) => {
@@ -819,8 +819,8 @@ quickbase.api('API_GetAppDTMInfo', {
 	 * 	action: 'API_GetAppDTMInfo',
 	 * 	errcode: 0,
 	 * 	errtext: 'No error',
-	 * 	RequestTime: ,
-	 * 	RequestNextAllowedTime: ,
+	 * 	RequestTime: 1227657049750,
+	 * 	RequestNextAllowedTime: 1227657049750,
 	 * 	app: {
 	 * 		id: 'bdzk2ecg5',
 	 * 		lastModifiedTime: 1227657049750,
@@ -848,7 +848,13 @@ quickbase.api('API_GetDBPage', {
 	dbid: 'bguin9b8e', /* Required */
 	pageID: 3          /* Required */
 }).then((results) => {
-	/* results = '<html>...</html>' */
+	/* results = {
+	 * 	action: 'API_GetDBPage',
+	 * 	errcode: 0,
+	 * 	errtext: 'No error',
+	 * 	pagebody: '<html></html>'
+	 * }
+	*/
 }).catch((error) => {
 	// Handle error
 });
