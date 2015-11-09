@@ -1,6 +1,6 @@
 {
   "name": "quickbase",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "A lightweight, very flexible QuickBase API",
   "keywords": [
     "QuickBase",
@@ -36,10 +36,7 @@
   },
   "scripts": {
     "test": "node tests/runAll.js",
-    "build": "babel quickbase.js > quickbase.es5.js && browserify quickbase.es5.js > quickbase.browserify.js && cat devTools\\LICENSE.js > quickbase.browserify.min.js && minify quickbase.browserify.js >> quickbase.browserify.min.js",
-    "release-patch": "npm run build && git add -A . && git commit -m \"Release Patch Build\" && npm version patch -m \"Release Patch v%s\" && npm publish && git push --follow-tags",
-    "release-minor": "npm run build && git add -A . && git commit -m \"Release Minor Build\" && npm version minor -m \"Release Minor v%s\" && npm publish && git push --follow-tags",
-    "release-major": "npm run build && git add -A . && git commit -m \"Release Major Build\" && npm version major -m \"Release Major v%s\" && npm publish && git push --follow-tags"
+    "build": "babel quickbase.js > quickbase.es5.js && browserify quickbase.es5.js > quickbase.browserify.js && cat devTools\\LICENSE.js > quickbase.browserify.min.js && minify quickbase.browserify.js >> quickbase.browserify.min.js"
   },
   "dependencies": {
     "bluebird": "^3.0.2",

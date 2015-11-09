@@ -38,6 +38,8 @@ __Warning: Native Browser Promises do not share the same functionality as Bluebi
 
 Chaining functions off of an ```.api()``` function call uses the Bluebird Promise Library. Declaring a ```new Promise()``` uses Native Browser Promises (if available).
 
+node-quickbase, exposes the internal ```Promise``` object under ```QuickBase.Promise```.
+
 The use is the same as in Nodejs, but there is no need to ```require('quickbase')```.
 
 ```html

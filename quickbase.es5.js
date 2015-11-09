@@ -1888,6 +1888,7 @@ var prepareOptions = {
 QuickBase.QueryBuilder = QueryBuilder;
 QuickBase.Throttle = Throttle;
 QuickBase.QuickBaseError = QuickBaseError;
+QuickBase.Promise = Promise;
 
 /* Expose Methods */
 QuickBase.actions = actions;
