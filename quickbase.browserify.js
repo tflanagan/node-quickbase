@@ -6913,7 +6913,7 @@ function extend() {
  * 
  */
 /**
- * bluebird build version 3.0.2
+ * bluebird build version 3.0.5
  * Features enabled: core, race, call_get, generators, map, nodeify, promisify, props, reduce, settle, some, using, timers, filter, any, each
 */
 !function(e){if("object"==typeof exports&&"undefined"!=typeof module)module.exports=e();else if("function"==typeof define&&define.amd)define([],e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.Promise=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof _dereq_=="function"&&_dereq_;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof _dereq_=="function"&&_dereq_;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
@@ -7480,7 +7480,7 @@ var contextStack = [];
 
 Promise.prototype._promiseCreated = function() {};
 Promise.prototype._pushContext = function() {};
-Promise.prototype._popContext = function() {return 0;};
+Promise.prototype._popContext = function() {return null;};
 Promise._peekContext = Promise.prototype._peekContext = function() {};
 
 function Context() {
@@ -7488,7 +7488,7 @@ function Context() {
 }
 Context.prototype._pushContext = function () {
     if (this._trace !== undefined) {
-        this._trace._promisesCreated = 0;
+        this._trace._promiseCreated = null;
         contextStack.push(this._trace);
     }
 };
@@ -7496,11 +7496,11 @@ Context.prototype._pushContext = function () {
 Context.prototype._popContext = function () {
     if (this._trace !== undefined) {
         var trace = contextStack.pop();
-        var ret = trace._promisesCreated;
-        trace._promisesCreated = 0;
+        var ret = trace._promiseCreated;
+        trace._promiseCreated = null;
         return ret;
     }
-    return 0;
+    return null;
 };
 
 function createContext() {
@@ -7523,7 +7523,7 @@ Context.activateLongStackTraces = function() {
     Promise._peekContext = Promise.prototype._peekContext = peekContext;
     Promise.prototype._promiseCreated = function() {
         var ctx = this._peekContext();
-        if (ctx) ctx._promisesCreated++;
+        if (ctx && ctx._promiseCreated == null) ctx._promiseCreated = this;
     };
 };
 return Context;
@@ -7545,8 +7545,10 @@ var stackFramePattern = null;
 var formatStack = null;
 var indentStackFrames = false;
 var printWarning;
-var debugging =!!(true || util.env("BLUEBIRD_DEBUG") ||
-                               util.env("NODE_ENV") === "development");
+var debugging = !!(util.env("BLUEBIRD_DEBUG") != 0 &&
+                        (true ||
+                         util.env("BLUEBIRD_DEBUG") ||
+                         util.env("NODE_ENV") === "development"));
 var warnings = !!(util.env("BLUEBIRD_WARNINGS") != 0 &&
     (debugging || util.env("BLUEBIRD_WARNINGS")));
 var longStackTraces = !!(util.env("BLUEBIRD_LONG_STACK_TRACES") != 0 &&
@@ -7606,8 +7608,8 @@ Promise.prototype._isRejectionUnhandled = function () {
     return (this._bitField & 1048576) > 0;
 };
 
-Promise.prototype._warn = function(message, shouldUseOwnTrace) {
-    return warn(message, shouldUseOwnTrace, this);
+Promise.prototype._warn = function(message, shouldUseOwnTrace, promise) {
+    return warn(message, shouldUseOwnTrace, promise || this);
 };
 
 Promise.onPossiblyUnhandledRejection = function (fn) {
@@ -7786,14 +7788,14 @@ function longStackTracesAttachExtraTrace(error, ignoreSelf) {
     }
 }
 
-function checkForgottenReturns(returnValue, promisesCreated, name, promise) {
+function checkForgottenReturns(returnValue, promiseCreated, name, promise) {
     if (returnValue === undefined &&
-        promisesCreated > 0 &&
+        promiseCreated !== null &&
         config.longStackTraces &&
         config.warnings) {
         var msg = "a promise was created in a " + name +
             " handler but was not returned from it";
-        promise._warn(msg);
+        promise._warn(msg, true, promiseCreated);
     }
 }
 
@@ -8282,7 +8284,7 @@ if (typeof console !== "undefined" && typeof console.warn !== "undefined") {
     if (util.isNode && process.stderr.isTTY) {
         printWarning = function(message, isSoft) {
             var color = isSoft ? "\u001b[33m" : "\u001b[31m";
-            process.stderr.write(color + message + "\u001b[0m\n");
+            console.warn(color + message + "\u001b[0m\n");
         };
     } else if (!util.isNode && typeof (new Error().stack) === "string") {
         printWarning = function(message, isSoft) {
@@ -9129,10 +9131,10 @@ MappingPromiseArray.prototype._promiseFulfilled = function (value, index) {
         var receiver = promise._boundValue();
         promise._pushContext();
         var ret = tryCatch(callback).call(receiver, value, index, length);
-        var promisesCreated = promise._popContext();
+        var promiseCreated = promise._popContext();
         debug.checkForgottenReturns(
             ret,
-            promisesCreated,
+            promiseCreated,
             preservedValues !== null ? "Promise.filter" : "Promise.map",
             promise
         );
@@ -9240,7 +9242,9 @@ Promise.method = function (fn) {
         ret._captureStackTrace();
         ret._pushContext();
         var value = tryCatch(fn).apply(this, arguments);
-        ret._popContext();
+        var promiseCreated = ret._popContext();
+        debug.checkForgottenReturns(
+            value, promiseCreated, "Promise.method", ret);
         ret._resolveFromSyncValue(value);
         return ret;
     };
@@ -9263,7 +9267,9 @@ Promise.attempt = Promise["try"] = function (fn) {
     } else {
         value = tryCatch(fn)();
     }
-    ret._popContext();
+    var promiseCreated = ret._popContext();
+    debug.checkForgottenReturns(
+        value, promiseCreated, "Promise.try", ret);
     ret._resolveFromSyncValue(value);
     return ret;
 };
@@ -9831,10 +9837,11 @@ Promise.prototype._resolveCallback = function(value, shouldBind) {
     }
 };
 
-Promise.prototype._rejectCallback = function(reason, synchronous) {
+Promise.prototype._rejectCallback =
+function(reason, synchronous, ignoreNonErrorWarnings) {
     var trace = util.ensureErrorObject(reason);
     var hasStack = trace === reason;
-    if (!hasStack && debug.warnings()) {
+    if (!hasStack && !ignoreNonErrorWarnings && debug.warnings()) {
         var message = "a promise was rejected with a non-error: " +
             util.classString(reason);
         this._warn(message, true);
@@ -9879,7 +9886,7 @@ Promise.prototype._settlePromiseFromHandler = function (
     } else {
         x = tryCatch(handler).call(receiver, value);
     }
-    var promisesCreatedDuringHandlerInvocation = promise._popContext();
+    var promiseCreated = promise._popContext();
     bitField = promise._bitField;
     if (((bitField & 65536) !== 0)) return;
 
@@ -9889,13 +9896,7 @@ Promise.prototype._settlePromiseFromHandler = function (
         var err = x === promise ? makeSelfResolutionError() : x.e;
         promise._rejectCallback(err, false);
     } else {
-        if (x === undefined &&
-            promisesCreatedDuringHandlerInvocation > 0 &&
-            debug.longStackTraces() &&
-            debug.warnings()) {
-            promise._warn("a promise was created in a handler but " +
-                "none were returned from it", true);
-        }
+        debug.checkForgottenReturns(x, promiseCreated, "",  promise);
         promise._resolveCallback(x);
     }
 };
@@ -10511,7 +10512,7 @@ function(callback, receiver, originalName, fn, _, multiArgs) {
                 [CodeForSwitchCase]                                          \n\
             }                                                                \n\
             if (ret === errorObj) {                                          \n\
-                promise._rejectCallback(maybeWrapAsError(ret.e), true);      \n\
+                promise._rejectCallback(maybeWrapAsError(ret.e), true, true);\n\
             }                                                                \n\
             if (!promise._isFateSealed()) promise._setAsyncGuaranteed();     \n\
             return promise;                                                  \n\
@@ -10562,7 +10563,7 @@ function makeNodePromisifiedClosure(callback, receiver, _, fn, __, multiArgs) {
         try {
             cb.apply(_receiver, withAppended(arguments, fn));
         } catch(e) {
-            promise._rejectCallback(maybeWrapAsError(e), true);
+            promise._rejectCallback(maybeWrapAsError(e), true, true);
         }
         if (!promise._isFateSealed()) promise._setAsyncGuaranteed();
         return promise;
@@ -11069,10 +11070,10 @@ function gotValue(value) {
     if (ret instanceof Promise) {
         array._currentCancellable = ret;
     }
-    var promisesCreated = promise._popContext();
+    var promiseCreated = promise._popContext();
     debug.checkForgottenReturns(
         ret,
-        promisesCreated,
+        promiseCreated,
         array._eachValues !== undefined ? "Promise.each" : "Promise.reduce",
         promise
     );
@@ -11473,7 +11474,7 @@ function doThenable(x, then, context) {
     synchronous = false;
 
     if (promise && result === errorObj) {
-        promise._rejectCallback(result.e, true);
+        promise._rejectCallback(result.e, true, true);
         promise = null;
     }
 
@@ -11485,7 +11486,7 @@ function doThenable(x, then, context) {
 
     function reject(reason) {
         if (!promise) return;
-        promise._rejectCallback(reason, synchronous);
+        promise._rejectCallback(reason, synchronous, true);
         promise = null;
     }
     return ret;
@@ -11745,9 +11746,9 @@ module.exports = function (Promise, apiRejection, tryConvertToPromise,
                 fn = tryCatch(fn);
                 var ret = spreadArgs
                     ? fn.apply(undefined, inspections) : fn(inspections);
-                var promisesCreated = promise._popContext();
+                var promiseCreated = promise._popContext();
                 debug.checkForgottenReturns(
-                    ret, promisesCreated, "Promise.using", promise);
+                    ret, promiseCreated, "Promise.using", promise);
                 return ret;
             });
 
@@ -12258,6 +12259,7 @@ module.exports = ret;
       async: false,
       strict: true,
       attrNameProcessors: null,
+      attrValueProcessors: null,
       tagNameProcessors: null,
       valueProcessors: null,
       emptyTag: ''
@@ -12282,6 +12284,7 @@ module.exports = ret;
       async: false,
       strict: true,
       attrNameProcessors: null,
+      attrValueProcessors: null,
       tagNameProcessors: null,
       valueProcessors: null,
       rootName: 'root',
@@ -12387,6 +12390,9 @@ module.exports = ret;
                 if (typeof child === 'string' && _this.options.cdata && requiresCDATA(child)) {
                   element = element.ele(key).raw(wrapCDATA(child)).up();
                 } else {
+                  if (child == null) {
+                    child = '';
+                  }
                   element = element.ele(key, child.toString()).up();
                 }
               }
@@ -12523,7 +12529,7 @@ module.exports = ret;
               if (!(attrkey in obj) && !_this.options.mergeAttrs) {
                 obj[attrkey] = {};
               }
-              newValue = node.attributes[key];
+              newValue = _this.options.attrValueProcessors ? processName(_this.options.attrValueProcessors, node.attributes[key]) : node.attributes[key];
               processedKey = _this.options.attrNameProcessors ? processName(_this.options.attrNameProcessors, key) : key;
               if (_this.options.mergeAttrs) {
                 _this.assignOrPush(obj, processedKey, newValue);
@@ -14536,10 +14542,6 @@ module.exports = ret;
       this.defaultValueType = defaultValueType;
     }
 
-    XMLDTDAttList.prototype.clone = function() {
-      return create(XMLDTDAttList.prototype, this);
-    };
-
     XMLDTDAttList.prototype.toString = function(options, level) {
       var indent, newline, offset, pretty, r, ref, ref1, ref2, space;
       pretty = (options != null ? options.pretty : void 0) || false;
@@ -14594,10 +14596,6 @@ module.exports = ret;
       this.name = this.stringify.eleName(name);
       this.value = this.stringify.dtdElementValue(value);
     }
-
-    XMLDTDElement.prototype.clone = function() {
-      return create(XMLDTDElement.prototype, this);
-    };
 
     XMLDTDElement.prototype.toString = function(options, level) {
       var indent, newline, offset, pretty, r, ref, ref1, ref2, space;
@@ -14668,10 +14666,6 @@ module.exports = ret;
       }
     }
 
-    XMLDTDEntity.prototype.clone = function() {
-      return create(XMLDTDEntity.prototype, this);
-    };
-
     XMLDTDEntity.prototype.toString = function(options, level) {
       var indent, newline, offset, pretty, r, ref, ref1, ref2, space;
       pretty = (options != null ? options.pretty : void 0) || false;
@@ -14739,10 +14733,6 @@ module.exports = ret;
       }
     }
 
-    XMLDTDNotation.prototype.clone = function() {
-      return create(XMLDTDNotation.prototype, this);
-    };
-
     XMLDTDNotation.prototype.toString = function(options, level) {
       var indent, newline, offset, pretty, r, ref, ref1, ref2, space;
       pretty = (options != null ? options.pretty : void 0) || false;
@@ -14801,9 +14791,7 @@ module.exports = ret;
       if (!version) {
         version = '1.0';
       }
-      if (version != null) {
-        this.version = this.stringify.xmlVersion(version);
-      }
+      this.version = this.stringify.xmlVersion(version);
       if (encoding != null) {
         this.encoding = this.stringify.xmlEncoding(encoding);
       }
@@ -14811,10 +14799,6 @@ module.exports = ret;
         this.standalone = this.stringify.xmlStandalone(standalone);
       }
     }
-
-    XMLDeclaration.prototype.clone = function() {
-      return create(XMLDeclaration.prototype, this);
-    };
 
     XMLDeclaration.prototype.toString = function(options, level) {
       var indent, newline, offset, pretty, r, ref, ref1, ref2, space;
@@ -14829,9 +14813,7 @@ module.exports = ret;
         r += space;
       }
       r += '<?xml';
-      if (this.version != null) {
-        r += ' version="' + this.version + '"';
-      }
+      r += ' version="' + this.version + '"';
       if (this.encoding != null) {
         r += ' encoding="' + this.encoding + '"';
       }
@@ -14893,10 +14875,6 @@ module.exports = ret;
         this.sysID = this.stringify.dtdSysID(sysID);
       }
     }
-
-    XMLDocType.prototype.clone = function() {
-      return create(XMLDocType.prototype, this);
-    };
 
     XMLDocType.prototype.element = function(name, value) {
       var child;
@@ -15301,12 +15279,8 @@ module.exports = ret;
       }
     }
 
-    XMLNode.prototype.clone = function() {
-      throw new Error("Cannot clone generic XMLNode");
-    };
-
     XMLNode.prototype.element = function(name, attributes, text) {
-      var item, j, key, lastChild, len, ref, val;
+      var childNode, item, j, k, key, lastChild, len, len1, ref, val;
       lastChild = null;
       if (attributes == null) {
         attributes = {};
@@ -15335,21 +15309,20 @@ module.exports = ret;
           if ((isObject(val)) && (isEmpty(val))) {
             val = null;
           }
-          if (!val && !this.options.ignoreDecorators && this.stringify.convertListKey && key.indexOf(this.stringify.convertListKey) === 0) {
-            lastChild = this;
-            continue;
-          }
           if (!this.options.ignoreDecorators && this.stringify.convertAttKey && key.indexOf(this.stringify.convertAttKey) === 0) {
             lastChild = this.attribute(key.substr(this.stringify.convertAttKey.length), val);
           } else if (!this.options.ignoreDecorators && this.stringify.convertPIKey && key.indexOf(this.stringify.convertPIKey) === 0) {
             lastChild = this.instruction(key.substr(this.stringify.convertPIKey.length), val);
-          } else if (isObject(val)) {
-            if (!this.options.ignoreDecorators && this.stringify.convertListKey && key.indexOf(this.stringify.convertListKey) === 0 && Array.isArray(val)) {
-              lastChild = this.element(val);
-            } else {
-              lastChild = this.element(key);
-              lastChild.element(val);
+          } else if (!this.options.separateArrayItems && Array.isArray(val)) {
+            for (k = 0, len1 = val.length; k < len1; k++) {
+              item = val[k];
+              childNode = {};
+              childNode[key] = item;
+              lastChild = this.element(childNode);
             }
+          } else if (isObject(val)) {
+            lastChild = this.element(key);
+            lastChild.element(val);
           } else {
             lastChild = this.element(key, val);
           }
@@ -15782,7 +15755,7 @@ module.exports = ret;
 
     XMLStringifier.prototype.xmlEncoding = function(val) {
       val = '' + val || '';
-      if (!val.match(/[A-Za-z](?:[A-Za-z0-9._-]|-)*/)) {
+      if (!val.match(/^[A-Za-z](?:[A-Za-z0-9._-]|-)*$/)) {
         throw new Error("Invalid encoding: " + val);
       }
       return val;
@@ -15839,8 +15812,6 @@ module.exports = ret;
     XMLStringifier.prototype.convertCommentKey = '#comment';
 
     XMLStringifier.prototype.convertRawKey = '#raw';
-
-    XMLStringifier.prototype.convertListKey = '#list';
 
     XMLStringifier.prototype.assertLegalChar = function(str) {
       var chars, chr;
