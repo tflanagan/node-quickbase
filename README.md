@@ -27,7 +27,7 @@ Browserify
 This library works out of the box with Babel+Browserify.
 ```
 $ npm install quickbase
-$ npm install -g babel browserify minifier
+$ npm install -g babel-cli browserify minifier
 $ babel quickbase.js > quickbase.es5.js
 $ browserify quickbase.es5.js > quickbase.browserify.js
 $ minify quickbase.browserify.js > quickbase.browserify.min.js
