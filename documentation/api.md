@@ -1,7 +1,7 @@
 # Node-QuickBase Documentation
 
 ### Quick Links
-- [Promises &#8599;](https://github.com/petkaantonov/bluebird/blob/master/API.md)
+- [Promises &#8599;](http://bluebirdjs.com/docs/api-reference.html)
 - [Initialization](api.md#initialization)
 - [API_AddField](api.md#api_addfield)
 - [API_AddGroupToRole](api.md#api_addgrouptorole)

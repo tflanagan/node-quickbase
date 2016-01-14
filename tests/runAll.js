@@ -27,14 +27,14 @@ if(!!process.env.TRAVIS === false){
 		console.error([
 			'ERROR: Incorrect CI Test Usage.',
 			'',
-			'\t$ npm test <realm> <username> <password> <appToken> <dbid>',
+			'\t$ npm test <realm> <username> <password> <appToken> <dbid> <appid>',
 			'',
 			'\trealm:    www',
 			'\tusername: foo@bar.com',
 			'\tpassword: foobar',
 			'\tappToken: dn23iuct88jvbcx7v9vttp2an6',
 			'\tdbid:     bkcamms4m',
-			'\t          (must be a table dbid, not an application dbid)',
+			'\tappid:    bkcamms4l',
 			''
 		].join('\n'));
 
