@@ -179,7 +179,7 @@ class QuickBase {
 				includeRids: true,
 				returnPercentage: false,
 				fmt: 'structured',
-				encoding: 'UTF-8',
+				encoding: 'ISO-8859-1',
 				dbidAsParam: false
 			},
 
@@ -462,7 +462,7 @@ class QueryBuilder {
 					path: '/db/' + (this.options.dbid && !settings.flags.dbidAsParam ? this.options.dbid : 'main') + '?act=' + this.action + (!settings.flags.useXML ? this.payload : ''),
 					method: settings.flags.useXML ? 'POST' : 'GET',
 					headers: {
-						'Content-Type': 'application/xml',
+						'Content-Type': 'application/xml; charset=' + this.options.encoding,
 						'QUICKBASE-ACTION': this.action
 					},
 					agent: false

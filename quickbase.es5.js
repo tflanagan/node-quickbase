@@ -17,13 +17,15 @@
 
 /* Dependencies */
 
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var xml = require('xml2js');
 var http = require('http');
@@ -38,7 +40,7 @@ if (!Object.hasOwnProperty('extend') && Object.extend === undefined) {
 			var _this = this;
 
 			Object.getOwnPropertyNames(source).forEach(function (property) {
-				if (_this.hasOwnProperty(property) && typeof _this[property] === 'object') {
+				if (_this.hasOwnProperty(property) && _typeof(_this[property]) === 'object') {
 					_this[property] = _this[property].extend(source[property]);
 				} else {
 					Object.defineProperty(_this, property, Object.getOwnPropertyDescriptor(source, property));
@@ -101,7 +103,7 @@ var cleanXML = function cleanXML(xml) {
 			}
 		}
 
-		if (typeof xml[node] === 'object') {
+		if (_typeof(xml[node]) === 'object') {
 			xml[node] = cleanXML(xml[node]);
 		}
 
@@ -159,26 +161,29 @@ var flattenXMLAttributes = function flattenXMLAttributes(obj) {
 
 /* Error Handling */
 
-var QuickBaseError = (function (_Error) {
+var QuickBaseError = function (_Error) {
 	_inherits(QuickBaseError, _Error);
 
 	function QuickBaseError(code, name, message) {
+		var _ret;
+
 		_classCallCheck(this, QuickBaseError);
 
-		_get(Object.getPrototypeOf(QuickBaseError.prototype), 'constructor', this).call(this, name);
+		var _this2 = _possibleConstructorReturn(this, Object.getPrototypeOf(QuickBaseError).call(this, name));
 
-		this.code = code;
-		this.name = name;
-		this.message = message || '';
+		_this2.code = code;
+		_this2.name = name;
+		_this2.message = message || '';
 
-		return this;
+		return _ret = _this2, _possibleConstructorReturn(_this2, _ret);
 	}
 
-	/* Main Class */
 	return QuickBaseError;
-})(Error);
+}(Error);
 
-var QuickBase = (function () {
+/* Main Class */
+
+var QuickBase = function () {
 	function QuickBase(options) {
 		_classCallCheck(this, QuickBase);
 
@@ -198,7 +203,7 @@ var QuickBase = (function () {
 				includeRids: true,
 				returnPercentage: false,
 				fmt: 'structured',
-				encoding: 'UTF-8',
+				encoding: 'ISO-8859-1',
 				dbidAsParam: false
 			},
 
@@ -213,23 +218,21 @@ var QuickBase = (function () {
 			errorOnConnectionLimit: false
 		};
 
-		this.settings = ({}).extend(defaults, options || {});
+		this.settings = {}.extend(defaults, options || {});
 
 		this.throttle = new Throttle(this.settings.connectionLimit, this.settings.errorOnConnectionLimit);
 
 		return this;
 	}
 
-	/* Throttle */
-
 	_createClass(QuickBase, [{
 		key: 'api',
 		value: function api(action, options, callback) {
-			var _this2 = this;
+			var _this3 = this;
 
 			var call = new Promise(function (resolve, reject) {
-				Promise.using(_this2.throttle.acquire(), function () {
-					var query = new QueryBuilder(_this2, action, options || {}, callback);
+				Promise.using(_this3.throttle.acquire(), function () {
+					var query = new QueryBuilder(_this3, action, options || {}, callback);
 
 					return query.addFlags().processOptions().actionRequest().constructPayload().processQuery().then(function (results) {
 						query.results = results;
@@ -241,10 +244,10 @@ var QuickBase = (function () {
 						} else {
 							resolve(query.results);
 						}
-					})['catch'](function (error) {
+					}).catch(function (error) {
 						resolve(query.catchError(error));
 					});
-				})['catch'](function (error) {
+				}).catch(function (error) {
 					if (callback instanceof Function) {
 						callback(error);
 					} else {
@@ -258,9 +261,11 @@ var QuickBase = (function () {
 	}]);
 
 	return QuickBase;
-})();
+}();
 
-var Throttle = (function () {
+/* Throttle */
+
+var Throttle = function () {
 	function Throttle(maxConnections, errorOnConnectionLimit) {
 		_classCallCheck(this, Throttle);
 
@@ -273,44 +278,44 @@ var Throttle = (function () {
 		return this;
 	}
 
-	/* Request Handling */
-
 	_createClass(Throttle, [{
 		key: 'acquire',
 		value: function acquire() {
-			var _this3 = this;
+			var _this4 = this;
 
 			return new Promise(function (resolve, reject) {
-				if (_this3._numConnections >= _this3.maxConnections && _this3.maxConnections !== -1) {
-					if (_this3.errorOnConnectionLimit) {
+				if (_this4._numConnections >= _this4.maxConnections && _this4.maxConnections !== -1) {
+					if (_this4.errorOnConnectionLimit) {
 						reject(new QuickBaseError(1001, 'No Connections Available', 'Maximum Number of Connections Reached'));
 					} else {
-						_this3._pendingConnections.push({
+						_this4._pendingConnections.push({
 							resolve: resolve,
 							reject: reject
 						});
 					}
 				} else {
-					++_this3._numConnections;
+					++_this4._numConnections;
 
 					resolve();
 				}
 			}).disposer(function () {
-				--_this3._numConnections;
+				--_this4._numConnections;
 
-				if (_this3._pendingConnections.length > 0) {
-					++_this3._numConnections;
+				if (_this4._pendingConnections.length > 0) {
+					++_this4._numConnections;
 
-					_this3._pendingConnections.shift().resolve();
+					_this4._pendingConnections.shift().resolve();
 				}
 			});
 		}
 	}]);
 
 	return Throttle;
-})();
+}();
 
-var QueryBuilder = (function () {
+/* Request Handling */
+
+var QueryBuilder = function () {
 	function QueryBuilder(parent, action, options, callback) {
 		_classCallCheck(this, QueryBuilder);
 
@@ -319,7 +324,7 @@ var QueryBuilder = (function () {
 		this.options = options;
 		this.callback = callback;
 
-		this.settings = ({}).extend(parent.settings);
+		this.settings = {}.extend(parent.settings);
 
 		this.results;
 
@@ -327,8 +332,6 @@ var QueryBuilder = (function () {
 
 		return this;
 	}
-
-	/* XML Node Parsers */
 
 	_createClass(QueryBuilder, [{
 		key: 'actionRequest',
@@ -345,11 +348,11 @@ var QueryBuilder = (function () {
 				} else if (typeof actions[action].request === 'function') {
 					actions[action].request(this);
 				}
-			} else if (typeof actions['default'] !== 'undefined') {
-				if (typeof actions['default'] === 'function') {
-					actions['default'](this);
-				} else if (typeof actions['default'].request === 'function') {
-					actions['default'].request(this);
+			} else if (typeof actions.default !== 'undefined') {
+				if (typeof actions.default === 'function') {
+					actions.default(this);
+				} else if (typeof actions.default.request === 'function') {
+					actions.default.request(this);
 				}
 			}
 
@@ -364,10 +367,10 @@ var QueryBuilder = (function () {
 				action = 'default';
 			}
 
-			if (typeof actions[action] === 'object' && typeof actions[action].response === 'function') {
+			if (_typeof(actions[action]) === 'object' && typeof actions[action].response === 'function') {
 				actions[action].response(this, this.results);
-			} else if (typeof actions['default'] === 'object' && typeof actions['default'].response === 'function') {
-				actions['default'].response(this, this.results);
+			} else if (_typeof(actions.default) === 'object' && typeof actions.default.response === 'function') {
+				actions.default.response(this, this.results);
 			}
 
 			return this;
@@ -396,47 +399,47 @@ var QueryBuilder = (function () {
 	}, {
 		key: 'catchError',
 		value: function catchError(err) {
-			var _this4 = this;
+			var _this5 = this;
 
 			++this._nErr;
 
 			if (this._nErr < this.settings.maxErrorRetryAttempts) {
 				if ([1000, 1001].indexOf(err.code) !== -1) {
 					return this.processQuery().then(function (results) {
-						_this4.results = results;
+						_this5.results = results;
 
-						_this4.actionResponse();
+						_this5.actionResponse();
 
-						if (_this4.callback instanceof Function) {
-							_this4.callback(null, _this4.results);
+						if (_this5.callback instanceof Function) {
+							_this5.callback(null, _this5.results);
 						} else {
-							return _this4.results;
+							return _this5.results;
 						}
-					})['catch'](function (error) {
-						return _this4.catchError(error);
+					}).catch(function (error) {
+						return _this5.catchError(error);
 					});
 				} else if (err.code === 4 && this.parent.settings.hasOwnProperty('username') && this.parent.settings.username !== '' && this.parent.settings.hasOwnProperty('password') && this.parent.settings.password !== '') {
 					return this.parent.api('API_Authenticate', {
 						username: this.parent.settings.username,
 						password: this.parent.settings.password
 					}).then(function (results) {
-						_this4.parent.settings.ticket = results.ticket;
-						_this4.settings.ticket = results.ticket;
-						_this4.options.ticket = results.ticket;
+						_this5.parent.settings.ticket = results.ticket;
+						_this5.settings.ticket = results.ticket;
+						_this5.options.ticket = results.ticket;
 
-						return _this4.addFlags().constructPayload().processQuery().then(function (results) {
-							_this4.results = results;
+						return _this5.addFlags().constructPayload().processQuery().then(function (results) {
+							_this5.results = results;
 
-							_this4.actionResponse();
+							_this5.actionResponse();
 
-							if (_this4.callback instanceof Function) {
-								_this4.callback(null, _this4.results);
+							if (_this5.callback instanceof Function) {
+								_this5.callback(null, _this5.results);
 							} else {
-								return _this4.results;
+								return _this5.results;
 							}
 						});
-					})['catch'](function (error) {
-						return _this4.catchError(error);
+					}).catch(function (error) {
+						return _this5.catchError(error);
 					});
 				}
 			}
@@ -450,7 +453,7 @@ var QueryBuilder = (function () {
 	}, {
 		key: 'constructPayload',
 		value: function constructPayload() {
-			var _this5 = this;
+			var _this6 = this;
 
 			var builder = new xml.Builder({
 				rootName: 'qdbapi',
@@ -472,7 +475,7 @@ var QueryBuilder = (function () {
 				}
 			} else {
 				Object.keys(this.options).forEach(function (arg) {
-					_this5.payload += '&' + arg + '=' + encodeURIComponent(_this5.options[arg]);
+					_this6.payload += '&' + arg + '=' + encodeURIComponent(_this6.options[arg]);
 				});
 			}
 
@@ -481,18 +484,18 @@ var QueryBuilder = (function () {
 	}, {
 		key: 'processQuery',
 		value: function processQuery() {
-			var _this6 = this;
+			var _this7 = this;
 
 			return new Promise(function (resolve, reject) {
-				var settings = _this6.settings,
+				var settings = _this7.settings,
 				    reqOpts = {
 					hostname: [settings.realm, settings.domain].join('.'),
 					port: settings.useSSL ? 443 : 80,
-					path: '/db/' + (_this6.options.dbid && !settings.flags.dbidAsParam ? _this6.options.dbid : 'main') + '?act=' + _this6.action + (!settings.flags.useXML ? _this6.payload : ''),
+					path: '/db/' + (_this7.options.dbid && !settings.flags.dbidAsParam ? _this7.options.dbid : 'main') + '?act=' + _this7.action + (!settings.flags.useXML ? _this7.payload : ''),
 					method: settings.flags.useXML ? 'POST' : 'GET',
 					headers: {
-						'Content-Type': 'application/xml',
-						'QUICKBASE-ACTION': _this6.action
+						'Content-Type': 'application/xml; charset=' + _this7.options.encoding,
+						'QUICKBASE-ACTION': _this7.action
 					},
 					agent: false
 				},
@@ -528,7 +531,7 @@ var QueryBuilder = (function () {
 				});
 
 				if (settings.flags.useXML === true) {
-					request.write(_this6.payload);
+					request.write(_this7.payload);
 				}
 
 				request.on('error', function (err) {
@@ -541,7 +544,7 @@ var QueryBuilder = (function () {
 	}, {
 		key: 'processOptions',
 		value: function processOptions() {
-			var _this7 = this;
+			var _this8 = this;
 
 			if (this.options.hasOwnProperty('fields')) {
 				this.options.field = this.options.fields;
@@ -552,7 +555,7 @@ var QueryBuilder = (function () {
 			var newOpts = {};
 
 			Object.keys(this.options).forEach(function (option) {
-				newOpts[option] = prepareOptions.hasOwnProperty(option) ? prepareOptions[option](_this7.options[option]) : newOpts[option] = _this7.options[option];
+				newOpts[option] = prepareOptions.hasOwnProperty(option) ? prepareOptions[option](_this8.options[option]) : newOpts[option] = _this8.options[option];
 			});
 
 			this.options = newOpts;
@@ -562,7 +565,9 @@ var QueryBuilder = (function () {
 	}]);
 
 	return QueryBuilder;
-})();
+}();
+
+/* XML Node Parsers */
 
 var xmlNodeParsers = {
 	fields: function fields(val) {
@@ -581,7 +586,7 @@ var xmlNodeParsers = {
 
 			// Support Case #480141
 			// XML returned from QuickBase inserts '<br />' after every line in formula fields.
-			if (typeof value.formula === 'object') {
+			if (_typeof(value.formula) === 'object') {
 				value.formula = value.formula._;
 			}
 
@@ -682,7 +687,7 @@ var xmlNodeParsers = {
 		});
 	},
 	variables: function variables(val) {
-		val = val['var'];
+		val = val.var;
 
 		if (!(val instanceof Array)) {
 			// Support Case #480141
@@ -773,6 +778,7 @@ var actions = {
 	// },
 	API_CopyGroup: {
 		// request (query) { },
+
 		response: function response(query, results) {
 			if (results.hasOwnProperty('group')) {
 				results.group = xmlNodeParsers.group(results.group);
@@ -789,6 +795,7 @@ var actions = {
 	// },
 	API_CreateGroup: {
 		// request (query) { },
+
 		response: function response(query, results) {
 			if (results.hasOwnProperty('group')) {
 				results.group = xmlNodeParsers.group(results.group);
@@ -1022,6 +1029,7 @@ var actions = {
 	// },
 	API_GetGroupRole: {
 		// request (query) { },
+
 		response: function response(query, results) {
 			if (results.hasOwnProperty('roles')) {
 				results.roles = xmlNodeParsers.roles(results.roles);
@@ -1034,6 +1042,7 @@ var actions = {
 	// },
 	API_GetSchema: {
 		// request (query) { },
+
 		response: function response(query, results) {
 			if (results.table.hasOwnProperty('chdbids')) {
 				if (!(results.table.chdbids instanceof Array)) {
@@ -1077,6 +1086,7 @@ var actions = {
 	// },
 	API_GetRoleInfo: {
 		// request (query) { },
+
 		response: function response(query, results) {
 			if (results.hasOwnProperty('roles')) {
 				results.roles = xmlNodeParsers.roles(results.roles);
@@ -1085,6 +1095,7 @@ var actions = {
 	},
 	API_GetUserInfo: {
 		// request (query) { },
+
 		response: function response(query, results) {
 			if (results.hasOwnProperty('user')) {
 				results.user = flattenXMLAttributes(results.user);
@@ -1093,6 +1104,7 @@ var actions = {
 	},
 	API_GetUserRole: {
 		// request (query) { },
+
 		response: function response(query, results) {
 			if (results.hasOwnProperty('roles')) {
 				results.roles = xmlNodeParsers.roles(results.roles);
@@ -1101,6 +1113,7 @@ var actions = {
 	},
 	API_GetUsersInGroup: {
 		// request (query) { },
+
 		response: function response(query, results) {
 			if (results.hasOwnProperty('group')) {
 				results.group = xmlNodeParsers.group(results.group);
@@ -1109,6 +1122,7 @@ var actions = {
 	},
 	API_GrantedDBs: {
 		// request (query) { },
+
 		response: function response(query, results) {
 			if (results.hasOwnProperty('databases')) {
 				results.databases = results.databases.dbinfo;
@@ -1117,6 +1131,7 @@ var actions = {
 	},
 	API_GrantedDBsForGroup: {
 		// request (query) { },
+
 		response: function response(query, results) {
 			if (result.hasOwnProperty('databases')) {
 				result.databases = result.databases.dbinfo;
@@ -1125,6 +1140,7 @@ var actions = {
 	},
 	API_GrantedGroups: {
 		// request (query) { },
+
 		response: function response(query, results) {
 			if (results.hasOwnProperty('groups')) {
 				if (!(results.groups instanceof Array)) {
@@ -1139,6 +1155,7 @@ var actions = {
 	},
 	API_ImportFromCSV: {
 		// request (query) { },
+
 		response: function response(query, results) {
 			if (results.hasOwnProperty('rids')) {
 				results.rids = results.rids.map(function (record) {
@@ -1209,6 +1226,7 @@ var actions = {
 	// },
 	API_UploadFile: {
 		// request (query) { },
+
 		response: function response(query, results) {
 			if (results.hasOwnProperty('file_fields')) {
 				results.file_fields = results.file_fields.field;
@@ -1231,6 +1249,7 @@ var actions = {
 	},
 	API_UserRoles: {
 		// request (query) { },
+
 		response: function response(query, results) {
 			if (results.hasOwnProperty('users')) {
 
@@ -1252,7 +1271,7 @@ var actions = {
 			}
 		}
 	},
-	'default': {
+	default: {
 		/* request (query) {
    * 	Do stuff prior to the request
    * },
@@ -1361,6 +1380,7 @@ var prepareOptions = {
 	// },
 
 	/* API_DoQuery, API_GenResultsTable, API_ImportFromCSV */
+
 	clist: function clist(val) {
 		return val instanceof Array ? val.join('.') : val;
 	},
@@ -1807,10 +1827,10 @@ var prepareOptions = {
 	slist: function slist(val) {
 		return val instanceof Array ? val.join('.') : val;
 	}
-
 };
 
 /* Expose Instances */
+
 /* API_SetFieldProperties */
 // sort_as_given (val) {
 // 	return val;

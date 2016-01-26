@@ -1,6 +1,6 @@
 {
   "name": "quickbase",
-  "version": "2.2.1",
+  "version": "2.2.2",
   "description": "A lightweight, very flexible QuickBase API",
   "keywords": [
     "QuickBase",
@@ -36,14 +36,15 @@
   },
   "scripts": {
     "test": "node tests/runAll.js",
-    "build": "babel quickbase.js > quickbase.es5.js && browserify quickbase.es5.js > quickbase.browserify.js && cat devTools\\LICENSE.js > quickbase.browserify.min.js && minify quickbase.browserify.js >> quickbase.browserify.min.js"
+    "build": "babel --presets es2015 quickbase.js > quickbase.es5.js && browserify quickbase.es5.js > quickbase.browserify.js && cat devTools\\LICENSE.js > quickbase.browserify.min.js && minify quickbase.browserify.js >> quickbase.browserify.min.js"
   },
   "dependencies": {
-    "bluebird": "^3.0.5",
-    "xml2js": "^0.4.15"
+    "bluebird": "^3.1.5",
+    "xml2js": "^0.4.16"
   },
   "devDependencies": {
     "babel-cli": "*",
+    "babel-preset-es2015": "*",
     "browserify": "*",
     "minify": "*"
   },
