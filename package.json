@@ -27,7 +27,8 @@
     }
   ],
   "contributors": [
-    "Tristian Flanagan <contact@tristianflanagan.com> (https://github.com/tflanagan)"
+    "Tristian Flanagan <contact@tristianflanagan.com> (https://github.com/tflanagan)",
+    "Angel Cambero (https://github.com/angelcambero)"
   ],
   "main": "quickbase.js",
   "repository": {
