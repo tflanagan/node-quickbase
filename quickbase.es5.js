@@ -54,11 +54,9 @@ if (!Object.hasOwnProperty('extend') && Object.extend === undefined) {
 	Object.defineProperty(Object.prototype, 'extend', {
 		enumerable: false,
 		value: function value() {
-			var args = new Array(arguments.length),
-			    i = 0,
-			    l = args.length;
+			var args = new Array(arguments.length);
 
-			for (; i < l; ++i) {
+			for (var i = 0; i < args.length; ++i) {
 				args[i] = arguments[i];
 
 				this._extend(args[i]);
@@ -71,9 +69,9 @@ if (!Object.hasOwnProperty('extend') && Object.extend === undefined) {
 
 /* Helpers */
 var cleanXML = function cleanXML(xml) {
-	var isInt = /^-?\s*\d+$/,
-	    isDig = /^(-?\s*\d+\.?\d*)$/,
-	    radix = 10;
+	var isInt = /^-?\s*\d+$/;
+	var isDig = /^(-?\s*\d+\.?\d*)$/;
+	var radix = 10;
 
 	Object.keys(xml).forEach(function (node) {
 		var value = undefined,
@@ -487,8 +485,9 @@ var QueryBuilder = function () {
 			var _this7 = this;
 
 			return new Promise(function (resolve, reject) {
-				var settings = _this7.settings,
-				    reqOpts = {
+				var settings = _this7.settings;
+				var protocol = settings.useSSL ? https : http;
+				var request = protocol.request({
 					hostname: [settings.realm, settings.domain].join('.'),
 					port: settings.useSSL ? 443 : 80,
 					path: '/db/' + (_this7.options.dbid && !settings.flags.dbidAsParam ? _this7.options.dbid : 'main') + '?act=' + _this7.action + (!settings.flags.useXML ? _this7.payload : ''),
@@ -498,9 +497,7 @@ var QueryBuilder = function () {
 						'QUICKBASE-ACTION': _this7.action
 					},
 					agent: false
-				},
-				    protocol = settings.useSSL ? https : http,
-				    request = protocol.request(reqOpts, function (response) {
+				}, function (response) {
 					var xmlResponse = '';
 
 					response.on('data', function (chunk) {

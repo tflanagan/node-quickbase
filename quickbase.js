@@ -41,10 +41,9 @@ if(!Object.hasOwnProperty('extend') && Object.extend === undefined){
 	Object.defineProperty(Object.prototype, 'extend', {
 		enumerable: false,
 		value () {
-			let args = new Array(arguments.length),
-				i = 0, l = args.length;
+			const args = new Array(arguments.length);
 
-			for(; i < l; ++i){
+			for(let i = 0; i < args.length; ++i){
 				args[i] = arguments[i];
 
 				this._extend(args[i]);
@@ -57,9 +56,9 @@ if(!Object.hasOwnProperty('extend') && Object.extend === undefined){
 
 /* Helpers */
 const cleanXML = (xml) => {
-	let isInt = /^-?\s*\d+$/,
-		isDig = /^(-?\s*\d+\.?\d*)$/,
-		radix = 10;
+	const isInt = /^-?\s*\d+$/;
+	const isDig = /^(-?\s*\d+\.?\d*)$/;
+	const radix = 10;
 
 	Object.keys(xml).forEach((node) => {
 		let value, singulars,
@@ -202,9 +201,9 @@ class QuickBase {
 	}
 
 	api (action, options, callback) {
-		let call = new Promise((resolve, reject) => {
+		const call = new Promise((resolve, reject) => {
 			Promise.using(this.throttle.acquire(), () => {
-				let query = new QueryBuilder(this, action, options || {}, callback);
+				const query = new QueryBuilder(this, action, options || {}, callback);
 
 				return query
 					.addFlags()
@@ -426,7 +425,7 @@ class QueryBuilder {
 	}
 
 	constructPayload () {
-		let builder = new xml.Builder({
+		const builder = new xml.Builder({
 			rootName: 'qdbapi',
 			xmldec: {
 				encoding: this.options.encoding
@@ -455,48 +454,47 @@ class QueryBuilder {
 
 	processQuery () {
 		return new Promise((resolve, reject) => {
-			let settings = this.settings,
-				reqOpts = {
-					hostname: [ settings.realm, settings.domain ].join('.'),
-					port: settings.useSSL ? 443 : 80,
-					path: '/db/' + (this.options.dbid && !settings.flags.dbidAsParam ? this.options.dbid : 'main') + '?act=' + this.action + (!settings.flags.useXML ? this.payload : ''),
-					method: settings.flags.useXML ? 'POST' : 'GET',
-					headers: {
-						'Content-Type': 'application/xml; charset=' + this.options.encoding,
-						'QUICKBASE-ACTION': this.action
-					},
-					agent: false
+			const settings = this.settings;
+			const protocol = settings.useSSL ? https : http;
+			const request = protocol.request({
+				hostname: [ settings.realm, settings.domain ].join('.'),
+				port: settings.useSSL ? 443 : 80,
+				path: '/db/' + (this.options.dbid && !settings.flags.dbidAsParam ? this.options.dbid : 'main') + '?act=' + this.action + (!settings.flags.useXML ? this.payload : ''),
+				method: settings.flags.useXML ? 'POST' : 'GET',
+				headers: {
+					'Content-Type': 'application/xml; charset=' + this.options.encoding,
+					'QUICKBASE-ACTION': this.action
 				},
-				protocol = settings.useSSL ? https : http,
-				request = protocol.request(reqOpts, (response) => {
-					let xmlResponse = '';
+				agent: false
+			}, (response) => {
+				let xmlResponse = '';
 
-					response.on('data', (chunk) => {
-						xmlResponse += chunk;
-					});
-
-					response.on('end', () => {
-						if(response.headers['content-type'] === 'application/xml'){
-							xml.parseString(xmlResponse, {
-								async: true
-							}, (err, result) => {
-								if(err){
-									return reject(new QuickBaseError(1000, 'Error Processing Request', err));
-								}
-
-								result = cleanXML(result.qdbapi);
-
-								if(result.errcode !== settings.status.errcode){
-									return reject(new QuickBaseError(result.errcode, result.errtext, result.errdetail));
-								}
-
-								resolve(result);
-							});
-						}else{
-							resolve(xmlResponse);
-						}
-					});
+				response.on('data', (chunk) => {
+					xmlResponse += chunk;
 				});
+
+				response.on('end', () => {
+					if(response.headers['content-type'] === 'application/xml'){
+						xml.parseString(xmlResponse, {
+							async: true
+						}, (err, result) => {
+							if(err){
+								return reject(new QuickBaseError(1000, 'Error Processing Request', err));
+							}
+
+							result = cleanXML(result.qdbapi);
+
+							if(result.errcode !== settings.status.errcode){
+								return reject(new QuickBaseError(result.errcode, result.errtext, result.errdetail));
+							}
+
+							resolve(result);
+						});
+					}else{
+						resolve(xmlResponse);
+					}
+				});
+			});
 
 			if(settings.flags.useXML === true){
 				request.write(this.payload);
@@ -517,7 +515,7 @@ class QueryBuilder {
 			delete this.options.fields;
 		}
 
-		let newOpts = {};
+		const newOpts = {};
 
 		Object.keys(this.options).forEach((option) => {
 			newOpts[option] = prepareOptions.hasOwnProperty(option) ? prepareOptions[option](this.options[option]) : newOpts[option] = this.options[option];
@@ -531,7 +529,7 @@ class QueryBuilder {
 }
 
 /* XML Node Parsers */
-let xmlNodeParsers = {
+const xmlNodeParsers = {
 	fields (val) {
 		if(!(val instanceof Array)){
 			// Support Case #480141
@@ -623,7 +621,7 @@ let xmlNodeParsers = {
 		}
 
 		return val.map((value) => {
-			let ret = {
+			const ret = {
 				id: value.$.id
 			}
 
@@ -661,7 +659,7 @@ let xmlNodeParsers = {
 			}
 		}
 
-		let newVars = {};
+		const newVars = {};
 
 		val.forEach((value) => {
 			newVars[value.$.name] = value._;
@@ -672,7 +670,7 @@ let xmlNodeParsers = {
 };
 
 /* Actions */
-let actions = {
+const actions = {
 
 	/* NOTICE:
 	 * When an actions request or response does nothing, comment the function out.
@@ -832,7 +830,7 @@ let actions = {
 					}
 
 					results.table.records = results.table.records.map((record) => {
-						let ret = {};
+						const ret = {};
 
 						if(!(record.f instanceof Array)){
 							if(record.f === undefined){
@@ -847,7 +845,7 @@ let actions = {
 						}
 
 						record.f.forEach((field) => {
-							let fid = field.$.id;
+							const fid = field.$.id;
 
 							if(field.hasOwnProperty('url')){
 								ret[fid] = {
@@ -1109,7 +1107,7 @@ let actions = {
 		response (query, results) {
 			if(results.hasOwnProperty('rids')){
 				results.rids = results.rids.map((record) => {
-					let ret = {
+					const ret = {
 						rid: record._
 					};
 
@@ -1231,7 +1229,7 @@ let actions = {
 };
 
 /* Option Handling */
-let prepareOptions = {
+const prepareOptions = {
 
 	/* NOTICE:
 	 * When an option is a simple return of the value given, comment the function out.
@@ -1484,7 +1482,7 @@ let prepareOptions = {
 		}
 
 		return val.map((value) => {
-			let ret = {
+			const ret = {
 				$: {},
 				_: value.value
 			};
