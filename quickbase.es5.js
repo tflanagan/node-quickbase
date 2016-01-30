@@ -28,7 +28,6 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var xml = require('xml2js');
-var util = require('util');
 var http = require('http');
 var https = require('https');
 var merge = require('lodash.merge');
@@ -36,9 +35,17 @@ var Promise = require('bluebird');
 
 /* Backwards Compatibility */
 if (!Object.hasOwnProperty('extend') && Object.extend === undefined) {
+	var warned = false;
+
 	Object.defineProperty(Object.prototype, 'extend', {
 		enumerable: false,
-		value: util.deprecate(function () {
+		value: function value() {
+			if (!warned) {
+				warned = true;
+
+				console.warn('{}.extend has been deprecated, please install and use lodash.merge instead');
+			}
+
 			var args = new Array(arguments.length);
 
 			for (var i = 0; i < args.length; ++i) {
@@ -48,7 +55,7 @@ if (!Object.hasOwnProperty('extend') && Object.extend === undefined) {
 			args.unshift(this);
 
 			return merge.apply(null, args);
-		}, '{}.extend: Please install and use lodash.merge instead')
+		}
 	});
 }
 

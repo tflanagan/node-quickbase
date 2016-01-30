@@ -17,7 +17,6 @@
 
 /* Dependencies */
 const xml = require('xml2js');
-const util = require('util');
 const http = require('http');
 const https = require('https');
 const merge = require('lodash.merge');
@@ -25,9 +24,17 @@ const Promise = require('bluebird');
 
 /* Backwards Compatibility */
 if(!Object.hasOwnProperty('extend') && Object.extend === undefined){
+	var warned = false;
+
 	Object.defineProperty(Object.prototype, 'extend', {
 		enumerable: false,
-		value: util.deprecate(function(){
+		value () {
+			if(!warned){
+				warned = true;
+
+				console.warn('{}.extend has been deprecated, please install and use lodash.merge instead');
+			}
+
 			const args = new Array(arguments.length);
 
 			for(let i = 0; i < args.length; ++i){
@@ -37,7 +44,7 @@ if(!Object.hasOwnProperty('extend') && Object.extend === undefined){
 			args.unshift(this);
 
 			return merge.apply(null, args);
-		}, '{}.extend: Please install and use lodash.merge instead')
+		}
 	});
 }
 
