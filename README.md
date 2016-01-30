@@ -152,6 +152,31 @@ quickbase.api('API_Authenticate', {
 });
 ```
 
+Class
+-----
+```javascript
+class QuickBase {
+
+	public object defaults;
+
+	public object actions;
+	public object prepareOptions;
+	public object xmlNodeParsers;
+
+	public function api(action[, options[, callback]);
+
+	public static class QueryBuilder(parent, action[, options[, callback]]);
+	public static class Throttle([maxConnections = 10[, errorOnConnectionLimit = false]]);
+	public static class QuickBaseError(code, name[, message]);
+
+	public static class Promise = Promise;
+
+	public static function checkIsArrAndConvert(obj);
+	public static function cleanXML(xml);
+
+}
+```
+
 License
 -------
 

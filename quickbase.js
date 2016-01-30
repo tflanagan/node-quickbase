@@ -17,131 +17,29 @@
 
 /* Dependencies */
 const xml = require('xml2js');
+const util = require('util');
 const http = require('http');
 const https = require('https');
+const merge = require('lodash.merge');
 const Promise = require('bluebird');
 
-/* Native Extensions */
+/* Backwards Compatibility */
 if(!Object.hasOwnProperty('extend') && Object.extend === undefined){
-	Object.defineProperty(Object.prototype, '_extend', {
-		enumerable: false,
-		value (source) {
-			Object.getOwnPropertyNames(source).forEach((property) => {
-				if(this.hasOwnProperty(property) && typeof(this[property]) === 'object'){
-					this[property] = this[property].extend(source[property]);
-				}else{
-					Object.defineProperty(this, property, Object.getOwnPropertyDescriptor(source, property));
-				}
-			});
-
-			return this;
-		}
-	});
-
 	Object.defineProperty(Object.prototype, 'extend', {
 		enumerable: false,
-		value () {
+		value: util.deprecate(function(){
 			const args = new Array(arguments.length);
 
 			for(let i = 0; i < args.length; ++i){
 				args[i] = arguments[i];
-
-				this._extend(args[i]);
 			}
 
-			return this;
-		}
+			args.unshift(this);
+
+			return merge.apply(null, args);
+		}, '{}.extend: Please install and use lodash.merge instead')
 	});
 }
-
-/* Helpers */
-const cleanXML = (xml) => {
-	const isInt = /^-?\s*\d+$/;
-	const isDig = /^(-?\s*\d+\.?\d*)$/;
-	const radix = 10;
-
-	Object.keys(xml).forEach((node) => {
-		let value, singulars,
-			l = -1, i = -1, s = -1, e = -1;
-
-		if(xml[node] instanceof Array && xml[node].length === 1){
-			xml[node] = xml[node][0];
-		}
-
-		if(xml[node] instanceof Object){
-			value = Object.keys(xml[node]);
-
-			if(value.length === 1){
-				l = node.length;
-
-				singulars = [
-					node.substring(0, l - 1),
-					node.substring(0, l - 3) + 'y'
-				];
-
-				i = singulars.indexOf(value[0]);
-
-				if(i !== -1){
-					xml[node] = xml[node][singulars[i]];
-				}
-			}
-		}
-
-		if(typeof(xml[node]) === 'object'){
-			xml[node] = cleanXML(xml[node]);
-		}
-
-		if(typeof(xml[node]) === 'string'){
-			value = xml[node].trim();
-
-			if(value.match(isDig)){
-				if(value.match(isInt)){
-					l = parseInt(value, radix);
-
-					if(Math.abs(l) <= 9007199254740991){
-						xml[node] = l;
-					}
-				}else{
-					l = value.length;
-
-					if(l <= 15){
-						xml[node] = parseFloat(value);
-					}else{
-						for(i = 0, s = -1, e = -1; i < l && e - s <= 15; ++i){
-							if(value.charAt(i) > 0){
-								if(s === -1){
-									s = i;
-								}else{
-									e = i;
-								}
-							}
-						}
-
-						if(e - s <= 15){
-							xml[node] = parseFloat(value);
-						}
-					}
-				}
-			}else{
-				xml[node] = value;
-			}
-		}
-	});
-
-	return xml;
-};
-
-const flattenXMLAttributes = (obj) => {
-	if(obj.hasOwnProperty('$')){
-		Object.keys(obj.$).forEach((property) => {
-			obj[property] = obj.$[property];
-		});
-
-		delete obj.$;
-	}
-
-	return obj;
-};
 
 /* Error Handling */
 class QuickBaseError extends Error {
@@ -158,42 +56,43 @@ class QuickBaseError extends Error {
 
 }
 
+/* Default Settings */
+const defaults = {
+	realm: 'www',
+	domain: 'quickbase.com',
+	useSSL: true,
+
+	username: '',
+	password: '',
+	appToken: '',
+	ticket: '',
+
+	flags: {
+		useXML: true,
+		msInUTC: true,
+		includeRids: true,
+		returnPercentage: false,
+		fmt: 'structured',
+		encoding: 'ISO-8859-1',
+		dbidAsParam: false
+	},
+
+	status: {
+		errcode: 0,
+		errtext: 'No error',
+		errdetail: ''
+	},
+
+	maxErrorRetryAttempts: 3,
+	connectionLimit: 10,
+	errorOnConnectionLimit: false
+};
+
 /* Main Class */
 class QuickBase {
 
 	constructor (options) {
-		const defaults = {
-			realm: 'www',
-			domain: 'quickbase.com',
-			useSSL: true,
-
-			username: '',
-			password: '',
-			appToken: '',
-			ticket: '',
-
-			flags: {
-				useXML: true,
-				msInUTC: true,
-				includeRids: true,
-				returnPercentage: false,
-				fmt: 'structured',
-				encoding: 'ISO-8859-1',
-				dbidAsParam: false
-			},
-
-			status: {
-				errcode: 0,
-				errtext: 'No error',
-				errdetail: ''
-			},
-
-			maxErrorRetryAttempts: 3,
-			connectionLimit: 10,
-			errorOnConnectionLimit: false
-		};
-
-		this.settings = ({}).extend(defaults, options || {});
+		this.settings = ({}).extend({}, QuickBase.defaults, options || {});
 
 		this.throttle = new Throttle(this.settings.connectionLimit, this.settings.errorOnConnectionLimit);
 
@@ -237,14 +136,112 @@ class QuickBase {
 		return callback instanceof Function ? this : call;
 	}
 
+	static checkIsArrAndConvert (obj) {
+		if(!(obj instanceof Array)){
+			// Support Case #480141
+			// XML returned from QuickBase appends "\r\n      "
+			if(obj === ''){
+				obj = [];
+			}else{
+				obj = [ obj ];
+			}
+		}
+
+		return obj;
+	}
+
+	static cleanXML (xml) {
+		const isInt = /^-?\s*\d+$/;
+		const isDig = /^(-?\s*\d+\.?\d*)$/;
+		const radix = 10;
+
+		Object.keys(xml).forEach((node) => {
+			let value, singulars,
+				l = -1, i = -1, s = -1, e = -1;
+
+			if(xml[node] instanceof Array && xml[node].length === 1){
+				xml[node] = xml[node][0];
+			}
+
+			if(xml[node] instanceof Object){
+				value = Object.keys(xml[node]);
+
+				if(value.length === 1){
+					l = node.length;
+
+					singulars = [
+						node.substring(0, l - 1),
+						node.substring(0, l - 3) + 'y'
+					];
+
+					i = singulars.indexOf(value[0]);
+
+					if(i !== -1){
+						xml[node] = xml[node][singulars[i]];
+					}
+				}
+			}
+
+			if(typeof(xml[node]) === 'object'){
+				xml[node] = QuickBase.cleanXML(xml[node]);
+			}
+
+			if(typeof(xml[node]) === 'string'){
+				value = xml[node].trim();
+
+				if(value.match(isDig)){
+					if(value.match(isInt)){
+						l = parseInt(value, radix);
+
+						if(Math.abs(l) <= 9007199254740991){
+							xml[node] = l;
+						}
+					}else{
+						l = value.length;
+
+						if(l <= 15){
+							xml[node] = parseFloat(value);
+						}else{
+							for(i = 0, s = -1, e = -1; i < l && e - s <= 15; ++i){
+								if(value.charAt(i) > 0){
+									if(s === -1){
+										s = i;
+									}else{
+										e = i;
+									}
+								}
+							}
+
+							if(e - s <= 15){
+								xml[node] = parseFloat(value);
+							}
+						}
+					}
+				}else{
+					xml[node] = value;
+				}
+			}
+
+			if(node === '$'){
+				Object.keys(xml[node]).forEach((property) => {
+					xml[property] = xml[node][property];
+				});
+
+				delete xml[node];
+			}
+		});
+
+		return xml;
+	}
+
 }
 
 /* Throttle */
 class Throttle {
 
 	constructor (maxConnections, errorOnConnectionLimit) {
-		this.maxConnections = maxConnections;
-		this.errorOnConnectionLimit = errorOnConnectionLimit;
+		this.maxConnections = maxConnections || 10;
+		this.errorOnConnectionLimit = errorOnConnectionLimit || false;
 
 		this._numConnections = 0;
 		this._pendingConnections = [];
@@ -290,7 +287,7 @@ class QueryBuilder {
 		this.options = options;
 		this.callback = callback;
 
-		this.settings = ({}).extend(parent.settings);
+		this.settings = merge({}, parent.settings);
 
 		this.results;
 
@@ -456,7 +453,7 @@ class QueryBuilder {
 		return new Promise((resolve, reject) => {
 			const settings = this.settings;
 			const protocol = settings.useSSL ? https : http;
-			const request = protocol.request({
+			const options = {
 				hostname: [ settings.realm, settings.domain ].join('.'),
 				port: settings.useSSL ? 443 : 80,
 				path: '/db/' + (this.options.dbid && !settings.flags.dbidAsParam ? this.options.dbid : 'main') + '?act=' + this.action + (!settings.flags.useXML ? this.payload : ''),
@@ -466,7 +463,8 @@ class QueryBuilder {
 					'QUICKBASE-ACTION': this.action
 				},
 				agent: false
-			}, (response) => {
+			};
+			const request = protocol.request(options, (response) => {
 				let xmlResponse = '';
 
 				response.on('data', (chunk) => {
@@ -482,7 +480,7 @@ class QueryBuilder {
 								return reject(new QuickBaseError(1000, 'Error Processing Request', err));
 							}
 
-							result = cleanXML(result.qdbapi);
+							result = QuickBase.cleanXML(result.qdbapi);
 
 							if(result.errcode !== settings.status.errcode){
 								return reject(new QuickBaseError(result.errcode, result.errtext, result.errdetail));
@@ -531,19 +529,7 @@ class QueryBuilder {
 /* XML Node Parsers */
 const xmlNodeParsers = {
 	fields (val) {
-		if(!(val instanceof Array)){
-			// Support Case #480141
-			// XML returned from QuickBase appends "\r\n      "
-			if(val === ''){
-				val = [];
-			}else{
-				val = [ val ];
-			}
-		}
-
-		return val.map((value) => {
-			value = flattenXMLAttributes(value);
-
+		return QuickBase.checkIsArrAndConvert(val).map((value) => {
 			// Support Case #480141
 			// XML returned from QuickBase inserts '<br />' after every line in formula fields.
 			if(typeof(value.formula) === 'object'){
@@ -553,76 +539,21 @@ const xmlNodeParsers = {
 			return value;
 		});
 	},
-	group (val) {
-		val = flattenXMLAttributes(val);
-
-		if(val.hasOwnProperty('users')){
-			val.users = val.users.map((user) => {
-				return flattenXMLAttributes(user);
-			});
-		}
-
-		if(val.hasOwnProperty('managers')){
-			val.managers = val.managers.map((manager) => {
-				return flattenXMLAttributes(manager);
-			});
-		}
-
-		if(val.hasOwnProperty('subgroups')){
-			val.subgroups = val.subgroups.map((subgroup) => {
-				return flattenXMLAttributes(subgroup);
-			});
-		}
-
-		return val;
-	},
 	lusers (val) {
-		if(!(val instanceof Array)){
-			// Support Case #480141
-			// XML returned from QuickBase appends "\r\n      "
-			if(val === ''){
-				val = [];
-			}else{
-				val = [ val ];
-			}
-		}
-
-		return val.map((value) => {
+		return QuickBase.checkIsArrAndConvert(val).map((value) => {
 			return {
-				id: value.$.id,
+				id: value.id,
 				name: value._
 			}
 		});
 	},
 	queries (val) {
-		if(!(val instanceof Array)){
-			// Support Case #480141
-			// XML returned from QuickBase appends "\r\n      "
-			if(val === ''){
-				val = [];
-			}else{
-				val = [ val ];
-			}
-		}
-
-		return val.map((value) => {
-			return flattenXMLAttributes(value);
-		});
+		return QuickBase.checkIsArrAndConvert(val);
 	},
 	roles (val) {
-		if(!(val instanceof Array)){
-			// Support Case #480141
-			// XML returned from QuickBase appends "\r\n      "
-			if(val === ''){
-				val = [];
-			}else{
-				val = [ val ];
-			}
-		}
-
-		return val.map((value) => {
+		return QuickBase.checkIsArrAndConvert(val).map((value) => {
 			const ret = {
-				id: value.$.id
+				id: value.id
 			}
 
 			if(value._){
@@ -630,14 +561,14 @@ const xmlNodeParsers = {
 			}else{
 				if(value.hasOwnProperty('access')){
 					ret.access = {
-						id: value.access.$.id,
+						id: value.access.id,
 						name: value.access._
 					};
 				}
 
 				if(value.hasOwnProperty('member')){
 					ret.member = {
-						type: value.member.$.type,
+						type: value.member.type,
 						name: value.member._
 					};
 				}
@@ -647,22 +578,10 @@ const xmlNodeParsers = {
 		});
 	},
 	variables (val) {
-		val = val.var;
-
-		if(!(val instanceof Array)){
-			// Support Case #480141
-			// XML returned from QuickBase appends "\r\n      "
-			if(val === ''){
-				val = [];
-			}else{
-				val = [ val ];
-			}
-		}
-
 		const newVars = {};
 
-		val.forEach((value) => {
-			newVars[value.$.name] = value._;
+		QuickBase.checkIsArrAndConvert(val.var).forEach((value) => {
+			newVars[value.name] = value._;
 		});
 
 		return newVars;
@@ -736,14 +655,10 @@ const actions = {
 		// request (query) { },
 		// response (query, results) { }
 	// },
-	API_CopyGroup: {
+	// API_CopyGroup: {
 		// request (query) { },
-		response (query, results) {
-			if(results.hasOwnProperty('group')){
-				results.group = xmlNodeParsers.group(results.group);
-			}
-		}
-	},
+		// response (query, results) {	}
+	// },
 	// API_CopyMasterDetail: {
 		// request (query) { },
 		// response (query, results) { }
@@ -752,14 +667,10 @@ const actions = {
 		// request (query) { },
 		// response (query, results) { }
 	// },
-	API_CreateGroup: {
+	// API_CreateGroup: {
 		// request (query) { },
-		response (query, results) {
-			if(results.hasOwnProperty('group')){
-				results.group = xmlNodeParsers.group(results.group);
-			}
-		}
-	},
+		// response (query, results) {	}
+	// },
 	// API_CreateTable: {
 		// request (query) { },
 		// response (query, results) { }
@@ -819,33 +730,15 @@ const actions = {
 				*/
 
 				if(results.table.hasOwnProperty('records')){
-					if(!(results.table.records instanceof Array)){
-						// Support Case #480141
-						// XML returned from QuickBase appends "\r\n      "
-						if(results.table.records === ''){
-							results.table.records = [];
-						}else{
-							results.table.records = [ results.table.records ];
-						}
-					}
-
-					results.table.records = results.table.records.map((record) => {
+					results.table.records = QuickBase.checkIsArrAndConvert(results.table.records).map((record) => {
 						const ret = {};
 
-						if(!(record.f instanceof Array)){
-							if(record.f === undefined){
-								record.f = [];
-							}else{
-								record.f = [ record.f ];
-							}
-						}
-
 						if(query.options.includeRids){
-							ret.rid = record.$.rid;
+							ret.rid = record.rid;
 						}
 
-						record.f.forEach((field) => {
-							const fid = field.$.id;
+						QuickBase.checkIsArrAndConvert(record.f).forEach((field) => {
+							const fid = field.id;
 
 							if(field.hasOwnProperty('url')){
 								ret[fid] = {
@@ -877,27 +770,9 @@ const actions = {
 					results.table.lusers = xmlNodeParsers.lusers(results.table.lusers);
 				}
 			}else{
-				if(!(results.record instanceof Array)){
-					// Support Case #480141
-					// XML returned from QuickBase appends "\r\n      "
-					if(results.record === ''){
-						results.record = [];
-					}else{
-						results.record = [ results.record ];
-					}
-				}
-
-				results.records = results.record;
+				results.records = QuickBase.checkIsArrAndConvert(results.record);
 
 				delete results.record;
-
-				if(query.options.includeRids){
-					results.records.forEach((record) => {
-						record.rid = record.$.rid;
-
-						delete record.$;
-					});
-				}
 
 				if(results.hasOwnProperty('chdbids')){
 					if(!(results.chdbids instanceof Array)){
@@ -958,18 +833,8 @@ const actions = {
 			query.settings.flags.dbidAsParam = true;
 		},
 		response (query, results) {
-			if(results.hasOwnProperty('app')){
-				results.app = flattenXMLAttributes(results.app);
-			}
-
 			if(results.hasOwnProperty('tables')){
-				if(!(results.tables instanceof Array)){
-					results.tables = [ results.tables ];
-				}
-
-				results.tables = results.tables.map((table) => {
-					return flattenXMLAttributes(table);
-				});
+				results.tables = QuickBase.checkIsArrAndConvert(results.tables);
 			}
 		}
 	},
@@ -1001,19 +866,9 @@ const actions = {
 		// request (query) { },
 		response (query, results) {
 			if(results.table.hasOwnProperty('chdbids')){
-				if(!(results.table.chdbids instanceof Array)){
-					// Support Case #480141
-					// XML returned from QuickBase appends "\r\n      "
-					if(results.table.chdbids === ''){
-						results.table.chdbids = [];
-					}else{
-						results.table.chdbids = [ results.table.chdbids ];
-					}
-				}
-
-				results.table.chdbids = results.table.chdbids.map((chdbid) => {
+				results.table.chdbids = QuickBase.checkIsArrAndConvert(results.table.chdbids).map((chdbid) => {
 					return {
-						name: chdbid.$.name,
+						name: chdbid.name,
 						dbid: chdbid._
 					}
 				});
@@ -1048,14 +903,10 @@ const actions = {
 			}
 		}
 	},
-	API_GetUserInfo: {
+	// API_GetUserInfo: {
 		// request (query) { },
-		response (query, results) {
-			if(results.hasOwnProperty('user')){
-				results.user = flattenXMLAttributes(results.user);
-			}
-		}
-	},
+		// response (query, results) { }
+	// },
 	API_GetUserRole: {
 		// request (query) { },
 		response (query, results) {
@@ -1064,14 +915,10 @@ const actions = {
 			}
 		}
 	},
-	API_GetUsersInGroup: {
+	// API_GetUsersInGroup: {
 		// request (query) { },
-		response (query, results) {
-			if(results.hasOwnProperty('group')){
-				results.group = xmlNodeParsers.group(results.group);
-			}
-		}
-	},
+		// response (query, results) { }
+	// },
 	API_GrantedDBs: {
 		// request (query) { },
 		response (query, results) {
@@ -1092,13 +939,7 @@ const actions = {
 		// request (query) { },
 		response (query, results) {
 			if(results.hasOwnProperty('groups')){
-				if(!(results.groups instanceof Array)){
-					results.groups = [ results.groups ];
-				}
-
-				results.groups = results.groups.map((group) => {
-					return flattenXMLAttributes(group);
-				});
+				results.groups = QuickBase.checkIsArrAndConvert();
 			}
 		}
 	},
@@ -1111,8 +952,8 @@ const actions = {
 						rid: record._
 					};
 
-					if(record.$ && record.$.update_id){
-						ret.update_id = record.$.update_id;
+					if(record.update_id){
+						ret.update_id = record.update_id;
 					}
 
 					return ret;
@@ -1176,21 +1017,7 @@ const actions = {
 		// request (query) { },
 		response (query, results) {
 			if(results.hasOwnProperty('file_fields')){
-				results.file_fields = results.file_fields.field;
-
-				if(!(results.file_fields instanceof Array)){
-					// Support Case #480141
-					// XML returned from QuickBase appends "\r\n      "
-					if(results.file_fields === ''){
-						results.file_fields = [];
-					}else{
-						results.file_fields = [ results.file_fields ];
-					}
-				}
-
-				results.file_fields = results.file_fields.map((file) => {
-					return flattenXMLAttributes(file);
-				});
+				results.file_fields = QuickBase.checkIsArrAndConvert(results.file_fields.field);
 			}
 		}
 	},
@@ -1198,21 +1025,10 @@ const actions = {
 		// request (query) { },
 		response (query, results) {
 			if(results.hasOwnProperty('users')){
-
-				if(!(results.users instanceof Array)){
-					// Support Case #480141
-					// XML returned from QuickBase appends "\r\n      "
-					if(results.users === ''){
-						results.users = [];
-					}else{
-						results.users = [ results.users ];
-					}
-				}
-
-				results.users = results.users.map((user) => {
+				results.users = QuickBase.checkIsArrAndConvert(results.users).map((user) => {
 					user.roles = xmlNodeParsers.roles(user.roles);
 
-					return flattenXMLAttributes(user);
+					return user;
 				});
 			}
 		}
@@ -1237,93 +1053,57 @@ const prepareOptions = {
 	*/
 
 	/* Common to All */
-	// apptoken (val) {
-	// 	return val;
-	// },
+	// apptoken (val) { return val; },
 
-	// dbid (val) {
-	// 	return val;
-	// },
+	// dbid (val) { return val; },
 
-	// ticket (val) {
-	// 	return val;
-	// },
+	// ticket (val) { return val; },
 
-	// udata (val) {
-	// 	return val;
-	// },
+	// udata (val) { return val; },
 
 	/* API Specific Options */
 
 	/* API_ChangeGroupInfo, API_CreateGroup */
-	// accountId (val) {
-	// 	return val;
-	// },
+	// accountId (val) { return val; },
 
 	/* API_AddField */
-	// add_to_forms (val) {
-	// 	return val;
-	// },
+	// add_to_forms (val) { return val; },
 
 	/* API_GrantedDBs */
-	// adminOnly (val) {
-	// 	return val;
-	// },
+	// adminOnly (val) { return val; },
 
 	/* API_GrantedGroups */
-	// adminonly (val) {
-	// 	return val;
-	// },
+	// adminonly (val) { return val; },
 
 	/* API_SetFieldProperties */
-	// allow_new_choices (val) {
-	// 	return val;
-	// },
+	// allow_new_choices (val) { return val; },
 
 	/* API_AddUserToGroup */
-	// allowAdminAccess (val) {
-	// 	return val;
-	// },
+	// allowAdminAccess (val) { return val; },
 
 	/* API_SetFieldProperties */
-	// allowHTML (val) {
-	// 	return val;
-	// },
+	// allowHTML (val) { return val; },
 
 	/* API_RemoveGroupFromRole */
-	// allRoles (val) {
-	// 	return val;
-	// },
+	// allRoles (val) { return val; },
 
 	/* API_SetFieldProperties */
-	// appears_by_default (val) {
-	// 	return val;
-	// },
+	// appears_by_default (val) { return val; },
 
 	/* API_SetFieldProperties */
-	// 'append-only' (val) {
-	// 	return val;
-	// },
+	// 'append-only' (val) { return val; },
 
 	/* API_SetFieldProperties */
-	// blank_is_zero (val) {
-	// 	return val;
-	// },
+	// blank_is_zero (val) { return val; },
 
 	/* API_SetFieldProperties */
-	// bold (val) {
-	// 	return val;
-	// },
+	// bold (val) { return val; },
 
 	/* API_FieldAddChoices, API_FieldRemoveChoices */
-	// choice (val) {
-	// 	return val;
-	// },
+	// choice (val) { return val; },
 
 	/* API_SetFieldProperties */
-	// choices (val) {
-	// 	return val;
-	// },
+	// choices (val) { return val; },
 
 	/* API_DoQuery, API_GenResultsTable, API_ImportFromCSV */
 	clist (val) {
@@ -1336,144 +1116,88 @@ const prepareOptions = {
 	},
 
 	/* API_SetFieldProperties */
-	// comma_start (val) {
-	// 	return val;
-	// },
+	// comma_start (val) { return val; },
 
 	/* API_CopyMasterDetail */
-	// copyfid (val) {
-	// 	return val;
-	// },
+	// copyfid (val) { return val; },
 
 	/* API_CreateDatabase */
-	// createapptoken (val) {
-	// 	return val;
-	// },
+	// createapptoken (val) { return val; },
 
 	/* API_SetFieldProperties */
-	// currency_format (val) {
-	// 	return val;
-	// },
+	// currency_format (val) { return val; },
 
 	/* API_SetFieldProperties */
-	// currency_symbol (val) {
-	// 	return val;
-	// },
+	// currency_symbol (val) { return val; },
 
 	/* API_CreateDatabase */
-	// dbdesc (val) {
-	// 	return val;
-	// },
+	// dbdesc (val) { return val; },
 
 	/* API_CreateDatabase, API_FindDBByName */
-	// dbname (val) {
-	// 	return val;
-	// },
+	// dbname (val) { return val; },
 
 	/* API_SetFieldProperties */
-	// decimal_places (val) {
-	// 	return val;
-	// },
+	// decimal_places (val) { return val; },
 
 	/* API_SetFieldProperties */
-	// default_today (val) {
-	// 	return val;
-	// },
+	// default_today (val) { return val; },
 
 	/* API_SetFieldProperties */
-	// default_value (val) {
-	// 	return val;
-	// },
+	// default_value (val) { return val; },
 
 	/* API_ChangeGroupInfo, API_CopyGroup, API_CreateGroup */
-	// description (val) {
-	// 	return val;
-	// },
+	// description (val) { return val; },
 
 	/* API_CopyMasterDetail */
-	// destrid (val) {
-	// 	return val;
-	// },
+	// destrid (val) { return val; },
 
 	/* API_GetRecordAsHTML */
-	// dfid (val) {
-	// 	return val;
-	// },
+	// dfid (val) { return val; },
 
 	/* API_SetFieldProperties */
-	// display_as_button (val) {
-	// 	return val;
-	// },
+	// display_as_button (val) { return val; },
 
 	/* API_SetFieldProperties */
-	// display_dow (val) {
-	// 	return val;
-	// },
+	// display_dow (val) { return val; },
 
 	/* API_SetFieldProperties */
-	// display_month (val) {
-	// 	return val;
-	// },
+	// display_month (val) { return val; },
 
 	/* API_SetFieldProperties */
-	// display_relative (val) {
-	// 	return val;
-	// },
+	// display_relative (val) { return val; },
 
 	/* API_SetFieldProperties */
-	// display_time (val) {
-	// 	return val;
-	// },
+	// display_time (val) { return val; },
 
 	/* API_SetFieldProperties */
-	// display_zone (val) {
-	// 	return val;
-	// },
+	// display_zone (val) { return val; },
 
 	/* API_AddRecord, API_EditRecord */
-	// disprec (val) {
-	// 	return val;
-	// },
+	// disprec (val) { return val; },
 
 	/* API_SetFieldProperties */
-	// does_average (val) {
-	// 	return val;
-	// },
+	// does_average (val) { return val; },
 
 	/* API_SetFieldProperties */
-	// does_total (val) {
-	// 	return val;
-	// },
+	// does_total (val) { return val; },
 
 	/* API_SetFieldProperties */
-	// doesdatacopy (val) {
-	// 	return val;
-	// },
+	// doesdatacopy (val) { return val; },
 
 	/* API_GetUserInfo, API_ProvisionUser */
-	// email (val) {
-	// 	return val;
-	// },
+	// email (val) { return val; },
 
 	/* API_CloneDatabase */
-	// excludefiles (val) {
-	// 	return val;
-	// },
+	// excludefiles (val) { return val; },
 
 	/* API_GrantedDBs */
-	// excludeparents (val) {
-	// 	return val;
-	// },
+	// excludeparents (val) { return val; },
 
 	/* API_AddRecord, API_EditRecord */
-	// fform (val) {
-	// 	return val;
-	// },
+	// fform (val) { return val; },
 
 	/* API_DeleteField, API_FieldAddChoices, API_FieldRemoveChoices, API_SetFieldProperties, API_SetKeyField */
-	// fid (val) {
-	// 	return val;
-	// },
+	// fid (val) { return val; },
 
 	/* API_AddRecord, API_EditRecord, API_GenAddRecordForm, API_UploadFile */
 	field (val) {
@@ -1504,169 +1228,103 @@ const prepareOptions = {
 	},
 
 	/* API_SetFieldProperties */
-	// fieldhelp (val) {
-	// 	return val;
-	// },
+	// fieldhelp (val) { return val; },
 
 	/* API_SetFieldProperties */
-	// find_enabled (val) {
-	// 	return val;
-	// },
+	// find_enabled (val) { return val; },
 
 	/* API_DoQuery */
-	// fmt (val) {
-	// 	return val;
-	// },
+	// fmt (val) { return val; },
 
 	/* API_ProvisionUser */
-	// fname (val) {
-	// 	return val;
-	// },
+	// fname (val) { return val; },
 
 	/* API_SetFieldProperties */
-	// formula (val) {
-	// 	return val;
-	// },
+	// formula (val) { return val; },
 
 	/* API_CopyGroup */
-	// gacct (val) {
-	// 	return val;
-	// },
+	// gacct (val) { return val; },
 
 	/* API_AddGroupToRole, API_AddSubGroup, API_AddUserToGroup, API_ChangeGroupInfo, API_CopyGroup, API_DeleteGroup, API_GetGroupRole, API_GetUsersInGroup, API_GrantedDBsForGroup, API_RemoveGroupFromRole, API_RemoveSubgroup, API_RemoveUserFromGroup */
-	// gid (val) {
-	// 	return val;
-	// },
+	// gid (val) { return val; },
 
 	/* API_SetFieldProperties */
-	// has_extension (val) {
-	// 	return val;
-	// },
+	// has_extension (val) { return val; },
 
 	/* API_Authenticate */
-	// hours (val) {
-	// 	return val;
-	// },
+	// hours (val) { return val; },
 
 	/* API_RunImport */
-	// id (val) {
-	// 	return val;
-	// },
+	// id (val) { return val; },
 
 	/* API_AddRecord, API_EditRecord */
-	// ignoreError (val) {
-	// 	return val;
-	// },
+	// ignoreError (val) { return val; },
 
 	/* API_GetUserRole */
-	// inclgrps (val) {
-	// 	return val;
-	// },
+	// inclgrps (val) { return val; },
 
 	/* API_GetUsersInGroup */
-	// includeAllMgrs (val) {
-	// 	return val;
-	// },
+	// includeAllMgrs (val) { return val; },
 
 	/* API_GrantedDBs */
-	// includeancestors (val) {
-	// 	return val;
-	// },
+	// includeancestors (val) { return val; },
 
 	/* API_DoQuery */
-	// includeRids (val) {
-	// 	return val;
-	// },
+	// includeRids (val) { return val; },
 
 	/* API_GenResultsTable */
-	// jht (val) {
-	// 	return val;
-	// },
+	// jht (val) { return val; },
 
 	/* API_GenResultsTable */
-	// jsa (val) {
-	// 	return val;
-	// },
+	// jsa (val) { return val; },
 
 	/* API_CloneDatabase */
-	// keepData (val) {
-	// 	return val;
-	// },
+	// keepData (val) { return val; },
 
 	/* API_ChangeRecordOwner, API_DeleteRecord, API_EditRecord, API_GetRecordInfo */
-	// key (val) {
-	// 	return val;
-	// },
+	// key (val) { return val; },
 
 	/* API_AddField, API_SetFieldProperties */
-	// label (val) {
-	// 	return val;
-	// },
+	// label (val) { return val; },
 
 	/* API_ProvisionUser */
-	// lname (val) {
-	// 	return val;
-	// },
+	// lname (val) { return val; },
 
 	/* API_SetFieldProperties */
-	// maxlength (val) {
-	// 	return val;
-	// },
+	// maxlength (val) { return val; },
 
 	/* API_AddField */
-	// mode (val) {
-	// 	return val;
-	// },
+	// mode (val) { return val; },
 
 	/* API_AddRecord, API_EditRecord, API_ImportFromCSV */
-	// msInUTC (val) {
-	// 	return val;
-	// },
+	// msInUTC (val) { return val; },
 
 	/* API_ChangeGroupInfo, API_CopyGroup, API_CreateGroup */
-	// name (val) {
-	// 	return val;
-	// },
+	// name (val) { return val; },
 
 	/* API_RenameApp */
-	// newappname (val) {
-	// 	return val;
-	// },
+	// newappname (val) { return val; },
 
 	/* API_CloneDatabase */
-	// newdbdesc (val) {
-	// 	return val;
-	// },
+	// newdbdesc (val) { return val; },
 
 	/* API_CloneDatabase */
-	// newdbname (val) {
-	// 	return val;
-	// },
+	// newdbname (val) { return val; },
 
 	/* API_ChangeManager */
-	// newmgr (val) {
-	// 	return val;
-	// },
+	// newmgr (val) { return val; },
 
 	/* API_ChangeRecordOwner */
-	// newowner (val) {
-	// 	return val;
-	// },
+	// newowner (val) { return val; },
 
 	/* API_ChangeUserRole */
-	// newroleid (val) {
-	// 	return val;
-	// },
+	// newroleid (val) { return val; },
 
 	/* API_SetFieldProperties */
-	// no_wrap (val) {
-	// 	return val;
-	// },
+	// no_wrap (val) { return val; },
 
 	/* API_SetFieldProperties */
-	// numberfmt (val) {
-	// 	return val;
-	// },
+	// numberfmt (val) { return val; },
 
 	/* API_DoQuery, API_GenResultsTable */
 	options (val) {
@@ -1674,59 +1332,37 @@ const prepareOptions = {
 	},
 
 	/* API_AddReplaceDBPage */
-	// pagebody (val) {
-	// 	return val;
-	// },
+	// pagebody (val) { return val; },
 
 	/* API_AddReplaceDBPage */
-	// pageid (val) {
-	// 	return val;
-	// },
+	// pageid (val) { return val; },
 
 	/* API_GetDBPage */
-	// pageID (val) {
-	// 	return val;
-	// },
+	// pageID (val) { return val; },
 
 	/* API_AddReplaceDBPage */
-	// pagename (val) {
-	// 	return val;
-	// },
+	// pagename (val) { return val; },
 
 	/* API_AddReplaceDBPage */
-	// pagetype (val) {
-	// 	return val;
-	// },
+	// pagetype (val) { return val; },
 
 	/* API_FindDBByName */
-	// ParentsOnly (val) {
-	// 	return val;
-	// },
+	// ParentsOnly (val) { return val; },
 
 	/* API_Authenticate */
-	// password (val) {
-	// 	return val;
-	// },
+	// password (val) { return val; },
 
 	/* API_CreateTable */
-	// pnoun (val) {
-	// 	return val;
-	// },
+	// pnoun (val) { return val; },
 
 	/* API_DoQuery, API_GenResultsTable, API_PurgeRecords */
-	// qid (val) {
-	// 	return val;
-	// },
+	// qid (val) { return val; },
 
 	/* API_DoQuery, API_GenResultsTable, API_PurgeRecords */
-	// qname (val) {
-	// 	return val;
-	// },
+	// qname (val) { return val; },
 
 	/* API_DoQuery, API_DoQueryCount, API_GenResultsTable, API_PurgeRecords */
-	// query (val) {
-	// 	return val;
-	// },
+	// query (val) { return val; },
 
 	/* API_ImportFromCSV */
 	records_csv (val) {
@@ -1734,39 +1370,25 @@ const prepareOptions = {
 	},
 
 	/* API_CopyMasterDetail */
-	// recurse (val) {
-	// 	return val;
-	// },
+	// recurse (val) { return val; },
 
 	/* API_CopyMasterDetail */
-	// relfids (val) {
-	// 	return val;
-	// },
+	// relfids (val) { return val; },
 
 	/* API_SetFieldProperties */
-	// required (val) {
-	// 	return val;
-	// },
+	// required (val) { return val; },
 
 	/* API_DoQuery */
-	// returnpercentage (val) {
-	// 	return val;
-	// },
+	// returnpercentage (val) { return val; },
 
 	/* API_ChangeRecordOwner, API_DeleteRecord, API_EditRecord, API_GetRecordAsHTML, API_GetRecordInfo, API_UploadFile */
-	// rid (val) {
-	// 	return val;
-	// },
+	// rid (val) { return val; },
 
 	/* API_AddGroupToRole, API_AddUserToRole, API_ChangeUserRole, API_ProvisionUser, API_RemoveGroupFromRole, API_RemoveUserFromRole */
-	// roleid (val) {
-	// 	return val;
-	// },
+	// roleid (val) { return val; },
 
 	/* API_ImportFromCSV */
-	// skipfirst (val) {
-	// 	return val;
-	// },
+	// skipfirst (val) { return val; },
 
 	/* API_DoQuery, API_GenResultsTable */
 	slist (val) {
@@ -1774,79 +1396,49 @@ const prepareOptions = {
 	},
 
 	/* API_SetFieldProperties */
-	// sort_as_given (val) {
-	// 	return val;
-	// },
+	// sort_as_given (val) { return val; },
 
 	/* API_CopyMasterDetail */
-	// sourcerid (val) {
-	// 	return val;
-	// },
+	// sourcerid (val) { return val; },
 
 	/* API_AddSubGroup, API_RemoveSubgroup */
-	// subgroupid (val) {
-	// 	return val;
-	// },
+	// subgroupid (val) { return val; },
 
 	/* API_CreateTable */
-	// tname (val) {
-	// 	return val;
-	// },
+	// tname (val) { return val; },
 
 	/* API_AddField */
-	// type (val) {
-	// 	return val;
-	// },
+	// type (val) { return val; },
 
 	/* API_SetFieldProperties */
-	// unique (val) {
-	// 	return val;
-	// },
+	// unique (val) { return val; },
 
 	/* API_EditRecord */
-	// update_id (val) {
-	// 	return val;
-	// },
+	// update_id (val) { return val; },
 
 	/* API_AddUserToGroup, API_AddUserToRole, API_ChangeUserRole, API_GetUserRole, API_GrantedGroups, API_RemoveUserFromGroup, API_RemoveUserFromRole, API_SendInvitation */
-	// userid (val) {
-	// 	return val;
-	// },
+	// userid (val) { return val; },
 
 	/* API_Authenticate */
-	// username (val) {
-	// 	return val;
-	// },
+	// username (val) { return val; },
 
 	/* API_CloneDatabase */
-	// usersandroles (val) {
-	// 	return val;
-	// },
+	// usersandroles (val) { return val; },
 
 	/* API_SendInvitation */
-	// usertext (val) {
-	// 	return val;
-	// },
+	// usertext (val) { return val; },
 
 	/* API_SetDBVar */
-	// value (val) {
-	// 	return val;
-	// },
+	// value (val) { return val; },
 
 	/* API_GetDBVar, API_SetDBVar */
-	// varname (val) {
-	// 	return val;
-	// },
+	// varname (val) { return val; },
 
 	/* API_SetFieldProperties */
-	// width (val) {
-	// 	return val;
-	// },
+	// width (val) { return val; },
 
 	/* API_GrantedDBs */
-	// withembeddedtables (val) {
-	// 	return val;
-	// }
+	// withembeddedtables (val) { return val; }
 };
 
 /* Expose Instances */
@@ -1858,8 +1450,10 @@ QuickBase.Promise = Promise;
 /* Expose Methods */
 QuickBase.actions = actions;
 QuickBase.prepareOptions = prepareOptions;
-QuickBase.cleanXML = cleanXML;
 QuickBase.xmlNodeParsers = xmlNodeParsers;
+
+/* Expose Properties */
+QuickBase.defaults = defaults;
 
 /* Export Module */
 if(typeof(module) !== 'undefined' && module.exports){

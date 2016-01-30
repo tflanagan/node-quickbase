@@ -17,9 +17,9 @@
 
 /* Dependencies */
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -28,134 +28,29 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var xml = require('xml2js');
+var util = require('util');
 var http = require('http');
 var https = require('https');
+var merge = require('lodash.merge');
 var Promise = require('bluebird');
 
-/* Native Extensions */
+/* Backwards Compatibility */
 if (!Object.hasOwnProperty('extend') && Object.extend === undefined) {
-	Object.defineProperty(Object.prototype, '_extend', {
-		enumerable: false,
-		value: function value(source) {
-			var _this = this;
-
-			Object.getOwnPropertyNames(source).forEach(function (property) {
-				if (_this.hasOwnProperty(property) && _typeof(_this[property]) === 'object') {
-					_this[property] = _this[property].extend(source[property]);
-				} else {
-					Object.defineProperty(_this, property, Object.getOwnPropertyDescriptor(source, property));
-				}
-			});
-
-			return this;
-		}
-	});
-
 	Object.defineProperty(Object.prototype, 'extend', {
 		enumerable: false,
-		value: function value() {
+		value: util.deprecate(function () {
 			var args = new Array(arguments.length);
 
 			for (var i = 0; i < args.length; ++i) {
 				args[i] = arguments[i];
-
-				this._extend(args[i]);
 			}
 
-			return this;
-		}
+			args.unshift(this);
+
+			return merge.apply(null, args);
+		}, '{}.extend: Please install and use lodash.merge instead')
 	});
 }
-
-/* Helpers */
-var cleanXML = function cleanXML(xml) {
-	var isInt = /^-?\s*\d+$/;
-	var isDig = /^(-?\s*\d+\.?\d*)$/;
-	var radix = 10;
-
-	Object.keys(xml).forEach(function (node) {
-		var value = undefined,
-		    singulars = undefined,
-		    l = -1,
-		    i = -1,
-		    s = -1,
-		    e = -1;
-
-		if (xml[node] instanceof Array && xml[node].length === 1) {
-			xml[node] = xml[node][0];
-		}
-
-		if (xml[node] instanceof Object) {
-			value = Object.keys(xml[node]);
-
-			if (value.length === 1) {
-				l = node.length;
-
-				singulars = [node.substring(0, l - 1), node.substring(0, l - 3) + 'y'];
-
-				i = singulars.indexOf(value[0]);
-
-				if (i !== -1) {
-					xml[node] = xml[node][singulars[i]];
-				}
-			}
-		}
-
-		if (_typeof(xml[node]) === 'object') {
-			xml[node] = cleanXML(xml[node]);
-		}
-
-		if (typeof xml[node] === 'string') {
-			value = xml[node].trim();
-
-			if (value.match(isDig)) {
-				if (value.match(isInt)) {
-					l = parseInt(value, radix);
-
-					if (Math.abs(l) <= 9007199254740991) {
-						xml[node] = l;
-					}
-				} else {
-					l = value.length;
-
-					if (l <= 15) {
-						xml[node] = parseFloat(value);
-					} else {
-						for (i = 0, s = -1, e = -1; i < l && e - s <= 15; ++i) {
-							if (value.charAt(i) > 0) {
-								if (s === -1) {
-									s = i;
-								} else {
-									e = i;
-								}
-							}
-						}
-
-						if (e - s <= 15) {
-							xml[node] = parseFloat(value);
-						}
-					}
-				}
-			} else {
-				xml[node] = value;
-			}
-		}
-	});
-
-	return xml;
-};
-
-var flattenXMLAttributes = function flattenXMLAttributes(obj) {
-	if (obj.hasOwnProperty('$')) {
-		Object.keys(obj.$).forEach(function (property) {
-			obj[property] = obj.$[property];
-		});
-
-		delete obj.$;
-	}
-
-	return obj;
-};
 
 /* Error Handling */
 
@@ -167,17 +62,50 @@ var QuickBaseError = function (_Error) {
 
 		_classCallCheck(this, QuickBaseError);
 
-		var _this2 = _possibleConstructorReturn(this, Object.getPrototypeOf(QuickBaseError).call(this, name));
+		var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(QuickBaseError).call(this, name));
 
-		_this2.code = code;
-		_this2.name = name;
-		_this2.message = message || '';
+		_this.code = code;
+		_this.name = name;
+		_this.message = message || '';
 
-		return _ret = _this2, _possibleConstructorReturn(_this2, _ret);
+		return _ret = _this, _possibleConstructorReturn(_this, _ret);
 	}
 
 	return QuickBaseError;
 }(Error);
+
+/* Default Settings */
+
+var defaults = {
+	realm: 'www',
+	domain: 'quickbase.com',
+	useSSL: true,
+
+	username: '',
+	password: '',
+	appToken: '',
+	ticket: '',
+
+	flags: {
+		useXML: true,
+		msInUTC: true,
+		includeRids: true,
+		returnPercentage: false,
+		fmt: 'structured',
+		encoding: 'ISO-8859-1',
+		dbidAsParam: false
+	},
+
+	status: {
+		errcode: 0,
+		errtext: 'No error',
+		errdetail: ''
+	},
+
+	maxErrorRetryAttempts: 3,
+	connectionLimit: 10,
+	errorOnConnectionLimit: false
+};
 
 /* Main Class */
 
@@ -185,38 +113,7 @@ var QuickBase = function () {
 	function QuickBase(options) {
 		_classCallCheck(this, QuickBase);
 
-		var defaults = {
-			realm: 'www',
-			domain: 'quickbase.com',
-			useSSL: true,
-
-			username: '',
-			password: '',
-			appToken: '',
-			ticket: '',
-
-			flags: {
-				useXML: true,
-				msInUTC: true,
-				includeRids: true,
-				returnPercentage: false,
-				fmt: 'structured',
-				encoding: 'ISO-8859-1',
-				dbidAsParam: false
-			},
-
-			status: {
-				errcode: 0,
-				errtext: 'No error',
-				errdetail: ''
-			},
-
-			maxErrorRetryAttempts: 3,
-			connectionLimit: 10,
-			errorOnConnectionLimit: false
-		};
-
-		this.settings = {}.extend(defaults, options || {});
+		this.settings = {}.extend({}, QuickBase.defaults, options || {});
 
 		this.throttle = new Throttle(this.settings.connectionLimit, this.settings.errorOnConnectionLimit);
 
@@ -226,11 +123,11 @@ var QuickBase = function () {
 	_createClass(QuickBase, [{
 		key: 'api',
 		value: function api(action, options, callback) {
-			var _this3 = this;
+			var _this2 = this;
 
 			var call = new Promise(function (resolve, reject) {
-				Promise.using(_this3.throttle.acquire(), function () {
-					var query = new QueryBuilder(_this3, action, options || {}, callback);
+				Promise.using(_this2.throttle.acquire(), function () {
+					var query = new QueryBuilder(_this2, action, options || {}, callback);
 
 					return query.addFlags().processOptions().actionRequest().constructPayload().processQuery().then(function (results) {
 						query.results = results;
@@ -256,6 +153,107 @@ var QuickBase = function () {
 
 			return callback instanceof Function ? this : call;
 		}
+	}], [{
+		key: 'checkIsArrAndConvert',
+		value: function checkIsArrAndConvert(obj) {
+			if (!(obj instanceof Array)) {
+				// Support Case #480141
+				// XML returned from QuickBase appends "\r\n      "
+				if (obj === '') {
+					obj = [];
+				} else {
+					obj = [obj];
+				}
+			}
+
+			return obj;
+		}
+	}, {
+		key: 'cleanXML',
+		value: function cleanXML(xml) {
+			var isInt = /^-?\s*\d+$/;
+			var isDig = /^(-?\s*\d+\.?\d*)$/;
+			var radix = 10;
+
+			Object.keys(xml).forEach(function (node) {
+				var value = undefined,
+				    singulars = undefined,
+				    l = -1,
+				    i = -1,
+				    s = -1,
+				    e = -1;
+
+				if (xml[node] instanceof Array && xml[node].length === 1) {
+					xml[node] = xml[node][0];
+				}
+
+				if (xml[node] instanceof Object) {
+					value = Object.keys(xml[node]);
+
+					if (value.length === 1) {
+						l = node.length;
+
+						singulars = [node.substring(0, l - 1), node.substring(0, l - 3) + 'y'];
+
+						i = singulars.indexOf(value[0]);
+
+						if (i !== -1) {
+							xml[node] = xml[node][singulars[i]];
+						}
+					}
+				}
+
+				if (_typeof(xml[node]) === 'object') {
+					xml[node] = QuickBase.cleanXML(xml[node]);
+				}
+
+				if (typeof xml[node] === 'string') {
+					value = xml[node].trim();
+
+					if (value.match(isDig)) {
+						if (value.match(isInt)) {
+							l = parseInt(value, radix);
+
+							if (Math.abs(l) <= 9007199254740991) {
+								xml[node] = l;
+							}
+						} else {
+							l = value.length;
+
+							if (l <= 15) {
+								xml[node] = parseFloat(value);
+							} else {
+								for (i = 0, s = -1, e = -1; i < l && e - s <= 15; ++i) {
+									if (value.charAt(i) > 0) {
+										if (s === -1) {
+											s = i;
+										} else {
+											e = i;
+										}
+									}
+								}
+
+								if (e - s <= 15) {
+									xml[node] = parseFloat(value);
+								}
+							}
+						}
+					} else {
+						xml[node] = value;
+					}
+				}
+
+				if (node === '$') {
+					Object.keys(xml[node]).forEach(function (property) {
+						xml[property] = xml[node][property];
+					});
+
+					delete xml[node];
+				}
+			});
+
+			return xml;
+		}
 	}]);
 
 	return QuickBase;
@@ -267,8 +265,8 @@ var Throttle = function () {
 	function Throttle(maxConnections, errorOnConnectionLimit) {
 		_classCallCheck(this, Throttle);
 
-		this.maxConnections = maxConnections;
-		this.errorOnConnectionLimit = errorOnConnectionLimit;
+		this.maxConnections = maxConnections || 10;
+		this.errorOnConnectionLimit = errorOnConnectionLimit || false;
 
 		this._numConnections = 0;
 		this._pendingConnections = [];
@@ -279,30 +277,30 @@ var Throttle = function () {
 	_createClass(Throttle, [{
 		key: 'acquire',
 		value: function acquire() {
-			var _this4 = this;
+			var _this3 = this;
 
 			return new Promise(function (resolve, reject) {
-				if (_this4._numConnections >= _this4.maxConnections && _this4.maxConnections !== -1) {
-					if (_this4.errorOnConnectionLimit) {
+				if (_this3._numConnections >= _this3.maxConnections && _this3.maxConnections !== -1) {
+					if (_this3.errorOnConnectionLimit) {
 						reject(new QuickBaseError(1001, 'No Connections Available', 'Maximum Number of Connections Reached'));
 					} else {
-						_this4._pendingConnections.push({
+						_this3._pendingConnections.push({
 							resolve: resolve,
 							reject: reject
 						});
 					}
 				} else {
-					++_this4._numConnections;
+					++_this3._numConnections;
 
 					resolve();
 				}
 			}).disposer(function () {
-				--_this4._numConnections;
+				--_this3._numConnections;
 
-				if (_this4._pendingConnections.length > 0) {
-					++_this4._numConnections;
+				if (_this3._pendingConnections.length > 0) {
+					++_this3._numConnections;
 
-					_this4._pendingConnections.shift().resolve();
+					_this3._pendingConnections.shift().resolve();
 				}
 			});
 		}
@@ -322,7 +320,7 @@ var QueryBuilder = function () {
 		this.options = options;
 		this.callback = callback;
 
-		this.settings = {}.extend(parent.settings);
+		this.settings = merge({}, parent.settings);
 
 		this.results;
 
@@ -397,47 +395,47 @@ var QueryBuilder = function () {
 	}, {
 		key: 'catchError',
 		value: function catchError(err) {
-			var _this5 = this;
+			var _this4 = this;
 
 			++this._nErr;
 
 			if (this._nErr < this.settings.maxErrorRetryAttempts) {
 				if ([1000, 1001].indexOf(err.code) !== -1) {
 					return this.processQuery().then(function (results) {
-						_this5.results = results;
+						_this4.results = results;
 
-						_this5.actionResponse();
+						_this4.actionResponse();
 
-						if (_this5.callback instanceof Function) {
-							_this5.callback(null, _this5.results);
+						if (_this4.callback instanceof Function) {
+							_this4.callback(null, _this4.results);
 						} else {
-							return _this5.results;
+							return _this4.results;
 						}
 					}).catch(function (error) {
-						return _this5.catchError(error);
+						return _this4.catchError(error);
 					});
 				} else if (err.code === 4 && this.parent.settings.hasOwnProperty('username') && this.parent.settings.username !== '' && this.parent.settings.hasOwnProperty('password') && this.parent.settings.password !== '') {
 					return this.parent.api('API_Authenticate', {
 						username: this.parent.settings.username,
 						password: this.parent.settings.password
 					}).then(function (results) {
-						_this5.parent.settings.ticket = results.ticket;
-						_this5.settings.ticket = results.ticket;
-						_this5.options.ticket = results.ticket;
+						_this4.parent.settings.ticket = results.ticket;
+						_this4.settings.ticket = results.ticket;
+						_this4.options.ticket = results.ticket;
 
-						return _this5.addFlags().constructPayload().processQuery().then(function (results) {
-							_this5.results = results;
+						return _this4.addFlags().constructPayload().processQuery().then(function (results) {
+							_this4.results = results;
 
-							_this5.actionResponse();
+							_this4.actionResponse();
 
-							if (_this5.callback instanceof Function) {
-								_this5.callback(null, _this5.results);
+							if (_this4.callback instanceof Function) {
+								_this4.callback(null, _this4.results);
 							} else {
-								return _this5.results;
+								return _this4.results;
 							}
 						});
 					}).catch(function (error) {
-						return _this5.catchError(error);
+						return _this4.catchError(error);
 					});
 				}
 			}
@@ -451,7 +449,7 @@ var QueryBuilder = function () {
 	}, {
 		key: 'constructPayload',
 		value: function constructPayload() {
-			var _this6 = this;
+			var _this5 = this;
 
 			var builder = new xml.Builder({
 				rootName: 'qdbapi',
@@ -473,7 +471,7 @@ var QueryBuilder = function () {
 				}
 			} else {
 				Object.keys(this.options).forEach(function (arg) {
-					_this6.payload += '&' + arg + '=' + encodeURIComponent(_this6.options[arg]);
+					_this5.payload += '&' + arg + '=' + encodeURIComponent(_this5.options[arg]);
 				});
 			}
 
@@ -482,22 +480,23 @@ var QueryBuilder = function () {
 	}, {
 		key: 'processQuery',
 		value: function processQuery() {
-			var _this7 = this;
+			var _this6 = this;
 
 			return new Promise(function (resolve, reject) {
-				var settings = _this7.settings;
+				var settings = _this6.settings;
 				var protocol = settings.useSSL ? https : http;
-				var request = protocol.request({
+				var options = {
 					hostname: [settings.realm, settings.domain].join('.'),
 					port: settings.useSSL ? 443 : 80,
-					path: '/db/' + (_this7.options.dbid && !settings.flags.dbidAsParam ? _this7.options.dbid : 'main') + '?act=' + _this7.action + (!settings.flags.useXML ? _this7.payload : ''),
+					path: '/db/' + (_this6.options.dbid && !settings.flags.dbidAsParam ? _this6.options.dbid : 'main') + '?act=' + _this6.action + (!settings.flags.useXML ? _this6.payload : ''),
 					method: settings.flags.useXML ? 'POST' : 'GET',
 					headers: {
-						'Content-Type': 'application/xml; charset=' + _this7.options.encoding,
-						'QUICKBASE-ACTION': _this7.action
+						'Content-Type': 'application/xml; charset=' + _this6.options.encoding,
+						'QUICKBASE-ACTION': _this6.action
 					},
 					agent: false
-				}, function (response) {
+				};
+				var request = protocol.request(options, function (response) {
 					var xmlResponse = '';
 
 					response.on('data', function (chunk) {
@@ -513,7 +512,7 @@ var QueryBuilder = function () {
 									return reject(new QuickBaseError(1000, 'Error Processing Request', err));
 								}
 
-								result = cleanXML(result.qdbapi);
+								result = QuickBase.cleanXML(result.qdbapi);
 
 								if (result.errcode !== settings.status.errcode) {
 									return reject(new QuickBaseError(result.errcode, result.errtext, result.errdetail));
@@ -528,7 +527,7 @@ var QueryBuilder = function () {
 				});
 
 				if (settings.flags.useXML === true) {
-					request.write(_this7.payload);
+					request.write(_this6.payload);
 				}
 
 				request.on('error', function (err) {
@@ -541,7 +540,7 @@ var QueryBuilder = function () {
 	}, {
 		key: 'processOptions',
 		value: function processOptions() {
-			var _this8 = this;
+			var _this7 = this;
 
 			if (this.options.hasOwnProperty('fields')) {
 				this.options.field = this.options.fields;
@@ -552,7 +551,7 @@ var QueryBuilder = function () {
 			var newOpts = {};
 
 			Object.keys(this.options).forEach(function (option) {
-				newOpts[option] = prepareOptions.hasOwnProperty(option) ? prepareOptions[option](_this8.options[option]) : newOpts[option] = _this8.options[option];
+				newOpts[option] = prepareOptions.hasOwnProperty(option) ? prepareOptions[option](_this7.options[option]) : newOpts[option] = _this7.options[option];
 			});
 
 			this.options = newOpts;
@@ -568,19 +567,7 @@ var QueryBuilder = function () {
 
 var xmlNodeParsers = {
 	fields: function fields(val) {
-		if (!(val instanceof Array)) {
-			// Support Case #480141
-			// XML returned from QuickBase appends "\r\n      "
-			if (val === '') {
-				val = [];
-			} else {
-				val = [val];
-			}
-		}
-
-		return val.map(function (value) {
-			value = flattenXMLAttributes(value);
-
+		return QuickBase.checkIsArrAndConvert(val).map(function (value) {
 			// Support Case #480141
 			// XML returned from QuickBase inserts '<br />' after every line in formula fields.
 			if (_typeof(value.formula) === 'object') {
@@ -590,76 +577,21 @@ var xmlNodeParsers = {
 			return value;
 		});
 	},
-	group: function group(val) {
-		val = flattenXMLAttributes(val);
-
-		if (val.hasOwnProperty('users')) {
-			val.users = val.users.map(function (user) {
-				return flattenXMLAttributes(user);
-			});
-		}
-
-		if (val.hasOwnProperty('managers')) {
-			val.managers = val.managers.map(function (manager) {
-				return flattenXMLAttributes(manager);
-			});
-		}
-
-		if (val.hasOwnProperty('subgroups')) {
-			val.subgroups = val.subgroups.map(function (subgroup) {
-				return flattenXMLAttributes(subgroup);
-			});
-		}
-
-		return val;
-	},
 	lusers: function lusers(val) {
-		if (!(val instanceof Array)) {
-			// Support Case #480141
-			// XML returned from QuickBase appends "\r\n      "
-			if (val === '') {
-				val = [];
-			} else {
-				val = [val];
-			}
-		}
-
-		return val.map(function (value) {
+		return QuickBase.checkIsArrAndConvert(val).map(function (value) {
 			return {
-				id: value.$.id,
+				id: value.id,
 				name: value._
 			};
 		});
 	},
 	queries: function queries(val) {
-		if (!(val instanceof Array)) {
-			// Support Case #480141
-			// XML returned from QuickBase appends "\r\n      "
-			if (val === '') {
-				val = [];
-			} else {
-				val = [val];
-			}
-		}
-
-		return val.map(function (value) {
-			return flattenXMLAttributes(value);
-		});
+		return QuickBase.checkIsArrAndConvert(val);
 	},
 	roles: function roles(val) {
-		if (!(val instanceof Array)) {
-			// Support Case #480141
-			// XML returned from QuickBase appends "\r\n      "
-			if (val === '') {
-				val = [];
-			} else {
-				val = [val];
-			}
-		}
-
-		return val.map(function (value) {
+		return QuickBase.checkIsArrAndConvert(val).map(function (value) {
 			var ret = {
-				id: value.$.id
+				id: value.id
 			};
 
 			if (value._) {
@@ -667,14 +599,14 @@ var xmlNodeParsers = {
 			} else {
 				if (value.hasOwnProperty('access')) {
 					ret.access = {
-						id: value.access.$.id,
+						id: value.access.id,
 						name: value.access._
 					};
 				}
 
 				if (value.hasOwnProperty('member')) {
 					ret.member = {
-						type: value.member.$.type,
+						type: value.member.type,
 						name: value.member._
 					};
 				}
@@ -684,22 +616,10 @@ var xmlNodeParsers = {
 		});
 	},
 	variables: function variables(val) {
-		val = val.var;
-
-		if (!(val instanceof Array)) {
-			// Support Case #480141
-			// XML returned from QuickBase appends "\r\n      "
-			if (val === '') {
-				val = [];
-			} else {
-				val = [val];
-			}
-		}
-
 		var newVars = {};
 
-		val.forEach(function (value) {
-			newVars[value.$.name] = value._;
+		QuickBase.checkIsArrAndConvert(val.var).forEach(function (value) {
+			newVars[value.name] = value._;
 		});
 
 		return newVars;
@@ -773,15 +693,10 @@ var actions = {
 	// request (query) { },
 	// response (query, results) { }
 	// },
-	API_CopyGroup: {
-		// request (query) { },
-
-		response: function response(query, results) {
-			if (results.hasOwnProperty('group')) {
-				results.group = xmlNodeParsers.group(results.group);
-			}
-		}
-	},
+	// API_CopyGroup: {
+	// request (query) { },
+	// response (query, results) {	}
+	// },
 	// API_CopyMasterDetail: {
 	// request (query) { },
 	// response (query, results) { }
@@ -790,15 +705,10 @@ var actions = {
 	// request (query) { },
 	// response (query, results) { }
 	// },
-	API_CreateGroup: {
-		// request (query) { },
-
-		response: function response(query, results) {
-			if (results.hasOwnProperty('group')) {
-				results.group = xmlNodeParsers.group(results.group);
-			}
-		}
-	},
+	// API_CreateGroup: {
+	// request (query) { },
+	// response (query, results) {	}
+	// },
 	// API_CreateTable: {
 	// request (query) { },
 	// response (query, results) { }
@@ -858,33 +768,15 @@ var actions = {
     */
 
 				if (results.table.hasOwnProperty('records')) {
-					if (!(results.table.records instanceof Array)) {
-						// Support Case #480141
-						// XML returned from QuickBase appends "\r\n      "
-						if (results.table.records === '') {
-							results.table.records = [];
-						} else {
-							results.table.records = [results.table.records];
-						}
-					}
-
-					results.table.records = results.table.records.map(function (record) {
+					results.table.records = QuickBase.checkIsArrAndConvert(results.table.records).map(function (record) {
 						var ret = {};
 
-						if (!(record.f instanceof Array)) {
-							if (record.f === undefined) {
-								record.f = [];
-							} else {
-								record.f = [record.f];
-							}
-						}
-
 						if (query.options.includeRids) {
-							ret.rid = record.$.rid;
+							ret.rid = record.rid;
 						}
 
-						record.f.forEach(function (field) {
-							var fid = field.$.id;
+						QuickBase.checkIsArrAndConvert(record.f).forEach(function (field) {
+							var fid = field.id;
 
 							if (field.hasOwnProperty('url')) {
 								ret[fid] = {
@@ -916,27 +808,9 @@ var actions = {
 					results.table.lusers = xmlNodeParsers.lusers(results.table.lusers);
 				}
 			} else {
-				if (!(results.record instanceof Array)) {
-					// Support Case #480141
-					// XML returned from QuickBase appends "\r\n      "
-					if (results.record === '') {
-						results.record = [];
-					} else {
-						results.record = [results.record];
-					}
-				}
-
-				results.records = results.record;
+				results.records = QuickBase.checkIsArrAndConvert(results.record);
 
 				delete results.record;
-
-				if (query.options.includeRids) {
-					results.records.forEach(function (record) {
-						record.rid = record.$.rid;
-
-						delete record.$;
-					});
-				}
 
 				if (results.hasOwnProperty('chdbids')) {
 					if (!(results.chdbids instanceof Array)) {
@@ -997,18 +871,8 @@ var actions = {
 			query.settings.flags.dbidAsParam = true;
 		},
 		response: function response(query, results) {
-			if (results.hasOwnProperty('app')) {
-				results.app = flattenXMLAttributes(results.app);
-			}
-
 			if (results.hasOwnProperty('tables')) {
-				if (!(results.tables instanceof Array)) {
-					results.tables = [results.tables];
-				}
-
-				results.tables = results.tables.map(function (table) {
-					return flattenXMLAttributes(table);
-				});
+				results.tables = QuickBase.checkIsArrAndConvert(results.tables);
 			}
 		}
 	},
@@ -1042,19 +906,9 @@ var actions = {
 
 		response: function response(query, results) {
 			if (results.table.hasOwnProperty('chdbids')) {
-				if (!(results.table.chdbids instanceof Array)) {
-					// Support Case #480141
-					// XML returned from QuickBase appends "\r\n      "
-					if (results.table.chdbids === '') {
-						results.table.chdbids = [];
-					} else {
-						results.table.chdbids = [results.table.chdbids];
-					}
-				}
-
-				results.table.chdbids = results.table.chdbids.map(function (chdbid) {
+				results.table.chdbids = QuickBase.checkIsArrAndConvert(results.table.chdbids).map(function (chdbid) {
 					return {
-						name: chdbid.$.name,
+						name: chdbid.name,
 						dbid: chdbid._
 					};
 				});
@@ -1090,15 +944,10 @@ var actions = {
 			}
 		}
 	},
-	API_GetUserInfo: {
-		// request (query) { },
-
-		response: function response(query, results) {
-			if (results.hasOwnProperty('user')) {
-				results.user = flattenXMLAttributes(results.user);
-			}
-		}
-	},
+	// API_GetUserInfo: {
+	// request (query) { },
+	// response (query, results) { }
+	// },
 	API_GetUserRole: {
 		// request (query) { },
 
@@ -1108,15 +957,10 @@ var actions = {
 			}
 		}
 	},
-	API_GetUsersInGroup: {
-		// request (query) { },
-
-		response: function response(query, results) {
-			if (results.hasOwnProperty('group')) {
-				results.group = xmlNodeParsers.group(results.group);
-			}
-		}
-	},
+	// API_GetUsersInGroup: {
+	// request (query) { },
+	// response (query, results) { }
+	// },
 	API_GrantedDBs: {
 		// request (query) { },
 
@@ -1140,13 +984,7 @@ var actions = {
 
 		response: function response(query, results) {
 			if (results.hasOwnProperty('groups')) {
-				if (!(results.groups instanceof Array)) {
-					results.groups = [results.groups];
-				}
-
-				results.groups = results.groups.map(function (group) {
-					return flattenXMLAttributes(group);
-				});
+				results.groups = QuickBase.checkIsArrAndConvert();
 			}
 		}
 	},
@@ -1160,8 +998,8 @@ var actions = {
 						rid: record._
 					};
 
-					if (record.$ && record.$.update_id) {
-						ret.update_id = record.$.update_id;
+					if (record.update_id) {
+						ret.update_id = record.update_id;
 					}
 
 					return ret;
@@ -1226,21 +1064,7 @@ var actions = {
 
 		response: function response(query, results) {
 			if (results.hasOwnProperty('file_fields')) {
-				results.file_fields = results.file_fields.field;
-
-				if (!(results.file_fields instanceof Array)) {
-					// Support Case #480141
-					// XML returned from QuickBase appends "\r\n      "
-					if (results.file_fields === '') {
-						results.file_fields = [];
-					} else {
-						results.file_fields = [results.file_fields];
-					}
-				}
-
-				results.file_fields = results.file_fields.map(function (file) {
-					return flattenXMLAttributes(file);
-				});
+				results.file_fields = QuickBase.checkIsArrAndConvert(results.file_fields.field);
 			}
 		}
 	},
@@ -1249,21 +1073,10 @@ var actions = {
 
 		response: function response(query, results) {
 			if (results.hasOwnProperty('users')) {
-
-				if (!(results.users instanceof Array)) {
-					// Support Case #480141
-					// XML returned from QuickBase appends "\r\n      "
-					if (results.users === '') {
-						results.users = [];
-					} else {
-						results.users = [results.users];
-					}
-				}
-
-				results.users = results.users.map(function (user) {
+				results.users = QuickBase.checkIsArrAndConvert(results.users).map(function (user) {
 					user.roles = xmlNodeParsers.roles(user.roles);
 
-					return flattenXMLAttributes(user);
+					return user;
 				});
 			}
 		}
@@ -1288,93 +1101,57 @@ var prepareOptions = {
  */
 
 	/* Common to All */
-	// apptoken (val) {
-	// 	return val;
-	// },
+	// apptoken (val) { return val; },
 
-	// dbid (val) {
-	// 	return val;
-	// },
+	// dbid (val) { return val; },
 
-	// ticket (val) {
-	// 	return val;
-	// },
+	// ticket (val) { return val; },
 
-	// udata (val) {
-	// 	return val;
-	// },
+	// udata (val) { return val; },
 
 	/* API Specific Options */
 
 	/* API_ChangeGroupInfo, API_CreateGroup */
-	// accountId (val) {
-	// 	return val;
-	// },
+	// accountId (val) { return val; },
 
 	/* API_AddField */
-	// add_to_forms (val) {
-	// 	return val;
-	// },
+	// add_to_forms (val) { return val; },
 
 	/* API_GrantedDBs */
-	// adminOnly (val) {
-	// 	return val;
-	// },
+	// adminOnly (val) { return val; },
 
 	/* API_GrantedGroups */
-	// adminonly (val) {
-	// 	return val;
-	// },
+	// adminonly (val) { return val; },
 
 	/* API_SetFieldProperties */
-	// allow_new_choices (val) {
-	// 	return val;
-	// },
+	// allow_new_choices (val) { return val; },
 
 	/* API_AddUserToGroup */
-	// allowAdminAccess (val) {
-	// 	return val;
-	// },
+	// allowAdminAccess (val) { return val; },
 
 	/* API_SetFieldProperties */
-	// allowHTML (val) {
-	// 	return val;
-	// },
+	// allowHTML (val) { return val; },
 
 	/* API_RemoveGroupFromRole */
-	// allRoles (val) {
-	// 	return val;
-	// },
+	// allRoles (val) { return val; },
 
 	/* API_SetFieldProperties */
-	// appears_by_default (val) {
-	// 	return val;
-	// },
+	// appears_by_default (val) { return val; },
 
 	/* API_SetFieldProperties */
-	// 'append-only' (val) {
-	// 	return val;
-	// },
+	// 'append-only' (val) { return val; },
 
 	/* API_SetFieldProperties */
-	// blank_is_zero (val) {
-	// 	return val;
-	// },
+	// blank_is_zero (val) { return val; },
 
 	/* API_SetFieldProperties */
-	// bold (val) {
-	// 	return val;
-	// },
+	// bold (val) { return val; },
 
 	/* API_FieldAddChoices, API_FieldRemoveChoices */
-	// choice (val) {
-	// 	return val;
-	// },
+	// choice (val) { return val; },
 
 	/* API_SetFieldProperties */
-	// choices (val) {
-	// 	return val;
-	// },
+	// choices (val) { return val; },
 
 	/* API_DoQuery, API_GenResultsTable, API_ImportFromCSV */
 
@@ -1388,144 +1165,88 @@ var prepareOptions = {
 	},
 
 	/* API_SetFieldProperties */
-	// comma_start (val) {
-	// 	return val;
-	// },
+	// comma_start (val) { return val; },
 
 	/* API_CopyMasterDetail */
-	// copyfid (val) {
-	// 	return val;
-	// },
+	// copyfid (val) { return val; },
 
 	/* API_CreateDatabase */
-	// createapptoken (val) {
-	// 	return val;
-	// },
+	// createapptoken (val) { return val; },
 
 	/* API_SetFieldProperties */
-	// currency_format (val) {
-	// 	return val;
-	// },
+	// currency_format (val) { return val; },
 
 	/* API_SetFieldProperties */
-	// currency_symbol (val) {
-	// 	return val;
-	// },
+	// currency_symbol (val) { return val; },
 
 	/* API_CreateDatabase */
-	// dbdesc (val) {
-	// 	return val;
-	// },
+	// dbdesc (val) { return val; },
 
 	/* API_CreateDatabase, API_FindDBByName */
-	// dbname (val) {
-	// 	return val;
-	// },
+	// dbname (val) { return val; },
 
 	/* API_SetFieldProperties */
-	// decimal_places (val) {
-	// 	return val;
-	// },
+	// decimal_places (val) { return val; },
 
 	/* API_SetFieldProperties */
-	// default_today (val) {
-	// 	return val;
-	// },
+	// default_today (val) { return val; },
 
 	/* API_SetFieldProperties */
-	// default_value (val) {
-	// 	return val;
-	// },
+	// default_value (val) { return val; },
 
 	/* API_ChangeGroupInfo, API_CopyGroup, API_CreateGroup */
-	// description (val) {
-	// 	return val;
-	// },
+	// description (val) { return val; },
 
 	/* API_CopyMasterDetail */
-	// destrid (val) {
-	// 	return val;
-	// },
+	// destrid (val) { return val; },
 
 	/* API_GetRecordAsHTML */
-	// dfid (val) {
-	// 	return val;
-	// },
+	// dfid (val) { return val; },
 
 	/* API_SetFieldProperties */
-	// display_as_button (val) {
-	// 	return val;
-	// },
+	// display_as_button (val) { return val; },
 
 	/* API_SetFieldProperties */
-	// display_dow (val) {
-	// 	return val;
-	// },
+	// display_dow (val) { return val; },
 
 	/* API_SetFieldProperties */
-	// display_month (val) {
-	// 	return val;
-	// },
+	// display_month (val) { return val; },
 
 	/* API_SetFieldProperties */
-	// display_relative (val) {
-	// 	return val;
-	// },
+	// display_relative (val) { return val; },
 
 	/* API_SetFieldProperties */
-	// display_time (val) {
-	// 	return val;
-	// },
+	// display_time (val) { return val; },
 
 	/* API_SetFieldProperties */
-	// display_zone (val) {
-	// 	return val;
-	// },
+	// display_zone (val) { return val; },
 
 	/* API_AddRecord, API_EditRecord */
-	// disprec (val) {
-	// 	return val;
-	// },
+	// disprec (val) { return val; },
 
 	/* API_SetFieldProperties */
-	// does_average (val) {
-	// 	return val;
-	// },
+	// does_average (val) { return val; },
 
 	/* API_SetFieldProperties */
-	// does_total (val) {
-	// 	return val;
-	// },
+	// does_total (val) { return val; },
 
 	/* API_SetFieldProperties */
-	// doesdatacopy (val) {
-	// 	return val;
-	// },
+	// doesdatacopy (val) { return val; },
 
 	/* API_GetUserInfo, API_ProvisionUser */
-	// email (val) {
-	// 	return val;
-	// },
+	// email (val) { return val; },
 
 	/* API_CloneDatabase */
-	// excludefiles (val) {
-	// 	return val;
-	// },
+	// excludefiles (val) { return val; },
 
 	/* API_GrantedDBs */
-	// excludeparents (val) {
-	// 	return val;
-	// },
+	// excludeparents (val) { return val; },
 
 	/* API_AddRecord, API_EditRecord */
-	// fform (val) {
-	// 	return val;
-	// },
+	// fform (val) { return val; },
 
 	/* API_DeleteField, API_FieldAddChoices, API_FieldRemoveChoices, API_SetFieldProperties, API_SetKeyField */
-	// fid (val) {
-	// 	return val;
-	// },
+	// fid (val) { return val; },
 
 	/* API_AddRecord, API_EditRecord, API_GenAddRecordForm, API_UploadFile */
 	field: function field(val) {
@@ -1556,169 +1277,103 @@ var prepareOptions = {
 	},
 
 	/* API_SetFieldProperties */
-	// fieldhelp (val) {
-	// 	return val;
-	// },
+	// fieldhelp (val) { return val; },
 
 	/* API_SetFieldProperties */
-	// find_enabled (val) {
-	// 	return val;
-	// },
+	// find_enabled (val) { return val; },
 
 	/* API_DoQuery */
-	// fmt (val) {
-	// 	return val;
-	// },
+	// fmt (val) { return val; },
 
 	/* API_ProvisionUser */
-	// fname (val) {
-	// 	return val;
-	// },
+	// fname (val) { return val; },
 
 	/* API_SetFieldProperties */
-	// formula (val) {
-	// 	return val;
-	// },
+	// formula (val) { return val; },
 
 	/* API_CopyGroup */
-	// gacct (val) {
-	// 	return val;
-	// },
+	// gacct (val) { return val; },
 
 	/* API_AddGroupToRole, API_AddSubGroup, API_AddUserToGroup, API_ChangeGroupInfo, API_CopyGroup, API_DeleteGroup, API_GetGroupRole, API_GetUsersInGroup, API_GrantedDBsForGroup, API_RemoveGroupFromRole, API_RemoveSubgroup, API_RemoveUserFromGroup */
-	// gid (val) {
-	// 	return val;
-	// },
+	// gid (val) { return val; },
 
 	/* API_SetFieldProperties */
-	// has_extension (val) {
-	// 	return val;
-	// },
+	// has_extension (val) { return val; },
 
 	/* API_Authenticate */
-	// hours (val) {
-	// 	return val;
-	// },
+	// hours (val) { return val; },
 
 	/* API_RunImport */
-	// id (val) {
-	// 	return val;
-	// },
+	// id (val) { return val; },
 
 	/* API_AddRecord, API_EditRecord */
-	// ignoreError (val) {
-	// 	return val;
-	// },
+	// ignoreError (val) { return val; },
 
 	/* API_GetUserRole */
-	// inclgrps (val) {
-	// 	return val;
-	// },
+	// inclgrps (val) { return val; },
 
 	/* API_GetUsersInGroup */
-	// includeAllMgrs (val) {
-	// 	return val;
-	// },
+	// includeAllMgrs (val) { return val; },
 
 	/* API_GrantedDBs */
-	// includeancestors (val) {
-	// 	return val;
-	// },
+	// includeancestors (val) { return val; },
 
 	/* API_DoQuery */
-	// includeRids (val) {
-	// 	return val;
-	// },
+	// includeRids (val) { return val; },
 
 	/* API_GenResultsTable */
-	// jht (val) {
-	// 	return val;
-	// },
+	// jht (val) { return val; },
 
 	/* API_GenResultsTable */
-	// jsa (val) {
-	// 	return val;
-	// },
+	// jsa (val) { return val; },
 
 	/* API_CloneDatabase */
-	// keepData (val) {
-	// 	return val;
-	// },
+	// keepData (val) { return val; },
 
 	/* API_ChangeRecordOwner, API_DeleteRecord, API_EditRecord, API_GetRecordInfo */
-	// key (val) {
-	// 	return val;
-	// },
+	// key (val) { return val; },
 
 	/* API_AddField, API_SetFieldProperties */
-	// label (val) {
-	// 	return val;
-	// },
+	// label (val) { return val; },
 
 	/* API_ProvisionUser */
-	// lname (val) {
-	// 	return val;
-	// },
+	// lname (val) { return val; },
 
 	/* API_SetFieldProperties */
-	// maxlength (val) {
-	// 	return val;
-	// },
+	// maxlength (val) { return val; },
 
 	/* API_AddField */
-	// mode (val) {
-	// 	return val;
-	// },
+	// mode (val) { return val; },
 
 	/* API_AddRecord, API_EditRecord, API_ImportFromCSV */
-	// msInUTC (val) {
-	// 	return val;
-	// },
+	// msInUTC (val) { return val; },
 
 	/* API_ChangeGroupInfo, API_CopyGroup, API_CreateGroup */
-	// name (val) {
-	// 	return val;
-	// },
+	// name (val) { return val; },
 
 	/* API_RenameApp */
-	// newappname (val) {
-	// 	return val;
-	// },
+	// newappname (val) { return val; },
 
 	/* API_CloneDatabase */
-	// newdbdesc (val) {
-	// 	return val;
-	// },
+	// newdbdesc (val) { return val; },
 
 	/* API_CloneDatabase */
-	// newdbname (val) {
-	// 	return val;
-	// },
+	// newdbname (val) { return val; },
 
 	/* API_ChangeManager */
-	// newmgr (val) {
-	// 	return val;
-	// },
+	// newmgr (val) { return val; },
 
 	/* API_ChangeRecordOwner */
-	// newowner (val) {
-	// 	return val;
-	// },
+	// newowner (val) { return val; },
 
 	/* API_ChangeUserRole */
-	// newroleid (val) {
-	// 	return val;
-	// },
+	// newroleid (val) { return val; },
 
 	/* API_SetFieldProperties */
-	// no_wrap (val) {
-	// 	return val;
-	// },
+	// no_wrap (val) { return val; },
 
 	/* API_SetFieldProperties */
-	// numberfmt (val) {
-	// 	return val;
-	// },
+	// numberfmt (val) { return val; },
 
 	/* API_DoQuery, API_GenResultsTable */
 	options: function options(val) {
@@ -1726,59 +1381,37 @@ var prepareOptions = {
 	},
 
 	/* API_AddReplaceDBPage */
-	// pagebody (val) {
-	// 	return val;
-	// },
+	// pagebody (val) { return val; },
 
 	/* API_AddReplaceDBPage */
-	// pageid (val) {
-	// 	return val;
-	// },
+	// pageid (val) { return val; },
 
 	/* API_GetDBPage */
-	// pageID (val) {
-	// 	return val;
-	// },
+	// pageID (val) { return val; },
 
 	/* API_AddReplaceDBPage */
-	// pagename (val) {
-	// 	return val;
-	// },
+	// pagename (val) { return val; },
 
 	/* API_AddReplaceDBPage */
-	// pagetype (val) {
-	// 	return val;
-	// },
+	// pagetype (val) { return val; },
 
 	/* API_FindDBByName */
-	// ParentsOnly (val) {
-	// 	return val;
-	// },
+	// ParentsOnly (val) { return val; },
 
 	/* API_Authenticate */
-	// password (val) {
-	// 	return val;
-	// },
+	// password (val) { return val; },
 
 	/* API_CreateTable */
-	// pnoun (val) {
-	// 	return val;
-	// },
+	// pnoun (val) { return val; },
 
 	/* API_DoQuery, API_GenResultsTable, API_PurgeRecords */
-	// qid (val) {
-	// 	return val;
-	// },
+	// qid (val) { return val; },
 
 	/* API_DoQuery, API_GenResultsTable, API_PurgeRecords */
-	// qname (val) {
-	// 	return val;
-	// },
+	// qname (val) { return val; },
 
 	/* API_DoQuery, API_DoQueryCount, API_GenResultsTable, API_PurgeRecords */
-	// query (val) {
-	// 	return val;
-	// },
+	// query (val) { return val; },
 
 	/* API_ImportFromCSV */
 	records_csv: function records_csv(val) {
@@ -1786,39 +1419,25 @@ var prepareOptions = {
 	},
 
 	/* API_CopyMasterDetail */
-	// recurse (val) {
-	// 	return val;
-	// },
+	// recurse (val) { return val; },
 
 	/* API_CopyMasterDetail */
-	// relfids (val) {
-	// 	return val;
-	// },
+	// relfids (val) { return val; },
 
 	/* API_SetFieldProperties */
-	// required (val) {
-	// 	return val;
-	// },
+	// required (val) { return val; },
 
 	/* API_DoQuery */
-	// returnpercentage (val) {
-	// 	return val;
-	// },
+	// returnpercentage (val) { return val; },
 
 	/* API_ChangeRecordOwner, API_DeleteRecord, API_EditRecord, API_GetRecordAsHTML, API_GetRecordInfo, API_UploadFile */
-	// rid (val) {
-	// 	return val;
-	// },
+	// rid (val) { return val; },
 
 	/* API_AddGroupToRole, API_AddUserToRole, API_ChangeUserRole, API_ProvisionUser, API_RemoveGroupFromRole, API_RemoveUserFromRole */
-	// roleid (val) {
-	// 	return val;
-	// },
+	// roleid (val) { return val; },
 
 	/* API_ImportFromCSV */
-	// skipfirst (val) {
-	// 	return val;
-	// },
+	// skipfirst (val) { return val; },
 
 	/* API_DoQuery, API_GenResultsTable */
 	slist: function slist(val) {
@@ -1829,79 +1448,49 @@ var prepareOptions = {
 /* Expose Instances */
 
 /* API_SetFieldProperties */
-// sort_as_given (val) {
-// 	return val;
-// },
+// sort_as_given (val) { return val; },
 
 /* API_CopyMasterDetail */
-// sourcerid (val) {
-// 	return val;
-// },
+// sourcerid (val) { return val; },
 
 /* API_AddSubGroup, API_RemoveSubgroup */
-// subgroupid (val) {
-// 	return val;
-// },
+// subgroupid (val) { return val; },
 
 /* API_CreateTable */
-// tname (val) {
-// 	return val;
-// },
+// tname (val) { return val; },
 
 /* API_AddField */
-// type (val) {
-// 	return val;
-// },
+// type (val) { return val; },
 
 /* API_SetFieldProperties */
-// unique (val) {
-// 	return val;
-// },
+// unique (val) { return val; },
 
 /* API_EditRecord */
-// update_id (val) {
-// 	return val;
-// },
+// update_id (val) { return val; },
 
 /* API_AddUserToGroup, API_AddUserToRole, API_ChangeUserRole, API_GetUserRole, API_GrantedGroups, API_RemoveUserFromGroup, API_RemoveUserFromRole, API_SendInvitation */
-// userid (val) {
-// 	return val;
-// },
+// userid (val) { return val; },
 
 /* API_Authenticate */
-// username (val) {
-// 	return val;
-// },
+// username (val) { return val; },
 
 /* API_CloneDatabase */
-// usersandroles (val) {
-// 	return val;
-// },
+// usersandroles (val) { return val; },
 
 /* API_SendInvitation */
-// usertext (val) {
-// 	return val;
-// },
+// usertext (val) { return val; },
 
 /* API_SetDBVar */
-// value (val) {
-// 	return val;
-// },
+// value (val) { return val; },
 
 /* API_GetDBVar, API_SetDBVar */
-// varname (val) {
-// 	return val;
-// },
+// varname (val) { return val; },
 
 /* API_SetFieldProperties */
-// width (val) {
-// 	return val;
-// },
+// width (val) { return val; },
 
 /* API_GrantedDBs */
-// withembeddedtables (val) {
-// 	return val;
-// }
+// withembeddedtables (val) { return val; }
 QuickBase.QueryBuilder = QueryBuilder;
 QuickBase.Throttle = Throttle;
 QuickBase.QuickBaseError = QuickBaseError;
@@ -1910,8 +1499,10 @@ QuickBase.Promise = Promise;
 /* Expose Methods */
 QuickBase.actions = actions;
 QuickBase.prepareOptions = prepareOptions;
-QuickBase.cleanXML = cleanXML;
 QuickBase.xmlNodeParsers = xmlNodeParsers;
+
+/* Expose Properties */
+QuickBase.defaults = defaults;
 
 /* Export Module */
 if (typeof module !== 'undefined' && module.exports) {

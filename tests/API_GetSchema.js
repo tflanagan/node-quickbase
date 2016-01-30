@@ -183,6 +183,35 @@ const expectedGetSchema = {
 	}
 };
 
+const expectedAPPGetSchema = {
+	action: 'API_GetSchema',
+	errcode: 0,
+	errtext: 'No error',
+	time_zone: '',
+	date_format: '',
+	table: {
+		name: '',
+		original: {
+			table_id: '',
+			app_id: '',
+			cre_date: 0,
+			mod_date: 0,
+			next_record_id: 0,
+			next_field_id: 0,
+			next_query_id: 0,
+			def_sort_fid: 0,
+			def_sort_order: 0
+		},
+		variables: {
+			test: ''
+		},
+		chdbids: [
+			{ name: '', dbid: '' }
+		],
+		fields: []
+	}
+};
+
 /* Main */
 module.exports = function(pass, fail){
 	let qb = new QuickBase({
@@ -191,11 +220,20 @@ module.exports = function(pass, fail){
 		ticket: process.env.ticket
 	});
 
-	return qb.api('API_GetSchema', {
-		dbid: process.env.dbid
-	}).then((results) => {
-		common.objStrctEqual(results, expectedGetSchema, 'Mismatched API_GetSchema Data Structure');
+	return QuickBase.Promise.all([
+		qb.api('API_GetSchema', {
+			dbid: process.env.dbid
+		}).then((results) => {
+			common.objStrctEqual(results, expectedGetSchema, 'Mismatched API_GetSchema Data Structure');
 
-		return results;
-	}).then(pass).catch(fail);
+			return results;
+		}),
+		qb.api('API_GetSchema', {
+			dbid: process.env.appid
+		}).then((results) => {
+			common.objStrctEqual(results, expectedAPPGetSchema, 'Mismatched API_GetSchema App Data Structure');
+
+			return results;
+		})
+	]).then(pass).catch(fail);
 };
