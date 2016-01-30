@@ -92,7 +92,7 @@ const defaults = {
 class QuickBase {
 
 	constructor (options) {
-		this.settings = ({}).extend({}, QuickBase.defaults, options || {});
+		this.settings = merge({}, QuickBase.defaults, options || {});
 
 		this.throttle = new Throttle(this.settings.connectionLimit, this.settings.errorOnConnectionLimit);
 

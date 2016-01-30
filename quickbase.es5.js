@@ -113,7 +113,7 @@ var QuickBase = function () {
 	function QuickBase(options) {
 		_classCallCheck(this, QuickBase);
 
-		this.settings = {}.extend({}, QuickBase.defaults, options || {});
+		this.settings = merge({}, QuickBase.defaults, options || {});
 
 		this.throttle = new Throttle(this.settings.connectionLimit, this.settings.errorOnConnectionLimit);
 
