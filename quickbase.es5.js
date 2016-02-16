@@ -83,6 +83,7 @@ var QuickBaseError = function (_Error) {
 
 /* Default Settings */
 
+
 var defaults = {
 	realm: 'www',
 	domain: 'quickbase.com',
@@ -268,6 +269,7 @@ var QuickBase = function () {
 
 /* Throttle */
 
+
 var Throttle = function () {
 	function Throttle(maxConnections, errorOnConnectionLimit) {
 		_classCallCheck(this, Throttle);
@@ -317,6 +319,7 @@ var Throttle = function () {
 }();
 
 /* Request Handling */
+
 
 var QueryBuilder = function () {
 	function QueryBuilder(parent, action, options, callback) {
@@ -572,6 +575,7 @@ var QueryBuilder = function () {
 
 /* XML Node Parsers */
 
+
 var xmlNodeParsers = {
 	fields: function fields(val) {
 		return QuickBase.checkIsArrAndConvert(val).map(function (value) {
@@ -642,32 +646,32 @@ var actions = {
  */
 
 	// API_AddField: {
-	// request (query) { },
-	// response (query, results) { }
+	// request(query) { },
+	// response(query, results) { }
 	// },
 	// API_AddGroupToRole: {
-	// request (query) { },
-	// response (query, results) { }
+	// request(query) { },
+	// response(query, results) { }
 	// },
 	// API_AddRecord: {
-	// request (query) { },
-	// response (query, results) { }
+	// request(query) { },
+	// response(query, results) { }
 	// },
 	// API_AddReplaceDBPage: {
-	// request (query) { },
-	// response (query, results) { }
+	// request(query) { },
+	// response(query, results) { }
 	// },
 	// API_AddSubGroup: {
-	// request (query) { },
-	// response (query, results) { }
+	// request(query) { },
+	// response(query, results) { }
 	// },
 	// API_AddUserToGroup: {
-	// request (query) { },
-	// response (query, results) { }
+	// request(query) { },
+	// response(query, results) { }
 	// },
 	// API_AddUserToRole: {
-	// request (query) { },
-	// response (query, results) { }
+	// request(query) { },
+	// response(query, results) { }
 	// },
 	API_Authenticate: {
 		request: function request(query) {
@@ -681,60 +685,60 @@ var actions = {
 		}
 	},
 	// API_ChangeGroupInfo: {
-	// request (query) { },
-	// response (query, results) { }
+	// request(query) { },
+	// response(query, results) { }
 	// },
 	// API_ChangeManager: {
-	// request (query) { },
-	// response (query, results) { }
+	// request(query) { },
+	// response(query, results) { }
 	// },
 	// API_ChangeRecordOwner: {
-	// request (query) { },
-	// response (query, results) { }
+	// request(query) { },
+	// response(query, results) { }
 	// },
 	// API_ChangeUserRole: {
-	// request (query) { },
-	// response (query, results) { }
+	// request(query) { },
+	// response(query, results) { }
 	// },
 	// API_CloneDatabase: {
-	// request (query) { },
-	// response (query, results) { }
+	// request(query) { },
+	// response(query, results) { }
 	// },
 	// API_CopyGroup: {
-	// request (query) { },
-	// response (query, results) {	}
+	// request(query) { },
+	// response(query, results) {  }
 	// },
 	// API_CopyMasterDetail: {
-	// request (query) { },
-	// response (query, results) { }
+	// request(query) { },
+	// response(query, results) { }
 	// },
 	// API_CreateDatabase: {
-	// request (query) { },
-	// response (query, results) { }
+	// request(query) { },
+	// response(query, results) { }
 	// },
 	// API_CreateGroup: {
-	// request (query) { },
-	// response (query, results) {	}
+	// request(query) { },
+	// response(query, results) {  }
 	// },
 	// API_CreateTable: {
-	// request (query) { },
-	// response (query, results) { }
+	// request(query) { },
+	// response(query, results) { }
 	// },
 	// API_DeleteDatabase: {
-	// request (query) { },
-	// response (query, results) { }
+	// request(query) { },
+	// response(query, results) { }
 	// },
 	// API_DeleteField: {
-	// request (query) { },
-	// response (query, results) { }
+	// request(query) { },
+	// response(query, results) { }
 	// },
 	// API_DeleteGroup: {
-	// request (query) { },
-	// response (query, results) { }
+	// request(query) { },
+	// response(query, results) { }
 	// },
 	// API_DeleteRecord: {
-	// request (query) { },
-	// response (query, results) { }
+	// request(query) { },
+	// response(query, results) { }
 	// },
 	API_DoQuery: {
 		request: function request(query) {
@@ -754,24 +758,24 @@ var actions = {
 			if (query.options.hasOwnProperty('fmt') && query.options.fmt === 'structured') {
 				/* XML is _so_ butt ugly... Let's try to make some sense of it
      * Turn this:
-     * 	{
-     * 		$: { rid: 1 },
-     * 		f: [
-     * 			{ $: { id: 3 }, _: 1 } ],
-     * 			{ $: { id: 6 }, _: 'Test Value' }
-     * 			{ $: { id: 7 }, _: 'filename.png', url: 'https://www.quickbase.com/' }
-     * 		]
-     * 	}
+     *  {
+     *    $: { rid: 1 },
+     *    f: [
+     *      { $: { id: 3 }, _: 1 } ],
+     *      { $: { id: 6 }, _: 'Test Value' }
+     *      { $: { id: 7 }, _: 'filename.png', url: 'https://www.quickbase.com/' }
+     *    ]
+     *  }
      *
      * Into this:
-     * 	{
-     * 		3: 1,
-     * 		6: 'Test Value',
-     * 		7: {
-     * 			filename: 'filename.png',
-     * 			url: 'https://www.quickbase.com/'
-     * 		}
-     * 	}
+     *  {
+     *    3: 1,
+     *    6: 'Test Value',
+     *    7: {
+     *      filename: 'filename.png',
+     *      url: 'https://www.quickbase.com/'
+     *    }
+     *  }
     */
 
 				if (results.table.hasOwnProperty('records')) {
@@ -842,36 +846,36 @@ var actions = {
 		}
 	},
 	// API_DoQueryCount: {
-	// request (query) { },
-	// response (query, results) { }
+	// request(query) { },
+	// response(query, results) { }
 	// },
 	// API_EditRecord: {
-	// request (query) { },
-	// response (query, results) { }
+	// request(query) { },
+	// response(query, results) { }
 	// },
 	// API_FieldAddChoices: {
-	// request (query) { },
-	// response (query, results) { }
+	// request(query) { },
+	// response(query, results) { }
 	// },
 	// API_FieldRemoveChoices: {
-	// request (query) { },
-	// response (query, results) { }
+	// request(query) { },
+	// response(query, results) { }
 	// },
 	// API_FindDBByName: {
-	// request (query) { },
-	// response (query, results) { }
+	// request(query) { },
+	// response(query, results) { }
 	// },
 	// API_GenAddRecordForm: {
-	// request (query) { },
-	// response (query, results) { }
+	// request(query) { },
+	// response(query, results) { }
 	// },
 	// API_GenResultsTable: {
-	// request (query) { },
-	// response (query, results) { }
+	// request(query) { },
+	// response(query, results) { }
 	// },
 	// API_GetAncestorInfo: {
-	// request (query) { },
-	// response (query, results) { }
+	// request(query) { },
+	// response(query, results) { }
 	// },
 	API_GetAppDTMInfo: {
 		request: function request(query) {
@@ -884,19 +888,19 @@ var actions = {
 		}
 	},
 	// API_GetDBPage: {
-	// request (query) { },
-	// response (query, results) { }
+	// request(query) { },
+	// response(query, results) { }
 	// },
 	// API_GetDBInfo: {
-	// request (query) { },
-	// response (query, results) { }
+	// request(query) { },
+	// response(query, results) { }
 	// },
 	// API_GetDBVar: {
-	// request (query) { },
-	// response (query, results) { }
+	// request(query) { },
+	// response(query, results) { }
 	// },
 	API_GetGroupRole: {
-		// request (query) { },
+		// request(query) { },
 
 		response: function response(query, results) {
 			if (results.hasOwnProperty('roles')) {
@@ -905,11 +909,11 @@ var actions = {
 		}
 	},
 	// API_GetNumRecords: {
-	// request (query) { },
-	// response (query, results) { }
+	// request(query) { },
+	// response(query, results) { }
 	// },
 	API_GetSchema: {
-		// request (query) { },
+		// request(query) { },
 
 		response: function response(query, results) {
 			if (results.table.hasOwnProperty('chdbids')) {
@@ -935,15 +939,15 @@ var actions = {
 		}
 	},
 	// API_GetRecordAsHTML: {
-	// request (query) { },
-	// response (query, results) { }
+	// request(query) { },
+	// response(query, results) { }
 	// },
 	// API_GetRecordInfo: {
-	// request (query) { },
-	// response (query, results) { }
+	// request(query) { },
+	// response(query, results) { }
 	// },
 	API_GetRoleInfo: {
-		// request (query) { },
+		// request(query) { },
 
 		response: function response(query, results) {
 			if (results.hasOwnProperty('roles')) {
@@ -952,11 +956,11 @@ var actions = {
 		}
 	},
 	// API_GetUserInfo: {
-	// request (query) { },
-	// response (query, results) { }
+	// request(query) { },
+	// response(query, results) { }
 	// },
 	API_GetUserRole: {
-		// request (query) { },
+		// request(query) { },
 
 		response: function response(query, results) {
 			if (results.hasOwnProperty('roles')) {
@@ -965,11 +969,11 @@ var actions = {
 		}
 	},
 	// API_GetUsersInGroup: {
-	// request (query) { },
-	// response (query, results) { }
+	// request(query) { },
+	// response(query, results) { }
 	// },
 	API_GrantedDBs: {
-		// request (query) { },
+		// request(query) { },
 
 		response: function response(query, results) {
 			if (results.hasOwnProperty('databases')) {
@@ -978,16 +982,16 @@ var actions = {
 		}
 	},
 	API_GrantedDBsForGroup: {
-		// request (query) { },
+		// request(query) { },
 
 		response: function response(query, results) {
-			if (result.hasOwnProperty('databases')) {
-				result.databases = result.databases.dbinfo;
+			if (results.hasOwnProperty('databases')) {
+				results.databases = results.databases.dbinfo;
 			}
 		}
 	},
 	API_GrantedGroups: {
-		// request (query) { },
+		// request(query) { },
 
 		response: function response(query, results) {
 			if (results.hasOwnProperty('groups')) {
@@ -996,7 +1000,7 @@ var actions = {
 		}
 	},
 	API_ImportFromCSV: {
-		// request (query) { },
+		// request(query) { },
 
 		response: function response(query, results) {
 			if (results.hasOwnProperty('rids')) {
@@ -1015,59 +1019,59 @@ var actions = {
 		}
 	},
 	// API_ProvisionUser: {
-	// request (query) { },
-	// response (query, results) { }
+	// request(query) { },
+	// response(query, results) { }
 	// },
 	// API_PurgeRecords: {
-	// request (query) { },
-	// response (query, results) { }
+	// request(query) { },
+	// response(query, results) { }
 	// },
 	// API_RemoveGroupFromRole: {
-	// request (query) { },
-	// response (query, results) { }
+	// request(query) { },
+	// response(query, results) { }
 	// },
 	// API_RemoveSubgroup: {
-	// request (query) { },
-	// response (query, results) { }
+	// request(query) { },
+	// response(query, results) { }
 	// },
 	// API_RemoveUserFromGroup: {
-	// request (query) { },
-	// response (query, results) { }
+	// request(query) { },
+	// response(query, results) { }
 	// },
 	// API_RemoveUserFromRole: {
-	// request (query) { },
-	// response (query, results) { }
+	// request(query) { },
+	// response(query, results) { }
 	// },
 	// API_RenameApp: {
-	// request (query) { },
-	// response (query, results) { }
+	// request(query) { },
+	// response(query, results) { }
 	// },
 	// API_RunImport: {
-	// request (query) { },
-	// response (query, results) { }
+	// request(query) { },
+	// response(query, results) { }
 	// },
 	// API_SendInvitation: {
-	// request (query) { },
-	// response (query, results) { }
+	// request(query) { },
+	// response(query, results) { }
 	// },
 	// API_SetDBVar: {
-	// request (query) { },
-	// response (query, results) { }
+	// request(query) { },
+	// response(query, results) { }
 	// },
 	// API_SetFieldProperties: {
-	// request (query) { },
-	// response (query, results) { }
+	// request(query) { },
+	// response(query, results) { }
 	// },
 	// API_SetKeyField: {
-	// request (query) { },
-	// response (query, results) { }
+	// request(query) { },
+	// response(query, results) { }
 	// },
 	// API_SignOut: {
-	// request (query) { },
-	// response (query, results) { }
+	// request(query) { },
+	// response(query, results) { }
 	// },
 	API_UploadFile: {
-		// request (query) { },
+		// request(query) { },
 
 		response: function response(query, results) {
 			if (results.hasOwnProperty('file_fields')) {
@@ -1076,7 +1080,7 @@ var actions = {
 		}
 	},
 	API_UserRoles: {
-		// request (query) { },
+		// request(query) { },
 
 		response: function response(query, results) {
 			if (results.hasOwnProperty('users')) {
@@ -1089,11 +1093,11 @@ var actions = {
 		}
 	},
 	default: {
-		/* request (query) {
-   * 	Do stuff prior to the request
+		/* request(query) {
+   *  Do stuff prior to the request
    * },
-   * response (query, results) {
-   * 	Do Stuff with the results before resolving the api call
+   * response(query, results) {
+   *  Do Stuff with the results before resolving the api call
    * }
   */
 	}
@@ -1166,10 +1170,12 @@ var prepareOptions = {
 		return val instanceof Array ? val.join('.') : val;
 	},
 
+
 	/* API_ImportFromCSV */
 	clist_output: function clist_output(val) {
 		return val instanceof Array ? val.join('.') : val;
 	},
+
 
 	/* API_SetFieldProperties */
 	// comma_start (val) { return val; },
@@ -1283,6 +1289,7 @@ var prepareOptions = {
 		});
 	},
 
+
 	/* API_SetFieldProperties */
 	// fieldhelp (val) { return val; },
 
@@ -1387,6 +1394,7 @@ var prepareOptions = {
 		return val instanceof Array ? val.join('.') : val;
 	},
 
+
 	/* API_AddReplaceDBPage */
 	// pagebody (val) { return val; },
 
@@ -1425,6 +1433,7 @@ var prepareOptions = {
 		return val instanceof Array ? val.join('\n') : val;
 	},
 
+
 	/* API_CopyMasterDetail */
 	// recurse (val) { return val; },
 
@@ -1453,6 +1462,7 @@ var prepareOptions = {
 };
 
 /* Expose Instances */
+
 
 /* API_SetFieldProperties */
 // sort_as_given (val) { return val; },

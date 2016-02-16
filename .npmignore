@@ -2,6 +2,6 @@ documentation/
 quickbase.browserify.js
 quickbase.es5.js
 tests/
-devTools/
+tools/
 reports/
 example.js

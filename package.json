@@ -11,23 +11,23 @@
   "homepage": "https://github.com/tflanagan/node-quickbase",
   "bugs": {
     "url": "https://github.com/tflanagan/node-quickbase/issues",
-    "email": "tristian.flanagan@comcast.net"
+    "email": "contact@tristianflanagan.com"
   },
   "license": "Apache-2.0",
   "author": {
     "name": "Tristian Flanagan",
     "url": "https://github.com/tflanagan",
-    "email": "tristian.flanagan@comcast.net"
+    "email": "contact@tristianflanagan.com"
   },
   "maintainers": [
     {
       "name": "tflanagan",
       "url": "https://github.com/tflanagan",
-      "email": "tristian.flanagan@comcast.net"
+      "email": "contact@tristianflanagan.com"
     }
   ],
   "contributors": [
-    "Tristian Flanagan <tristian.flanagan@comcast.net> (https://github.com/tflanagan)"
+    "Tristian Flanagan <contact@tristianflanagan.com> (https://github.com/tflanagan)"
   ],
   "main": "quickbase.js",
   "repository": {
@@ -36,7 +36,7 @@
   },
   "scripts": {
     "test": "node tests/runAll.js",
-    "build": "babel --presets es2015 quickbase.js > quickbase.es5.js && browserify quickbase.es5.js > quickbase.browserify.js && cat devTools\\LICENSE.js > quickbase.browserify.min.js && minify quickbase.browserify.js >> quickbase.browserify.min.js"
+    "build": "node ./node_modules/eslint/bin/eslint.js ./quickbase.js && babel --presets es2015 quickbase.js > quickbase.es5.js && browserify quickbase.es5.js > quickbase.browserify.js && cat tools\\LICENSE.js > quickbase.browserify.min.js && minify quickbase.browserify.js >> quickbase.browserify.min.js"
   },
   "dependencies": {
     "bluebird": "^3.1.5",
@@ -44,10 +44,11 @@
     "xml2js": "^0.4.16"
   },
   "devDependencies": {
-    "babel-cli": "*",
-    "babel-preset-es2015": "*",
-    "browserify": "*",
-    "minify": "*"
+    "babel-cli": "^6.5.1",
+    "babel-preset-es2015": "^6.5.0",
+    "browserify": "^13.0.0",
+    "minify": "^2.0.3",
+    "eslint": "^1.10.3"
   },
   "engines": {
     "node": ">=4.0.*"

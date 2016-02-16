@@ -59,7 +59,7 @@ Example
 ```javascript
 const QuickBase = require('quickbase');
 
-let quickbase = new QuickBase({
+const quickbase = new QuickBase({
 	realm: 'www',
 	appToken: '*****'
 });
@@ -114,24 +114,25 @@ quickbase.api('API_Authenticate', {
 			throw err;
 		}
 
-		let i = 0,
-			fin = () => {
-				++i;
+		let i = 0;
 
-				if(i === result.table.records.length){
-					quickbase.api('API_DoQuery', {
-						dbid: '*****',
-						clist: '3.12',
-						options: 'num-5'
-					}, (err, result) => {
-						if(err){
-							throw err;
-						}
+		const = fin = () => {
+			++i;
 
-						console.log('done');
-					})
-				}
-			};
+			if(i === result.table.records.length){
+				quickbase.api('API_DoQuery', {
+					dbid: '*****',
+					clist: '3.12',
+					options: 'num-5'
+				}, (err, result) => {
+					if(err){
+						throw err;
+					}
+
+					console.log('done');
+				})
+			}
+		};
 
 		result.table.records.forEach((record) => {
 			quickbase.api('API_EditRecord', {

@@ -23,13 +23,13 @@ const merge = require('lodash.merge');
 const Promise = require('bluebird');
 
 /* Backwards Compatibility */
-if(!Object.hasOwnProperty('extend') && Object.extend === undefined){
+if (!Object.hasOwnProperty('extend') && Object.extend === undefined) {
 	var warned = false;
 
 	Object.defineProperty(Object.prototype, 'extend', {
 		enumerable: false,
-		value () {
-			if(!warned){
+		value() {
+			if (!warned) {
 				warned = true;
 
 				console.warn('{}.extend has been deprecated, please install and use lodash.merge instead');
@@ -37,7 +37,7 @@ if(!Object.hasOwnProperty('extend') && Object.extend === undefined){
 
 			const args = new Array(arguments.length);
 
-			for(let i = 0; i < args.length; ++i){
+			for (let i = 0; i < args.length; ++i) {
 				args[i] = arguments[i];
 			}
 
@@ -51,7 +51,7 @@ if(!Object.hasOwnProperty('extend') && Object.extend === undefined){
 /* Error Handling */
 class QuickBaseError extends Error {
 
-	constructor (code, name, message) {
+	constructor(code, name, message) {
 		super(name);
 
 		this.code = code;
@@ -98,7 +98,7 @@ const defaults = {
 /* Main Class */
 class QuickBase {
 
-	constructor (options) {
+	constructor(options) {
 		this.settings = merge({}, QuickBase.defaults, options || {});
 
 		this.throttle = new Throttle(this.settings.connectionLimit, this.settings.errorOnConnectionLimit);
@@ -106,7 +106,7 @@ class QuickBase {
 		return this;
 	}
 
-	api (action, options, callback) {
+	api(action, options, callback) {
 		const call = new Promise((resolve, reject) => {
 			Promise.using(this.throttle.acquire(), () => {
 				const query = new QueryBuilder(this, action, options || {}, callback);
@@ -122,9 +122,9 @@ class QuickBase {
 
 						query.actionResponse();
 
-						if(callback instanceof Function){
+						if (callback instanceof Function) {
 							callback(null, query.results);
-						}else{
+						} else {
 							resolve(query.results);
 						}
 					})
@@ -132,9 +132,9 @@ class QuickBase {
 						resolve(query.catchError(error));
 					});
 			}).catch((error) => {
-				if(callback instanceof Function){
+				if (callback instanceof Function) {
 					callback(error);
-				}else{
+				} else {
 					reject(error);
 				}
 			});
@@ -143,13 +143,13 @@ class QuickBase {
 		return callback instanceof Function ? this : call;
 	}
 
-	static checkIsArrAndConvert (obj) {
-		if(!(obj instanceof Array)){
+	static checkIsArrAndConvert(obj) {
+		if (!(obj instanceof Array)) {
 			// Support Case #480141
 			// XML returned from QuickBase appends "\r\n      "
-			if(obj === ''){
+			if (obj === '') {
 				obj = [];
-			}else{
+			} else {
 				obj = [ obj ];
 			}
 		}
@@ -157,7 +157,7 @@ class QuickBase {
 		return obj;
 	}
 
-	static cleanXML (xml) {
+	static cleanXML(xml) {
 		const isInt = /^-?\s*\d+$/;
 		const isDig = /^(-?\s*\d+\.?\d*)$/;
 		const radix = 10;
@@ -166,14 +166,14 @@ class QuickBase {
 			let value, singulars,
 				l = -1, i = -1, s = -1, e = -1;
 
-			if(xml[node] instanceof Array && xml[node].length === 1){
+			if (xml[node] instanceof Array && xml[node].length === 1) {
 				xml[node] = xml[node][0];
 			}
 
-			if(xml[node] instanceof Object){
+			if (xml[node] instanceof Object) {
 				value = Object.keys(xml[node]);
 
-				if(value.length === 1){
+				if (value.length === 1) {
 					l = node.length;
 
 					singulars = [
@@ -183,53 +183,53 @@ class QuickBase {
 
 					i = singulars.indexOf(value[0]);
 
-					if(i !== -1){
+					if (i !== -1) {
 						xml[node] = xml[node][singulars[i]];
 					}
 				}
 			}
 
-			if(typeof(xml[node]) === 'object'){
+			if (typeof xml[node] === 'object') {
 				xml[node] = QuickBase.cleanXML(xml[node]);
 			}
 
-			if(typeof(xml[node]) === 'string'){
+			if (typeof xml[node] === 'string') {
 				value = xml[node].trim();
 
-				if(value.match(isDig)){
-					if(value.match(isInt)){
+				if (value.match(isDig)) {
+					if (value.match(isInt)) {
 						l = parseInt(value, radix);
 
-						if(Math.abs(l) <= 9007199254740991){
+						if (Math.abs(l) <= 9007199254740991) {
 							xml[node] = l;
 						}
-					}else{
+					} else {
 						l = value.length;
 
-						if(l <= 15){
+						if (l <= 15) {
 							xml[node] = parseFloat(value);
-						}else{
-							for(i = 0, s = -1, e = -1; i < l && e - s <= 15; ++i){
-								if(value.charAt(i) > 0){
-									if(s === -1){
+						} else {
+							for (i = 0, s = -1, e = -1; i < l && e - s <= 15; ++i) {
+								if (value.charAt(i) > 0) {
+									if (s === -1) {
 										s = i;
-									}else{
+									} else {
 										e = i;
 									}
 								}
 							}
 
-							if(e - s <= 15){
+							if (e - s <= 15) {
 								xml[node] = parseFloat(value);
 							}
 						}
 					}
-				}else{
+				} else {
 					xml[node] = value;
 				}
 			}
 
-			if(node === '$'){
+			if (node === '$') {
 				Object.keys(xml[node]).forEach((property) => {
 					xml[property] = xml[node][property];
 				});
@@ -246,7 +246,7 @@ class QuickBase {
 /* Throttle */
 class Throttle {
 
-	constructor (maxConnections, errorOnConnectionLimit) {
+	constructor(maxConnections, errorOnConnectionLimit) {
 		this.maxConnections = maxConnections || 10;
 		this.errorOnConnectionLimit = errorOnConnectionLimit || false;
 
@@ -256,18 +256,18 @@ class Throttle {
 		return this;
 	}
 
-	acquire () {
+	acquire() {
 		return new Promise((resolve, reject) => {
-			if(this._numConnections >= this.maxConnections && this.maxConnections !== -1){
-				if(this.errorOnConnectionLimit){
+			if (this._numConnections >= this.maxConnections && this.maxConnections !== -1) {
+				if (this.errorOnConnectionLimit) {
 					reject(new QuickBaseError(1001, 'No Connections Available', 'Maximum Number of Connections Reached'));
-				}else{
+				} else {
 					this._pendingConnections.push({
 						resolve: resolve,
 						reject: reject
 					});
 				}
-			}else{
+			} else {
 				++this._numConnections;
 
 				resolve();
@@ -275,7 +275,7 @@ class Throttle {
 		}).disposer(() => {
 			--this._numConnections;
 
-			if(this._pendingConnections.length > 0){
+			if (this._pendingConnections.length > 0) {
 				++this._numConnections;
 
 				this._pendingConnections.shift().resolve();
@@ -288,7 +288,7 @@ class Throttle {
 /* Request Handling */
 class QueryBuilder {
 
-	constructor (parent, action, options, callback) {
+	constructor(parent, action, options, callback) {
 		this.parent = parent;
 		this.action = action;
 		this.options = options;
@@ -303,26 +303,26 @@ class QueryBuilder {
 		return this;
 	}
 
-	actionRequest () {
+	actionRequest() {
 		let action = this.action;
 
-		if(!actions.hasOwnProperty(action)){
+		if (!actions.hasOwnProperty(action)) {
 			action = 'default';
 		}
 
-		if(typeof(actions[action]) !== 'undefined'){
-			if(typeof(actions[action]) === 'function'){
+		if (typeof actions[action] !== 'undefined') {
+			if (typeof actions[action] === 'function') {
 				actions[action](this);
 			}else
-			if(typeof(actions[action].request) === 'function'){
+			if (typeof actions[action].request === 'function') {
 				actions[action].request(this);
 			}
 		}else
-		if(typeof(actions.default) !== 'undefined'){
-			if(typeof(actions.default) === 'function'){
+		if (typeof actions.default !== 'undefined') {
+			if (typeof actions.default === 'function') {
 				actions.default(this);
 			}else
-			if(typeof(actions.default.request) === 'function'){
+			if (typeof actions.default.request === 'function') {
 				actions.default.request(this);
 			}
 		}
@@ -330,57 +330,57 @@ class QueryBuilder {
 		return this;
 	}
 
-	actionResponse () {
+	actionResponse() {
 		let action = this.action;
 
-		if(!actions.hasOwnProperty(action)){
+		if (!actions.hasOwnProperty(action)) {
 			action = 'default';
 		}
 
-		if(typeof(actions[action]) === 'object' && typeof(actions[action].response) === 'function'){
+		if (typeof actions[action] === 'object' && typeof actions[action].response === 'function') {
 			actions[action].response(this, this.results);
 		}else
-		if(typeof(actions.default) === 'object' && typeof(actions.default.response) === 'function'){
+		if (typeof actions.default === 'object' && typeof actions.default.response === 'function') {
 			actions.default.response(this, this.results);
 		}
 
 		return this;
 	}
 
-	addFlags () {
-		if(!this.options.hasOwnProperty('msInUTC') && this.settings.flags.msInUTC){
+	addFlags() {
+		if (!this.options.hasOwnProperty('msInUTC') && this.settings.flags.msInUTC) {
 			this.options.msInUTC = 1;
 		}
 
-		if(!this.options.hasOwnProperty('appToken') && this.settings.appToken){
+		if (!this.options.hasOwnProperty('appToken') && this.settings.appToken) {
 			this.options.apptoken = this.settings.appToken;
 		}
 
-		if(!this.options.hasOwnProperty('ticket') && this.settings.ticket){
+		if (!this.options.hasOwnProperty('ticket') && this.settings.ticket) {
 			this.options.ticket = this.settings.ticket;
 		}
 
-		if(!this.options.hasOwnProperty('encoding') && this.settings.flags.encoding){
+		if (!this.options.hasOwnProperty('encoding') && this.settings.flags.encoding) {
 			this.options.encoding = this.settings.flags.encoding;
 		}
 
 		return this;
 	}
 
-	catchError (err) {
+	catchError(err) {
 		++this._nErr;
 
-		if(this._nErr < this.settings.maxErrorRetryAttempts){
-			if([1000, 1001].indexOf(err.code) !== -1){
+		if (this._nErr < this.settings.maxErrorRetryAttempts) {
+			if ([1000, 1001].indexOf(err.code) !== -1) {
 				return this.processQuery()
 					.then((results) => {
 						this.results = results;
 
 						this.actionResponse();
 
-						if(this.callback instanceof Function){
+						if (this.callback instanceof Function) {
 							this.callback(null, this.results);
-						}else{
+						} else {
 							return this.results;
 						}
 					})
@@ -388,11 +388,11 @@ class QueryBuilder {
 						return this.catchError(error);
 					});
 			}else
-			if(
+			if (
 				err.code === 4 &&
 				this.parent.settings.hasOwnProperty('username') && this.parent.settings.username !== '' &&
 				this.parent.settings.hasOwnProperty('password') && this.parent.settings.password !== ''
-			){
+			) {
 				return this.parent.api('API_Authenticate', {
 					username: this.parent.settings.username,
 					password: this.parent.settings.password
@@ -409,9 +409,9 @@ class QueryBuilder {
 
 							this.actionResponse();
 
-							if(this.callback instanceof Function){
+							if (this.callback instanceof Function) {
 								this.callback(null, this.results);
-							}else{
+							} else {
 								return this.results;
 							}
 						});
@@ -421,14 +421,14 @@ class QueryBuilder {
 			}
 		}
 
-		if(this.callback instanceof Function){
+		if (this.callback instanceof Function) {
 			this.callback(err);
-		}else{
+		} else {
 			throw err;
 		}
 	}
 
-	constructPayload () {
+	constructPayload() {
 		const builder = new xml.Builder({
 			rootName: 'qdbapi',
 			xmldec: {
@@ -441,13 +441,13 @@ class QueryBuilder {
 
 		this.payload = '';
 
-		if(this.settings.flags.useXML === true){
+		if (this.settings.flags.useXML === true) {
 			try {
 				this.payload = builder.buildObject(this.options);
-			}catch(err){
+			} catch (err) {
 				throw new QuickBaseError(1002, 'Error Building XML', err);
 			}
-		}else{
+		} else {
 			Object.keys(this.options).forEach((arg) => {
 				this.payload += '&' + arg + '=' + encodeURIComponent(this.options[arg]);
 			});
@@ -456,7 +456,7 @@ class QueryBuilder {
 		return this;
 	}
 
-	processQuery () {
+	processQuery() {
 		return new Promise((resolve, reject) => {
 			const settings = this.settings;
 			const protocol = settings.useSSL ? https : http;
@@ -479,29 +479,29 @@ class QueryBuilder {
 				});
 
 				response.on('end', () => {
-					if(response.headers['content-type'] === 'application/xml'){
+					if (response.headers['content-type'] === 'application/xml') {
 						xml.parseString(xmlResponse, {
 							async: true
 						}, (err, result) => {
-							if(err){
+							if (err) {
 								return reject(new QuickBaseError(1000, 'Error Processing Request', err));
 							}
 
 							result = QuickBase.cleanXML(result.qdbapi);
 
-							if(result.errcode !== settings.status.errcode){
+							if (result.errcode !== settings.status.errcode) {
 								return reject(new QuickBaseError(result.errcode, result.errtext, result.errdetail));
 							}
 
 							resolve(result);
 						});
-					}else{
+					} else {
 						resolve(xmlResponse);
 					}
 				});
 			});
 
-			if(settings.flags.useXML === true){
+			if (settings.flags.useXML === true) {
 				request.write(this.payload);
 			}
 
@@ -513,8 +513,8 @@ class QueryBuilder {
 		});
 	}
 
-	processOptions () {
-		if(this.options.hasOwnProperty('fields')){
+	processOptions() {
+		if (this.options.hasOwnProperty('fields')) {
 			this.options.field = this.options.fields;
 
 			delete this.options.fields;
@@ -535,45 +535,45 @@ class QueryBuilder {
 
 /* XML Node Parsers */
 const xmlNodeParsers = {
-	fields (val) {
+	fields(val) {
 		return QuickBase.checkIsArrAndConvert(val).map((value) => {
 			// Support Case #480141
 			// XML returned from QuickBase inserts '<br />' after every line in formula fields.
-			if(typeof(value.formula) === 'object'){
+			if (typeof value.formula === 'object') {
 				value.formula = value.formula._;
 			}
 
 			return value;
 		});
 	},
-	lusers (val) {
+	lusers(val) {
 		return QuickBase.checkIsArrAndConvert(val).map((value) => {
 			return {
 				id: value.id,
 				name: value._
-			}
+			};
 		});
 	},
-	queries (val) {
+	queries(val) {
 		return QuickBase.checkIsArrAndConvert(val);
 	},
-	roles (val) {
+	roles(val) {
 		return QuickBase.checkIsArrAndConvert(val).map((value) => {
 			const ret = {
 				id: value.id
-			}
+			};
 
-			if(value._){
+			if (value._) {
 				ret.name = value._;
-			}else{
-				if(value.hasOwnProperty('access')){
+			} else {
+				if (value.hasOwnProperty('access')) {
 					ret.access = {
 						id: value.access.id,
 						name: value.access._
 					};
 				}
 
-				if(value.hasOwnProperty('member')){
+				if (value.hasOwnProperty('member')) {
 					ret.member = {
 						type: value.member.type,
 						name: value.member._
@@ -584,7 +584,7 @@ const xmlNodeParsers = {
 			return ret;
 		});
 	},
-	variables (val) {
+	variables(val) {
 		const newVars = {};
 
 		QuickBase.checkIsArrAndConvert(val.var).forEach((value) => {
@@ -604,155 +604,155 @@ const actions = {
 	*/
 
 	// API_AddField: {
-		// request (query) { },
-		// response (query, results) { }
+		// request(query) { },
+		// response(query, results) { }
 	// },
 	// API_AddGroupToRole: {
-		// request (query) { },
-		// response (query, results) { }
+		// request(query) { },
+		// response(query, results) { }
 	// },
 	// API_AddRecord: {
-		// request (query) { },
-		// response (query, results) { }
+		// request(query) { },
+		// response(query, results) { }
 	// },
 	// API_AddReplaceDBPage: {
-		// request (query) { },
-		// response (query, results) { }
+		// request(query) { },
+		// response(query, results) { }
 	// },
 	// API_AddSubGroup: {
-		// request (query) { },
-		// response (query, results) { }
+		// request(query) { },
+		// response(query, results) { }
 	// },
 	// API_AddUserToGroup: {
-		// request (query) { },
-		// response (query, results) { }
+		// request(query) { },
+		// response(query, results) { }
 	// },
 	// API_AddUserToRole: {
-		// request (query) { },
-		// response (query, results) { }
+		// request(query) { },
+		// response(query, results) { }
 	// },
 	API_Authenticate: {
-		request (query) {
+		request(query) {
 			// API_Authenticate can only happen over SSL
 			query.settings.useSSL = true;
 		},
-		response (query, results) {
+		response(query, results) {
 			query.parent.settings.ticket = results.ticket;
 			query.parent.settings.username = query.options.username;
 			query.parent.settings.password = query.options.password;
 		}
 	},
 	// API_ChangeGroupInfo: {
-		// request (query) { },
-		// response (query, results) { }
+		// request(query) { },
+		// response(query, results) { }
 	// },
 	// API_ChangeManager: {
-		// request (query) { },
-		// response (query, results) { }
+		// request(query) { },
+		// response(query, results) { }
 	// },
 	// API_ChangeRecordOwner: {
-		// request (query) { },
-		// response (query, results) { }
+		// request(query) { },
+		// response(query, results) { }
 	// },
 	// API_ChangeUserRole: {
-		// request (query) { },
-		// response (query, results) { }
+		// request(query) { },
+		// response(query, results) { }
 	// },
 	// API_CloneDatabase: {
-		// request (query) { },
-		// response (query, results) { }
+		// request(query) { },
+		// response(query, results) { }
 	// },
 	// API_CopyGroup: {
-		// request (query) { },
-		// response (query, results) {	}
+		// request(query) { },
+		// response(query, results) {  }
 	// },
 	// API_CopyMasterDetail: {
-		// request (query) { },
-		// response (query, results) { }
+		// request(query) { },
+		// response(query, results) { }
 	// },
 	// API_CreateDatabase: {
-		// request (query) { },
-		// response (query, results) { }
+		// request(query) { },
+		// response(query, results) { }
 	// },
 	// API_CreateGroup: {
-		// request (query) { },
-		// response (query, results) {	}
+		// request(query) { },
+		// response(query, results) {  }
 	// },
 	// API_CreateTable: {
-		// request (query) { },
-		// response (query, results) { }
+		// request(query) { },
+		// response(query, results) { }
 	// },
 	// API_DeleteDatabase: {
-		// request (query) { },
-		// response (query, results) { }
+		// request(query) { },
+		// response(query, results) { }
 	// },
 	// API_DeleteField: {
-		// request (query) { },
-		// response (query, results) { }
+		// request(query) { },
+		// response(query, results) { }
 	// },
 	// API_DeleteGroup: {
-		// request (query) { },
-		// response (query, results) { }
+		// request(query) { },
+		// response(query, results) { }
 	// },
 	// API_DeleteRecord: {
-		// request (query) { },
-		// response (query, results) { }
+		// request(query) { },
+		// response(query, results) { }
 	// },
 	API_DoQuery: {
-		request (query) {
-			if(!query.options.hasOwnProperty('returnPercentage') && query.settings.flags.returnPercentage){
+		request(query) {
+			if (!query.options.hasOwnProperty('returnPercentage') && query.settings.flags.returnPercentage) {
 				query.options.returnPercentage = 1;
 			}
 
-			if(!query.options.hasOwnProperty('fmt') && query.settings.flags.fmt){
+			if (!query.options.hasOwnProperty('fmt') && query.settings.flags.fmt) {
 				query.options.fmt = query.settings.flags.fmt;
 			}
 
-			if(!query.options.hasOwnProperty('includeRids') && query.settings.flags.includeRids){
+			if (!query.options.hasOwnProperty('includeRids') && query.settings.flags.includeRids) {
 				query.options.includeRids = 1;
 			}
 		},
-		response (query, results) {
-			if(query.options.hasOwnProperty('fmt') && query.options.fmt === 'structured'){
+		response(query, results) {
+			if (query.options.hasOwnProperty('fmt') && query.options.fmt === 'structured') {
 				/* XML is _so_ butt ugly... Let's try to make some sense of it
 				 * Turn this:
-				 * 	{
-				 * 		$: { rid: 1 },
-				 * 		f: [
-				 * 			{ $: { id: 3 }, _: 1 } ],
-				 * 			{ $: { id: 6 }, _: 'Test Value' }
-				 * 			{ $: { id: 7 }, _: 'filename.png', url: 'https://www.quickbase.com/' }
-				 * 		]
-				 * 	}
+				 *  {
+				 *    $: { rid: 1 },
+				 *    f: [
+				 *      { $: { id: 3 }, _: 1 } ],
+				 *      { $: { id: 6 }, _: 'Test Value' }
+				 *      { $: { id: 7 }, _: 'filename.png', url: 'https://www.quickbase.com/' }
+				 *    ]
+				 *  }
 				 *
 				 * Into this:
-				 * 	{
-				 * 		3: 1,
-				 * 		6: 'Test Value',
-				 * 		7: {
-				 * 			filename: 'filename.png',
-				 * 			url: 'https://www.quickbase.com/'
-				 * 		}
-				 * 	}
+				 *  {
+				 *    3: 1,
+				 *    6: 'Test Value',
+				 *    7: {
+				 *      filename: 'filename.png',
+				 *      url: 'https://www.quickbase.com/'
+				 *    }
+				 *  }
 				*/
 
-				if(results.table.hasOwnProperty('records')){
+				if (results.table.hasOwnProperty('records')) {
 					results.table.records = QuickBase.checkIsArrAndConvert(results.table.records).map((record) => {
 						const ret = {};
 
-						if(query.options.includeRids){
+						if (query.options.includeRids) {
 							ret.rid = record.rid;
 						}
 
 						QuickBase.checkIsArrAndConvert(record.f).forEach((field) => {
 							const fid = field.id;
 
-							if(field.hasOwnProperty('url')){
+							if (field.hasOwnProperty('url')) {
 								ret[fid] = {
 									filename: field._,
 									url: field.url
 								};
-							}else{
+							} else {
 								ret[fid] = field._;
 							}
 						});
@@ -761,41 +761,41 @@ const actions = {
 					});
 				}
 
-				if(results.table.hasOwnProperty('queries')){
+				if (results.table.hasOwnProperty('queries')) {
 					results.table.queries = xmlNodeParsers.queries(results.table.queries);
 				}
 
-				if(results.table.hasOwnProperty('fields')){
+				if (results.table.hasOwnProperty('fields')) {
 					results.table.fields = xmlNodeParsers.fields(results.table.fields);
 				}
 
-				if(results.table.hasOwnProperty('variables')){
+				if (results.table.hasOwnProperty('variables')) {
 					results.table.variables = xmlNodeParsers.variables(results.table.variables);
 				}
 
-				if(results.table.hasOwnProperty('lusers')){
+				if (results.table.hasOwnProperty('lusers')) {
 					results.table.lusers = xmlNodeParsers.lusers(results.table.lusers);
 				}
-			}else{
+			} else {
 				results.records = QuickBase.checkIsArrAndConvert(results.record);
 
 				delete results.record;
 
-				if(results.hasOwnProperty('chdbids')){
-					if(!(results.chdbids instanceof Array)){
+				if (results.hasOwnProperty('chdbids')) {
+					if (!(results.chdbids instanceof Array)) {
 						// Support Case #480141
 						// XML returned from QuickBase appends "\r\n      "
-						if(results.chdbids === ''){
+						if (results.chdbids === '') {
 							results.chdbids = [];
 						}
 					}
 				}
 
-				if(results.hasOwnProperty('variables')){
-					if(!(results.variables instanceof Array)){
+				if (results.hasOwnProperty('variables')) {
+					if (!(results.variables instanceof Array)) {
 						// Support Case #480141
 						// XML returned from QuickBase appends "\r\n      "
-						if(results.variables === ''){
+						if (results.variables === '') {
 							results.variables = {};
 						}
 					}
@@ -804,162 +804,162 @@ const actions = {
 		}
 	},
 	// API_DoQueryCount: {
-		// request (query) { },
-		// response (query, results) { }
+		// request(query) { },
+		// response(query, results) { }
 	// },
 	// API_EditRecord: {
-		// request (query) { },
-		// response (query, results) { }
+		// request(query) { },
+		// response(query, results) { }
 	// },
 	// API_FieldAddChoices: {
-		// request (query) { },
-		// response (query, results) { }
+		// request(query) { },
+		// response(query, results) { }
 	// },
 	// API_FieldRemoveChoices: {
-		// request (query) { },
-		// response (query, results) { }
+		// request(query) { },
+		// response(query, results) { }
 	// },
 	// API_FindDBByName: {
-		// request (query) { },
-		// response (query, results) { }
+		// request(query) { },
+		// response(query, results) { }
 	// },
 	// API_GenAddRecordForm: {
-		// request (query) { },
-		// response (query, results) { }
+		// request(query) { },
+		// response(query, results) { }
 	// },
 	// API_GenResultsTable: {
-		// request (query) { },
-		// response (query, results) { }
+		// request(query) { },
+		// response(query, results) { }
 	// },
 	// API_GetAncestorInfo: {
-		// request (query) { },
-		// response (query, results) { }
+		// request(query) { },
+		// response(query, results) { }
 	// },
 	API_GetAppDTMInfo: {
-		request (query) {
+		request(query) {
 			query.settings.flags.dbidAsParam = true;
 		},
-		response (query, results) {
-			if(results.hasOwnProperty('tables')){
+		response(query, results) {
+			if (results.hasOwnProperty('tables')) {
 				results.tables = QuickBase.checkIsArrAndConvert(results.tables);
 			}
 		}
 	},
 	// API_GetDBPage: {
-		// request (query) { },
-		// response (query, results) { }
+		// request(query) { },
+		// response(query, results) { }
 	// },
 	// API_GetDBInfo: {
-		// request (query) { },
-		// response (query, results) { }
+		// request(query) { },
+		// response(query, results) { }
 	// },
 	// API_GetDBVar: {
-		// request (query) { },
-		// response (query, results) { }
+		// request(query) { },
+		// response(query, results) { }
 	// },
 	API_GetGroupRole: {
-		// request (query) { },
-		response (query, results) {
-			if(results.hasOwnProperty('roles')){
+		// request(query) { },
+		response(query, results) {
+			if (results.hasOwnProperty('roles')) {
 				results.roles = xmlNodeParsers.roles(results.roles);
 			}
 		}
 	},
 	// API_GetNumRecords: {
-		// request (query) { },
-		// response (query, results) { }
+		// request(query) { },
+		// response(query, results) { }
 	// },
 	API_GetSchema: {
-		// request (query) { },
-		response (query, results) {
-			if(results.table.hasOwnProperty('chdbids')){
+		// request(query) { },
+		response(query, results) {
+			if (results.table.hasOwnProperty('chdbids')) {
 				results.table.chdbids = QuickBase.checkIsArrAndConvert(results.table.chdbids).map((chdbid) => {
 					return {
 						name: chdbid.name,
 						dbid: chdbid._
-					}
+					};
 				});
 			}
 
-			if(results.table.hasOwnProperty('variables')){
+			if (results.table.hasOwnProperty('variables')) {
 				results.table.variables = xmlNodeParsers.variables(results.table.variables);
 			}
 
-			if(results.table.hasOwnProperty('queries')){
+			if (results.table.hasOwnProperty('queries')) {
 				results.table.queries = xmlNodeParsers.queries(results.table.queries);
 			}
 
-			if(results.table.hasOwnProperty('fields')){
+			if (results.table.hasOwnProperty('fields')) {
 				results.table.fields = xmlNodeParsers.fields(results.table.fields);
 			}
 		}
 	},
 	// API_GetRecordAsHTML: {
-		// request (query) { },
-		// response (query, results) { }
+		// request(query) { },
+		// response(query, results) { }
 	// },
 	// API_GetRecordInfo: {
-		// request (query) { },
-		// response (query, results) { }
+		// request(query) { },
+		// response(query, results) { }
 	// },
 	API_GetRoleInfo: {
-		// request (query) { },
-		response (query, results) {
-			if(results.hasOwnProperty('roles')){
-				results.roles = xmlNodeParsers.roles(results.roles);				
+		// request(query) { },
+		response(query, results) {
+			if (results.hasOwnProperty('roles')) {
+				results.roles = xmlNodeParsers.roles(results.roles);
 			}
 		}
 	},
 	// API_GetUserInfo: {
-		// request (query) { },
-		// response (query, results) { }
+		// request(query) { },
+		// response(query, results) { }
 	// },
 	API_GetUserRole: {
-		// request (query) { },
-		response (query, results) {
-			if(results.hasOwnProperty('roles')){
+		// request(query) { },
+		response(query, results) {
+			if (results.hasOwnProperty('roles')) {
 				results.roles = xmlNodeParsers.roles(results.roles);
 			}
 		}
 	},
 	// API_GetUsersInGroup: {
-		// request (query) { },
-		// response (query, results) { }
+		// request(query) { },
+		// response(query, results) { }
 	// },
 	API_GrantedDBs: {
-		// request (query) { },
-		response (query, results) {
-			if(results.hasOwnProperty('databases')){
+		// request(query) { },
+		response(query, results) {
+			if (results.hasOwnProperty('databases')) {
 				results.databases = results.databases.dbinfo;
 			}
 		}
 	},
 	API_GrantedDBsForGroup: {
-		// request (query) { },
-		response (query, results) {
-			if(result.hasOwnProperty('databases')){
-				result.databases = result.databases.dbinfo;
+		// request(query) { },
+		response(query, results) {
+			if (results.hasOwnProperty('databases')) {
+				results.databases = results.databases.dbinfo;
 			}
 		}
 	},
 	API_GrantedGroups: {
-		// request (query) { },
-		response (query, results) {
-			if(results.hasOwnProperty('groups')){
+		// request(query) { },
+		response(query, results) {
+			if (results.hasOwnProperty('groups')) {
 				results.groups = QuickBase.checkIsArrAndConvert();
 			}
 		}
 	},
 	API_ImportFromCSV: {
-		// request (query) { },
-		response (query, results) {
-			if(results.hasOwnProperty('rids')){
+		// request(query) { },
+		response(query, results) {
+			if (results.hasOwnProperty('rids')) {
 				results.rids = results.rids.map((record) => {
 					const ret = {
 						rid: record._
 					};
 
-					if(record.update_id){
+					if (record.update_id) {
 						ret.update_id = record.update_id;
 					}
 
@@ -969,69 +969,69 @@ const actions = {
 		}
 	},
 	// API_ProvisionUser: {
-		// request (query) { },
-		// response (query, results) { }
+		// request(query) { },
+		// response(query, results) { }
 	// },
 	// API_PurgeRecords: {
-		// request (query) { },
-		// response (query, results) { }
+		// request(query) { },
+		// response(query, results) { }
 	// },
 	// API_RemoveGroupFromRole: {
-		// request (query) { },
-		// response (query, results) { }
+		// request(query) { },
+		// response(query, results) { }
 	// },
 	// API_RemoveSubgroup: {
-		// request (query) { },
-		// response (query, results) { }
+		// request(query) { },
+		// response(query, results) { }
 	// },
 	// API_RemoveUserFromGroup: {
-		// request (query) { },
-		// response (query, results) { }
+		// request(query) { },
+		// response(query, results) { }
 	// },
 	// API_RemoveUserFromRole: {
-		// request (query) { },
-		// response (query, results) { }
+		// request(query) { },
+		// response(query, results) { }
 	// },
 	// API_RenameApp: {
-		// request (query) { },
-		// response (query, results) { }
+		// request(query) { },
+		// response(query, results) { }
 	// },
 	// API_RunImport: {
-		// request (query) { },
-		// response (query, results) { }
+		// request(query) { },
+		// response(query, results) { }
 	// },
 	// API_SendInvitation: {
-		// request (query) { },
-		// response (query, results) { }
+		// request(query) { },
+		// response(query, results) { }
 	// },
 	// API_SetDBVar: {
-		// request (query) { },
-		// response (query, results) { }
+		// request(query) { },
+		// response(query, results) { }
 	// },
 	// API_SetFieldProperties: {
-		// request (query) { },
-		// response (query, results) { }
+		// request(query) { },
+		// response(query, results) { }
 	// },
 	// API_SetKeyField: {
-		// request (query) { },
-		// response (query, results) { }
+		// request(query) { },
+		// response(query, results) { }
 	// },
 	// API_SignOut: {
-		// request (query) { },
-		// response (query, results) { }
+		// request(query) { },
+		// response(query, results) { }
 	// },
 	API_UploadFile: {
-		// request (query) { },
-		response (query, results) {
-			if(results.hasOwnProperty('file_fields')){
+		// request(query) { },
+		response(query, results) {
+			if (results.hasOwnProperty('file_fields')) {
 				results.file_fields = QuickBase.checkIsArrAndConvert(results.file_fields.field);
 			}
 		}
 	},
 	API_UserRoles: {
-		// request (query) { },
-		response (query, results) {
-			if(results.hasOwnProperty('users')){
+		// request(query) { },
+		response(query, results) {
+			if (results.hasOwnProperty('users')) {
 				results.users = QuickBase.checkIsArrAndConvert(results.users).map((user) => {
 					user.roles = xmlNodeParsers.roles(user.roles);
 
@@ -1041,11 +1041,11 @@ const actions = {
 		}
 	},
 	default: {
-		/* request (query) {
-		 * 	Do stuff prior to the request
+		/* request(query) {
+		 *  Do stuff prior to the request
 		 * },
-		 * response (query, results) {
-		 * 	Do Stuff with the results before resolving the api call
+		 * response(query, results) {
+		 *  Do Stuff with the results before resolving the api call
 		 * }
 		*/
 	}
@@ -1113,12 +1113,12 @@ const prepareOptions = {
 	// choices (val) { return val; },
 
 	/* API_DoQuery, API_GenResultsTable, API_ImportFromCSV */
-	clist (val) {
+	clist(val) {
 		return val instanceof Array ? val.join('.') : val;
 	},
 
 	/* API_ImportFromCSV */
-	clist_output (val) {
+	clist_output(val) {
 		return val instanceof Array ? val.join('.') : val;
 	},
 
@@ -1207,8 +1207,8 @@ const prepareOptions = {
 	// fid (val) { return val; },
 
 	/* API_AddRecord, API_EditRecord, API_GenAddRecordForm, API_UploadFile */
-	field (val) {
-		if(val instanceof Object && val.map === undefined){
+	field(val) {
+		if (val instanceof Object && val.map === undefined) {
 			val = [ val ];
 		}
 
@@ -1218,15 +1218,15 @@ const prepareOptions = {
 				_: value.value
 			};
 
-			if(value.hasOwnProperty('fid')){
+			if (value.hasOwnProperty('fid')) {
 				ret.$.fid = value.fid;
 			}
 
-			if(value.hasOwnProperty('name')){
+			if (value.hasOwnProperty('name')) {
 				ret.$.name = value.name;
 			}
 
-			if(value.hasOwnProperty('filename')){
+			if (value.hasOwnProperty('filename')) {
 				ret.$.filename = value.filename;
 			}
 
@@ -1334,7 +1334,7 @@ const prepareOptions = {
 	// numberfmt (val) { return val; },
 
 	/* API_DoQuery, API_GenResultsTable */
-	options (val) {
+	options(val) {
 		return val instanceof Array ? val.join('.') : val;
 	},
 
@@ -1372,7 +1372,7 @@ const prepareOptions = {
 	// query (val) { return val; },
 
 	/* API_ImportFromCSV */
-	records_csv (val) {
+	records_csv(val) {
 		return val instanceof Array ? val.join('\n') : val;
 	},
 
@@ -1398,7 +1398,7 @@ const prepareOptions = {
 	// skipfirst (val) { return val; },
 
 	/* API_DoQuery, API_GenResultsTable */
-	slist (val) {
+	slist(val) {
 		return val instanceof Array ? val.join('.') : val;
 	},
 
@@ -1463,15 +1463,15 @@ QuickBase.xmlNodeParsers = xmlNodeParsers;
 QuickBase.defaults = defaults;
 
 /* Export Module */
-if(typeof(module) !== 'undefined' && module.exports){
+if (typeof module !== 'undefined' && module.exports) {
 	module.exports = QuickBase;
 }else
-if(typeof(define) === 'function' && define.amd){
-	define('QuickBase', [], () => {
+if (typeof define === 'function' && define.amd) {
+	define('QuickBase', [], function() {
 		return QuickBase;
 	});
 }
 
-if(typeof(global) !== 'undefined' && typeof(window) !== 'undefined' && global === window){
+if (typeof global !== 'undefined' && typeof window !== 'undefined' && global === window) {
 	global.QuickBase = QuickBase;
 }
