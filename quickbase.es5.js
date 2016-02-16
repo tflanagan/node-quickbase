@@ -83,7 +83,6 @@ var QuickBaseError = function (_Error) {
 
 /* Default Settings */
 
-
 var defaults = {
 	realm: 'www',
 	domain: 'quickbase.com',
@@ -269,7 +268,6 @@ var QuickBase = function () {
 
 /* Throttle */
 
-
 var Throttle = function () {
 	function Throttle(maxConnections, errorOnConnectionLimit) {
 		_classCallCheck(this, Throttle);
@@ -319,7 +317,6 @@ var Throttle = function () {
 }();
 
 /* Request Handling */
-
 
 var QueryBuilder = function () {
 	function QueryBuilder(parent, action, options, callback) {
@@ -574,7 +571,6 @@ var QueryBuilder = function () {
 }();
 
 /* XML Node Parsers */
-
 
 var xmlNodeParsers = {
 	fields: function fields(val) {
@@ -1170,12 +1166,10 @@ var prepareOptions = {
 		return val instanceof Array ? val.join('.') : val;
 	},
 
-
 	/* API_ImportFromCSV */
 	clist_output: function clist_output(val) {
 		return val instanceof Array ? val.join('.') : val;
 	},
-
 
 	/* API_SetFieldProperties */
 	// comma_start (val) { return val; },
@@ -1289,7 +1283,6 @@ var prepareOptions = {
 		});
 	},
 
-
 	/* API_SetFieldProperties */
 	// fieldhelp (val) { return val; },
 
@@ -1394,7 +1387,6 @@ var prepareOptions = {
 		return val instanceof Array ? val.join('.') : val;
 	},
 
-
 	/* API_AddReplaceDBPage */
 	// pagebody (val) { return val; },
 
@@ -1433,7 +1425,6 @@ var prepareOptions = {
 		return val instanceof Array ? val.join('\n') : val;
 	},
 
-
 	/* API_CopyMasterDetail */
 	// recurse (val) { return val; },
 
@@ -1462,7 +1453,6 @@ var prepareOptions = {
 };
 
 /* Expose Instances */
-
 
 /* API_SetFieldProperties */
 // sort_as_given (val) { return val; },
