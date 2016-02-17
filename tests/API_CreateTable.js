@@ -16,10 +16,13 @@
 'use strict';
 
 /* Dependencies */
+/*
 const QuickBase = require('../');
 const common = require('./_common.js');
+*/
 
 /* Expected Structures */
+/*
 const expectedCTBL = {
 	action: 'API_CreateTable',
 	errcode: 0,
@@ -32,13 +35,15 @@ const expectedDDB = {
 	errcode: 0,
 	errtext: 'No error'
 };
+*/
 
 /* Main */
-module.exports = function(pass, fail){
+module.exports = function(pass, fail) {
 	// Test user rights need to be fixed first
 	return pass();
 
-	let qb = new QuickBase({
+	/*
+	const qb = new QuickBase({
 		realm: process.env.realm,
 		appToken: process.env.appToken,
 		ticket: process.env.ticket
@@ -59,4 +64,5 @@ module.exports = function(pass, fail){
 			return results;
 		});
 	}).then(pass).catch(fail);
+	*/
 };

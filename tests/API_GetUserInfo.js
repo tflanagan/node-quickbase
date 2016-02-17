@@ -37,8 +37,8 @@ const expectedGetUserInfo = {
 };
 
 /* Main */
-module.exports = function(pass, fail){
-	let qb = new QuickBase({
+module.exports = function(pass, fail) {
+	const qb = new QuickBase({
 		realm: process.env.realm,
 		appToken: process.env.appToken,
 		ticket: process.env.ticket

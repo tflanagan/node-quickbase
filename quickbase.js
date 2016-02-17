@@ -127,8 +127,7 @@ class QuickBase {
 						} else {
 							resolve(query.results);
 						}
-					})
-					.catch((error) => {
+					}).catch((error) => {
 						resolve(query.catchError(error));
 					});
 			}).catch((error) => {
@@ -162,7 +161,7 @@ class QuickBase {
 		const isDig = /^(-?\s*\d+\.?\d*)$/;
 		const radix = 10;
 
-		Object.keys(xml).forEach((node) => {
+		const processNode = (node) => {
 			let value, singulars,
 				l = -1, i = -1, s = -1, e = -1;
 
@@ -230,13 +229,17 @@ class QuickBase {
 			}
 
 			if (node === '$') {
-				Object.keys(xml[node]).forEach((property) => {
+				const processAttr = (property) => {
 					xml[property] = xml[node][property];
-				});
+				};
+
+				Object.keys(xml[node]).forEach(processAttr);
 
 				delete xml[node];
 			}
-		});
+		};
+
+		Object.keys(xml).forEach(processNode);
 
 		return xml;
 	}
@@ -258,20 +261,20 @@ class Throttle {
 
 	acquire() {
 		return new Promise((resolve, reject) => {
-			if (this._numConnections >= this.maxConnections && this.maxConnections !== -1) {
-				if (this.errorOnConnectionLimit) {
-					reject(new QuickBaseError(1001, 'No Connections Available', 'Maximum Number of Connections Reached'));
-				} else {
-					this._pendingConnections.push({
-						resolve: resolve,
-						reject: reject
-					});
-				}
-			} else {
+			if (this.maxConnections === -1 || this._numConnections < this.maxConnections) {
 				++this._numConnections;
 
-				resolve();
+				return resolve();
 			}
+
+			if (this.errorOnConnectionLimit) {
+				return reject(new QuickBaseError(1001, 'No Connections Available', 'Maximum Number of Connections Reached'));
+			}
+
+			this._pendingConnections.push({
+				resolve: resolve,
+				reject: reject
+			});
 		}).disposer(() => {
 			--this._numConnections;
 
@@ -372,21 +375,19 @@ class QueryBuilder {
 
 		if (this._nErr < this.settings.maxErrorRetryAttempts) {
 			if ([1000, 1001].indexOf(err.code) !== -1) {
-				return this.processQuery()
-					.then((results) => {
-						this.results = results;
+				return this.processQuery().then((results) => {
+					this.results = results;
 
-						this.actionResponse();
+					this.actionResponse();
 
-						if (this.callback instanceof Function) {
-							this.callback(null, this.results);
-						} else {
-							return this.results;
-						}
-					})
-					.catch((error) => {
-						return this.catchError(error);
-					});
+					if (this.callback instanceof Function) {
+						this.callback(null, this.results);
+					} else {
+						return this.results;
+					}
+				}).catch((error) => {
+					return this.catchError(error);
+				});
 			}else
 			if (
 				err.code === 4 &&
@@ -401,7 +402,8 @@ class QueryBuilder {
 					this.settings.ticket = results.ticket;
 					this.options.ticket = results.ticket;
 
-					return this.addFlags()
+					return this
+						.addFlags()
 						.constructPayload()
 						.processQuery()
 						.then((results) => {

@@ -22989,7 +22989,7 @@ var QuickBase = function () {
 			var isDig = /^(-?\s*\d+\.?\d*)$/;
 			var radix = 10;
 
-			Object.keys(xml).forEach(function (node) {
+			var processNode = function processNode(node) {
 				var value = undefined,
 				    singulars = undefined,
 				    l = -1,
@@ -23058,13 +23058,17 @@ var QuickBase = function () {
 				}
 
 				if (node === '$') {
-					Object.keys(xml[node]).forEach(function (property) {
+					var processAttr = function processAttr(property) {
 						xml[property] = xml[node][property];
-					});
+					};
+
+					Object.keys(xml[node]).forEach(processAttr);
 
 					delete xml[node];
 				}
-			});
+			};
+
+			Object.keys(xml).forEach(processNode);
 
 			return xml;
 		}
@@ -23094,20 +23098,20 @@ var Throttle = function () {
 			var _this3 = this;
 
 			return new Promise(function (resolve, reject) {
-				if (_this3._numConnections >= _this3.maxConnections && _this3.maxConnections !== -1) {
-					if (_this3.errorOnConnectionLimit) {
-						reject(new QuickBaseError(1001, 'No Connections Available', 'Maximum Number of Connections Reached'));
-					} else {
-						_this3._pendingConnections.push({
-							resolve: resolve,
-							reject: reject
-						});
-					}
-				} else {
+				if (_this3.maxConnections === -1 || _this3._numConnections < _this3.maxConnections) {
 					++_this3._numConnections;
 
-					resolve();
+					return resolve();
 				}
+
+				if (_this3.errorOnConnectionLimit) {
+					return reject(new QuickBaseError(1001, 'No Connections Available', 'Maximum Number of Connections Reached'));
+				}
+
+				_this3._pendingConnections.push({
+					resolve: resolve,
+					reject: reject
+				});
 			}).disposer(function () {
 				--_this3._numConnections;
 

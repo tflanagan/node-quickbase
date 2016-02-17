@@ -17,68 +17,56 @@
 
 const assert = require('assert');
 
-function objStrctEquiv(a, b){
-	if(typeof a !== 'object' || typeof b !== 'object'){
+function objStrctEquiv(a, b) {
+	if (typeof a !== 'object' || typeof b !== 'object')
 		return false;
-	}
 
 	const keys = Object.keys(a);
 	const l = keys.length;
 
-	for(let i = 0, key, val; i < l; ++i){
+	for (let i = 0, key, val; i < l; ++i) {
 		key = keys[i];
 		val = a[key];
 
-		if(!b.hasOwnProperty(key) || !objStrctMatch(val, b[key])){
+		if (!b.hasOwnProperty(key) || !objStrctMatch(val, b[key]))
 			return false;
-		}
 	}
 
 	return true;
 }
 
-function objStrctMatch(a, b){
-	if(a === null || b === null || a === undefined || b === undefined){
+function objStrctMatch(a, b) {
+	if (a === null || b === null || a === undefined || b === undefined)
 		return a === b;
-	}
 
-	if(typeof a !== 'object' || typeof b !== 'object'){
+	if (typeof a !== 'object' || typeof b !== 'object')
 		return typeof a === typeof b;
-	}
 
-	if(a instanceof Date || b instanceof Date){
+	if (a instanceof Date || b instanceof Date)
 		return a instanceof Date && b instanceof Date;
-	}
 
-	if(a instanceof Boolean || b instanceof Boolean){
+	if (a instanceof Boolean || b instanceof Boolean)
 		return a instanceof Boolean && b instanceof Boolean;
-	}
 
-	if(a instanceof Number || b instanceof Number){
+	if (a instanceof Number || b instanceof Number)
 		return a instanceof Number && b instanceof Number;
-	}
 
-	if(a instanceof String || b instanceof String){
+	if (a instanceof String || b instanceof String)
 		return a instanceof String && b instanceof String;
-	}
 
-	if((a instanceof Array || b instanceof Array) && a.length !== b.length){
+	if ((a instanceof Array || b instanceof Array) && a.length !== b.length)
 		return false;
-	}
 
-	if(a instanceof Object && !objStrctEquiv(a, b)){
+	if (a instanceof Object && !objStrctEquiv(a, b))
 		return false;
-	}
 
-	if(b instanceof Object && !objStrctEquiv(b, a)){
+	if (b instanceof Object && !objStrctEquiv(b, a))
 		return false;
-	}
 
 	return true;
 }
 
-module.exports.objStrctEqual = function objStrctEqual(actual, expected, message){
-	if(!objStrctMatch(actual, expected)){
+module.exports.objStrctEqual = function objStrctEqual(actual, expected, message) {
+	if (!objStrctMatch(actual, expected))
 		assert.fail(actual, expected, message, 'objStrctEqual', objStrctEqual);
-	}
 };

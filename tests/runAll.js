@@ -19,11 +19,10 @@
 const fs = require('fs');
 const path = require('path');
 const Promise = require('bluebird');
-const QuickBase = require('../');
 
 /* Globals */
-if(!!process.env.TRAVIS === false){
-	if(process.argv.length !== 8){
+if (!!process.env.TRAVIS === false) {
+	if (process.argv.length !== 8) {
 		console.error([
 			'ERROR: Incorrect CI Test Usage.',
 			'',
@@ -50,17 +49,15 @@ if(!!process.env.TRAVIS === false){
 }
 
 /* Helpers */
-let getTests = () => {
+const getTests = () => {
 	return new Promise((resolve, reject) => {
 		fs.readdir(__dirname, (err, tests) => {
-			if(err){
+			if (err)
 				return reject(err);
-			}
 
 			tests = tests.reduce((tests, test) => {
-				if(test.indexOf('.') !== 0 && test !== 'runAll.js' && test !== '_common.js'){
+				if (test.indexOf('.') !== 0 && test !== 'runAll.js' && test !== '_common.js')
 					tests.push(test);
-				}
 
 				return tests;
 			}, []);
@@ -70,41 +67,35 @@ let getTests = () => {
 	});
 };
 
-let runTest = (test) => {
+const runTest = (test) => {
 	return new Promise((resolve, reject) => {
 		require(path.join(__dirname, test))(resolve, reject);
 	});
 };
 
 /* Main */
-getTests()
-	.then((tests) => {
-		// Force API_Authenticate to be first
-		// Need 'ticket' for the rest of the tests.
-		let i = tests.indexOf('API_Authenticate.js');
+getTests().then((tests) => {
+	// Force API_Authenticate to be first
+	// Need 'ticket' for the rest of the tests.
+	const i = tests.indexOf('API_Authenticate.js');
 
-		if(i === -1){
-			throw new Error('Missing API_Authenticate.js test.');
-		}
+	if (i === -1)
+		throw new Error('Missing API_Authenticate.js test.');
 
-		let authTest = tests.splice(i, 1);
+	const authTest = tests.splice(i, 1);
 
-		return authTest.concat(tests);
-	})
-	.map((test) => {
-		return runTest(test)
-			.then((results) => {
-				if(results && results.ticket){
-					process.env.ticket = results.ticket;
-				}
+	return authTest.concat(tests);
+}).map((test) => {
+	return runTest(test).then((results) => {
+		if (results && results.ticket)
+			process.env.ticket = results.ticket;
 
-				console.log('Test Complete: %s', test);
-			})
-			.catch((err) => {
-				console.error('Test Failed: %s', test);
+		console.log('Test Complete: %s', test);
+	}).catch((err) => {
+		console.error('Test Failed: %s', test);
 
-				throw err;
-			});
-	}, {
-		concurrency: 1
+		throw err;
 	});
+}, {
+	concurrency: 1
+});

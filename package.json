@@ -36,7 +36,7 @@
   },
   "scripts": {
     "test": "node tests/runAll.js",
-    "build": "node ./node_modules/eslint/bin/eslint.js ./quickbase.js && babel --presets es2015 quickbase.js > quickbase.es5.js && browserify quickbase.es5.js > quickbase.browserify.js && cat tools\\LICENSE.js > quickbase.browserify.min.js && minify quickbase.browserify.js >> quickbase.browserify.min.js"
+    "build": "node ./node_modules/eslint/bin/eslint.js ./quickbase.js tests/ && babel --presets es2015 quickbase.js > quickbase.es5.js && browserify quickbase.es5.js > quickbase.browserify.js && cat tools\\LICENSE.js > quickbase.browserify.min.js && minify quickbase.browserify.js >> quickbase.browserify.min.js"
   },
   "dependencies": {
     "bluebird": "^3.3.1",
