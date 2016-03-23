@@ -23409,7 +23409,8 @@ var xmlNodeParsers = {
 	roles: function roles(val) {
 		return QuickBase.checkIsArrAndConvert(val).map(function (value) {
 			var ret = {
-				id: value.id
+				id: value.id,
+				name: value.name
 			};
 
 			if (value._) {
@@ -23770,8 +23771,8 @@ var actions = {
 		// request(query) { },
 
 		response: function response(query, results) {
-			if (results.hasOwnProperty('roles')) {
-				results.roles = xmlNodeParsers.roles(results.roles);
+			if (results.user.hasOwnProperty('roles')) {
+				results.user.roles = xmlNodeParsers.roles(results.user.roles);
 			}
 		}
 	},

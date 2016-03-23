@@ -562,7 +562,8 @@ const xmlNodeParsers = {
 	roles(val) {
 		return QuickBase.checkIsArrAndConvert(val).map((value) => {
 			const ret = {
-				id: value.id
+				id: value.id,
+				name: value.name
 			};
 
 			if (value._) {
@@ -919,8 +920,8 @@ const actions = {
 	API_GetUserRole: {
 		// request(query) { },
 		response(query, results) {
-			if (results.hasOwnProperty('roles')) {
-				results.roles = xmlNodeParsers.roles(results.roles);
+			if (results.user.hasOwnProperty('roles')) {
+				results.user.roles = xmlNodeParsers.roles(results.user.roles);
 			}
 		}
 	},
