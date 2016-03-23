@@ -36,6 +36,10 @@ const expected = {
 			lastModifiedTime: 0,
 			lastRecModTime: 0,
 			id: ''
+		}, {
+			lastModifiedTime: 0,
+			lastRecModTime: 0,
+			id: ''
 		}
 	]
 };

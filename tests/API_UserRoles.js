@@ -59,6 +59,23 @@ const expected = {
 			],
 			type: '',
 			id: ''
+		}, {
+			name: '',
+			lastAccess: 0,
+			lastAccessAppLocal: '',
+			firstName: '',
+			lastName: '',
+			roles: [
+				{
+					id: 0,
+					access: {
+						id: 0,
+						name: ''
+					}
+				}
+			],
+			type: '',
+			id: ''
 		}
 	]
 };

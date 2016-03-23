@@ -206,6 +206,7 @@ const expectedAPPGetSchema = {
 			test: ''
 		},
 		chdbids: [
+			{ name: '', dbid: '' },
 			{ name: '', dbid: '' }
 		],
 		fields: []

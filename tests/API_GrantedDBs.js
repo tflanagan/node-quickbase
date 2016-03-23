@@ -26,6 +26,7 @@ const expected = {
 	errtext: 'No error',
 	databases: [
 		{ dbname: '', dbid: '' },
+		{ dbname: '', dbid: '' },
 		{ dbname: '', dbid: '' }
 	]
 };
