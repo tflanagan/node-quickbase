@@ -122,6 +122,10 @@ class QuickBase {
 
 						query.actionResponse();
 
+						if (QuickBase.DEBUG) {
+							console.info('Results Returned: ', query.results);
+						}
+
 						if (callback instanceof Function) {
 							callback(null, query.results);
 						} else {
@@ -367,6 +371,12 @@ class QueryBuilder {
 			this.options.encoding = this.settings.flags.encoding;
 		}
 
+		Object.keys(this.settings.flags).forEach((flag) => {
+			if (this.options.hasOwnProperty(flag)) {
+				this.settings.flags[flag] = this.options[flag];
+			}
+		});
+
 		return this;
 	}
 
@@ -450,9 +460,9 @@ class QueryBuilder {
 				throw new QuickBaseError(1002, 'Error Building XML', err);
 			}
 		} else {
-			Object.keys(this.options).forEach((arg) => {
-				this.payload += '&' + arg + '=' + encodeURIComponent(this.options[arg]);
-			});
+			this.payload = Object.keys(this.options).reduce((payload, arg) => {
+				return payload + '&' + arg + '=' + encodeURIComponent(this.options[arg]);
+			}, this.payload);
 		}
 
 		return this;
@@ -511,6 +521,10 @@ class QueryBuilder {
 				reject(err);
 			});
 
+			if (QuickBase.DEBUG) {
+				console.info('Sending Request (Headers/Payload):', options, this.payload);
+			}
+
 			request.end();
 		});
 	}
@@ -522,13 +536,11 @@ class QueryBuilder {
 			delete this.options.fields;
 		}
 
-		const newOpts = {};
-
-		Object.keys(this.options).forEach((option) => {
+		this.options = Object.keys(this.options).reduce((newOpts, option) => {
 			newOpts[option] = prepareOptions.hasOwnProperty(option) ? prepareOptions[option](this.options[option]) : newOpts[option] = this.options[option];
-		});
 
-		this.options = newOpts;
+			return newOpts;
+		}, {});
 
 		return this;
 	}
@@ -588,13 +600,11 @@ const xmlNodeParsers = {
 		});
 	},
 	variables(val) {
-		const newVars = {};
-
-		QuickBase.checkIsArrAndConvert(val.var).forEach((value) => {
+		return QuickBase.checkIsArrAndConvert(val.var).reduce((newVars, value) => {
 			newVars[value.name] = value._;
-		});
 
-		return newVars;
+			return newVars;
+		}, {});
 	}
 };
 
@@ -747,7 +757,7 @@ const actions = {
 							ret.rid = record.rid;
 						}
 
-						QuickBase.checkIsArrAndConvert(record.f).forEach((field) => {
+						return QuickBase.checkIsArrAndConvert(record.f).reduce((ret, field) => {
 							const fid = field.id;
 
 							if (field.hasOwnProperty('url')) {
@@ -758,9 +768,9 @@ const actions = {
 							} else {
 								ret[fid] = field._;
 							}
-						});
 
-						return ret;
+							return ret;
+						}, ret);
 					});
 				}
 
@@ -1464,6 +1474,7 @@ QuickBase.xmlNodeParsers = xmlNodeParsers;
 
 /* Expose Properties */
 QuickBase.defaults = defaults;
+QuickBase.DEBUG = false;
 
 /* Export Module */
 if (typeof module !== 'undefined' && module.exports) {
@@ -1477,4 +1488,12 @@ if (typeof define === 'function' && define.amd) {
 
 if (typeof global !== 'undefined' && typeof window !== 'undefined' && global === window) {
 	global.QuickBase = QuickBase;
+
+	if (window.location.search.match(/debug=1/i)) {
+		QuickBase.DEBUG = true;
+	} else {
+		QuickBase.Promise.config({
+			longStackTraces: false
+		});
+	}
 }

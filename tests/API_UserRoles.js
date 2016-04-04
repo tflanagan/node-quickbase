@@ -34,6 +34,7 @@ const expected = {
 			roles: [
 				{
 					id: 0,
+					name: '',
 					access: {
 						id: 0,
 						name: ''
@@ -51,6 +52,7 @@ const expected = {
 			roles: [
 				{
 					id: 0,
+					name: '',
 					access: {
 						id: 0,
 						name: ''
@@ -68,6 +70,7 @@ const expected = {
 			roles: [
 				{
 					id: 0,
+					name: '',
 					access: {
 						id: 0,
 						name: ''

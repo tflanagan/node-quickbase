@@ -1,6 +1,6 @@
 {
   "name": "quickbase",
-  "version": "2.3.4",
+  "version": "2.4.0",
   "description": "A lightweight, very flexible QuickBase API",
   "keywords": [
     "QuickBase",
@@ -39,8 +39,8 @@
     "build": "node ./node_modules/eslint/bin/eslint.js ./quickbase.js tests/ && babel --presets es2015 quickbase.js > quickbase.es5.js && browserify quickbase.es5.js > quickbase.browserify.js && cat tools\\LICENSE.js > quickbase.browserify.min.js && minify quickbase.browserify.js >> quickbase.browserify.min.js"
   },
   "dependencies": {
-    "bluebird": "^3.3.1",
-    "lodash.merge": "^4.2.0",
+    "bluebird": "^3.3.4",
+    "lodash.merge": "^4.3.4",
     "xml2js": "^0.4.16"
   },
   "devDependencies": {
