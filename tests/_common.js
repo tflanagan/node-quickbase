@@ -17,25 +17,21 @@
 
 const assert = require('assert');
 
-function objStrctEquiv(a, b) {
+const objStrctEquiv = (a, b) => {
 	if (typeof a !== 'object' || typeof b !== 'object')
 		return false;
 
-	const keys = Object.keys(a);
-	const l = keys.length;
+	return Object.keys(a).some((key, i, arr) => {
+		const val = arr[key];
 
-	for (let i = 0, key, val; i < l; ++i) {
-		key = keys[i];
-		val = a[key];
-
-		if (!b.hasOwnProperty(key) || !objStrctMatch(val, b[key]))
+		if (b.hasOwnProperty(key) && objStrctMatch(val, b[key]))
 			return false;
-	}
 
-	return true;
-}
+		return true;
+	});
+};
 
-function objStrctMatch(a, b) {
+const objStrctMatch = (a, b) => {
 	if (a === null || b === null || a === undefined || b === undefined)
 		return a === b;
 
@@ -64,7 +60,7 @@ function objStrctMatch(a, b) {
 		return false;
 
 	return true;
-}
+};
 
 module.exports.objStrctEqual = function objStrctEqual(actual, expected, message) {
 	if (!objStrctMatch(actual, expected))

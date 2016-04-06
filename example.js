@@ -1,4 +1,6 @@
 // npm install tflanagan/node-quickbase
+'use strict';
+
 const QuickBase = require('quickbase');
 
 const quickbase = new QuickBase({
@@ -43,36 +45,33 @@ quickbase.api('API_Authenticate', {
 	username: '*****',
 	password: '*****'
 }, (err, result) => {
-	if(err){
+	if (err)
 		throw err;
-	}
 
 	quickbase.api('API_DoQuery', {
 		dbid: '*****',
 		clist: '3.12',
 		options: 'num-5'
 	}, (err, result) => {
-		if(err){
+		if (err)
 			throw err;
-		}
 
 		let i = 0;
 
 		const fin = () => {
 			++i;
 
-			if(i === result.table.records.length){
+			if (i === result.table.records.length) {
 				quickbase.api('API_DoQuery', {
 					dbid: '*****',
 					clist: '3.12',
 					options: 'num-5'
 				}, (err, result) => {
-					if(err){
+					if (err)
 						throw err;
-					}
 
 					console.log('done');
-				})
+				});
 			}
 		};
 
@@ -84,9 +83,8 @@ quickbase.api('API_Authenticate', {
 					{ fid: 12, value: record[12] }
 				]
 			}, (err, results) => {
-				if(err){
+				if (err)
 					throw err;
-				}
 
 				fin();
 			});

@@ -35,8 +35,8 @@
     "url": "git://github.com/tflanagan/node-quickbase.git"
   },
   "scripts": {
-    "test": "node tests/runAll.js",
-    "build": "node ./node_modules/eslint/bin/eslint.js ./quickbase.js tests/ && babel --presets es2015 quickbase.js > quickbase.es5.js && browserify quickbase.es5.js > quickbase.browserify.js && cat tools\\LICENSE.js > quickbase.browserify.min.js && minify quickbase.browserify.js >> quickbase.browserify.min.js"
+    "test": "gulp test",
+    "build": "gulp build"
   },
   "dependencies": {
     "bluebird": "^3.3.4",
@@ -47,8 +47,12 @@
     "babel-cli": "^6.5.1",
     "babel-preset-es2015": "^6.5.0",
     "browserify": "^13.0.0",
+    "eslint": "^1.10.3",
+    "gulp": "^3.9.1",
+    "gulp-cli": "^1.2.1",
+    "inquirer": "^0.12.0",
     "minify": "^2.0.3",
-    "eslint": "^1.10.3"
+    "yargs": "^4.4.0"
   },
   "engines": {
     "node": ">=4.0.*"
