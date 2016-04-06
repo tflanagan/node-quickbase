@@ -25,6 +25,8 @@ const inquirer = require('inquirer');
 
 /* Helpers */
 const browserify = () => {
+	console.log('Running Browserify...');
+
 	return new Promise((resolve, reject) => {
 		cp.exec([
 			'node ' + path.join('.', 'node_modules', 'browserify', 'bin', 'cmd.js') + ' quickbase.es5.js > quickbase.browserify.js',
@@ -34,16 +36,22 @@ const browserify = () => {
 			if (err)
 				return reject(new Error(err));
 
+			console.log('Browserify Complete');
+
 			resolve();
 		});
 	});
 };
 
 const es5 = () => {
+	console.log('Running ES5 Translation...');
+
 	return new Promise((resolve, reject) => {
 		cp.exec('node ' + path.join('.', 'node_modules', 'babel-cli', 'bin', 'babel.js') + ' --presets es2015 quickbase.js > quickbase.es5.js', (err, stdout, stderr) => {
 			if (err)
 				return reject(new Error(err));
+
+			console.log('ES5 Translation Complete');
 
 			resolve();
 		});
@@ -51,12 +59,17 @@ const es5 = () => {
 };
 
 const eslint = () => {
+	console.log('Running ESLint...');
+
 	return new Promise((resolve, reject) => {
 		cp.exec('node ' + path.join('.', 'node_modules', 'eslint', 'bin', 'eslint.js') + ' quickbase.js gulpfile.js example.js tests', (err, stdout, stderr) => {
-			console.log(stdout);
+			if (stdout)
+				console.log(stdout);
 
 			if (err)
 				return reject(new Error(err));
+
+			console.log('ESLint Complete');
 
 			resolve();
 		});
@@ -64,49 +77,8 @@ const eslint = () => {
 };
 
 const test = () => {
-	return new Promise((resolve, reject) => {
-		fs.readdir(path.join(__dirname, 'tests'), (err, tests) => {
-			if (err)
-				return reject(err);
+	console.log('Running Tests...');
 
-			resolve(tests.filter((test) => {
-				return [
-					test.indexOf('.'),
-					test.indexOf('_')
-				].indexOf(0) === -1;
-			}));
-		});
-	}).then((tests) => {
-		// Force API_Authenticate to be first
-		// Need 'ticket' for the rest of the tests.
-		const i = tests.indexOf('API_Authenticate.js');
-
-		if (i === -1)
-			throw new Error('Missing API_Authenticate.js test.');
-
-		const authTest = tests.splice(i, 1);
-
-		return authTest.concat(tests);
-	}).map((test) => {
-		return new Promise((resolve, reject) => {
-			require(path.join(__dirname, 'tests', test))(resolve, reject);
-		}).then((results) => {
-			if (results && results.ticket)
-				process.env.ticket = results.ticket;
-
-			console.log('Test Complete: %s', test);
-		}).catch((err) => {
-			console.error('Test Failed: %s', test);
-
-			throw err;
-		});
-	}, {
-		concurrency: 1
-	});
-};
-
-/* Tasks */
-gulp.task('test', () => {
 	return new Promise((resolve, reject) => {
 		if (!!process.env.TRAVIS === true)
 			return resolve();
@@ -164,12 +136,49 @@ gulp.task('test', () => {
 			resolve();
 		});
 	}).then(() => {
-		return test();
-	});
-});
+		return new Promise((resolve, reject) => {
+			fs.readdir(path.join(__dirname, 'tests'), (err, tests) => {
+				if (err)
+					return reject(err);
 
-gulp.task('eslint', eslint);
-gulp.task('es5', es5);
+				resolve(tests.filter((test) => {
+					return [
+						test.indexOf('.'),
+						test.indexOf('_')
+					].indexOf(0) === -1;
+				}));
+			});
+		});
+	}).then((tests) => {
+		// Force API_Authenticate to be first
+		// Need 'ticket' for the rest of the tests.
+		const i = tests.indexOf('API_Authenticate.js');
+
+		if (i === -1)
+			throw new Error('Missing API_Authenticate.js test.');
+
+		const authTest = tests.splice(i, 1);
+
+		return authTest.concat(tests);
+	}).map((test) => {
+		return new Promise((resolve, reject) => {
+			require(path.join(__dirname, 'tests', test))(resolve, reject);
+		}).then((results) => {
+			if (results && results.ticket)
+				process.env.ticket = results.ticket;
+
+			console.log('Test Complete: %s', test);
+		}).catch((err) => {
+			console.error('Test Failed: %s', test);
+
+			throw err;
+		});
+	}, {
+		concurrency: 1
+	});
+};
+
+/* Tasks */
 gulp.task('browserify', browserify);
 
 gulp.task('build', () => {
@@ -179,3 +188,7 @@ gulp.task('build', () => {
 gulp.task('build-test', () => {
 	return eslint().then(test).then(es5).then(browserify);
 });
+
+gulp.task('es5', es5);
+gulp.task('eslint', eslint);
+gulp.task('test', test);

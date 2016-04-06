@@ -36,7 +36,8 @@
   },
   "scripts": {
     "test": "gulp test",
-    "build": "gulp build"
+    "build": "gulp build",
+    "build-test": "gulp build-test"
   },
   "dependencies": {
     "bluebird": "^3.3.4",
