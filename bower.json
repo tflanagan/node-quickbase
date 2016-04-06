@@ -23,6 +23,7 @@
     "documentation",
     "tools",
     "example.js",
+    "gulpfile.js",
     "quickbase.js",
     "quickbase.es5.js",
     "quickbase.browserify.js"

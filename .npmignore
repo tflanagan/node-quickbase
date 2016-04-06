@@ -5,3 +5,4 @@ tests/
 tools/
 reports/
 example.js
+gulpfile.js

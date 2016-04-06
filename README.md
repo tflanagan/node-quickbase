@@ -57,6 +57,8 @@ The use is the same as in Nodejs, but there is no need to ```require('quickbase'
 Example
 -------
 ```javascript
+'use strict';
+
 const QuickBase = require('quickbase');
 
 const quickbase = new QuickBase({
@@ -101,36 +103,33 @@ quickbase.api('API_Authenticate', {
 	username: '*****',
 	password: '*****'
 }, (err, result) => {
-	if(err){
+	if (err)
 		throw err;
-	}
 
 	quickbase.api('API_DoQuery', {
 		dbid: '*****',
 		clist: '3.12',
 		options: 'num-5'
 	}, (err, result) => {
-		if(err){
+		if (err)
 			throw err;
-		}
 
 		let i = 0;
 
-		const = fin = () => {
+		const fin = () => {
 			++i;
 
-			if(i === result.table.records.length){
+			if (i === result.table.records.length) {
 				quickbase.api('API_DoQuery', {
 					dbid: '*****',
 					clist: '3.12',
 					options: 'num-5'
 				}, (err, result) => {
-					if(err){
+					if (err)
 						throw err;
-					}
 
 					console.log('done');
-				})
+				});
 			}
 		};
 
@@ -142,9 +141,8 @@ quickbase.api('API_Authenticate', {
 					{ fid: 12, value: record[12] }
 				]
 			}, (err, results) => {
-				if(err){
+				if (err)
 					throw err;
-				}
 
 				fin();
 			});
@@ -166,14 +164,13 @@ class QuickBase {
 
 	public function api(action[, options[, callback]);
 
-	public static class QueryBuilder(parent, action[, options[, callback]]);
-	public static class Throttle([maxConnections = 10[, errorOnConnectionLimit = false]]);
-	public static class QuickBaseError(code, name[, message]);
-
-	public static class Promise = Promise;
-
 	public static function checkIsArrAndConvert(obj);
 	public static function cleanXML(xml);
+
+	public class QueryBuilder(parent, action[, options[, callback]]);
+	public class Throttle([maxConnections = 10[, errorOnConnectionLimit = false]]);
+	public class QuickBaseError(code, name[, message]);
+	public class Promise;
 
 }
 ```

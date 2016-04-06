@@ -189,6 +189,6 @@ gulp.task('build-test', () => {
 	return eslint().then(test).then(es5).then(browserify);
 });
 
-gulp.task('es5', es5);
+gulp.task('es5', ['eslint'], es5);
 gulp.task('eslint', eslint);
-gulp.task('test', test);
+gulp.task('test', ['eslint'], test);
