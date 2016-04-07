@@ -23,15 +23,23 @@ const path = require('path');
 const Promise = require('bluebird');
 const inquirer = require('inquirer');
 
+/* Constants */
+const BABEL = path.join('.', 'node_modules', 'babel-cli', 'bin', 'babel.js');
+const BROWSERIFY = path.join('.', 'node_modules', 'browserify', 'bin', 'cmd.js');
+const COMMENTED_LICENSE = path.join('.', 'tools', 'LICENSE.js');
+const ESLINT = path.join('.', 'node_modules', 'eslint', 'bin', 'eslint.js');
+const MINIFY = path.join('.', 'node_modules', 'minify', 'bin', 'minify.js');
+
 /* Helpers */
 const browserify = () => {
 	console.log('Running Browserify...');
 
 	return new Promise((resolve, reject) => {
 		cp.exec([
-			'node ' + path.join('.', 'node_modules', 'browserify', 'bin', 'cmd.js') + ' quickbase.es5.js > quickbase.browserify.js',
-			'cat ' + path.join('.', 'tools', 'LICENSE.js') + ' > quickbase.browserify.min.js',
-			'node ' + path.join('.', 'node_modules', 'minify', 'bin', 'minify.js') + ' quickbase.browserify.js >> quickbase.browserify.min.js'
+			'node ' + BROWSERIFY + ' quickbase.es5.js > quickbase.browserify.js',
+			'cat ' + COMMENTED_LICENSE + ' > quickbase.browserify.min.js',
+			'node ' + MINIFY + ' quickbase.browserify.js >> quickbase.browserify.min.js',
+			'rm quickbase.browserify.js'
 		].join(' && '), (err, stdout, stderr) => {
 			if (err)
 				return reject(new Error(err));
@@ -47,7 +55,7 @@ const es5 = () => {
 	console.log('Running ES5 Translation...');
 
 	return new Promise((resolve, reject) => {
-		cp.exec('node ' + path.join('.', 'node_modules', 'babel-cli', 'bin', 'babel.js') + ' --presets es2015 quickbase.js > quickbase.es5.js', (err, stdout, stderr) => {
+		cp.exec('node ' + BABEL + ' --presets es2015 quickbase.js > quickbase.es5.js', (err, stdout, stderr) => {
 			if (err)
 				return reject(new Error(err));
 
@@ -62,7 +70,7 @@ const eslint = () => {
 	console.log('Running ESLint...');
 
 	return new Promise((resolve, reject) => {
-		cp.exec('node ' + path.join('.', 'node_modules', 'eslint', 'bin', 'eslint.js') + ' quickbase.js gulpfile.js example.js tests', (err, stdout, stderr) => {
+		cp.exec('node ' + ESLINT + ' quickbase.js gulpfile.js example.js tests', (err, stdout, stderr) => {
 			if (stdout)
 				console.log(stdout);
 
@@ -70,6 +78,26 @@ const eslint = () => {
 				return reject(new Error(err));
 
 			console.log('ESLint Complete');
+
+			resolve();
+		});
+	});
+};
+
+const sa = () => {
+	console.log('Building SA...');
+
+	return new Promise((resolve, reject) => {
+		cp.exec([
+			'node ' + BROWSERIFY + ' --node -r .' + path.sep + 'quickbase.es5.js:quickbase >> quickbase.sa.js',
+			'cat ' + COMMENTED_LICENSE + ' > quickbase.sa.min.js',
+			'node ' + MINIFY + ' quickbase.sa.js >> quickbase.sa.min.js',
+			'rm quickbase.sa.js'
+		].join(' && '), (err, stdout, stderr) => {
+			if (err)
+				return reject(new Error(err));
+
+			console.log('SA Build Complete');
 
 			resolve();
 		});
@@ -183,6 +211,10 @@ gulp.task('browserify', browserify);
 
 gulp.task('build', () => {
 	return eslint().then(es5).then(browserify);
+});
+
+gulp.task('build-sa', () => {
+	return eslint().then(es5).then(sa);
 });
 
 gulp.task('build-test', () => {

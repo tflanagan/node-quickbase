@@ -1,8 +1,10 @@
 documentation/
-quickbase.browserify.js
-quickbase.es5.js
 tests/
 tools/
-reports/
+.eslintrc
+.gitignore
+.travis.yml
+bower.json
 example.js
 gulpfile.js
+quickbase.es5.js

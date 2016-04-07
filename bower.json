@@ -18,15 +18,18 @@
   ],
   "ignore": [
     "**/.*",
+    "documentation",
     "node_modules",
     "tests",
-    "documentation",
     "tools",
+    ".eslintrc",
+    ".gitignore",
+    ".travis.yml",
     "example.js",
     "gulpfile.js",
     "quickbase.js",
     "quickbase.es5.js",
-    "quickbase.browserify.js"
+    "quickbase.sa.min.js"
   ],
   "repository": {
     "type": "git",
