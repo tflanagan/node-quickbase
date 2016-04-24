@@ -87,6 +87,7 @@ var QuickBaseError = function (_Error) {
 var defaults = {
 	realm: 'www',
 	domain: 'quickbase.com',
+	path: '/',
 	useSSL: true,
 
 	username: '',
@@ -514,7 +515,7 @@ var QueryBuilder = function () {
 				var options = {
 					hostname: [settings.realm, settings.domain].join('.'),
 					port: settings.useSSL ? 443 : 80,
-					path: '/db/' + (_this7.options.dbid && !settings.flags.dbidAsParam ? _this7.options.dbid : 'main') + '?act=' + _this7.action + (!settings.flags.useXML ? _this7.payload : ''),
+					path: settings.path + 'db/' + (_this7.options.dbid && !settings.flags.dbidAsParam ? _this7.options.dbid : 'main') + '?act=' + _this7.action + (!settings.flags.useXML ? _this7.payload : ''),
 					method: settings.flags.useXML ? 'POST' : 'GET',
 					headers: {
 						'Content-Type': 'application/xml; charset=' + _this7.options.encoding,

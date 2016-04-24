@@ -67,6 +67,7 @@ class QuickBaseError extends Error {
 const defaults = {
 	realm: 'www',
 	domain: 'quickbase.com',
+	path: '/',
 	useSSL: true,
 
 	username: '',
@@ -475,7 +476,7 @@ class QueryBuilder {
 			const options = {
 				hostname: [ settings.realm, settings.domain ].join('.'),
 				port: settings.useSSL ? 443 : 80,
-				path: '/db/' + (this.options.dbid && !settings.flags.dbidAsParam ? this.options.dbid : 'main') + '?act=' + this.action + (!settings.flags.useXML ? this.payload : ''),
+				path: settings.path + 'db/' + (this.options.dbid && !settings.flags.dbidAsParam ? this.options.dbid : 'main') + '?act=' + this.action + (!settings.flags.useXML ? this.payload : ''),
 				method: settings.flags.useXML ? 'POST' : 'GET',
 				headers: {
 					'Content-Type': 'application/xml; charset=' + this.options.encoding,

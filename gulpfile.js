@@ -210,7 +210,7 @@ const test = () => {
 gulp.task('browserify', browserify);
 
 gulp.task('build', () => {
-	return eslint().then(es5).then(browserify);
+	return eslint().then(es5).then(sa).then(browserify);
 });
 
 gulp.task('build-sa', () => {
