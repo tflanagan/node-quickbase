@@ -7,6 +7,8 @@ A lightweight, very flexible QuickBase API
 
 [API Documentation](https://github.com/tflanagan/node-quickbase/blob/master/documentation/api.md)
 
+[PHP Version](https://github.com/tflanagan/php-quickbase)
+
 Install
 -------
 ```
@@ -43,7 +45,7 @@ node-quickbase, exposes the internal ```Promise``` object under ```QuickBase.Pro
 The use is the same as in Nodejs, but there is no need to ```require('quickbase')```.
 
 ```html
-<script type="text/javascript" src="quickbase.browserify.js"></script>
+<script type="text/javascript" src="quickbase.browserify.min.js"></script>
 <script type="text/javascript">
 	var quickbase = new QuickBase({
 		realm: 'www',
