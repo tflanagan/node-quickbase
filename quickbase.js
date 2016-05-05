@@ -458,7 +458,7 @@ class QueryBuilder {
 			try {
 				this.payload = builder.buildObject(this.options);
 			} catch (err) {
-				throw new QuickBaseError(1002, 'Error Building XML', err);
+				throw new QuickBaseError(1002, 'Error Building XML' + (err.name ? ': ' + err.name : ''), err.message ? err.message : err);
 			}
 		} else {
 			this.payload = Object.keys(this.options).reduce((payload, arg) => {
