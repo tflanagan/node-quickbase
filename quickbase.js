@@ -1128,12 +1128,24 @@ const prepareOptions = {
 
 	/* API_DoQuery, API_GenResultsTable, API_ImportFromCSV */
 	clist(val) {
-		return val instanceof Array ? val.join('.') : val;
+		if (!(val instanceof Array)) {
+			val = ('' + val).split('.');
+		}
+
+		return val.filter((v, i, a) => {
+			return a.indexOf(v) === i;
+		}).join('.');
 	},
 
 	/* API_ImportFromCSV */
 	clist_output(val) {
-		return val instanceof Array ? val.join('.') : val;
+		if (!(val instanceof Array)) {
+			val = ('' + val).split('.');
+		}
+
+		return val.filter((v, i, a) => {
+			return a.indexOf(v) === i;
+		}).join('.');
 	},
 
 	/* API_SetFieldProperties */
