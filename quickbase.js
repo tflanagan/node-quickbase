@@ -550,12 +550,19 @@ class QueryBuilder {
 
 /* XML Node Parsers */
 const xmlNodeParsers = {
+	choices_luid(val) {
+		return val.choice_luid;
+	},
 	fields(val) {
 		return QuickBase.checkIsArrAndConvert(val).map((value) => {
 			// Support Case #480141
 			// XML returned from QuickBase inserts '<br />' after every line in formula fields.
 			if (typeof value.formula === 'object') {
 				value.formula = value.formula._;
+			}
+
+			if (value.hasOwnProperty('choices_luid')) {
+				value.choices_luid = xmlNodeParsers.choices_luid(value.choices_luid);
 			}
 
 			return value;
