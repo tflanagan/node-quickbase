@@ -39,6 +39,7 @@ if (!Object.hasOwnProperty('extend') && Object.extend === undefined) {
 
 	Object.defineProperty(Object.prototype, 'extend', {
 		enumerable: false,
+		writable: true,
 		value: function value() {
 			if (!warned) {
 				warned = true;
