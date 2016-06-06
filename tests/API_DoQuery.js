@@ -29,6 +29,7 @@ const expectedDoQueryFmt = {
 	qname: '',
 	table: {
 		name: '',
+		desc: '',
 		original: {
 			table_id: '',
 			app_id: '',

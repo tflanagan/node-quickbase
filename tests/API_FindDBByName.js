@@ -37,7 +37,7 @@ module.exports = function(pass, fail) {
 	});
 
 	return qb.api('API_FindDBByName', {
-		dbname: 'Node-QuickBase'
+		dbname: 'Tristian\'s Application'
 	}).then((results) => {
 		common.objStrctEqual(results, expected, 'Mismatched API_FindDBByName Data Structure');
 

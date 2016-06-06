@@ -28,6 +28,7 @@ const expectedGetSchema = {
 	date_format: '',
 	table: {
 		name: '',
+		desc: '',
 		original: {
 			table_id: '',
 			app_id: '',
