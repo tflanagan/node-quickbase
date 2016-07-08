@@ -94,6 +94,7 @@ var defaults = {
 	username: '',
 	password: '',
 	appToken: '',
+	userToken: '',
 	ticket: '',
 
 	flags: {
@@ -402,6 +403,10 @@ var QueryBuilder = function () {
 
 			if (!this.options.hasOwnProperty('appToken') && this.settings.appToken) {
 				this.options.apptoken = this.settings.appToken;
+			}
+
+			if (!this.options.hasOwnProperty('userToken') && this.settings.userToken) {
+				this.options.usertoken = this.settings.userToken;
 			}
 
 			if (!this.options.hasOwnProperty('ticket') && this.settings.ticket) {
