@@ -49,7 +49,8 @@ The use is the same as in Nodejs, but there is no need to ```require('quickbase'
 <script type="text/javascript">
 	var quickbase = new QuickBase({
 		realm: 'www',
-		appToken: '*****'
+		appToken: '*****',
+		// userToken: '*****'
 	});
 
 	...
@@ -65,8 +66,11 @@ const QuickBase = require('quickbase');
 
 const quickbase = new QuickBase({
 	realm: 'www',
-	appToken: '*****'
+	appToken: '*****',
+	// userToken: '*****'
 });
+
+// If using user tokens, you do not need to call API_Authenticate
 
 /* Promise Based */
 quickbase.api('API_Authenticate', {

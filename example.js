@@ -5,8 +5,11 @@ const QuickBase = require('quickbase');
 
 const quickbase = new QuickBase({
 	realm: 'www',
-	appToken: '*****'
+	appToken: '*****',
+	// userToken: '*****'
 });
+
+// If using user tokens, you do not need to call API_Authenticate
 
 /* Promise Based */
 quickbase.api('API_Authenticate', {
