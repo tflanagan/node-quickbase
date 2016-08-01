@@ -187,7 +187,7 @@ var QuickBase = function () {
 		key: 'cleanXML',
 		value: function cleanXML(xml) {
 			var isInt = /^-?\s*\d+$/;
-			var isDig = /^(-?\s*\d+\.?\d*)$/;
+			var isDig = /^[^0](-?\s*\d+\.?\d*)$/;
 			var radix = 10;
 
 			var processNode = function processNode(node) {
