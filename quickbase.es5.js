@@ -187,7 +187,7 @@ var QuickBase = function () {
 		key: 'cleanXML',
 		value: function cleanXML(xml) {
 			var isInt = /^-?\s*\d+$/;
-			var isDig = /^[^0](-?\s*\d+\.?\d*)$/;
+			var isDig = /^((?!0\d+$)(?:0|-?\s*\d+\.?\d*))$/;
 			var radix = 10;
 
 			var processNode = function processNode(node) {
@@ -932,7 +932,6 @@ var actions = {
 	// },
 	API_GetGroupRole: {
 		// request(query) { },
-
 		response: function response(query, results) {
 			if (results.hasOwnProperty('roles')) {
 				results.roles = xmlNodeParsers.roles(results.roles);
@@ -945,7 +944,6 @@ var actions = {
 	// },
 	API_GetSchema: {
 		// request(query) { },
-
 		response: function response(query, results) {
 			if (results.table.hasOwnProperty('chdbids')) {
 				results.table.chdbids = QuickBase.checkIsArrAndConvert(results.table.chdbids).map(function (chdbid) {
@@ -979,7 +977,6 @@ var actions = {
 	// },
 	API_GetRoleInfo: {
 		// request(query) { },
-
 		response: function response(query, results) {
 			if (results.hasOwnProperty('roles')) {
 				results.roles = xmlNodeParsers.roles(results.roles);
@@ -992,7 +989,6 @@ var actions = {
 	// },
 	API_GetUserRole: {
 		// request(query) { },
-
 		response: function response(query, results) {
 			if (results.user.hasOwnProperty('roles')) {
 				results.user.roles = xmlNodeParsers.roles(results.user.roles);
@@ -1005,7 +1001,6 @@ var actions = {
 	// },
 	API_GrantedDBs: {
 		// request(query) { },
-
 		response: function response(query, results) {
 			if (results.hasOwnProperty('databases')) {
 				results.databases = results.databases.dbinfo;
@@ -1014,7 +1009,6 @@ var actions = {
 	},
 	API_GrantedDBsForGroup: {
 		// request(query) { },
-
 		response: function response(query, results) {
 			if (results.hasOwnProperty('databases')) {
 				results.databases = results.databases.dbinfo;
@@ -1023,7 +1017,6 @@ var actions = {
 	},
 	API_GrantedGroups: {
 		// request(query) { },
-
 		response: function response(query, results) {
 			if (results.hasOwnProperty('groups')) {
 				results.groups = QuickBase.checkIsArrAndConvert();
@@ -1032,7 +1025,6 @@ var actions = {
 	},
 	API_ImportFromCSV: {
 		// request(query) { },
-
 		response: function response(query, results) {
 			if (results.hasOwnProperty('rids')) {
 				results.rids = results.rids.map(function (record) {
@@ -1103,7 +1095,6 @@ var actions = {
 	// },
 	API_UploadFile: {
 		// request(query) { },
-
 		response: function response(query, results) {
 			if (results.hasOwnProperty('file_fields')) {
 				results.file_fields = QuickBase.checkIsArrAndConvert(results.file_fields.field);
@@ -1112,7 +1103,6 @@ var actions = {
 	},
 	API_UserRoles: {
 		// request(query) { },
-
 		response: function response(query, results) {
 			if (results.hasOwnProperty('users')) {
 				results.users = QuickBase.checkIsArrAndConvert(results.users).map(function (user) {
@@ -1196,7 +1186,6 @@ var prepareOptions = {
 	// choices (val) { return val; },
 
 	/* API_DoQuery, API_GenResultsTable, API_ImportFromCSV */
-
 	clist: function clist(val) {
 		if (!(val instanceof Array)) {
 			val = ('' + val).split('.');

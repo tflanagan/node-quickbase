@@ -165,7 +165,7 @@ class QuickBase {
 
 	static cleanXML(xml) {
 		const isInt = /^-?\s*\d+$/;
-		const isDig = /^[^0](-?\s*\d+\.?\d*)$/;
+		const isDig = /^((?!0\d+$)(?:0|-?\s*\d+\.?\d*))$/;
 		const radix = 10;
 
 		const processNode = (node) => {
