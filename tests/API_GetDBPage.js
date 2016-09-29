@@ -37,7 +37,7 @@ module.exports = function(pass, fail) {
 
 	return qb.api('API_GetDBPage', {
 		dbid: process.env.appid,
-		pageID: 2
+		pageID: 9
 	}).then((results) => {
 		common.objStrctEqual(results, expected, 'Mismatched API_GetDBPage Data Structure');
 
