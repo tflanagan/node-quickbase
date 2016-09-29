@@ -1027,17 +1027,29 @@ var actions = {
 		// request(query) { },
 		response: function response(query, results) {
 			if (results.hasOwnProperty('rids')) {
-				results.rids = results.rids.map(function (record) {
-					var ret = {
-						rid: record._
-					};
+				if (results.rids.hasOwnProperty('fields')) {
+					results.rids = results.rids.fields.map(function (record) {
+						record.field.forEach(function (field) {
+							record[field.id] = field._;
+						});
 
-					if (record.update_id) {
-						ret.update_id = record.update_id;
-					}
+						delete record.field;
 
-					return ret;
-				});
+						return record;
+					});
+				} else {
+					results.rids = results.rids.map(function (record) {
+						var ret = {
+							rid: record._
+						};
+
+						if (record.update_id) {
+							ret.update_id = record.update_id;
+						}
+
+						return ret;
+					});
+				}
 			}
 		}
 	},
