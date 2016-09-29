@@ -981,17 +981,29 @@ const actions = {
 		// request(query) { },
 		response(query, results) {
 			if (results.hasOwnProperty('rids')) {
-				results.rids = results.rids.map((record) => {
-					const ret = {
-						rid: record._
-					};
+				if (results.rids.hasOwnProperty('fields')) {
+					results.rids = results.rids.fields.map((record) => {
+						record.field.forEach((field) => {
+							record[field.id] = field._;
+						});
 
-					if (record.update_id) {
-						ret.update_id = record.update_id;
-					}
+						delete record.field;
 
-					return ret;
-				});
+						return record;
+					});
+				} else {
+					results.rids = results.rids.map((record) => {
+						const ret = {
+							rid: record._
+						};
+
+						if (record.update_id) {
+							ret.update_id = record.update_id;
+						}
+
+						return ret;
+					});
+				}
 			}
 		}
 	},
