@@ -1511,6 +1511,7 @@ QuickBase.prepareOptions = prepareOptions;
 QuickBase.xmlNodeParsers = xmlNodeParsers;
 
 /* Expose Properties */
+QuickBase.className = 'QuickBase';
 QuickBase.defaults = defaults;
 QuickBase.DEBUG = false;
 
