@@ -102,6 +102,8 @@ const defaults = {
 class QuickBase {
 
 	constructor(options) {
+		this.className = QuickBase.className;
+
 		this.settings = merge({}, QuickBase.defaults, options || {});
 
 		this.throttle = new Throttle(this.settings.connectionLimit, this.settings.errorOnConnectionLimit);
