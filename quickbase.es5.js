@@ -31,6 +31,8 @@ var xml = require('xml2js');
 var http = require('http');
 var https = require('https');
 var merge = require('lodash.merge');
+var debugRequest = require('debug')('quickbase:request');
+var debugResponse = require('debug')('quickbase:response');
 var Promise = require('bluebird');
 
 /* Backwards Compatibility */
@@ -124,6 +126,8 @@ var QuickBase = function () {
 	function QuickBase(options) {
 		_classCallCheck(this, QuickBase);
 
+		this._id = 0;
+
 		this.className = QuickBase.className;
 
 		this.settings = merge({}, QuickBase.defaults, options || {});
@@ -142,14 +146,16 @@ var QuickBase = function () {
 				Promise.using(_this2.throttle.acquire(), function () {
 					var query = new QueryBuilder(_this2, action, options || {}, callback);
 
+					query._id = _this2._id;
+
+					++_this2._id;
+
 					return query.addFlags().processOptions().actionRequest().constructPayload().processQuery().then(function (results) {
 						query.results = results;
 
 						query.actionResponse();
 
-						if (QuickBase.DEBUG) {
-							console.info('Results Returned: ', query.results);
-						}
+						debugResponse(query._id, query.results);
 
 						if (callback instanceof Function) {
 							callback(null, query.results);
@@ -347,6 +353,7 @@ var QueryBuilder = function () {
 
 		this.results;
 
+		this._id = 0;
 		this._nErr = 0;
 
 		return this;
@@ -569,9 +576,7 @@ var QueryBuilder = function () {
 					reject(err);
 				});
 
-				if (QuickBase.DEBUG) {
-					console.info('Sending Request (Headers/Payload):', options, _this7.payload);
-				}
+				debugRequest(_this7._id, options, _this7.payload);
 
 				request.end();
 			});
@@ -1567,7 +1572,6 @@ QuickBase.xmlNodeParsers = xmlNodeParsers;
 /* Expose Properties */
 QuickBase.className = 'QuickBase';
 QuickBase.defaults = defaults;
-QuickBase.DEBUG = false;
 
 /* Export Module */
 if (typeof module !== 'undefined' && module.exports) {
@@ -1582,7 +1586,9 @@ if (typeof global !== 'undefined' && typeof window !== 'undefined' && global ===
 	global.QuickBase = QuickBase;
 
 	if (window.location.search.match(/debug=1/i)) {
-		QuickBase.DEBUG = true;
+		if (window.localStorage) {
+			window.localStorage.debug = 'quickbase:*';
+		}
 	} else {
 		QuickBase.Promise.config({
 			longStackTraces: false
