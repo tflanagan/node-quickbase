@@ -174,6 +174,7 @@ class QuickBase {
 	static cleanXML(xml) {
 		const isInt = /^-?\s*\d+$/;
 		const isDig = /^((?!0\d+$)(?:0|-?\s*\d+\.?\d*))$/;
+		const isSpaces = /^\s{1,}$/;
 		const radix = 10;
 
 		const processNode = (node) => {
@@ -208,38 +209,42 @@ class QuickBase {
 			}
 
 			if (typeof xml[node] === 'string') {
-				value = xml[node].trim();
+				if (value.match(isSpaces)) {
+					xml[node] = value;
+				} else {
+					value = xml[node].trim();
 
-				if (value.match(isDig)) {
-					if (value.match(isInt)) {
-						l = parseInt(value, radix);
+					if (value.match(isDig)) {
+						if (value.match(isInt)) {
+							l = parseInt(value, radix);
 
-						if (Math.abs(l) <= 9007199254740991) {
-							xml[node] = l;
-						}
-					} else {
-						l = value.length;
-
-						if (l <= 15) {
-							xml[node] = parseFloat(value);
+							if (Math.abs(l) <= 9007199254740991) {
+								xml[node] = l;
+							}
 						} else {
-							for (i = 0, s = -1, e = -1; i < l && e - s <= 15; ++i) {
-								if (value.charAt(i) > 0) {
-									if (s === -1) {
-										s = i;
-									} else {
-										e = i;
+							l = value.length;
+
+							if (l <= 15) {
+								xml[node] = parseFloat(value);
+							} else {
+								for (i = 0, s = -1, e = -1; i < l && e - s <= 15; ++i) {
+									if (value.charAt(i) > 0) {
+										if (s === -1) {
+											s = i;
+										} else {
+											e = i;
+										}
 									}
 								}
-							}
 
-							if (e - s <= 15) {
-								xml[node] = parseFloat(value);
+								if (e - s <= 15) {
+									xml[node] = parseFloat(value);
+								}
 							}
 						}
+					} else {
+						xml[node] = value;
 					}
-				} else {
-					xml[node] = value;
 				}
 			}
 
