@@ -67,7 +67,7 @@ if (!Object.hasOwnProperty('extend') && Object.extend === undefined) {
 var QuickBaseError = function (_Error) {
 	_inherits(QuickBaseError, _Error);
 
-	function QuickBaseError(code, name, message) {
+	function QuickBaseError(code, name, message, action) {
 		var _ret;
 
 		_classCallCheck(this, QuickBaseError);
@@ -77,6 +77,7 @@ var QuickBaseError = function (_Error) {
 		_this.code = code;
 		_this.name = name;
 		_this.message = message || '';
+		_this.action = action || '';
 
 		return _ret = _this, _possibleConstructorReturn(_this, _ret);
 	}
@@ -615,7 +616,7 @@ var QueryBuilder = function () {
 								}
 
 								if (result.errcode !== settings.status.errcode) {
-									return reject(new QuickBaseError(result.errcode, result.errtext, result.errdetail));
+									return reject(new QuickBaseError(result.errcode, result.errtext, result.errdetail, result.action));
 								}
 
 								resolve(result);

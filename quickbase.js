@@ -54,12 +54,13 @@ if (!Object.hasOwnProperty('extend') && Object.extend === undefined) {
 /* Error Handling */
 class QuickBaseError extends Error {
 
-	constructor(code, name, message) {
+	constructor(code, name, message, action) {
 		super(name);
 
 		this.code = code;
 		this.name = name;
 		this.message = message || '';
+		this.action = action || '';
 
 		return this;
 	}
@@ -573,7 +574,7 @@ class QueryBuilder {
 							}
 
 							if (result.errcode !== settings.status.errcode) {
-								return reject(new QuickBaseError(result.errcode, result.errtext, result.errdetail));
+								return reject(new QuickBaseError(result.errcode, result.errtext, result.errdetail, result.action));
 							}
 
 							resolve(result);
