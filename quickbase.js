@@ -100,6 +100,98 @@ const defaults = {
 	errorOnConnectionLimit: false
 };
 
+/* Throttle */
+class Throttle {
+
+	constructor(requestsPerPeriod, periodLength, errorOnLimit) {
+		this.requestsPerPeriod = requestsPerPeriod || 10;
+		this.periodLength = periodLength || -1;
+		this.errorOnLimit = errorOnLimit || false;
+
+		this._tick = undefined;
+		this._nRequests = 0;
+		this._times = [];
+		this._pending = [];
+
+		return this;
+	}
+
+	_acquire() {
+		return new Promise((resolve, reject) => {
+			if (this.periodLength === -1) {
+				if (this._nRequests < this.requestsPerPeriod || this.requestsPerPeriod === -1) {
+					++this._nRequests;
+
+					return resolve();
+				}
+			}else
+			if (this._times.length < this.requestsPerPeriod) {
+				this._times.push(Date.now());
+
+				return resolve();
+			}
+
+			if (this.errorOnLimit) {
+				return reject(new Error('Throttle Maximum Reached'));
+			}
+
+			this._pending.push({
+				resolve: resolve,
+				reject: reject
+			});
+		}).disposer(() => {
+			this._testTick();
+		});
+	}
+
+	_testTick() {
+		if (this.periodLength === -1) {
+			--this._nRequests;
+
+			if (this._nRequests < this.requestsPerPeriod && this._pending.length > 0) {
+				++this._nRequests;
+
+				this._pending.shift().resolve();
+			}
+
+			return;
+		}
+
+		const cutOff = Date.now() - this.periodLength;
+
+		this._times = this._times.filter((time) => {
+			return time >= cutOff;
+		}).sort();
+
+		if (this._times.length < this.requestsPerPeriod) {
+			if (this._pending.length > 0) {
+				this._times.push(Date.now());
+
+				this._pending.shift().resolve();
+			}
+		} else {
+			if (this._tick) {
+				clearTimeout(this._tick);
+			}
+
+			this._tick = setTimeout(() => {
+				this._testTick();
+			}, this._times[0] - cutOff);
+		}
+	}
+
+	acquire(fn) {
+		return Promise.using(this._acquire(), () => {
+			if (fn) {
+				return new Promise(fn);
+			}
+
+			return Promise.resolve();
+		});
+	}
+
+}
+
 /* Main Class */
 class QuickBase {
 
@@ -110,51 +202,47 @@ class QuickBase {
 
 		this.settings = merge({}, QuickBase.defaults, options || {});
 
-		this.throttle = new Throttle(this.settings.connectionLimit, this.settings.errorOnConnectionLimit);
+		this.throttle = new Throttle(this.settings.connectionLimit, -1, this.settings.errorOnConnectionLimit);
 
 		return this;
 	}
 
 	api(action, options, callback) {
-		const call = new Promise((resolve, reject) => {
-			Promise.using(this.throttle.acquire(), () => {
-				const query = new QueryBuilder(this, action, options || {}, callback);
+		return this.throttle.acquire((resolve, reject) => {
+			const query = new QueryBuilder(this, action, options || {}, callback);
 
-				query._id = this._id;
+			query._id = this._id;
 
-				++this._id;
+			++this._id;
 
-				return query
-					.addFlags()
-					.processOptions()
-					.actionRequest()
-					.constructPayload()
-					.processQuery()
-					.then((results) => {
-						query.results = results;
+			return query
+				.addFlags()
+				.processOptions()
+				.actionRequest()
+				.constructPayload()
+				.processQuery()
+				.then((results) => {
+					query.results = results;
 
-						query.actionResponse();
+					query.actionResponse();
 
-						debugResponse(query._id, query.results);
+					debugResponse(query._id, query.results);
 
-						if (callback instanceof Function) {
-							callback(null, query.results);
-						} else {
-							resolve(query.results);
-						}
-					}).catch((error) => {
-						resolve(query.catchError(error));
-					});
-			}).catch((error) => {
-				if (callback instanceof Function) {
-					callback(error);
-				} else {
-					reject(error);
-				}
-			});
+					if (callback instanceof Function) {
+						callback(null, query.results);
+					} else {
+						resolve(query.results);
+					}
+				}).catch((error) => {
+					resolve(query.catchError(error));
+				});
+		}).catch((error) => {
+			if (callback instanceof Function) {
+				callback(error);
+			} else {
+				throw error;
+			}
 		});
-
-		return callback instanceof Function ? this : call;
 	}
 
 	static checkIsArrAndConvert(obj) {
@@ -209,7 +297,7 @@ class QuickBase {
 			}
 
 			if (typeof xml[node] === 'string') {
-				if (value.match(isSpaces)) {
+				if (value && ('' + value).match(isSpaces)) {
 					xml[node] = value;
 				} else {
 					value = xml[node].trim();
@@ -262,48 +350,6 @@ class QuickBase {
 		Object.keys(xml).forEach(processNode);
 
 		return xml;
-	}
-
-}
-
-/* Throttle */
-class Throttle {
-
-	constructor(maxConnections, errorOnConnectionLimit) {
-		this.maxConnections = maxConnections || 10;
-		this.errorOnConnectionLimit = errorOnConnectionLimit || false;
-
-		this._numConnections = 0;
-		this._pendingConnections = [];
-
-		return this;
-	}
-
-	acquire() {
-		return new Promise((resolve, reject) => {
-			if (this.maxConnections === -1 || this._numConnections < this.maxConnections) {
-				++this._numConnections;
-
-				return resolve();
-			}
-
-			if (this.errorOnConnectionLimit) {
-				return reject(new QuickBaseError(1001, 'No Connections Available', 'Maximum Number of Connections Reached'));
-			}
-
-			this._pendingConnections.push({
-				resolve: resolve,
-				reject: reject
-			});
-		}).disposer(() => {
-			--this._numConnections;
-
-			if (this._pendingConnections.length > 0) {
-				++this._numConnections;
-
-				this._pendingConnections.shift().resolve();
-			}
-		});
 	}
 
 }
@@ -520,7 +566,11 @@ class QueryBuilder {
 								return reject(new QuickBaseError(1000, 'Error Processing Request', err));
 							}
 
-							result = QuickBase.cleanXML(result.qdbapi);
+							try {
+								result = QuickBase.cleanXML(result.qdbapi);
+							} catch (err) {
+								return reject(new QuickBaseError(1001, 'Error Processing Request', err));
+							}
 
 							if (result.errcode !== settings.status.errcode) {
 								return reject(new QuickBaseError(result.errcode, result.errtext, result.errdetail));

@@ -17,7 +17,7 @@
 
 /* Dependencies */
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -72,7 +72,7 @@ var QuickBaseError = function (_Error) {
 
 		_classCallCheck(this, QuickBaseError);
 
-		var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(QuickBaseError).call(this, name));
+		var _this = _possibleConstructorReturn(this, (QuickBaseError.__proto__ || Object.getPrototypeOf(QuickBaseError)).call(this, name));
 
 		_this.code = code;
 		_this.name = name;
@@ -120,7 +120,111 @@ var defaults = {
 	errorOnConnectionLimit: false
 };
 
+/* Throttle */
+
+var Throttle = function () {
+	function Throttle(requestsPerPeriod, periodLength, errorOnLimit) {
+		_classCallCheck(this, Throttle);
+
+		this.requestsPerPeriod = requestsPerPeriod || 10;
+		this.periodLength = periodLength || -1;
+		this.errorOnLimit = errorOnLimit || false;
+
+		this._tick = undefined;
+		this._nRequests = 0;
+		this._times = [];
+		this._pending = [];
+
+		return this;
+	}
+
+	_createClass(Throttle, [{
+		key: '_acquire',
+		value: function _acquire() {
+			var _this2 = this;
+
+			return new Promise(function (resolve, reject) {
+				if (_this2.periodLength === -1) {
+					if (_this2._nRequests < _this2.requestsPerPeriod || _this2.requestsPerPeriod === -1) {
+						++_this2._nRequests;
+
+						return resolve();
+					}
+				} else if (_this2._times.length < _this2.requestsPerPeriod) {
+					_this2._times.push(Date.now());
+
+					return resolve();
+				}
+
+				if (_this2.errorOnLimit) {
+					return reject(new Error('Throttle Maximum Reached'));
+				}
+
+				_this2._pending.push({
+					resolve: resolve,
+					reject: reject
+				});
+			}).disposer(function () {
+				_this2._testTick();
+			});
+		}
+	}, {
+		key: '_testTick',
+		value: function _testTick() {
+			var _this3 = this;
+
+			if (this.periodLength === -1) {
+				--this._nRequests;
+
+				if (this._nRequests < this.requestsPerPeriod && this._pending.length > 0) {
+					++this._nRequests;
+
+					this._pending.shift().resolve();
+				}
+
+				return;
+			}
+
+			var cutOff = Date.now() - this.periodLength;
+
+			this._times = this._times.filter(function (time) {
+				return time >= cutOff;
+			}).sort();
+
+			if (this._times.length < this.requestsPerPeriod) {
+				if (this._pending.length > 0) {
+					this._times.push(Date.now());
+
+					this._pending.shift().resolve();
+				}
+			} else {
+				if (this._tick) {
+					clearTimeout(this._tick);
+				}
+
+				this._tick = setTimeout(function () {
+					_this3._testTick();
+				}, this._times[0] - cutOff);
+			}
+		}
+	}, {
+		key: 'acquire',
+		value: function acquire(fn) {
+			return Promise.using(this._acquire(), function () {
+				if (fn) {
+					return new Promise(fn);
+				}
+
+				return Promise.resolve();
+			});
+		}
+	}]);
+
+	return Throttle;
+}();
+
 /* Main Class */
+
 
 var QuickBase = function () {
 	function QuickBase(options) {
@@ -132,7 +236,7 @@ var QuickBase = function () {
 
 		this.settings = merge({}, QuickBase.defaults, options || {});
 
-		this.throttle = new Throttle(this.settings.connectionLimit, this.settings.errorOnConnectionLimit);
+		this.throttle = new Throttle(this.settings.connectionLimit, -1, this.settings.errorOnConnectionLimit);
 
 		return this;
 	}
@@ -140,41 +244,37 @@ var QuickBase = function () {
 	_createClass(QuickBase, [{
 		key: 'api',
 		value: function api(action, options, callback) {
-			var _this2 = this;
+			var _this4 = this;
 
-			var call = new Promise(function (resolve, reject) {
-				Promise.using(_this2.throttle.acquire(), function () {
-					var query = new QueryBuilder(_this2, action, options || {}, callback);
+			return this.throttle.acquire(function (resolve, reject) {
+				var query = new QueryBuilder(_this4, action, options || {}, callback);
 
-					query._id = _this2._id;
+				query._id = _this4._id;
 
-					++_this2._id;
+				++_this4._id;
 
-					return query.addFlags().processOptions().actionRequest().constructPayload().processQuery().then(function (results) {
-						query.results = results;
+				return query.addFlags().processOptions().actionRequest().constructPayload().processQuery().then(function (results) {
+					query.results = results;
 
-						query.actionResponse();
+					query.actionResponse();
 
-						debugResponse(query._id, query.results);
+					debugResponse(query._id, query.results);
 
-						if (callback instanceof Function) {
-							callback(null, query.results);
-						} else {
-							resolve(query.results);
-						}
-					}).catch(function (error) {
-						resolve(query.catchError(error));
-					});
-				}).catch(function (error) {
 					if (callback instanceof Function) {
-						callback(error);
+						callback(null, query.results);
 					} else {
-						reject(error);
+						resolve(query.results);
 					}
+				}).catch(function (error) {
+					resolve(query.catchError(error));
 				});
+			}).catch(function (error) {
+				if (callback instanceof Function) {
+					callback(error);
+				} else {
+					throw error;
+				}
 			});
-
-			return callback instanceof Function ? this : call;
 		}
 	}], [{
 		key: 'checkIsArrAndConvert',
@@ -232,7 +332,7 @@ var QuickBase = function () {
 				}
 
 				if (typeof xml[node] === 'string') {
-					if (value.match(isSpaces)) {
+					if (value && ('' + value).match(isSpaces)) {
 						xml[node] = value;
 					} else {
 						value = xml[node].trim();
@@ -289,57 +389,6 @@ var QuickBase = function () {
 	}]);
 
 	return QuickBase;
-}();
-
-/* Throttle */
-
-
-var Throttle = function () {
-	function Throttle(maxConnections, errorOnConnectionLimit) {
-		_classCallCheck(this, Throttle);
-
-		this.maxConnections = maxConnections || 10;
-		this.errorOnConnectionLimit = errorOnConnectionLimit || false;
-
-		this._numConnections = 0;
-		this._pendingConnections = [];
-
-		return this;
-	}
-
-	_createClass(Throttle, [{
-		key: 'acquire',
-		value: function acquire() {
-			var _this3 = this;
-
-			return new Promise(function (resolve, reject) {
-				if (_this3.maxConnections === -1 || _this3._numConnections < _this3.maxConnections) {
-					++_this3._numConnections;
-
-					return resolve();
-				}
-
-				if (_this3.errorOnConnectionLimit) {
-					return reject(new QuickBaseError(1001, 'No Connections Available', 'Maximum Number of Connections Reached'));
-				}
-
-				_this3._pendingConnections.push({
-					resolve: resolve,
-					reject: reject
-				});
-			}).disposer(function () {
-				--_this3._numConnections;
-
-				if (_this3._pendingConnections.length > 0) {
-					++_this3._numConnections;
-
-					_this3._pendingConnections.shift().resolve();
-				}
-			});
-		}
-	}]);
-
-	return Throttle;
 }();
 
 /* Request Handling */
@@ -409,7 +458,7 @@ var QueryBuilder = function () {
 	}, {
 		key: 'addFlags',
 		value: function addFlags() {
-			var _this4 = this;
+			var _this5 = this;
 
 			if (!this.options.hasOwnProperty('msInUTC') && this.settings.flags.msInUTC) {
 				this.options.msInUTC = 1;
@@ -432,8 +481,8 @@ var QueryBuilder = function () {
 			}
 
 			Object.keys(this.settings.flags).forEach(function (flag) {
-				if (_this4.options.hasOwnProperty(flag)) {
-					_this4.settings.flags[flag] = _this4.options[flag];
+				if (_this5.options.hasOwnProperty(flag)) {
+					_this5.settings.flags[flag] = _this5.options[flag];
 				}
 			});
 
@@ -442,47 +491,47 @@ var QueryBuilder = function () {
 	}, {
 		key: 'catchError',
 		value: function catchError(err) {
-			var _this5 = this;
+			var _this6 = this;
 
 			++this._nErr;
 
 			if (this._nErr < this.settings.maxErrorRetryAttempts) {
 				if ([1000, 1001].indexOf(err.code) !== -1) {
 					return this.processQuery().then(function (results) {
-						_this5.results = results;
+						_this6.results = results;
 
-						_this5.actionResponse();
+						_this6.actionResponse();
 
-						if (_this5.callback instanceof Function) {
-							_this5.callback(null, _this5.results);
+						if (_this6.callback instanceof Function) {
+							_this6.callback(null, _this6.results);
 						} else {
-							return _this5.results;
+							return _this6.results;
 						}
 					}).catch(function (error) {
-						return _this5.catchError(error);
+						return _this6.catchError(error);
 					});
 				} else if (err.code === 4 && this.parent.settings.hasOwnProperty('username') && this.parent.settings.username !== '' && this.parent.settings.hasOwnProperty('password') && this.parent.settings.password !== '') {
 					return this.parent.api('API_Authenticate', {
 						username: this.parent.settings.username,
 						password: this.parent.settings.password
 					}).then(function (results) {
-						_this5.parent.settings.ticket = results.ticket;
-						_this5.settings.ticket = results.ticket;
-						_this5.options.ticket = results.ticket;
+						_this6.parent.settings.ticket = results.ticket;
+						_this6.settings.ticket = results.ticket;
+						_this6.options.ticket = results.ticket;
 
-						return _this5.addFlags().constructPayload().processQuery().then(function (results) {
-							_this5.results = results;
+						return _this6.addFlags().constructPayload().processQuery().then(function (results) {
+							_this6.results = results;
 
-							_this5.actionResponse();
+							_this6.actionResponse();
 
-							if (_this5.callback instanceof Function) {
-								_this5.callback(null, _this5.results);
+							if (_this6.callback instanceof Function) {
+								_this6.callback(null, _this6.results);
 							} else {
-								return _this5.results;
+								return _this6.results;
 							}
 						});
 					}).catch(function (error) {
-						return _this5.catchError(error);
+						return _this6.catchError(error);
 					});
 				}
 			}
@@ -496,7 +545,7 @@ var QueryBuilder = function () {
 	}, {
 		key: 'constructPayload',
 		value: function constructPayload() {
-			var _this6 = this;
+			var _this7 = this;
 
 			var builder = new xml.Builder({
 				rootName: 'qdbapi',
@@ -518,7 +567,7 @@ var QueryBuilder = function () {
 				}
 			} else {
 				this.payload = Object.keys(this.options).reduce(function (payload, arg) {
-					return payload + '&' + arg + '=' + encodeURIComponent(_this6.options[arg]);
+					return payload + '&' + arg + '=' + encodeURIComponent(_this7.options[arg]);
 				}, this.payload);
 			}
 
@@ -527,19 +576,19 @@ var QueryBuilder = function () {
 	}, {
 		key: 'processQuery',
 		value: function processQuery() {
-			var _this7 = this;
+			var _this8 = this;
 
 			return new Promise(function (resolve, reject) {
-				var settings = _this7.settings;
+				var settings = _this8.settings;
 				var protocol = settings.useSSL ? https : http;
 				var options = {
 					hostname: [settings.realm, settings.domain].join('.'),
 					port: settings.useSSL ? 443 : 80,
-					path: settings.path + 'db/' + (_this7.options.dbid && !settings.flags.dbidAsParam ? _this7.options.dbid : 'main') + '?act=' + _this7.action + (!settings.flags.useXML ? _this7.payload : ''),
+					path: settings.path + 'db/' + (_this8.options.dbid && !settings.flags.dbidAsParam ? _this8.options.dbid : 'main') + '?act=' + _this8.action + (!settings.flags.useXML ? _this8.payload : ''),
 					method: settings.flags.useXML ? 'POST' : 'GET',
 					headers: {
-						'Content-Type': 'application/xml; charset=' + _this7.options.encoding,
-						'QUICKBASE-ACTION': _this7.action
+						'Content-Type': 'application/xml; charset=' + _this8.options.encoding,
+						'QUICKBASE-ACTION': _this8.action
 					},
 					agent: false
 				};
@@ -559,7 +608,11 @@ var QueryBuilder = function () {
 									return reject(new QuickBaseError(1000, 'Error Processing Request', err));
 								}
 
-								result = QuickBase.cleanXML(result.qdbapi);
+								try {
+									result = QuickBase.cleanXML(result.qdbapi);
+								} catch (err) {
+									return reject(new QuickBaseError(1001, 'Error Processing Request', err));
+								}
 
 								if (result.errcode !== settings.status.errcode) {
 									return reject(new QuickBaseError(result.errcode, result.errtext, result.errdetail));
@@ -574,14 +627,14 @@ var QueryBuilder = function () {
 				});
 
 				if (settings.flags.useXML === true) {
-					request.write(_this7.payload);
+					request.write(_this8.payload);
 				}
 
 				request.on('error', function (err) {
 					reject(err);
 				});
 
-				debugRequest(_this7._id, options, _this7.payload);
+				debugRequest(_this8._id, options, _this8.payload);
 
 				request.end();
 			});
@@ -589,7 +642,7 @@ var QueryBuilder = function () {
 	}, {
 		key: 'processOptions',
 		value: function processOptions() {
-			var _this8 = this;
+			var _this9 = this;
 
 			if (this.options.hasOwnProperty('fields')) {
 				this.options.field = this.options.fields;
@@ -598,7 +651,7 @@ var QueryBuilder = function () {
 			}
 
 			this.options = Object.keys(this.options).reduce(function (newOpts, option) {
-				newOpts[option] = prepareOptions.hasOwnProperty(option) ? prepareOptions[option](_this8.options[option]) : newOpts[option] = _this8.options[option];
+				newOpts[option] = prepareOptions.hasOwnProperty(option) ? prepareOptions[option](_this9.options[option]) : newOpts[option] = _this9.options[option];
 
 				return newOpts;
 			}, {});
@@ -1518,52 +1571,6 @@ var prepareOptions = {
 };
 
 /* Expose Instances */
-
-
-/* API_SetFieldProperties */
-// sort_as_given (val) { return val; },
-
-/* API_CopyMasterDetail */
-// sourcerid (val) { return val; },
-
-/* API_AddSubGroup, API_RemoveSubgroup */
-// subgroupid (val) { return val; },
-
-/* API_CreateTable */
-// tname (val) { return val; },
-
-/* API_AddField */
-// type (val) { return val; },
-
-/* API_SetFieldProperties */
-// unique (val) { return val; },
-
-/* API_EditRecord */
-// update_id (val) { return val; },
-
-/* API_AddUserToGroup, API_AddUserToRole, API_ChangeUserRole, API_GetUserRole, API_GrantedGroups, API_RemoveUserFromGroup, API_RemoveUserFromRole, API_SendInvitation */
-// userid (val) { return val; },
-
-/* API_Authenticate */
-// username (val) { return val; },
-
-/* API_CloneDatabase */
-// usersandroles (val) { return val; },
-
-/* API_SendInvitation */
-// usertext (val) { return val; },
-
-/* API_SetDBVar */
-// value (val) { return val; },
-
-/* API_GetDBVar, API_SetDBVar */
-// varname (val) { return val; },
-
-/* API_SetFieldProperties */
-// width (val) { return val; },
-
-/* API_GrantedDBs */
-// withembeddedtables (val) { return val; }
 QuickBase.QueryBuilder = QueryBuilder;
 QuickBase.Throttle = Throttle;
 QuickBase.QuickBaseError = QuickBaseError;
