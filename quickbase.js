@@ -211,6 +211,19 @@ class QuickBase {
 	api(action, options, callback) {
 		return this.throttle.acquire((resolve, reject) => {
 			const query = new QueryBuilder(this, action, options || {}, callback);
+			const handleRes = function(results) {
+				query.results = results;
+
+				query.actionResponse();
+
+				debugResponse(query._id, query.results);
+
+				if (callback instanceof Function) {
+					callback(null, query.results);
+				} else {
+					resolve(query.results);
+				}
+			};
 
 			query._id = this._id;
 
@@ -222,24 +235,13 @@ class QuickBase {
 				.actionRequest()
 				.constructPayload()
 				.processQuery()
-				.then((results) => {
-					query.results = results;
-
-					query.actionResponse();
-
-					debugResponse(query._id, query.results);
-
-					if (callback instanceof Function) {
-						callback(null, query.results);
-					} else {
-						resolve(query.results);
-					}
-				}).catch((error) => {
-					resolve(query.catchError(error));
+				.then(handleRes)
+				.catch((error) => {
+					return query.catchError(error).then(handleRes).catch(reject);
 				});
 		}).catch((error) => {
 			if (callback instanceof Function) {
-				callback(error);
+				return callback(error);
 			} else {
 				throw error;
 			}
@@ -501,11 +503,7 @@ class QueryBuilder {
 			}
 		}
 
-		if (this.callback instanceof Function) {
-			this.callback(err);
-		} else {
-			throw err;
-		}
+		return Promise.reject(err);
 	}
 
 	constructPayload() {

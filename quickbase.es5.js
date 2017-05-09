@@ -249,12 +249,7 @@ var QuickBase = function () {
 
 			return this.throttle.acquire(function (resolve, reject) {
 				var query = new QueryBuilder(_this4, action, options || {}, callback);
-
-				query._id = _this4._id;
-
-				++_this4._id;
-
-				return query.addFlags().processOptions().actionRequest().constructPayload().processQuery().then(function (results) {
+				var handleRes = function handleRes(results) {
 					query.results = results;
 
 					query.actionResponse();
@@ -266,12 +261,18 @@ var QuickBase = function () {
 					} else {
 						resolve(query.results);
 					}
-				}).catch(function (error) {
-					resolve(query.catchError(error));
+				};
+
+				query._id = _this4._id;
+
+				++_this4._id;
+
+				return query.addFlags().processOptions().actionRequest().constructPayload().processQuery().then(handleRes).catch(function (error) {
+					return query.catchError(error).then(handleRes).catch(reject);
 				});
 			}).catch(function (error) {
 				if (callback instanceof Function) {
-					callback(error);
+					return callback(error);
 				} else {
 					throw error;
 				}
@@ -537,11 +538,7 @@ var QueryBuilder = function () {
 				}
 			}
 
-			if (this.callback instanceof Function) {
-				this.callback(err);
-			} else {
-				throw err;
-			}
+			return Promise.reject(err);
 		}
 	}, {
 		key: 'constructPayload',
