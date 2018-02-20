@@ -558,6 +558,9 @@ class QueryBuilder {
 
 				response.on('end', () => {
 					if (response.headers['content-type'] === 'application/xml') {
+						// Remove <BR/> tag from new RTF fields. They're not necessary
+						xmlResponse = xmlNodeParsers.stripBreakTag(xmlResponse);
+
 						xml.parseString(xmlResponse, {
 							async: true
 						}, (err, result) => {
@@ -617,6 +620,9 @@ class QueryBuilder {
 
 /* XML Node Parsers */
 const xmlNodeParsers = {
+	stripBreakTag(val) {
+		val.replace(/<[Bb][Rr]\/>/g, '');
+	},
 	choices_luid(val) {
 		return val.choice_luid;
 	},

@@ -599,6 +599,8 @@ var QueryBuilder = function () {
 
 					response.on('end', function () {
 						if (response.headers['content-type'] === 'application/xml') {
+							xmlResponse = xmlNodeParsers.stripBreakTag(xmlResponse);
+							
 							xml.parseString(xmlResponse, {
 								async: true
 							}, function (err, result) {
@@ -665,6 +667,9 @@ var QueryBuilder = function () {
 
 
 var xmlNodeParsers = {
+	stripBreakTag: function(val) {
+		val.replace(/<[Bb][Rr]\/>/g, '');
+	},
 	choices_luid: function choices_luid(val) {
 		return val.choice_luid;
 	},
