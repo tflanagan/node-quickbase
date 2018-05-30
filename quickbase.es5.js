@@ -1067,6 +1067,10 @@ var actions = {
 		response: function response(query, results) {
 			if (results.hasOwnProperty('databases')) {
 				results.databases = results.databases.dbinfo;
+
+				if (!(results.databases instanceof Array)) {
+					results.databases = [results.databases];
+				}
 			}
 		}
 	},
@@ -1075,6 +1079,10 @@ var actions = {
 		response: function response(query, results) {
 			if (results.hasOwnProperty('databases')) {
 				results.databases = results.databases.dbinfo;
+
+				if (!(results.databases instanceof Array)) {
+					results.databases = [results.databases];
+				}
 			}
 		}
 	},
