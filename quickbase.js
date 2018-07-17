@@ -96,6 +96,8 @@ const defaults = {
 		errdetail: ''
 	},
 
+	reqOptions: {},
+
 	maxErrorRetryAttempts: 3,
 	connectionLimit: 10,
 	errorOnConnectionLimit: false
@@ -549,7 +551,7 @@ class QueryBuilder {
 				},
 				agent: false
 			};
-			const request = protocol.request(options, (response) => {
+			const request = protocol.request(merge({}, options, this.parent.reqOptions), (response) => {
 				let xmlResponse = '';
 
 				response.on('data', (chunk) => {

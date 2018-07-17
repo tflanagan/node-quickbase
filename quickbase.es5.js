@@ -116,6 +116,8 @@ var defaults = {
 		errdetail: ''
 	},
 
+	reqOptions: {},
+
 	maxErrorRetryAttempts: 3,
 	connectionLimit: 10,
 	errorOnConnectionLimit: false
@@ -590,7 +592,7 @@ var QueryBuilder = function () {
 					},
 					agent: false
 				};
-				var request = protocol.request(options, function (response) {
+				var request = protocol.request(merge({}, options, _this8.parent.reqOptions), function (response) {
 					var xmlResponse = '';
 
 					response.on('data', function (chunk) {
