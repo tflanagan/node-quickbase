@@ -678,6 +678,10 @@ var xmlNodeParsers = {
 				value.formula = value.formula._;
 			}
 
+			if (_typeof(value.fieldhelp) === 'object') {
+				value.fieldhelp = value.fieldhelp._;
+			}
+
 			if (value.hasOwnProperty('choices_luid')) {
 				value.choices_luid = xmlNodeParsers.choices_luid(value.choices_luid);
 			}

@@ -630,6 +630,10 @@ const xmlNodeParsers = {
 				value.formula = value.formula._;
 			}
 
+			if (typeof value.fieldhelp === 'object') {
+				value.fieldhelp = value.fieldhelp._;
+			}
+
 			if (value.hasOwnProperty('choices_luid')) {
 				value.choices_luid = xmlNodeParsers.choices_luid(value.choices_luid);
 			}
