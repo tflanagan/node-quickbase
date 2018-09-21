@@ -581,7 +581,7 @@ var QueryBuilder = function () {
 			return new Promise(function (resolve, reject) {
 				var settings = _this8.settings;
 				var protocol = settings.useSSL ? https : http;
-				var options = {
+				var options = merge({}, {
 					hostname: [settings.realm, settings.domain].join('.'),
 					port: settings.useSSL ? 443 : 80,
 					path: settings.path + 'db/' + (_this8.options.dbid && !settings.flags.dbidAsParam ? _this8.options.dbid : 'main') + '?act=' + _this8.action + (!settings.flags.useXML ? _this8.payload : ''),
@@ -591,8 +591,9 @@ var QueryBuilder = function () {
 						'QUICKBASE-ACTION': _this8.action
 					},
 					agent: false
-				};
-				var request = protocol.request(merge({}, options, _this8.parent.reqOptions), function (response) {
+				}, _this8.parent.settings.reqOptions);
+
+				var request = protocol.request(options, function (response) {
 					var xmlResponse = '';
 
 					response.on('data', function (chunk) {

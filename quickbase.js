@@ -540,7 +540,7 @@ class QueryBuilder {
 		return new Promise((resolve, reject) => {
 			const settings = this.settings;
 			const protocol = settings.useSSL ? https : http;
-			const options = {
+			const options = merge({}, {
 				hostname: [ settings.realm, settings.domain ].join('.'),
 				port: settings.useSSL ? 443 : 80,
 				path: settings.path + 'db/' + (this.options.dbid && !settings.flags.dbidAsParam ? this.options.dbid : 'main') + '?act=' + this.action + (!settings.flags.useXML ? this.payload : ''),
@@ -550,8 +550,9 @@ class QueryBuilder {
 					'QUICKBASE-ACTION': this.action
 				},
 				agent: false
-			};
-			const request = protocol.request(merge({}, options, this.parent.reqOptions), (response) => {
+			}, this.parent.settings.reqOptions);
+
+			const request = protocol.request(options, (response) => {
 				let xmlResponse = '';
 
 				response.on('data', (chunk) => {
