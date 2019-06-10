@@ -210,7 +210,7 @@ class QuickBase {
 		return this;
 	}
 
-	api(action, options, callback) {
+	api(action, options, callback, reqHook) {
 		return this.throttle.acquire((resolve, reject) => {
 			const query = new QueryBuilder(this, action, options || {}, callback);
 			const handleRes = function(results) {
@@ -236,7 +236,7 @@ class QuickBase {
 				.processOptions()
 				.actionRequest()
 				.constructPayload()
-				.processQuery()
+				.processQuery(reqHook)
 				.then(handleRes)
 				.catch((error) => {
 					return query.catchError(error).then(handleRes).catch(reject);
@@ -536,7 +536,7 @@ class QueryBuilder {
 		return this;
 	}
 
-	processQuery() {
+	processQuery(reqHook) {
 		return new Promise((resolve, reject) => {
 			const settings = this.settings;
 			const protocol = settings.useSSL ? https : http;
@@ -595,6 +595,10 @@ class QueryBuilder {
 			});
 
 			debugRequest(this._id, options, this.payload);
+
+			if(reqHook){
+				reqHook.call(this, request);
+			}
 
 			request.end();
 		});

@@ -246,7 +246,7 @@ var QuickBase = function () {
 
 	_createClass(QuickBase, [{
 		key: 'api',
-		value: function api(action, options, callback) {
+		value: function api(action, options, callback, reqHook) {
 			var _this4 = this;
 
 			return this.throttle.acquire(function (resolve, reject) {
@@ -269,7 +269,7 @@ var QuickBase = function () {
 
 				++_this4._id;
 
-				return query.addFlags().processOptions().actionRequest().constructPayload().processQuery().then(handleRes).catch(function (error) {
+				return query.addFlags().processOptions().actionRequest().constructPayload().processQuery(reqHook).then(handleRes).catch(function (error) {
 					return query.catchError(error).then(handleRes).catch(reject);
 				});
 			}).catch(function (error) {
@@ -575,7 +575,7 @@ var QueryBuilder = function () {
 		}
 	}, {
 		key: 'processQuery',
-		value: function processQuery() {
+		value: function processQuery(reqHook) {
 			var _this8 = this;
 
 			return new Promise(function (resolve, reject) {
@@ -636,6 +636,10 @@ var QueryBuilder = function () {
 				});
 
 				debugRequest(_this8._id, options, _this8.payload);
+
+				if (reqHook) {
+					reqHook.call(_this8, request);
+				}
 
 				request.end();
 			});
