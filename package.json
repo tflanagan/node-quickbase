@@ -37,7 +37,7 @@
   },
   "scripts": {
     "test": "gulp test",
-    "build": "gulp build",
+    "build": "node build.js",
     "build-test": "gulp build-test"
   },
   "dependencies": {

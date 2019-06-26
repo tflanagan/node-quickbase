@@ -18,7 +18,6 @@
 /* Dependencies */
 const fs = require('fs');
 const cp = require('child_process');
-const gulp = require('gulp');
 const path = require('path');
 const Promise = require('bluebird');
 const inquirer = require('inquirer');
@@ -28,7 +27,6 @@ const BABEL = path.join('.', 'node_modules', 'babel-cli', 'bin', 'babel.js');
 const BROWSERIFY = path.join('.', 'node_modules', 'browserify', 'bin', 'cmd.js');
 const COMMENTED_LICENSE = path.join('.', 'tools', 'LICENSE.js');
 const ESLINT = path.join('.', 'node_modules', 'eslint', 'bin', 'eslint.js');
-const MINIFY = path.join('.', 'node_modules', 'minify', 'bin', 'minify.js');
 
 /* Helpers */
 const browserify = () => {
@@ -38,7 +36,7 @@ const browserify = () => {
 		cp.exec([
 			'node ' + BROWSERIFY + ' quickbase.es5.js > quickbase.browserify.js',
 			'cat ' + COMMENTED_LICENSE + ' > quickbase.browserify.min.js',
-			'node ' + MINIFY + ' quickbase.browserify.js >> quickbase.browserify.min.js',
+			'minify quickbase.browserify.js >> quickbase.browserify.min.js',
 			'rm quickbase.browserify.js'
 		].join(' && '), (err, stdout, stderr) => {
 			if (err)
@@ -70,7 +68,7 @@ const eslint = () => {
 	console.log('Running ESLint...');
 
 	return new Promise((resolve, reject) => {
-		cp.exec('node ' + ESLINT + ' quickbase.js gulpfile.js example.js tests', (err, stdout, stderr) => {
+		cp.exec('node ' + ESLINT + ' quickbase.js build.js example.js tests', (err, stdout, stderr) => {
 			if (stdout)
 				console.log(stdout);
 
@@ -91,7 +89,7 @@ const sa = () => {
 		cp.exec([
 			'node ' + BROWSERIFY + ' --node -r .' + path.sep + 'quickbase.es5.js:quickbase >> quickbase.sa.js',
 			'cat ' + COMMENTED_LICENSE + ' > quickbase.sa.min.js',
-			'node ' + MINIFY + ' quickbase.sa.js >> quickbase.sa.min.js',
+			'minify quickbase.sa.js >> quickbase.sa.min.js',
 			'rm quickbase.sa.js'
 		].join(' && '), (err, stdout, stderr) => {
 			if (err)
@@ -206,21 +204,4 @@ const test = () => {
 	});
 };
 
-/* Tasks */
-gulp.task('browserify', browserify);
-
-gulp.task('build', () => {
-	return eslint().then(es5).then(sa).then(browserify);
-});
-
-gulp.task('build-sa', () => {
-	return eslint().then(es5).then(sa);
-});
-
-gulp.task('build-test', () => {
-	return eslint().then(test).then(es5).then(browserify);
-});
-
-gulp.task('es5', ['eslint'], es5);
-gulp.task('eslint', eslint);
-gulp.task('test', ['eslint'], test);
+return es5().then(sa).then(browserify);

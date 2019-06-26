@@ -307,8 +307,10 @@ class QuickBase {
 				} else {
 					value = xml[node].trim();
 
-					if (value.match(isDig)) {
-						if (value.match(isInt)) {
+					var valIsInt = value.match(isInt);
+
+					if (valIsInt || (value.match(isDig) && !value.endsWith('0'))) {
+						if (valIsInt) {
 							l = parseInt(value, radix);
 
 							if (Math.abs(l) <= 9007199254740991) {
