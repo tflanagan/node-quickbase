@@ -1606,8 +1606,8 @@ if (typeof define === 'function' && define.amd) {
 	});
 }
 
-if (typeof global !== 'undefined' && typeof window !== 'undefined' && global === window) {
-	global.QuickBase = QuickBase;
+if ((typeof global !== 'undefined' && typeof window !== 'undefined' && global === window) || (typeof global === 'undefined' && typeof window !== 'undefined')) {
+	(global || window).QuickBase = QuickBase;
 
 	if (window.location.search.match(/debug=1/i)) {
 		if (window.localStorage) {
