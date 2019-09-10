@@ -970,6 +970,12 @@ const actions = {
 		// request(query) { },
 		// response(query, results) { }
 	// },
+	API_GetOneTimeTicket: {
+		// request(query) { },
+		response(query, results) {
+			query.parent.settings.ticket = results.ticket;
+		}
+	},
 	API_GetSchema: {
 		// request(query) { },
 		response(query, results) {

@@ -1018,6 +1018,12 @@ var actions = {
 	// request(query) { },
 	// response(query, results) { }
 	// },
+	API_GetOneTimeTicket: {
+		// request(query) { },
+		response: function response(query, results) {
+			query.parent.settings.ticket = results.ticket;
+		}
+	},
 	API_GetSchema: {
 		// request(query) { },
 		response: function response(query, results) {
