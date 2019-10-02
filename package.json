@@ -1,6 +1,6 @@
 {
   "name": "quickbase",
-  "version": "2.11.0",
+  "version": "2.11.1",
   "description": "A lightweight, very flexible QuickBase API",
   "keywords": [
     "QuickBase",
@@ -44,7 +44,7 @@
     "bluebird": "^3.5.0",
     "debug": "^2.6.4",
     "generic-throttle": "^1.0.1",
-    "lodash.merge": "^4.6.0",
+    "lodash.merge": "^4.6.2",
     "xml2js": "^0.4.17"
   },
   "devDependencies": {
