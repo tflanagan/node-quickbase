@@ -266,7 +266,7 @@ class QuickBase {
 
 	static cleanXML(xml) {
 		const isInt = /^-?\s*\d+$/;
-		const isDig = /^((?!0\d+$)(?:0|-?\s*\d+\.?\d*))$/;
+		const isDig = /^((?!-?0\d+$)(?:0|-?\s*\d+\.?\d*))$/;
 		const isSpaces = /^\s{1,}$/;
 		const radix = 10;
 
@@ -307,10 +307,8 @@ class QuickBase {
 				} else {
 					value = xml[node].trim();
 
-					var valIsInt = value.match(isInt);
-
-					if (valIsInt || (value.match(isDig) && !value.endsWith('0'))) {
-						if (valIsInt) {
+					if (value.match(isDig)) {
+						if (value.match(isInt)) {
 							l = parseInt(value, radix);
 
 							if (Math.abs(l) <= 9007199254740991) {

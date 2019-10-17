@@ -299,7 +299,7 @@ var QuickBase = function () {
 		key: 'cleanXML',
 		value: function cleanXML(xml) {
 			var isInt = /^-?\s*\d+$/;
-			var isDig = /^((?!0\d+$)(?:0|-?\s*\d+\.?\d*))$/;
+			var isDig = /^((?!-?0\d+$)(?:0|-?\s*\d+\.?\d*))$/;
 			var isSpaces = /^\s{1,}$/;
 			var radix = 10;
 
@@ -341,10 +341,8 @@ var QuickBase = function () {
 					} else {
 						value = xml[node].trim();
 
-						var valIsInt = value.match(isInt);
-
-						if (valIsInt || value.match(isDig) && !value.endsWith('0')) {
-							if (valIsInt) {
+						if (value.match(isDig)) {
+							if (value.match(isInt)) {
 								l = parseInt(value, radix);
 
 								if (Math.abs(l) <= 9007199254740991) {
