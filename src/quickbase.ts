@@ -23,12 +23,6 @@
 
 'use strict';
 
-/* VERSIONING */
-const VERSION_MAJOR = 3;
-const VERSION_MINOR = 0;
-const VERSION_PATCH = 0;
-const VERSION = [ VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH ].join('.');
-
 /* Dependencies */
 import merge from 'merge';
 import * as Debug from 'debug';
@@ -43,6 +37,10 @@ const Throttle = require('generic-throttle');
 const debug = Debug('quickbase');
 const debugRequest = Debug('quickbase:request');
 const debugResponse = Debug('quickbase:response');
+
+/* Globals */
+const VERSION = require('../package.json').version;
+const IS_BROWSER = typeof(window) !== 'undefined';
 
 /* Default Settings */
 export interface QuickBaseOptions {
@@ -65,7 +63,7 @@ const defaults: QuickBaseOptions = {
 	realm: 'www',
 	userToken: '',
 
-	userAgent: 'node-quickbase/v' + VERSION + ' ' + (typeof(window) !== 'undefined' ? (window.navigator ? window.navigator.userAgent : '') : 'nodejs/' + process.version),
+	userAgent: 'node-quickbase/v' + VERSION + ' ' + (IS_BROWSER ? (window.navigator ? window.navigator.userAgent : '') : 'nodejs/' + process.version),
 
 	connectionLimit: 10,
 	errorOnConnectionLimit: false
@@ -74,6 +72,7 @@ const defaults: QuickBaseOptions = {
 /* Main Class */
 export class QuickBase {
 
+	static VERSION = VERSION;
 	static defaults = defaults;
 
 	private _id: number = 0;
@@ -491,3 +490,8 @@ export interface QuickBaseQuery {
 
 /* Export Dependency Interfaces */
 export { AxiosRequestConfig } from 'axios';
+
+if(IS_BROWSER){
+	// TypeScript doesn't perform typecheck on string properties
+	window['QuickBase'] = QuickBase;
+}
