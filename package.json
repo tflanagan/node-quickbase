@@ -1,6 +1,6 @@
 {
   "name": "quickbase",
-  "version": "3.0.0-alpha.2",
+  "version": "3.0.0-alpha.3",
   "description": "A lightweight, very flexible QuickBase API",
   "keywords": [
     "QuickBase",
@@ -31,6 +31,7 @@
     "Angel Cambero (https://github.com/angelcambero)"
   ],
   "main": "./dist/quickbase.js",
+  "types": "./dist/quickbase.d.ts",
   "repository": {
     "type": "git",
     "url": "git://github.com/tflanagan/node-quickbase.git"
