@@ -1,0 +1,23 @@
+{
+	"compilerOptions": {
+		"outDir": "./dist/",
+		"target": "ES2018",
+		"module": "commonjs",
+		"lib": [
+			"ES2019"
+		],
+		"allowJs": true,
+		"checkJs": false,
+		"noImplicitAny": true,
+		"suppressImplicitAnyIndexErrors": true,
+		"moduleResolution": "node",
+		"noUnusedLocals": true,
+		"sourceMap": true,
+		"declaration": true,
+		"removeComments": true,
+		"alwaysStrict": true
+	},
+	"include": [
+		"./src/**/*"
+	]
+}
