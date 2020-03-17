@@ -1,2 +1,3 @@
+tests/
 quickbase.browserify.js
 quickbase.browserify.min.js

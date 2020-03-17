@@ -18,6 +18,7 @@
  - Add explicit types for generic-throttle
  - Add explicit types for QuickBaseResponseReport
  - Add tests
+ - Add backwards compatibility with older API
 */
 
 'use strict';
@@ -41,25 +42,22 @@ const debugResponse = Debug('quickbase:response');
 const VERSION = require('../package.json').version;
 const IS_BROWSER = typeof(window) !== 'undefined';
 
-/* Default Settings */
-const defaults: QuickBaseOptions = {
-	server: 'api.quickbase.com',
-	version: 'v1',
-
-	realm: 'www',
-	userToken: '',
-
-	userAgent: `node-quickbase/v${VERSION} ${IS_BROWSER ? (window.navigator ? window.navigator.userAgent : '') : 'nodejs/' + process.version}`,
-
-	connectionLimit: 10,
-	errorOnConnectionLimit: false
-};
-
 /* Main Class */
 export class QuickBase {
 
 	static VERSION = VERSION;
-	static defaults = defaults;
+	static defaults: QuickBaseOptions = {
+		server: 'api.quickbase.com',
+		version: 'v1',
+
+		realm: 'www',
+		userToken: '',
+
+		userAgent: `node-quickbase/v${VERSION} ${IS_BROWSER ? (window.navigator ? window.navigator.userAgent : '') : 'nodejs/' + process.version}`,
+
+		connectionLimit: 10,
+		errorOnConnectionLimit: false
+	};
 
 	private _id: number = 0;
 	private throttle: any;
@@ -265,7 +263,7 @@ export class QuickBase {
 		}, requestOptions);
 	}
 
-	async upsertRecord({ tableId, data, mergeFieldId, requestOptions }: QuickBaseRequestUpsertRecord): Promise<QuickBaseResponseUpsertRecord> {
+	async upsertRecords({ tableId, data, mergeFieldId, requestOptions }: QuickBaseRequestUpsertRecords): Promise<QuickBaseResponseUpsertRecords> {
 		return await this.request({
 			method: 'POST',
 			url: 'records',
@@ -366,7 +364,7 @@ export interface QuickBaseRequestRunReport extends QuickBaseRequest {
 	};
 }
 
-export interface QuickBaseRequestUpsertRecord extends QuickBaseRequest {
+export interface QuickBaseRequestUpsertRecords extends QuickBaseRequest {
 	tableId: string;
 	data: QuickBaseRecord[];
 	mergeFieldId?: number;
@@ -482,7 +480,7 @@ export interface QuickBaseRecord {
 	};
 }
 
-export interface QuickBaseResponseUpsertRecord {
+export interface QuickBaseResponseUpsertRecords {
 	data: QuickBaseRecord;
 	metadata: {
 		createdRecordIds: number[];
