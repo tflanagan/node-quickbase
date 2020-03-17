@@ -16,8 +16,7 @@
 
 /* TODO:
  - Add explicit types for generic-throttle
- - Add explicit types for QuickBaseReport
- - Do I need to do export AxiosRequestConfig?
+ - Add explicit types for QuickBaseResponseReport
  - Add tests
 */
 
@@ -43,19 +42,6 @@ const VERSION = require('../package.json').version;
 const IS_BROWSER = typeof(window) !== 'undefined';
 
 /* Default Settings */
-export interface QuickBaseOptions {
-	server?: string;
-	version?: string;
-
-	realm: string;
-	userToken: string;
-
-	userAgent?: string;
-
-	connectionLimit?: number;
-	errorOnConnectionLimit?: boolean;
-}
-
 const defaults: QuickBaseOptions = {
 	server: 'api.quickbase.com',
 	version: 'v1',
@@ -63,7 +49,7 @@ const defaults: QuickBaseOptions = {
 	realm: 'www',
 	userToken: '',
 
-	userAgent: 'node-quickbase/v' + VERSION + ' ' + (IS_BROWSER ? (window.navigator ? window.navigator.userAgent : '') : 'nodejs/' + process.version),
+	userAgent: `node-quickbase/v${VERSION} ${IS_BROWSER ? (window.navigator ? window.navigator.userAgent : '') : 'nodejs/' + process.version}`,
 
 	connectionLimit: 10,
 	errorOnConnectionLimit: false
@@ -93,10 +79,10 @@ export class QuickBase {
 	private getBasicRequest(): AxiosRequestConfig {
 		return {
 			method: 'GET',
-			baseURL: 'https://' + this.settings.server + '/' + this.settings.version,
+			baseURL: `https://${this.settings.server}/${this.settings.version}`,
 			headers: {
 				'User-Agent': this.settings.userAgent,
-				'Authorization': 'QB-USER-TOKEN ' + this.settings.userToken,
+				'Authorization': `QB-USER-TOKEN ${this.settings.userToken}`,
 				'QB-Realm-Hostname': this.settings.realm
 			}
 		};
@@ -141,7 +127,7 @@ export class QuickBase {
 		}
 	}
 
-	async deleteRecord(tableId: string, where: string, requestOptions?: AxiosRequestConfig): Promise<QuickBaseDelete> {
+	async deleteRecord({ tableId, where, requestOptions }: QuickBaseRequestDeleteRecord): Promise<QuickBaseResponseDelete> {
 		return await this.request({
 			method: 'DELETE',
 			url: 'records',
@@ -152,29 +138,35 @@ export class QuickBase {
 		}, requestOptions);
 	}
 
-	async getApp(appId: string, requestOptions?: AxiosRequestConfig): Promise<QuickBaseApp> {
+	async getApp({ appId, requestOptions }: QuickBaseRequestGetApp): Promise<QuickBaseResponseApp> {
 		return await this.request({
-			url: 'apps/' + appId
+			url: `apps/${appId}`
 		}, requestOptions);
 	}
 
-	async getAppTables(appId: string, requestOptions?: AxiosRequestConfig): Promise<QuickBaseTable[]> {
+	async getAppTables({ appId, requestOptions }: QuickBaseRequestGetAppTables): Promise<QuickBaseResponseTable[]> {
 		return await this.request({
-			url: 'tables?appId=' + appId
+			url: 'tables',
+			params: {
+				appId: appId
+			}
 		}, requestOptions);
 	}
 
-	async getField(tableId: string, fieldId: number, requestOptions?: AxiosRequestConfig): Promise<QuickBaseField> {
+	async getField({ tableId, fieldId, requestOptions }: QuickBaseRequestGetField): Promise<QuickBaseResponseField> {
 		return await this.request({
-			url: 'fields/' + fieldId,
+			url: `fields/${fieldId}`,
 			params: {
 				tableId: tableId
 			}
 		}, requestOptions);
 	}
 
-	async getFields(tableId: string, includeFieldPerms?: boolean, requestOptions?: AxiosRequestConfig): Promise<QuickBaseField[]> {
-		const params: any = {
+	async getFields({ tableId, includeFieldPerms, requestOptions }: QuickBaseRequestGetFields): Promise<QuickBaseResponseField[]> {
+		const params: {
+			tableId: string;
+			includeFieldPerms?: boolean;
+		} = {
 			tableId: tableId
 		};
 
@@ -188,8 +180,11 @@ export class QuickBase {
 		}, requestOptions);
 	}
 
-	async getFieldsUsage(tableId: string, skip?: number, requestOptions?: AxiosRequestConfig): Promise<QuickBaseFieldUsage[]> {
-		const params: any = {
+	async getFieldsUsage({ tableId, skip, requestOptions }: QuickBaseRequestGetFieldsUsage): Promise<QuickBaseResponseFieldUsage[]> {
+		const params: {
+			tableId: string;
+			skip?: number;
+		} = {
 			tableId: tableId
 		};
 
@@ -203,31 +198,31 @@ export class QuickBase {
 		}, requestOptions);
 	}
 
-	async getFieldUsage(tableId: string, fieldId: number, requestOptions?: AxiosRequestConfig): Promise<QuickBaseFieldUsage[]> {
+	async getFieldUsage({ tableId, fieldId, requestOptions }: QuickBaseRequestGetFieldUsage): Promise<QuickBaseResponseFieldUsage[]> {
 		return await this.request({
-			url: 'fields/usage/' + fieldId,
+			url: `fields/usage/${fieldId}`,
 			params: {
 				tableId: tableId
 			}
 		}, requestOptions);
 	}
 
-	async getReport(tableId: string, reportId: number, requestOptions?: AxiosRequestConfig): Promise<QuickBaseReport> {
+	async getReport({ tableId, reportId, requestOptions }: QuickBaseRequestGetReport): Promise<QuickBaseResponseReport> {
 		return await this.request({
-			url: 'reports/' + reportId,
+			url: `reports/${reportId}`,
 			params: {
 				tableId: tableId
 			}
 		}, requestOptions);
 	}
 
-	async getTable(tableId: string, requestOptions?: AxiosRequestConfig): Promise<QuickBaseTable> {
+	async getTable({ tableId, requestOptions }: QuickBaseRequestGetTable): Promise<QuickBaseResponseTable> {
 		return await this.request({
-			url: 'tables/' + tableId
+			url: `tables/${tableId}`
 		}, requestOptions);
 	}
 
-	async getTableReports(tableId: string, requestOptions?: AxiosRequestConfig): Promise<QuickBaseReport[]> {
+	async getTableReports({ tableId, requestOptions }: QuickBaseRequestGetTableReports): Promise<QuickBaseResponseReport[]> {
 		return await this.request({
 			url: 'reports',
 			params: {
@@ -236,7 +231,7 @@ export class QuickBase {
 		}, requestOptions);
 	}
 
-	async runQuery(tableId: string, query: QuickBaseQuery, requestOptions?: AxiosRequestConfig): Promise<QuickBaseQueryReportResults> {
+	async runQuery({ tableId, query, requestOptions }: QuickBaseRequestRunQuery): Promise<QuickBaseResponseRunQuery> {
 		query.from = tableId;
 
 		return await this.request({
@@ -246,8 +241,12 @@ export class QuickBase {
 		}, requestOptions);
 	}
 
-	async runReport(tableId: string, reportId: number, options?: { skip: number, top: number }, requestOptions?: AxiosRequestConfig): Promise<QuickBaseQueryReportResults> {
-		const params: any = {
+	async runReport({ tableId, reportId, options, requestOptions }: QuickBaseRequestRunReport): Promise<QuickBaseResponseRunQuery> {
+		const params: {
+			tableId: string;
+			skip?: number;
+			top?: number;
+		} = {
 			tableId: tableId
 		};
 
@@ -261,12 +260,12 @@ export class QuickBase {
 
 		return await this.request({
 			method: 'POST',
-			url: 'reports/' + reportId + '/run',
+			url: `reports/${reportId}/run`,
 			params: params
 		}, requestOptions);
 	}
 
-	async upsertRecord(tableId: string, data: QuickBaseRecord[], mergeFieldId?: number, requestOptions?: AxiosRequestConfig): Promise<QuickBaseRecordResponse> {
+	async upsertRecord({ tableId, data, mergeFieldId, requestOptions }: QuickBaseRequestUpsertRecord): Promise<QuickBaseResponseUpsertRecord> {
 		return await this.request({
 			method: 'POST',
 			url: 'records',
@@ -283,25 +282,111 @@ export class QuickBase {
 /* Quick Base Error */
 export class QuickBaseError extends Error {
 
-	constructor(public code: number, public message: string, public description?: string){
+	constructor(public code: number, public message: string, public description?: string) {
 		super(message);
 	}
 
 }
 
 /* Quick Base Interfaces */
-export interface QuickBaseApp {
+export interface QuickBaseOptions {
+	server?: string;
+	version?: string;
+
+	realm: string;
+	userToken: string;
+
+	userAgent?: string;
+
+	connectionLimit?: number;
+	errorOnConnectionLimit?: boolean;
+}
+
+export interface QuickBaseRequest {
+	requestOptions?: AxiosRequestConfig;
+}
+
+export interface QuickBaseRequestDeleteRecord extends QuickBaseRequest {
+	tableId: string;
+	where: string;
+}
+
+export interface QuickBaseRequestGetApp extends QuickBaseRequest {
+	appId: string;
+}
+
+export interface QuickBaseRequestGetAppTables extends QuickBaseRequest {
+	appId: string;
+}
+
+export interface QuickBaseRequestGetField extends QuickBaseRequest {
+	tableId: string;
+	fieldId: number;
+}
+
+export interface QuickBaseRequestGetFields extends QuickBaseRequest {
+	tableId: string;
+	includeFieldPerms?: boolean;
+}
+
+export interface QuickBaseRequestGetFieldsUsage extends QuickBaseRequest {
+	tableId: string;
+	skip?: number;
+}
+
+export interface QuickBaseRequestGetFieldUsage extends QuickBaseRequest {
+	tableId: string;
+	fieldId: number;
+}
+
+export interface QuickBaseRequestGetReport extends QuickBaseRequest {
+	tableId: string;
+	reportId: number;
+}
+
+export interface QuickBaseRequestGetTable extends QuickBaseRequest {
+	tableId: string;
+}
+
+export interface QuickBaseRequestGetTableReports extends QuickBaseRequest {
+	tableId: string;
+}
+
+export interface QuickBaseRequestRunQuery extends QuickBaseRequest {
+	tableId: string;
+	query: QuickBaseQuery;
+}
+
+export interface QuickBaseRequestRunReport extends QuickBaseRequest {
+	tableId: string;
+	reportId: number;
+	options?: {
+		skip: number;
+		top: number;
+	};
+}
+
+export interface QuickBaseRequestUpsertRecord extends QuickBaseRequest {
+	tableId: string;
+	data: QuickBaseRecord[];
+	mergeFieldId?: number;
+}
+
+export interface QuickBaseResponseApp {
 	id: string;
 	created: number;
 	updated: number;
 	name: string;
 	timeZone: string;
 	dateFormat: string;
-	variables: { name: string, value: string }[];
+	variables: {
+		name: string;
+		value: string;
+	}[];
 	hasEveryoneOnTheInternet: boolean;
 }
 
-export interface QuickBaseTable {
+export interface QuickBaseResponseTable {
 	id: string;
 	alias: string;
 	created: number;
@@ -319,13 +404,13 @@ export interface QuickBaseTable {
 	defaultSortOrder: string;
 }
 
-export interface QuickBaseFieldPermission {
-	role: string,
-	roleId: number,
-	permissionType: string
+export interface QuickBaseResponseFieldPermission {
+	role: string;
+	roleId: number;
+	permissionType: string;
 }
 
-export interface QuickBaseField {
+export interface QuickBaseResponseField {
 	id: number;
 	fieldType: string;
 	mode: string;
@@ -339,7 +424,7 @@ export interface QuickBaseField {
 	doesDataCopy: boolean;
 	audited: boolean;
 	properties: {
-		defaultValue: string;
+		defaultValue?: string;
 		foreignKey?: false;
 		allowNewChoices?: false;
 		sortAsGiven?: false;
@@ -370,11 +455,12 @@ export interface QuickBaseField {
 		formula?: string;
 		displayUser?: string;
 		defaultKind?: string;
-	},
-	permissions?: QuickBaseFieldPermission[]
+		choices?: string[];
+	};
+	permissions?: QuickBaseResponseFieldPermission[];
 }
 
-export interface QuickBaseReport {
+export interface QuickBaseResponseReport {
 	id: string;
 	name: string;
 	type: string;
@@ -386,87 +472,87 @@ export interface QuickBaseReport {
 		fields: number[];
 		sorting: any;
 		grouping: any;
-	},
+	};
 	properties: any;
 }
 
 export interface QuickBaseRecord {
 	[index: number]: {
 		value: any;
-	}
+	};
 }
 
-export interface QuickBaseRecordResponse {
-	data: QuickBaseRecord,
+export interface QuickBaseResponseUpsertRecord {
+	data: QuickBaseRecord;
 	metadata: {
 		createdRecordIds: number[];
-		totalNumberOfRecordsProcessed: number,
-		unchangedRecordIds: number[],
-		updatedRecordIds: number[]
-	}
+		totalNumberOfRecordsProcessed: number;
+		unchangedRecordIds: number[];
+		updatedRecordIds: number[];
+	};
 }
 
-export interface QuickBaseQueryReportResults {
+export interface QuickBaseResponseRunQuery {
 	data: QuickBaseRecord[];
-	fields: QuickBaseField[];
+	fields: QuickBaseResponseField[];
 	metadata: {
 		numFields: number;
 		numRecords: number;
 		skip: number;
 		totalRecords: number;
-	}
+	};
 }
 
-export interface QuickBaseFieldUsage {
+export interface QuickBaseResponseFieldUsage {
 	field: {
 		id: number;
 		name: string;
 		type: string;
-	},
+	};
 	usage: {
 		actions: {
 			count: number;
-		},
+		};
 		appHomePages: {
 			count: number;
-		},
+		};
 		defaultReports: {
 			count: number;
-		},
+		};
 		exactForms: {
 			count: number;
-		},
+		};
 		fields: {
 			count: number;
-		},
+		};
 		forms: {
 			count: number;
-		},
+		};
 		notifications: {
 			count: number;
-		},
+		};
 		personalReports: {
 			count: number;
-		},
+		};
 		relationships: {
 			count: number;
-		},
+		};
 		reminders: {
 			count: number;
-		},
+		};
 		reports: {
 			count: number;
-		},
+		};
 		roles: {
 			count: number;
-		},
+		};
 		webhooks: {
 			count: number;
-		}
-	}
+		};
+	};
 }
 
-export interface QuickBaseDelete {
+export interface QuickBaseResponseDelete {
 	numberDeleted: number;
 }
 
@@ -474,23 +560,26 @@ export interface QuickBaseQuery {
 	from?: string;
 	where?: string;
 	sortBy?: {
-		fieldId?: number,
-		order?: string
-	}[],
-	select?: number[],
+		fieldId?: number;
+		order?: string;
+	}[];
+	select?: number[];
 	options?: {
 		skip?: number;
 		top?: number;
-	},
+	};
 	groupBy?: {
 		fieldId?: number;
-		by?: 'string'
-	}[]
+		by?: 'string';
+	}[];
 }
 
-/* Export Dependency Interfaces */
-export { AxiosRequestConfig } from 'axios';
+/* Export Supporting Types/Classes */
+export {
+	AxiosRequestConfig
+} from 'axios';
 
+/* Export to Browser */
 if(IS_BROWSER){
 	// TypeScript doesn't perform typecheck on string properties
 	window['QuickBase'] = QuickBase;

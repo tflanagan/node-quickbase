@@ -1,6 +1,6 @@
 {
   "name": "quickbase",
-  "version": "3.0.0-alpha.3",
+  "version": "3.0.0-alpha.4",
   "description": "A lightweight, very flexible QuickBase API",
   "keywords": [
     "QuickBase",
@@ -39,8 +39,8 @@
   "scripts": {
     "reinstall": "rm -rf node_modules/ && npm install",
     "reinstall-dev": "rm -rf node_modules/ && npm install && npm install --dev",
-    "build": "tsc",
-    "prepublishOnly": "npm run build && browserify ./dist/quickbase.js > ./dist/quickbase.browserify.js && minify ./dist/quickbase.browserify.js > ./dist/quickbase.browserify.min.js && rm ./dist/quickbase.browserify.js"
+    "build": "tsc && browserify ./dist/quickbase.js > ./dist/quickbase.browserify.js && minify ./dist/quickbase.browserify.js > ./dist/quickbase.browserify.min.js && rm ./dist/quickbase.browserify.js",
+    "prepublishOnly": "npm run build"
   },
   "dependencies": {
     "axios": "^0.19.2",
