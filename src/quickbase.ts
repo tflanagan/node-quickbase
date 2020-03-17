@@ -135,13 +135,13 @@ export class QuickBase {
 			}
 		}, requestOptions);
 	}
-
+//
 	async getApp({ appId, requestOptions }: QuickBaseRequestGetApp): Promise<QuickBaseResponseApp> {
 		return await this.request({
 			url: `apps/${appId}`
 		}, requestOptions);
 	}
-
+//
 	async getAppTables({ appId, requestOptions }: QuickBaseRequestGetAppTables): Promise<QuickBaseResponseTable[]> {
 		return await this.request({
 			url: 'tables',
@@ -196,7 +196,7 @@ export class QuickBase {
 		}, requestOptions);
 	}
 
-	async getFieldUsage({ tableId, fieldId, requestOptions }: QuickBaseRequestGetFieldUsage): Promise<QuickBaseResponseFieldUsage[]> {
+	async getFieldUsage({ tableId, fieldId, requestOptions }: QuickBaseRequestGetFieldUsage): Promise<QuickBaseResponseFieldUsage> {
 		return await this.request({
 			url: `fields/usage/${fieldId}`,
 			params: {
@@ -204,7 +204,7 @@ export class QuickBase {
 			}
 		}, requestOptions);
 	}
-
+//
 	async getReport({ tableId, reportId, requestOptions }: QuickBaseRequestGetReport): Promise<QuickBaseResponseReport> {
 		return await this.request({
 			url: `reports/${reportId}`,
@@ -213,13 +213,13 @@ export class QuickBase {
 			}
 		}, requestOptions);
 	}
-
+//
 	async getTable({ tableId, requestOptions }: QuickBaseRequestGetTable): Promise<QuickBaseResponseTable> {
 		return await this.request({
 			url: `tables/${tableId}`
 		}, requestOptions);
 	}
-
+//
 	async getTableReports({ tableId, requestOptions }: QuickBaseRequestGetTableReports): Promise<QuickBaseResponseReport[]> {
 		return await this.request({
 			url: 'reports',

@@ -41,8 +41,8 @@
     "reinstall": "rm -rf node_modules/ && npm install",
     "reinstall-dev": "rm -rf node_modules/ && npm install && npm install --dev",
     "build": "tsc && browserify ./dist/quickbase.js > ./dist/quickbase.browserify.js && minify ./dist/quickbase.browserify.js > ./dist/quickbase.browserify.min.js && rm ./dist/quickbase.browserify.js",
-    "test": "ava",
-    "prepublishOnly": "npm run build && npm run test"
+    "test": "npm run build && ava",
+    "prepublishOnly": "npm run cleanup && npm run test"
   },
   "dependencies": {
     "axios": "^0.19.2",
