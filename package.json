@@ -40,9 +40,10 @@
     "cleanup": "rm -rf ./dist/*",
     "reinstall": "rm -rf node_modules/ && npm install",
     "reinstall-dev": "rm -rf node_modules/ && npm install && npm install --dev",
-    "build": "tsc && browserify ./dist/quickbase.js > ./dist/quickbase.browserify.js && minify ./dist/quickbase.browserify.js > ./dist/quickbase.browserify.min.js && rm ./dist/quickbase.browserify.js",
-    "test": "npm run build && ava",
-    "prepublishOnly": "npm run cleanup && npm run test"
+    "build": "npx tsc && browserify ./dist/quickbase.js > ./dist/quickbase.browserify.js && minify ./dist/quickbase.browserify.js > ./dist/quickbase.browserify.min.js && rm ./dist/quickbase.browserify.js",
+    "docs": "npx typedoc --readme none --out docs --theme minimal --name \"Node-QuickBase\" --includeVersion --includeDeclarations true --excludeExternals true --excludeNotExported true src/quickbase.ts",
+    "test": "npm run build && npx ava",
+    "prepublishOnly": "npm run cleanup && npm run test && npm run docs"
   },
   "dependencies": {
     "axios": "^0.19.2",
@@ -58,7 +59,9 @@
     "browserify": "^16.5.0",
     "dotenv": "^8.2.0",
     "minify": "^5.1.0",
-    "ts-node": "^8.6.2"
+    "ts-node": "^8.6.2",
+    "typedoc": "^0.17.0",
+    "typescript": "^3.8.3"
   },
   "engines": {
     "node": ">=10.14.2"

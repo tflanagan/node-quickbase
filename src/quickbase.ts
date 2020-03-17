@@ -17,7 +17,7 @@
 /* TODO:
  - Add explicit types for generic-throttle
  - Add explicit types for QuickBaseResponseReport
- - Add tests
+ - Add doc comments
  - Add backwards compatibility with older API
 */
 
