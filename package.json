@@ -41,9 +41,9 @@
     "reinstall": "rm -rf node_modules/ && npm install",
     "reinstall-dev": "rm -rf node_modules/ && npm install && npm install --dev",
     "build": "npx tsc && browserify ./dist/quickbase.js > ./dist/quickbase.browserify.js && minify ./dist/quickbase.browserify.js > ./dist/quickbase.browserify.min.js && rm ./dist/quickbase.browserify.js",
-    "docs": "npx typedoc --readme none --out docs --theme minimal --name \"Node-QuickBase\" --includeVersion --includeDeclarations true --excludeExternals true --excludeNotExported true src/quickbase.ts",
-    "test": "npm run build && npx ava",
-    "prepublishOnly": "npm run cleanup && npm run test"
+    "docs": "npx typedoc src/quickbase.ts",
+    "test": "npx ava",
+    "prepublishOnly": "npm run cleanup && npm run build && npm run test && npm run docs"
   },
   "dependencies": {
     "axios": "^0.19.2",

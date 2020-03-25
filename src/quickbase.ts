@@ -45,7 +45,7 @@ const IS_BROWSER = typeof(window) !== 'undefined';
 /* Main Class */
 export class QuickBase {
 
-	static VERSION = VERSION;
+	static readonly VERSION = VERSION;
 	static defaults: QuickBaseOptions = {
 		server: 'api.quickbase.com',
 		version: 'v1',
@@ -74,6 +74,11 @@ export class QuickBase {
 		return this;
 	}
 
+	/**
+	 * Returns a simple axios request configuration block
+	 * 
+	 * @returns Simple GET configuration with required authorization
+	 */
 	private getBasicRequest(): AxiosRequestConfig {
 		return {
 			method: 'GET',
@@ -86,6 +91,14 @@ export class QuickBase {
 		};
 	}
 
+	/**
+	 * Executes Quick Base API call
+	 * 
+	 * @param actOptions axios request configuration specific for API call
+	 * @param reqOptions axios request configuration passed in from user
+	 * 
+	 * @returns Direct results from API request
+	 */
 	private async request(actOptions: AxiosRequestConfig, reqOptions?: AxiosRequestConfig): Promise<any> {
 		try {
 			await this.throttle.acquire();
@@ -125,7 +138,14 @@ export class QuickBase {
 		}
 	}
 
-	async deleteRecord({ tableId, where, requestOptions }: QuickBaseRequestDeleteRecord): Promise<QuickBaseResponseDelete> {
+	/**
+	 * Delete records from a Quick Base Table
+	 * 
+	 * @param param0 API Call Parameters
+	 * @param param0.tableId Quick Base Table DBID
+	 * @param param0.where Quick Base Where Clause
+	 */
+	async deleteRecords({ tableId, where, requestOptions }: QuickBaseRequestDeleteRecords): Promise<QuickBaseResponseDeleteRecords> {
 		return await this.request({
 			method: 'DELETE',
 			url: 'records',
@@ -135,13 +155,13 @@ export class QuickBase {
 			}
 		}, requestOptions);
 	}
-//
+
 	async getApp({ appId, requestOptions }: QuickBaseRequestGetApp): Promise<QuickBaseResponseApp> {
 		return await this.request({
 			url: `apps/${appId}`
 		}, requestOptions);
 	}
-//
+
 	async getAppTables({ appId, requestOptions }: QuickBaseRequestGetAppTables): Promise<QuickBaseResponseTable[]> {
 		return await this.request({
 			url: 'tables',
@@ -204,7 +224,7 @@ export class QuickBase {
 			}
 		}, requestOptions);
 	}
-//
+
 	async getReport({ tableId, reportId, requestOptions }: QuickBaseRequestGetReport): Promise<QuickBaseResponseReport> {
 		return await this.request({
 			url: `reports/${reportId}`,
@@ -213,13 +233,13 @@ export class QuickBase {
 			}
 		}, requestOptions);
 	}
-//
+
 	async getTable({ tableId, requestOptions }: QuickBaseRequestGetTable): Promise<QuickBaseResponseTable> {
 		return await this.request({
 			url: `tables/${tableId}`
 		}, requestOptions);
 	}
-//
+
 	async getTableReports({ tableId, requestOptions }: QuickBaseRequestGetTableReports): Promise<QuickBaseResponseReport[]> {
 		return await this.request({
 			url: 'reports',
@@ -304,7 +324,7 @@ export interface QuickBaseRequest {
 	requestOptions?: AxiosRequestConfig;
 }
 
-export interface QuickBaseRequestDeleteRecord extends QuickBaseRequest {
+export interface QuickBaseRequestDeleteRecords extends QuickBaseRequest {
 	tableId: string;
 	where: string;
 }
@@ -550,7 +570,7 @@ export interface QuickBaseResponseFieldUsage {
 	};
 }
 
-export interface QuickBaseResponseDelete {
+export interface QuickBaseResponseDeleteRecords {
 	numberDeleted: number;
 }
 
@@ -579,6 +599,6 @@ export {
 
 /* Export to Browser */
 if(IS_BROWSER){
-	// TypeScript doesn't perform typecheck on string properties
-	window['QuickBase'] = QuickBase;
+	// @ts-ignore no-implicit-any
+	window.QuickBase = QuickBase;
 }

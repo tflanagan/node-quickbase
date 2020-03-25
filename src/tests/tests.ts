@@ -4,14 +4,20 @@ import { QuickBase } from '../quickbase';
 
 dotenv.config();
 
+const QB_REALM = process.env.QB_REALM!;
+const QB_USERTOKEN = process.env.QB_USERTOKEN!;
+const QB_APPID = process.env.QB_APPID!;
+const QB_TABLEID = process.env.QB_TABLEID!;
+const QB_FIELDID = process.env.QB_FIELDID!;
+
 const qb = new QuickBase({
-	realm: process.env.QB_REALM,
-	userToken: process.env.QB_USERTOKEN
+	realm: QB_REALM,
+	userToken: QB_USERTOKEN
 });
 
 test('getApp()', async (t) => {
 	const results = await qb.getApp({
-		appId: process.env.QB_APPID
+		appId: QB_APPID
 	});
 
 	t.truthy(results.id);
@@ -19,7 +25,7 @@ test('getApp()', async (t) => {
 
 test('getAppTables()', async (t) => {
 	const results = await qb.getAppTables({
-		appId: process.env.QB_APPID
+		appId: QB_APPID
 	});
 
 	t.truthy(results[0].id);
@@ -27,7 +33,7 @@ test('getAppTables()', async (t) => {
 
 test('getTable()', async (t) => {
 	const results = await qb.getTable({
-		tableId: process.env.QB_TABLEID
+		tableId: QB_TABLEID
 	});
 
 	t.truthy(results.id);
@@ -35,7 +41,7 @@ test('getTable()', async (t) => {
 
 test('getTableReports()', async (t) => {
 	const results = await qb.getTableReports({
-		tableId: process.env.QB_TABLEID
+		tableId: QB_TABLEID
 	});
 
 	t.truthy(results[0].id);
@@ -43,7 +49,7 @@ test('getTableReports()', async (t) => {
 
 test('getReport()', async (t) => {
 	const results = await qb.getReport({
-		tableId: process.env.QB_TABLEID,
+		tableId: QB_TABLEID,
 		reportId: 1
 	});
 
@@ -52,7 +58,7 @@ test('getReport()', async (t) => {
 
 test('getField()', async (t) => {
 	const results = await qb.getField({
-		tableId: process.env.QB_TABLEID,
+		tableId: QB_TABLEID,
 		fieldId: 1
 	});
 
@@ -61,7 +67,7 @@ test('getField()', async (t) => {
 
 test('getFields()', async (t) => {
 	const results = await qb.getFields({
-		tableId: process.env.QB_TABLEID
+		tableId: QB_TABLEID
 	});
 
 	t.truthy(results[0].id);
@@ -69,7 +75,7 @@ test('getFields()', async (t) => {
 
 test('getFieldUsage()', async (t) => {
 	const results = await qb.getFieldUsage({
-		tableId: process.env.QB_TABLEID,
+		tableId: QB_TABLEID,
 		fieldId: 1
 	});
 
@@ -78,7 +84,7 @@ test('getFieldUsage()', async (t) => {
 
 test('getFieldsUsage()', async (t) => {
 	const results = await qb.getFieldsUsage({
-		tableId: process.env.QB_TABLEID
+		tableId: QB_TABLEID
 	});
 
 	t.truthy(results[0].field.id);
@@ -86,7 +92,7 @@ test('getFieldsUsage()', async (t) => {
 
 test('runQuery()', async (t) => {
 	const results = await qb.runQuery({
-		tableId: process.env.QB_TABLEID,
+		tableId: QB_TABLEID,
 		query: {
 			where: "{'3'.XEX.''}",
 			select: [3]
@@ -98,7 +104,7 @@ test('runQuery()', async (t) => {
 
 test('runReport()', async (t) => {
 	const results = await qb.runReport({
-		tableId: process.env.QB_TABLEID,
+		tableId: QB_TABLEID,
 		reportId: 1
 	});
 
@@ -109,10 +115,10 @@ let newRid: number;
 
 test.serial('upsertRecords()', async (t) => {
 	const results = await qb.upsertRecords({
-		tableId: process.env.QB_TABLEID,
+		tableId: QB_TABLEID,
 		data: [
 			{
-				[process.env.QB_FIELDID]: {
+				[QB_FIELDID]: {
 					value: 'test value'
 				}
 			}
@@ -124,9 +130,9 @@ test.serial('upsertRecords()', async (t) => {
 	t.truthy(newRid);
 });
 
-test.serial('deleteRecord()', async (t) => {
-	const results = await qb.deleteRecord({
-		tableId: process.env.QB_TABLEID,
+test.serial('deleteRecords()', async (t) => {
+	const results = await qb.deleteRecords({
+		tableId: QB_TABLEID,
 		where: `{'3'.EX.'${newRid}'}`
 	});
 
