@@ -15,23 +15,19 @@
 */
 
 /* TODO:
- - Add explicit types for generic-throttle
- - Add explicit types for QuickBaseResponseReport
- - Add doc comments
- - Add backwards compatibility with older API
+ - Get rid of any explicit anys, if possible
+ - Add backwards compatibility with older API?
 */
 
 'use strict';
 
 /* Dependencies */
 import merge from 'merge';
-import * as Debug from 'debug';
-
+import { debug as Debug } from 'debug';
+import { Throttle } from 'generic-throttle';
 import axios, {
 	AxiosRequestConfig
 } from 'axios';
-
-const Throttle = require('generic-throttle');
 
 /* Debug */
 const debug = Debug('quickbase');
@@ -60,7 +56,7 @@ export class QuickBase {
 	};
 
 	private _id: number = 0;
-	private throttle: any;
+	private throttle: Throttle;
 
 	public settings: QuickBaseOptions;
 
@@ -100,50 +96,47 @@ export class QuickBase {
 	 * @returns Direct results from API request
 	 */
 	private async request(actOptions: AxiosRequestConfig, reqOptions?: AxiosRequestConfig): Promise<any> {
-		try {
-			await this.throttle.acquire();
-		}catch(err){
-			debug('Throttle Error', err);
+		return await this.throttle.acquire(async (resolve, reject) => {
+			const id = 0 + (++this._id);
+			const options = merge(this.getBasicRequest(), actOptions, reqOptions || {});
 
-			throw err;
-		}
-		
-		const id = 0 + (++this._id);
-		const options = merge(this.getBasicRequest(), actOptions, reqOptions || {});
+			debugRequest(id, options);
 
-		debugRequest(id, options);
+			try {
+				const results = (await axios.request(options)).data;
 
-		try {
-			const results = (await axios.request(options)).data;
+				debugResponse(id, results);
 
-			debugResponse(id, results);
+				resolve(results);
+			}catch(err){
+				if(!err.isAxiosError || !err.response){
+					debugResponse(id, err);
 
-			return results;
-		}catch(err){
-			if(!err.isAxiosError || !err.response){
-				debugResponse(id, err);
+					return reject(err);
+				}
 
-				throw err;
+				const data = err.response.data || {
+					message: 'Unknown Quick Base Error'
+				};
+
+				const nErr = new QuickBaseError(err.response.status, data.message, data.description);
+
+				debugResponse(id, nErr);
+
+				reject(nErr);
 			}
-
-			const data = err.response.data || {
-				message: 'Unknown Quick Base Error'
-			};
-
-			const nErr = new QuickBaseError(err.response.status, data.message, data.description);
-
-			debugResponse(id, nErr);
-
-			throw nErr;
-		}
+		});
 	}
 
 	/**
 	 * Delete records from a Quick Base Table
 	 * 
+	 * [Quick Base Documentation](https://www.ui.quickbase.com/ui/api-docs/operation/deleteRecords)
+	 * 
 	 * @param param0 API Call Parameters
 	 * @param param0.tableId Quick Base Table DBID
 	 * @param param0.where Quick Base Where Clause
+	 * @param param0.requestOptions Override axios request configuration
 	 */
 	async deleteRecords({ tableId, where, requestOptions }: QuickBaseRequestDeleteRecords): Promise<QuickBaseResponseDeleteRecords> {
 		return await this.request({
@@ -156,12 +149,30 @@ export class QuickBase {
 		}, requestOptions);
 	}
 
+	/**
+	 * Get the schema of a Quick Base Application
+	 * 
+	 * [Quick Base Documentation](https://www.ui.quickbase.com/ui/api-docs/operation/getApp)
+	 * 
+	 * @param param0 API Call Parameters
+	 * @param param0.appId Quick Base Application DBID
+	 * @param param0.requestOptions Override axios request configuration
+	 */
 	async getApp({ appId, requestOptions }: QuickBaseRequestGetApp): Promise<QuickBaseResponseApp> {
 		return await this.request({
 			url: `apps/${appId}`
 		}, requestOptions);
 	}
 
+	/**
+	 * Get all Quick Base Tables from a Quick Base Application
+	 * 
+	 * [Quick Base Documentation](https://www.ui.quickbase.com/ui/api-docs/operation/getAppTables)
+	 * 
+	 * @param param0 API Call Parameters
+	 * @param param0.appId Quick Base Application DBID
+	 * @param param0.requestOptions Override axios request configuration
+	 */
 	async getAppTables({ appId, requestOptions }: QuickBaseRequestGetAppTables): Promise<QuickBaseResponseTable[]> {
 		return await this.request({
 			url: 'tables',
@@ -171,6 +182,16 @@ export class QuickBase {
 		}, requestOptions);
 	}
 
+	/**
+	 * Get a single Quick Base Field from a Quick Base Table
+	 * 
+	 * [Quick Base Documentation](https://www.ui.quickbase.com/ui/api-docs/operation/getField)
+	 * 
+	 * @param param0 API Call Parameters
+	 * @param param0.tableId Quick Base Table DBID
+	 * @param param0.fieldId Quick Base Field ID
+	 * @param param0.requestOptions Override axios request configuration
+	 */
 	async getField({ tableId, fieldId, requestOptions }: QuickBaseRequestGetField): Promise<QuickBaseResponseField> {
 		return await this.request({
 			url: `fields/${fieldId}`,
@@ -180,6 +201,16 @@ export class QuickBase {
 		}, requestOptions);
 	}
 
+	/**
+	 * Get all Quick Base Fields from a Quick Base Table
+	 * 
+	 * [Quick Base Documentation](https://www.ui.quickbase.com/ui/api-docs/operation/getFields)
+	 * 
+	 * @param param0 API Call Parameters
+	 * @param param0.tableId Quick Base Table DBID
+	 * @param param0.includeFieldPerms If `true`, returns field permissions
+	 * @param param0.requestOptions Override axios request configuration
+	 */
 	async getFields({ tableId, includeFieldPerms, requestOptions }: QuickBaseRequestGetFields): Promise<QuickBaseResponseField[]> {
 		const params: {
 			tableId: string;
@@ -198,6 +229,16 @@ export class QuickBase {
 		}, requestOptions);
 	}
 
+	/**
+	 * Get the usage of all Quick Base Fields in a Quick Base Table
+	 * 
+	 * [Quick Base Documentation](https://www.ui.quickbase.com/ui/api-docs/operation/getFieldsUsage)
+	 * 
+	 * @param param0 API Call Parameters
+	 * @param param0.tableId Quick Base Table DBID
+	 * @param param0.skip Number of fields to skip from list
+	 * @param param0.requestOptions Override axios request configuration
+	 */
 	async getFieldsUsage({ tableId, skip, requestOptions }: QuickBaseRequestGetFieldsUsage): Promise<QuickBaseResponseFieldUsage[]> {
 		const params: {
 			tableId: string;
@@ -216,6 +257,16 @@ export class QuickBase {
 		}, requestOptions);
 	}
 
+	/**
+	 * Get the usage of a single Quick Base Field
+	 * 
+	 * [Quick Base Documentation](https://www.ui.quickbase.com/ui/api-docs/operation/getFieldUsage)
+	 * 
+	 * @param param0 API Call Parameters
+	 * @param param0.tableId Quick Base Table DBID
+	 * @param param0.fieldId Quick Base Field ID
+	 * @param param0.requestOptions Override axios request configuration
+	 */
 	async getFieldUsage({ tableId, fieldId, requestOptions }: QuickBaseRequestGetFieldUsage): Promise<QuickBaseResponseFieldUsage> {
 		return await this.request({
 			url: `fields/usage/${fieldId}`,
@@ -225,6 +276,16 @@ export class QuickBase {
 		}, requestOptions);
 	}
 
+	/**
+	 * Get a predefined Quick Base Report
+	 * 
+	 * [Quick Base Documentation](https://www.ui.quickbase.com/ui/api-docs/operation/getReport)
+	 * 
+	 * @param param0 API Call Parameters
+	 * @param param0.tableId Quick Base Table DBID
+	 * @param param0.reportId Quick Base Report ID
+	 * @param param0.requestOptions Override axios request configuration
+	 */
 	async getReport({ tableId, reportId, requestOptions }: QuickBaseRequestGetReport): Promise<QuickBaseResponseReport> {
 		return await this.request({
 			url: `reports/${reportId}`,
@@ -234,12 +295,30 @@ export class QuickBase {
 		}, requestOptions);
 	}
 
+	/**
+	 * Get the schema of a Quick Base Table
+	 * 
+	 * [Quick Base Documentation](https://www.ui.quickbase.com/ui/api-docs/operation/getTable)
+	 * 
+	 * @param param0 API Call Parameters
+	 * @param param0.tableId Quick Base Table DBID
+	 * @param param0.requestOptions Override axios request configuration
+	 */
 	async getTable({ tableId, requestOptions }: QuickBaseRequestGetTable): Promise<QuickBaseResponseTable> {
 		return await this.request({
 			url: `tables/${tableId}`
 		}, requestOptions);
 	}
 
+	/**
+	 * Get all predefined reports of a Quick Base Table
+	 * 
+	 * [Quick Base Documentation](https://www.ui.quickbase.com/ui/api-docs/operation/getTableReports)
+	 * 
+	 * @param param0 API Call Parameters
+	 * @param param0.tableId Quick Base Table DBID
+	 * @param param0.requestOptions Override axios request configuration
+	 */
 	async getTableReports({ tableId, requestOptions }: QuickBaseRequestGetTableReports): Promise<QuickBaseResponseReport[]> {
 		return await this.request({
 			url: 'reports',
@@ -249,6 +328,16 @@ export class QuickBase {
 		}, requestOptions);
 	}
 
+	/**
+	 * Run a custom Quick Base query
+	 * 
+	 * [Quick Base Documentation](https://www.ui.quickbase.com/ui/api-docs/operation/runQuery)
+	 * 
+	 * @param param0 API Call Parameters
+	 * @param param0.tableId Quick Base Table DBID
+	 * @param param0.query Quick Base query clause
+	 * @param param0.requestOptions Override axios request configuration
+	 */
 	async runQuery({ tableId, query, requestOptions }: QuickBaseRequestRunQuery): Promise<QuickBaseResponseRunQuery> {
 		query.from = tableId;
 
@@ -259,6 +348,19 @@ export class QuickBase {
 		}, requestOptions);
 	}
 
+	/**
+	 * Run a predefined Quick Base report
+	 * 
+	 * [Quick Base Documentation](https://www.ui.quickbase.com/ui/api-docs/operation/runReport)
+	 * 
+	 * @param param0 API Call Parameters
+	 * @param param0.tableId Quick Base Table DBID
+	 * @param param0.reportId Quick Base Report ID
+	 * @param param0.options Report Options Object
+	 * @param param0.options.skip Number of records to skip
+	 * @param param0.options.top Maximum number of records to return
+	 * @param param0.requestOptions Override axios request configuration
+	 */
 	async runReport({ tableId, reportId, options, requestOptions }: QuickBaseRequestRunReport): Promise<QuickBaseResponseRunQuery> {
 		const params: {
 			tableId: string;
@@ -283,6 +385,17 @@ export class QuickBase {
 		}, requestOptions);
 	}
 
+	/**
+	 * Creates or updates records in a Quick Base Table
+	 * 
+	 * [Quick Base Documentation](https://www.ui.quickbase.com/ui/api-docs/operation/upsert)
+	 * 
+	 * @param param0 API Call Parameters
+	 * @param param0.tableId Quick Base Table DBID
+	 * @param param0.data Record data array
+	 * @param param0.mergeFieldId Merge Field ID
+	 * @param param0.requestOptions Override axios request configuration
+	 */
 	async upsertRecords({ tableId, data, mergeFieldId, requestOptions }: QuickBaseRequestUpsertRecords): Promise<QuickBaseResponseUpsertRecords> {
 		return await this.request({
 			method: 'POST',
@@ -599,6 +712,6 @@ export {
 
 /* Export to Browser */
 if(IS_BROWSER){
-	// @ts-ignore no-implicit-any
+	// @ts-ignore
 	window.QuickBase = QuickBase;
 }

@@ -1,0 +1,34 @@
+{
+	"name": "quickbase",
+	"description": "A lightweight, very flexible QuickBase API",
+	"main": "dist/quickbase.browserify.min.js",
+	"authors": [
+	  "Tristian Flanagan <contact@tristianflanagan.com> (https://github.com/tflanagan)"
+	],
+	"license": "Apache-2.0",
+	"keywords": [
+		"QuickBase",
+		"quickbase",
+		"qb",
+		"api"
+	],
+	"homepage": "https://github.com/tflanagan/node-quickbase",
+	"moduleType": [
+	  "node"
+	],
+	"ignore": [
+	  "**/.*",
+	  "node_modules",
+	  "docs",
+	  "src",
+	  "dist/tests",
+	  "dist/quickbase.js",
+	  "dist/quickbase.d.ts"
+	],
+	"repository": {
+	  "type": "git",
+	  "url": "git://github.com/tflanagan/node-quickbase.git"
+	},
+	"private": false
+  }
+  

@@ -131,6 +131,10 @@ test.serial('upsertRecords()', async (t) => {
 });
 
 test.serial('deleteRecords()', async (t) => {
+	if(!newRid){
+		return t.fail('upsertRecords() failed, no record to delete');
+	}
+
 	const results = await qb.deleteRecords({
 		tableId: QB_TABLEID,
 		where: `{'3'.EX.'${newRid}'}`
