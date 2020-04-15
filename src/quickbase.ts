@@ -28,7 +28,6 @@ import { Throttle } from 'generic-throttle';
 import axios, {
 	AxiosRequestConfig
 } from 'axios';
-import { version } from '../package.json';
 
 /* Debug */
 const debugMain = debug('quickbase');
@@ -36,12 +35,13 @@ const debugRequest = debug('quickbase:request');
 const debugResponse = debug('quickbase:response');
 
 /* Globals */
+const VERSION = require('../package.json').version;
 const IS_BROWSER = typeof(window) !== 'undefined';
 
 /* Main Class */
 export class QuickBase {
 
-	static readonly VERSION: string = version;
+	static readonly VERSION: string = VERSION;
 	static defaults: QuickBaseOptions = {
 		server: 'api.quickbase.com',
 		version: 'v1',
@@ -49,7 +49,7 @@ export class QuickBase {
 		realm: 'www',
 		userToken: '',
 
-		userAgent: `node-quickbase/v${version} ${IS_BROWSER ? (window.navigator ? window.navigator.userAgent : '') : 'nodejs/' + process.version}`,
+		userAgent: `node-quickbase/v${VERSION} ${IS_BROWSER ? (window.navigator ? window.navigator.userAgent : '') : 'nodejs/' + process.version}`,
 
 		connectionLimit: 10,
 		errorOnConnectionLimit: false
@@ -89,7 +89,7 @@ export class QuickBase {
 			method: 'GET',
 			baseURL: `https://${this.settings.server}/${this.settings.version}`,
 			headers: {
-				'User-Agent': this.settings.userAgent,
+				[IS_BROWSER ? 'X-User-Agent' : 'User-Agent']: this.settings.userAgent,
 				'Authorization': `QB-USER-TOKEN ${this.settings.userToken}`,
 				'QB-Realm-Hostname': this.settings.realm
 			}
