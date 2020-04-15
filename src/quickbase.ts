@@ -52,7 +52,9 @@ export class QuickBase {
 		userAgent: `node-quickbase/v${VERSION} ${IS_BROWSER ? (window.navigator ? window.navigator.userAgent : '') : 'nodejs/' + process.version}`,
 
 		connectionLimit: 10,
-		errorOnConnectionLimit: false
+		errorOnConnectionLimit: false,
+
+		proxy: false
 	};
 
 	private _id: number = 0;
@@ -85,21 +87,16 @@ export class QuickBase {
 	 * @returns Simple GET configuration with required authorization
 	 */
 	private getBasicRequest(): AxiosRequestConfig {
-		const basicRequest: AxiosRequestConfig = {
+		return {
 			method: 'GET',
 			baseURL: `https://${this.settings.server}/${this.settings.version}`,
 			headers: {
 				[IS_BROWSER ? 'X-User-Agent' : 'User-Agent']: this.settings.userAgent,
 				'Authorization': `QB-USER-TOKEN ${this.settings.userToken}`,
 				'QB-Realm-Hostname': this.settings.realm
-			}
+			},
+			proxy: this.settings.proxy
 		};
-
-		if(this.settings.proxy){
-			basicRequest.proxy = this.settings.proxy;
-		}
-
-		return basicRequest;
 	}
 
 	/**
@@ -612,7 +609,7 @@ export interface QuickBaseOptions {
 	connectionLimit?: number;
 	errorOnConnectionLimit?: boolean;
 
-	proxy?: {
+	proxy?: false | {
 		host: string;
 		port: number;
 		auth?: {
