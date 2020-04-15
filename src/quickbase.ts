@@ -85,7 +85,7 @@ export class QuickBase {
 	 * @returns Simple GET configuration with required authorization
 	 */
 	private getBasicRequest(): AxiosRequestConfig {
-		return {
+		const basicRequest: AxiosRequestConfig = {
 			method: 'GET',
 			baseURL: `https://${this.settings.server}/${this.settings.version}`,
 			headers: {
@@ -94,6 +94,12 @@ export class QuickBase {
 				'QB-Realm-Hostname': this.settings.realm
 			}
 		};
+
+		if(this.settings.proxy){
+			basicRequest.proxy = this.settings.proxy;
+		}
+
+		return basicRequest;
 	}
 
 	/**
@@ -605,6 +611,15 @@ export interface QuickBaseOptions {
 
 	connectionLimit?: number;
 	errorOnConnectionLimit?: boolean;
+
+	proxy?: {
+		host: string;
+		port: number;
+		auth?: {
+			username: string;
+			password: string;
+		}
+	}
 }
 
 export interface QuickBaseRequest {
