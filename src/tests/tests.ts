@@ -8,7 +8,7 @@ const QB_REALM = process.env.QB_REALM!;
 const QB_USERTOKEN = process.env.QB_USERTOKEN!;
 const QB_APPID = process.env.QB_APPID!;
 const QB_TABLEID = process.env.QB_TABLEID!;
-const QB_FIELDID = process.env.QB_FIELDID!;
+const QB_FIELDID = +process.env.QB_FIELDID!;
 
 const qb = new QuickBase({
 	realm: QB_REALM,
@@ -93,10 +93,8 @@ test('getFieldsUsage()', async (t) => {
 test('runQuery()', async (t) => {
 	const results = await qb.runQuery({
 		tableId: QB_TABLEID,
-		query: {
-			where: "{'3'.XEX.''}",
-			select: [3]
-		}
+		where: "{'3'.XEX.''}",
+		select: [3]
 	});
 
 	t.truthy(results.fields[0].id);
@@ -111,6 +109,7 @@ test('runReport()', async (t) => {
 	t.truthy(results.fields[0].id);
 });
 
+const testValue: string = 'test value - б, в, г, д, ж, з, к, л, м, н, п, р, с, т, ф, х, ц, ч, ш, щ, а, э, ы, у, о, я, е, ё, ю, и';
 let newRid: number;
 
 test.serial('upsertRecords()', async (t) => {
@@ -119,7 +118,7 @@ test.serial('upsertRecords()', async (t) => {
 		data: [
 			{
 				[QB_FIELDID]: {
-					value: 'test value'
+					value: testValue
 				}
 			}
 		]
@@ -129,6 +128,20 @@ test.serial('upsertRecords()', async (t) => {
 
 	t.truthy(newRid);
 });
+
+/* 
+Leave this commented out until Quick Base supports UTF-8
+
+test.serial('utf-8 characters', async (t) => {
+	const results = await qb.runQuery({
+		tableId: QB_TABLEID,
+		where: "{'3'.EX.'" + newRid + "'}",
+		select: [ QB_FIELDID ]
+	});
+
+	t.truthy(results.data[0][QB_FIELDID].value === testValue);
+});
+*/
 
 test.serial('deleteRecords()', async (t) => {
 	if(!newRid){

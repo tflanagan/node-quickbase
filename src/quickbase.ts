@@ -23,25 +23,25 @@
 
 /* Dependencies */
 import merge from 'merge';
-import { debug as Debug } from 'debug';
+import { debug } from 'debug';
 import { Throttle } from 'generic-throttle';
 import axios, {
 	AxiosRequestConfig
 } from 'axios';
+import { version } from '../package.json';
 
 /* Debug */
-const debug = Debug('quickbase');
-const debugRequest = Debug('quickbase:request');
-const debugResponse = Debug('quickbase:response');
+const debugMain = debug('quickbase');
+const debugRequest = debug('quickbase:request');
+const debugResponse = debug('quickbase:response');
 
 /* Globals */
-const VERSION = require('../package.json').version;
 const IS_BROWSER = typeof(window) !== 'undefined';
 
 /* Main Class */
 export class QuickBase {
 
-	static readonly VERSION = VERSION;
+	static readonly VERSION: string = version;
 	static defaults: QuickBaseOptions = {
 		server: 'api.quickbase.com',
 		version: 'v1',
@@ -49,7 +49,7 @@ export class QuickBase {
 		realm: 'www',
 		userToken: '',
 
-		userAgent: `node-quickbase/v${VERSION} ${IS_BROWSER ? (window.navigator ? window.navigator.userAgent : '') : 'nodejs/' + process.version}`,
+		userAgent: `node-quickbase/v${version} ${IS_BROWSER ? (window.navigator ? window.navigator.userAgent : '') : 'nodejs/' + process.version}`,
 
 		connectionLimit: 10,
 		errorOnConnectionLimit: false
@@ -60,12 +60,21 @@ export class QuickBase {
 
 	public settings: QuickBaseOptions;
 
+	/**
+	 * Example:
+	 * ```typescript
+	 * const qb = new QuickBase({
+	 * 	realm: 'www',
+	 * 	userToken: 'xxxxxx_xxx_xxxxxxxxxxxxxxxxxxxxxxxxxx'
+	 * });
+	 * ```
+	 */
 	constructor(options?: QuickBaseOptions){
 		this.settings = merge({}, QuickBase.defaults, options || {});
 
 		this.throttle = new Throttle(this.settings.connectionLimit, -1, this.settings.errorOnConnectionLimit);
 
-		debug('New Instance', this.settings);
+		debugMain('New Instance', this.settings);
 
 		return this;
 	}
@@ -116,10 +125,11 @@ export class QuickBase {
 				}
 
 				const data = err.response.data || {
-					message: 'Unknown Quick Base Error'
+					message: 'Unknown Quick Base Error',
+					details: 'We were unable to determine the true error, please check your request and try again'
 				};
 
-				const nErr = new QuickBaseError(err.response.status, data.message, data.description);
+				const nErr = new QuickBaseError(err.response.status, data.message, data.details);
 
 				debugResponse(id, nErr);
 
@@ -132,6 +142,14 @@ export class QuickBase {
 	 * Delete records from a Quick Base Table
 	 * 
 	 * [Quick Base Documentation](https://www.ui.quickbase.com/ui/api-docs/operation/deleteRecords)
+	 * 
+	 * Example:
+	 * ```typescript
+	 * await qb.deleteRecords({
+	 * 	tableId: 'xxxxxxxxx',
+	 * 	where: "{'3'.GT.'0'}"
+	 * });
+	 * ```
 	 * 
 	 * @param param0 API Call Parameters
 	 * @param param0.tableId Quick Base Table DBID
@@ -154,6 +172,13 @@ export class QuickBase {
 	 * 
 	 * [Quick Base Documentation](https://www.ui.quickbase.com/ui/api-docs/operation/getApp)
 	 * 
+	 * Example:
+	 * ```typescript
+	 * await qb.getApp({
+	 * 	appId: 'xxxxxxxxx'
+	 * });
+	 * ```
+	 * 
 	 * @param param0 API Call Parameters
 	 * @param param0.appId Quick Base Application DBID
 	 * @param param0.requestOptions Override axios request configuration
@@ -168,6 +193,13 @@ export class QuickBase {
 	 * Get all Quick Base Tables from a Quick Base Application
 	 * 
 	 * [Quick Base Documentation](https://www.ui.quickbase.com/ui/api-docs/operation/getAppTables)
+	 * 
+	 * Example:
+	 * ```typescript
+	 * await qb.getAppTables({
+	 * 	appId: 'xxxxxxxxx'
+	 * });
+	 * ```
 	 * 
 	 * @param param0 API Call Parameters
 	 * @param param0.appId Quick Base Application DBID
@@ -187,6 +219,14 @@ export class QuickBase {
 	 * 
 	 * [Quick Base Documentation](https://www.ui.quickbase.com/ui/api-docs/operation/getField)
 	 * 
+	 * Example:
+	 * ```typescript
+	 * await qb.getField({
+	 * 	tableId: 'xxxxxxxxx',
+	 * 	fieldId: 3
+	 * });
+	 * ```
+	 * 
 	 * @param param0 API Call Parameters
 	 * @param param0.tableId Quick Base Table DBID
 	 * @param param0.fieldId Quick Base Field ID
@@ -205,6 +245,13 @@ export class QuickBase {
 	 * Get all Quick Base Fields from a Quick Base Table
 	 * 
 	 * [Quick Base Documentation](https://www.ui.quickbase.com/ui/api-docs/operation/getFields)
+	 * 
+	 * Example:
+	 * ```typescript
+	 * await qb.getFields({
+	 * 	tableId: 'xxxxxxxxx'
+	 * });
+	 * ```
 	 * 
 	 * @param param0 API Call Parameters
 	 * @param param0.tableId Quick Base Table DBID
@@ -234,6 +281,13 @@ export class QuickBase {
 	 * 
 	 * [Quick Base Documentation](https://www.ui.quickbase.com/ui/api-docs/operation/getFieldsUsage)
 	 * 
+	 * Example:
+	 * ```typescript
+	 * await qb.getFieldsUsage({
+	 * 	tableId: 'xxxxxxxxx'
+	 * });
+	 * ```
+	 * 
 	 * @param param0 API Call Parameters
 	 * @param param0.tableId Quick Base Table DBID
 	 * @param param0.skip Number of fields to skip from list
@@ -262,6 +316,14 @@ export class QuickBase {
 	 * 
 	 * [Quick Base Documentation](https://www.ui.quickbase.com/ui/api-docs/operation/getFieldUsage)
 	 * 
+	 * Example:
+	 * ```typescript
+	 * await qb.getFieldUsage({
+	 * 	tableId: 'xxxxxxxxx',
+	 * 	fieldId: 3
+	 * });
+	 * ```
+	 * 
 	 * @param param0 API Call Parameters
 	 * @param param0.tableId Quick Base Table DBID
 	 * @param param0.fieldId Quick Base Field ID
@@ -280,6 +342,14 @@ export class QuickBase {
 	 * Get a predefined Quick Base Report
 	 * 
 	 * [Quick Base Documentation](https://www.ui.quickbase.com/ui/api-docs/operation/getReport)
+	 * 
+	 * Example:
+	 * ```typescript
+	 * await qb.getReport({
+	 * 	tableId: 'xxxxxxxxx',
+	 * 	reportId: 1
+	 * });
+	 * ```
 	 * 
 	 * @param param0 API Call Parameters
 	 * @param param0.tableId Quick Base Table DBID
@@ -300,6 +370,13 @@ export class QuickBase {
 	 * 
 	 * [Quick Base Documentation](https://www.ui.quickbase.com/ui/api-docs/operation/getTable)
 	 * 
+	 * Example:
+	 * ```typescript
+	 * await qb.getTable({
+	 * 	tableId: 'xxxxxxxxx'
+	 * });
+	 * ```
+	 * 
 	 * @param param0 API Call Parameters
 	 * @param param0.tableId Quick Base Table DBID
 	 * @param param0.requestOptions Override axios request configuration
@@ -314,6 +391,13 @@ export class QuickBase {
 	 * Get all predefined reports of a Quick Base Table
 	 * 
 	 * [Quick Base Documentation](https://www.ui.quickbase.com/ui/api-docs/operation/getTableReports)
+	 * 
+	 * Example:
+	 * ```typescript
+	 * await qb.getTableReports({
+	 * 	tableId: 'xxxxxxxxx'
+	 * });
+	 * ```
 	 * 
 	 * @param param0 API Call Parameters
 	 * @param param0.tableId Quick Base Table DBID
@@ -333,18 +417,58 @@ export class QuickBase {
 	 * 
 	 * [Quick Base Documentation](https://www.ui.quickbase.com/ui/api-docs/operation/runQuery)
 	 * 
+	 * Example:
+	 * ```typescript
+	 * await qb.runQuery({
+	 * 	tableId: 'xxxxxxxxx',
+	 * 	where: "{'3'.GT.'0'}",
+	 * 	select: [ 3, 6, 7 ],
+	 * 	sortBy: [{
+	 * 		fieldId: 3,
+	 * 		order: 'ASC'
+	 * 	}],
+	 * 	groupBy: [{
+	 * 		fieldId: 6,
+	 * 		by: 'same-value'
+	 * 	}],
+	 * 	options: {
+	 * 		skip: 200,
+	 * 		top: 100
+	 * 	}
+	 * });
+	 * ```
+	 * 
 	 * @param param0 API Call Parameters
 	 * @param param0.tableId Quick Base Table DBID
-	 * @param param0.query Quick Base query clause
+	 * @param param0.where Quick Base query string
+	 * @param param0.select Array of Field IDs to return
+	 * @param param0.sortBy Array of Fields to sort the results by
+	 * @param param0.groupBy Array of Fields to group the results by
+	 * @param param0.options Report Options Object
+	 * @param param0.options.skip Number of records to skip
+	 * @param param0.options.top Maximum number of records to return
 	 * @param param0.requestOptions Override axios request configuration
 	 */
-	async runQuery({ tableId, query, requestOptions }: QuickBaseRequestRunQuery): Promise<QuickBaseResponseRunQuery> {
-		query.from = tableId;
-
+	async runQuery({ 
+		tableId,
+		where,
+		sortBy,
+		select,
+		options,
+		groupBy,
+		requestOptions
+	}: QuickBaseRequestRunQuery): Promise<QuickBaseResponseRunQuery> {
 		return await this.request({
 			method: 'POST',
 			url: 'records/query',
-			data: query
+			data: {
+				from: tableId,
+				where: where,
+				sortBy: sortBy,
+				select: select,
+				options: options,
+				groupBy: groupBy
+			}
 		}, requestOptions);
 	}
 
@@ -352,6 +476,18 @@ export class QuickBase {
 	 * Run a predefined Quick Base report
 	 * 
 	 * [Quick Base Documentation](https://www.ui.quickbase.com/ui/api-docs/operation/runReport)
+	 * 
+	 * Example:
+	 * ```typescript
+	 * await qb.runReport({
+	 * 	tableId: 'xxxxxxxxx',
+	 * 	reportId: 1,
+	 * 	options: {
+	 * 		skip: 200,
+	 * 		top: 100
+	 * 	}
+	 * });
+	 * ```
 	 * 
 	 * @param param0 API Call Parameters
 	 * @param param0.tableId Quick Base Table DBID
@@ -390,20 +526,46 @@ export class QuickBase {
 	 * 
 	 * [Quick Base Documentation](https://www.ui.quickbase.com/ui/api-docs/operation/upsert)
 	 * 
+	 * Example:
+	 * ```typescript
+	 * await qb.upsertRecords({
+	 * 	tableId: 'xxxxxxxxx',
+	 * 	data: [{
+	 * 		"6": {
+	 * 			value: 'Record 1 Field 6'
+	 * 		},
+	 * 		"7": {
+	 * 			value: 'Record 1 Field 7'
+	 * 		}
+	 * 	}, {
+	 * 		"6": {
+	 * 			value: 'Record 2 Field 6'
+	 * 		}
+	 * 		"7": {
+	 * 			value: 'Record 2 Field 7'
+	 * 		}
+	 * 	}],
+	 * 	mergeFieldId: 6,
+	 * 	fieldsToReturn: [ 6, 7 ]
+	 * });
+	 * ```
+	 * 
 	 * @param param0 API Call Parameters
 	 * @param param0.tableId Quick Base Table DBID
 	 * @param param0.data Record data array
 	 * @param param0.mergeFieldId Merge Field ID
+	 * @param param0.fieldsToReturn An array of Field IDs to return
 	 * @param param0.requestOptions Override axios request configuration
 	 */
-	async upsertRecords({ tableId, data, mergeFieldId, requestOptions }: QuickBaseRequestUpsertRecords): Promise<QuickBaseResponseUpsertRecords> {
+	async upsertRecords({ tableId, data, mergeFieldId, fieldsToReturn, requestOptions }: QuickBaseRequestUpsertRecords): Promise<QuickBaseResponseUpsertRecords> {
 		return await this.request({
 			method: 'POST',
 			url: 'records',
 			data: {
 				to: tableId,
 				data: data,
-				mergeFieldId: mergeFieldId
+				mergeFieldId: mergeFieldId,
+				fieldsToReturn: fieldsToReturn
 			}
 		}, requestOptions);
 	}
@@ -413,7 +575,19 @@ export class QuickBase {
 /* Quick Base Error */
 export class QuickBaseError extends Error {
 
-	constructor(public code: number, public message: string, public description?: string) {
+	/**
+	 * Extends the native JavaScript `Error` object for use with Quick Base API errors
+	 * 
+	 * Example:
+	 * ```typescript
+	 * const qbErr = new QuickBaseError(403, 'Access Denied', 'User token is invalid');
+	 * ```
+	 * 
+	 * @param code Error code
+	 * @param message Error message
+	 * @param details Error details
+	 */
+	constructor(public code: number, public message: string, public details?: string) {
 		super(message);
 	}
 
@@ -485,7 +659,20 @@ export interface QuickBaseRequestGetTableReports extends QuickBaseRequest {
 
 export interface QuickBaseRequestRunQuery extends QuickBaseRequest {
 	tableId: string;
-	query: QuickBaseQuery;
+	where?: string;
+	sortBy?: {
+		fieldId?: number;
+		order?: string;
+	}[];
+	select?: number[];
+	options?: {
+		skip?: number;
+		top?: number;
+	};
+	groupBy?: {
+		fieldId?: number;
+		by?: 'string';
+	}[];
 }
 
 export interface QuickBaseRequestRunReport extends QuickBaseRequest {
@@ -501,6 +688,7 @@ export interface QuickBaseRequestUpsertRecords extends QuickBaseRequest {
 	tableId: string;
 	data: QuickBaseRecord[];
 	mergeFieldId?: number;
+	fieldsToReturn?: number[];
 }
 
 export interface QuickBaseResponseApp {
@@ -599,10 +787,22 @@ export interface QuickBaseResponseReport {
 	query: {
 		tableId: string;
 		filter: string;
-		formulaFields: any;
+		formulaFields: {
+			formula: string;
+			label: string;
+			id: number;
+			fieldType: string;
+			decimalPrecision?: number;
+		}[];
 		fields: number[];
-		sorting: any;
-		grouping: any;
+		sorting: {
+			fieldId?: number;
+			order?: string;
+		}[];
+		grouping: {
+			fieldId?: number;
+			by?: 'string';
+		}[];
 	};
 	properties: any;
 }
@@ -685,24 +885,6 @@ export interface QuickBaseResponseFieldUsage {
 
 export interface QuickBaseResponseDeleteRecords {
 	numberDeleted: number;
-}
-
-export interface QuickBaseQuery {
-	from?: string;
-	where?: string;
-	sortBy?: {
-		fieldId?: number;
-		order?: string;
-	}[];
-	select?: number[];
-	options?: {
-		skip?: number;
-		top?: number;
-	};
-	groupBy?: {
-		fieldId?: number;
-		by?: 'string';
-	}[];
 }
 
 /* Export Supporting Types/Classes */
