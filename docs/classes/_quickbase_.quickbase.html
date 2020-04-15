@@ -2794,9 +2794,6 @@ img {
 			<a href="../interfaces/_quickbase_.quickbaseoptions.html" class="tsd-kind-icon">Quick<wbr>Base<wbr>Options</a>
 		</li>
 		<li class=" tsd-kind-interface tsd-parent-kind-module">
-			<a href="../interfaces/_quickbase_.quickbasequery.html" class="tsd-kind-icon">Quick<wbr>Base<wbr>Query</a>
-		</li>
-		<li class=" tsd-kind-interface tsd-parent-kind-module">
 			<a href="../interfaces/_quickbase_.quickbaserecord.html" class="tsd-kind-icon">Quick<wbr>Base<wbr>Record</a>
 		</li>
 		<li class=" tsd-kind-interface tsd-parent-kind-module">
@@ -2940,9 +2937,18 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/b7026c3/src/quickbase.ts#L61">src/quickbase.ts:61</a></li>
+								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/3e2ba14/src/quickbase.ts#L61">src/quickbase.ts:61</a></li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Example:</p>
+								<pre><code class="language-typescript"><span class="hljs-keyword">const</span> qb = <span class="hljs-keyword">new</span> QuickBase({
+    realm: <span class="hljs-string">'www'</span>,
+    userToken: <span class="hljs-string">'xxxxxx_xxx_xxxxxxxxxxxxxxxxxxxxxxxxxx'</span>
+});</code></pre>
+							</div>
+						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
@@ -2962,7 +2968,7 @@ img {
 				<div class="tsd-signature tsd-kind-icon">_id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 0</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/b7026c3/src/quickbase.ts#L58">src/quickbase.ts:58</a></li>
+						<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/3e2ba14/src/quickbase.ts#L58">src/quickbase.ts:58</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -2972,7 +2978,7 @@ img {
 				<div class="tsd-signature tsd-kind-icon">settings<span class="tsd-signature-symbol">:</span> <a href="../interfaces/_quickbase_.quickbaseoptions.html" class="tsd-signature-type">QuickBaseOptions</a></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/b7026c3/src/quickbase.ts#L61">src/quickbase.ts:61</a></li>
+						<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/3e2ba14/src/quickbase.ts#L61">src/quickbase.ts:61</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -2982,17 +2988,17 @@ img {
 				<div class="tsd-signature tsd-kind-icon">throttle<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Throttle</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/b7026c3/src/quickbase.ts#L59">src/quickbase.ts:59</a></li>
+						<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/3e2ba14/src/quickbase.ts#L59">src/quickbase.ts:59</a></li>
 					</ul>
 				</aside>
 			</section>
 			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-static">
 				<a name="version" class="tsd-anchor"></a>
 				<h3><span class="tsd-flag ts-flagStatic">Static</span> VERSION</h3>
-				<div class="tsd-signature tsd-kind-icon">VERSION<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol"> = VERSION</span></div>
+				<div class="tsd-signature tsd-kind-icon">VERSION<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> = version</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/b7026c3/src/quickbase.ts#L44">src/quickbase.ts:44</a></li>
+						<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/3e2ba14/src/quickbase.ts#L44">src/quickbase.ts:44</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -3009,7 +3015,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/b7026c3/src/quickbase.ts#L141">src/quickbase.ts:141</a></li>
+								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/3e2ba14/src/quickbase.ts#L159">src/quickbase.ts:159</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -3017,6 +3023,11 @@ img {
 								<p>Delete records from a Quick Base Table</p>
 							</div>
 							<p><a href="https://www.ui.quickbase.com/ui/api-docs/operation/deleteRecords">Quick Base Documentation</a></p>
+							<p>Example:</p>
+							<pre><code class="language-typescript"><span class="hljs-keyword">await</span> qb.deleteRecords({
+    tableId: <span class="hljs-string">'xxxxxxxxx'</span>,
+    where: <span class="hljs-string">"{'3'.GT.'0'}"</span>
+});</code></pre>
 						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
@@ -3049,7 +3060,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/b7026c3/src/quickbase.ts#L161">src/quickbase.ts:161</a></li>
+								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/3e2ba14/src/quickbase.ts#L186">src/quickbase.ts:186</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -3057,6 +3068,10 @@ img {
 								<p>Get the schema of a Quick Base Application</p>
 							</div>
 							<p><a href="https://www.ui.quickbase.com/ui/api-docs/operation/getApp">Quick Base Documentation</a></p>
+							<p>Example:</p>
+							<pre><code class="language-typescript"><span class="hljs-keyword">await</span> qb.getApp({
+    appId: <span class="hljs-string">'xxxxxxxxx'</span>
+});</code></pre>
 						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
@@ -3086,7 +3101,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/b7026c3/src/quickbase.ts#L176">src/quickbase.ts:176</a></li>
+								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/3e2ba14/src/quickbase.ts#L208">src/quickbase.ts:208</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -3094,6 +3109,10 @@ img {
 								<p>Get all Quick Base Tables from a Quick Base Application</p>
 							</div>
 							<p><a href="https://www.ui.quickbase.com/ui/api-docs/operation/getAppTables">Quick Base Documentation</a></p>
+							<p>Example:</p>
+							<pre><code class="language-typescript"><span class="hljs-keyword">await</span> qb.getAppTables({
+    appId: <span class="hljs-string">'xxxxxxxxx'</span>
+});</code></pre>
 						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
@@ -3123,7 +3142,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/b7026c3/src/quickbase.ts#L78">src/quickbase.ts:78</a></li>
+								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/3e2ba14/src/quickbase.ts#L87">src/quickbase.ts:87</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -3146,7 +3165,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/b7026c3/src/quickbase.ts#L195">src/quickbase.ts:195</a></li>
+								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/3e2ba14/src/quickbase.ts#L235">src/quickbase.ts:235</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -3154,6 +3173,11 @@ img {
 								<p>Get a single Quick Base Field from a Quick Base Table</p>
 							</div>
 							<p><a href="https://www.ui.quickbase.com/ui/api-docs/operation/getField">Quick Base Documentation</a></p>
+							<p>Example:</p>
+							<pre><code class="language-typescript"><span class="hljs-keyword">await</span> qb.getField({
+    tableId: <span class="hljs-string">'xxxxxxxxx'</span>,
+    fieldId: <span class="hljs-number">3</span>
+});</code></pre>
 						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
@@ -3186,7 +3210,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/b7026c3/src/quickbase.ts#L270">src/quickbase.ts:270</a></li>
+								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/3e2ba14/src/quickbase.ts#L332">src/quickbase.ts:332</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -3194,6 +3218,11 @@ img {
 								<p>Get the usage of a single Quick Base Field</p>
 							</div>
 							<p><a href="https://www.ui.quickbase.com/ui/api-docs/operation/getFieldUsage">Quick Base Documentation</a></p>
+							<p>Example:</p>
+							<pre><code class="language-typescript"><span class="hljs-keyword">await</span> qb.getFieldUsage({
+    tableId: <span class="hljs-string">'xxxxxxxxx'</span>,
+    fieldId: <span class="hljs-number">3</span>
+});</code></pre>
 						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
@@ -3226,7 +3255,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/b7026c3/src/quickbase.ts#L214">src/quickbase.ts:214</a></li>
+								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/3e2ba14/src/quickbase.ts#L261">src/quickbase.ts:261</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -3234,6 +3263,10 @@ img {
 								<p>Get all Quick Base Fields from a Quick Base Table</p>
 							</div>
 							<p><a href="https://www.ui.quickbase.com/ui/api-docs/operation/getFields">Quick Base Documentation</a></p>
+							<p>Example:</p>
+							<pre><code class="language-typescript"><span class="hljs-keyword">await</span> qb.getFields({
+    tableId: <span class="hljs-string">'xxxxxxxxx'</span>
+});</code></pre>
 						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
@@ -3266,7 +3299,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/b7026c3/src/quickbase.ts#L242">src/quickbase.ts:242</a></li>
+								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/3e2ba14/src/quickbase.ts#L296">src/quickbase.ts:296</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -3274,6 +3307,10 @@ img {
 								<p>Get the usage of all Quick Base Fields in a Quick Base Table</p>
 							</div>
 							<p><a href="https://www.ui.quickbase.com/ui/api-docs/operation/getFieldsUsage">Quick Base Documentation</a></p>
+							<p>Example:</p>
+							<pre><code class="language-typescript"><span class="hljs-keyword">await</span> qb.getFieldsUsage({
+    tableId: <span class="hljs-string">'xxxxxxxxx'</span>
+});</code></pre>
 						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
@@ -3306,7 +3343,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/b7026c3/src/quickbase.ts#L289">src/quickbase.ts:289</a></li>
+								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/3e2ba14/src/quickbase.ts#L359">src/quickbase.ts:359</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -3314,6 +3351,11 @@ img {
 								<p>Get a predefined Quick Base Report</p>
 							</div>
 							<p><a href="https://www.ui.quickbase.com/ui/api-docs/operation/getReport">Quick Base Documentation</a></p>
+							<p>Example:</p>
+							<pre><code class="language-typescript"><span class="hljs-keyword">await</span> qb.getReport({
+    tableId: <span class="hljs-string">'xxxxxxxxx'</span>,
+    reportId: <span class="hljs-number">1</span>
+});</code></pre>
 						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
@@ -3346,7 +3388,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/b7026c3/src/quickbase.ts#L307">src/quickbase.ts:307</a></li>
+								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/3e2ba14/src/quickbase.ts#L384">src/quickbase.ts:384</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -3354,6 +3396,10 @@ img {
 								<p>Get the schema of a Quick Base Table</p>
 							</div>
 							<p><a href="https://www.ui.quickbase.com/ui/api-docs/operation/getTable">Quick Base Documentation</a></p>
+							<p>Example:</p>
+							<pre><code class="language-typescript"><span class="hljs-keyword">await</span> qb.getTable({
+    tableId: <span class="hljs-string">'xxxxxxxxx'</span>
+});</code></pre>
 						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
@@ -3383,7 +3429,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/b7026c3/src/quickbase.ts#L322">src/quickbase.ts:322</a></li>
+								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/3e2ba14/src/quickbase.ts#L406">src/quickbase.ts:406</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -3391,6 +3437,10 @@ img {
 								<p>Get all predefined reports of a Quick Base Table</p>
 							</div>
 							<p><a href="https://www.ui.quickbase.com/ui/api-docs/operation/getTableReports">Quick Base Documentation</a></p>
+							<p>Example:</p>
+							<pre><code class="language-typescript"><span class="hljs-keyword">await</span> qb.getTableReports({
+    tableId: <span class="hljs-string">'xxxxxxxxx'</span>
+});</code></pre>
 						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
@@ -3420,7 +3470,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/b7026c3/src/quickbase.ts#L98">src/quickbase.ts:98</a></li>
+								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/3e2ba14/src/quickbase.ts#L107">src/quickbase.ts:107</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -3452,13 +3502,13 @@ img {
 				<a name="runquery" class="tsd-anchor"></a>
 				<h3>run<wbr>Query</h3>
 				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-					<li class="tsd-signature tsd-kind-icon">run<wbr>Query<span class="tsd-signature-symbol">(</span>__namedParameters<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">{ </span>query<span class="tsd-signature-symbol">: </span><a href="../interfaces/_quickbase_.quickbasequery.html" class="tsd-signature-type">QuickBaseQuery</a><span class="tsd-signature-symbol">; </span>requestOptions<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">AxiosRequestConfig</span><span class="tsd-signature-symbol">; </span>tableId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_quickbase_.quickbaseresponserunquery.html" class="tsd-signature-type">QuickBaseResponseRunQuery</a><span class="tsd-signature-symbol">&gt;</span></li>
+					<li class="tsd-signature tsd-kind-icon">run<wbr>Query<span class="tsd-signature-symbol">(</span>__namedParameters<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">{ </span>groupBy<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">{ </span>by<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"string"</span><span class="tsd-signature-symbol">; </span>fieldId<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">; </span>options<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">{ </span>skip<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>top<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">; </span>requestOptions<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">AxiosRequestConfig</span><span class="tsd-signature-symbol">; </span>select<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">; </span>sortBy<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">{ </span>fieldId<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>order<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">; </span>tableId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>where<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_quickbase_.quickbaseresponserunquery.html" class="tsd-signature-type">QuickBaseResponseRunQuery</a><span class="tsd-signature-symbol">&gt;</span></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/b7026c3/src/quickbase.ts#L341">src/quickbase.ts:341</a></li>
+								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/3e2ba14/src/quickbase.ts#L452">src/quickbase.ts:452</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -3466,20 +3516,50 @@ img {
 								<p>Run a custom Quick Base query</p>
 							</div>
 							<p><a href="https://www.ui.quickbase.com/ui/api-docs/operation/runQuery">Quick Base Documentation</a></p>
+							<p>Example:</p>
+							<pre><code class="language-typescript"><span class="hljs-keyword">await</span> qb.runQuery({
+    tableId: <span class="hljs-string">'xxxxxxxxx'</span>,
+    where: <span class="hljs-string">"{'3'.GT.'0'}"</span>,
+    select: [ <span class="hljs-number">3</span>, <span class="hljs-number">6</span>, <span class="hljs-number">7</span> ],
+    sortBy: [{
+        fieldId: <span class="hljs-number">3</span>,
+        order: <span class="hljs-string">'ASC'</span>
+    }],
+    groupBy: [{
+        fieldId: <span class="hljs-number">6</span>,
+        by: <span class="hljs-string">'same-value'</span>
+    }],
+    options: {
+        skip: <span class="hljs-number">200</span>,
+        top: <span class="hljs-number">100</span>
+    }
+});</code></pre>
 						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
-								<h5>__namedParameters: <span class="tsd-signature-symbol">{ </span>query<span class="tsd-signature-symbol">: </span><a href="../interfaces/_quickbase_.quickbasequery.html" class="tsd-signature-type">QuickBaseQuery</a><span class="tsd-signature-symbol">; </span>requestOptions<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">AxiosRequestConfig</span><span class="tsd-signature-symbol">; </span>tableId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span></h5>
+								<h5>__namedParameters: <span class="tsd-signature-symbol">{ </span>groupBy<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">{ </span>by<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"string"</span><span class="tsd-signature-symbol">; </span>fieldId<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">; </span>options<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">{ </span>skip<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>top<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">; </span>requestOptions<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">AxiosRequestConfig</span><span class="tsd-signature-symbol">; </span>select<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">; </span>sortBy<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">{ </span>fieldId<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>order<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">; </span>tableId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>where<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span></h5>
 								<ul class="tsd-parameters">
 									<li class="tsd-parameter">
-										<h5>query<span class="tsd-signature-symbol">: </span><a href="../interfaces/_quickbase_.quickbasequery.html" class="tsd-signature-type">QuickBaseQuery</a></h5>
+										<h5>group<wbr>By<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">{ </span>by<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"string"</span><span class="tsd-signature-symbol">; </span>fieldId<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">[]</span></h5>
+									</li>
+									<li class="tsd-parameter">
+										<h5>options<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">{ </span>skip<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>top<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> }</span></h5>
 									</li>
 									<li class="tsd-parameter">
 										<h5>request<wbr>Options<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">AxiosRequestConfig</span></h5>
 									</li>
 									<li class="tsd-parameter">
+										<h5>select<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span></h5>
+									</li>
+									<li class="tsd-parameter">
+										<h5>sort<wbr>By<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">{ </span>fieldId<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>order<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">[]</span></h5>
+									</li>
+									<li class="tsd-parameter">
 										<h5>table<wbr>Id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h5>
+									</li>
+									<li class="tsd-parameter">
+										<h5>where<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5>
 									</li>
 								</ul>
 							</li>
@@ -3498,7 +3578,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/b7026c3/src/quickbase.ts#L364">src/quickbase.ts:364</a></li>
+								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/3e2ba14/src/quickbase.ts#L500">src/quickbase.ts:500</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -3506,6 +3586,15 @@ img {
 								<p>Run a predefined Quick Base report</p>
 							</div>
 							<p><a href="https://www.ui.quickbase.com/ui/api-docs/operation/runReport">Quick Base Documentation</a></p>
+							<p>Example:</p>
+							<pre><code class="language-typescript"><span class="hljs-keyword">await</span> qb.runReport({
+    tableId: <span class="hljs-string">'xxxxxxxxx'</span>,
+    reportId: <span class="hljs-number">1</span>,
+    options: {
+        skip: <span class="hljs-number">200</span>,
+        top: <span class="hljs-number">100</span>
+    }
+});</code></pre>
 						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
@@ -3535,13 +3624,13 @@ img {
 				<a name="upsertrecords" class="tsd-anchor"></a>
 				<h3>upsert<wbr>Records</h3>
 				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-					<li class="tsd-signature tsd-kind-icon">upsert<wbr>Records<span class="tsd-signature-symbol">(</span>__namedParameters<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">{ </span>data<span class="tsd-signature-symbol">: </span><a href="../interfaces/_quickbase_.quickbaserecord.html" class="tsd-signature-type">QuickBaseRecord</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">; </span>mergeFieldId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>requestOptions<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">AxiosRequestConfig</span><span class="tsd-signature-symbol">; </span>tableId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_quickbase_.quickbaseresponseupsertrecords.html" class="tsd-signature-type">QuickBaseResponseUpsertRecords</a><span class="tsd-signature-symbol">&gt;</span></li>
+					<li class="tsd-signature tsd-kind-icon">upsert<wbr>Records<span class="tsd-signature-symbol">(</span>__namedParameters<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">{ </span>data<span class="tsd-signature-symbol">: </span><a href="../interfaces/_quickbase_.quickbaserecord.html" class="tsd-signature-type">QuickBaseRecord</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">; </span>fieldsToReturn<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">; </span>mergeFieldId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>requestOptions<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">AxiosRequestConfig</span><span class="tsd-signature-symbol">; </span>tableId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_quickbase_.quickbaseresponseupsertrecords.html" class="tsd-signature-type">QuickBaseResponseUpsertRecords</a><span class="tsd-signature-symbol">&gt;</span></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/b7026c3/src/quickbase.ts#L399">src/quickbase.ts:399</a></li>
+								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/3e2ba14/src/quickbase.ts#L560">src/quickbase.ts:560</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -3549,14 +3638,38 @@ img {
 								<p>Creates or updates records in a Quick Base Table</p>
 							</div>
 							<p><a href="https://www.ui.quickbase.com/ui/api-docs/operation/upsert">Quick Base Documentation</a></p>
+							<p>Example:</p>
+							<pre><code class="language-typescript"><span class="hljs-keyword">await</span> qb.upsertRecords({
+    tableId: <span class="hljs-string">'xxxxxxxxx'</span>,
+    data: [{
+        <span class="hljs-string">"6"</span>: {
+            value: <span class="hljs-string">'Record 1 Field 6'</span>
+        },
+        <span class="hljs-string">"7"</span>: {
+            value: <span class="hljs-string">'Record 1 Field 7'</span>
+        }
+    }, {
+        <span class="hljs-string">"6"</span>: {
+            value: <span class="hljs-string">'Record 2 Field 6'</span>
+        }
+        <span class="hljs-string">"7"</span>: {
+            value: <span class="hljs-string">'Record 2 Field 7'</span>
+        }
+    }],
+    mergeFieldId: <span class="hljs-number">6</span>,
+    fieldsToReturn: [ <span class="hljs-number">6</span>, <span class="hljs-number">7</span> ]
+});</code></pre>
 						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
-								<h5>__namedParameters: <span class="tsd-signature-symbol">{ </span>data<span class="tsd-signature-symbol">: </span><a href="../interfaces/_quickbase_.quickbaserecord.html" class="tsd-signature-type">QuickBaseRecord</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">; </span>mergeFieldId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>requestOptions<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">AxiosRequestConfig</span><span class="tsd-signature-symbol">; </span>tableId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span></h5>
+								<h5>__namedParameters: <span class="tsd-signature-symbol">{ </span>data<span class="tsd-signature-symbol">: </span><a href="../interfaces/_quickbase_.quickbaserecord.html" class="tsd-signature-type">QuickBaseRecord</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">; </span>fieldsToReturn<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">; </span>mergeFieldId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>requestOptions<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">AxiosRequestConfig</span><span class="tsd-signature-symbol">; </span>tableId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span></h5>
 								<ul class="tsd-parameters">
 									<li class="tsd-parameter">
 										<h5>data<span class="tsd-signature-symbol">: </span><a href="../interfaces/_quickbase_.quickbaserecord.html" class="tsd-signature-type">QuickBaseRecord</a><span class="tsd-signature-symbol">[]</span></h5>
+									</li>
+									<li class="tsd-parameter">
+										<h5>fields<wbr>ToReturn<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span></h5>
 									</li>
 									<li class="tsd-parameter">
 										<h5>merge<wbr>Field<wbr>Id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span></h5>
@@ -3583,7 +3696,7 @@ img {
 				<div class="tsd-signature tsd-kind-icon">defaults<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/b7026c3/src/quickbase.ts#L45">src/quickbase.ts:45</a></li>
+						<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/3e2ba14/src/quickbase.ts#L45">src/quickbase.ts:45</a></li>
 					</ul>
 				</aside>
 				<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-object-literal">
@@ -3592,7 +3705,7 @@ img {
 					<div class="tsd-signature tsd-kind-icon">connection<wbr>Limit<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 10</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/b7026c3/src/quickbase.ts#L54">src/quickbase.ts:54</a></li>
+							<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/3e2ba14/src/quickbase.ts#L54">src/quickbase.ts:54</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -3602,7 +3715,7 @@ img {
 					<div class="tsd-signature tsd-kind-icon">error<wbr>OnConnection<wbr>Limit<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> = false</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/b7026c3/src/quickbase.ts#L55">src/quickbase.ts:55</a></li>
+							<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/3e2ba14/src/quickbase.ts#L55">src/quickbase.ts:55</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -3612,7 +3725,7 @@ img {
 					<div class="tsd-signature tsd-kind-icon">realm<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> = &quot;www&quot;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/b7026c3/src/quickbase.ts#L49">src/quickbase.ts:49</a></li>
+							<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/3e2ba14/src/quickbase.ts#L49">src/quickbase.ts:49</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -3622,17 +3735,17 @@ img {
 					<div class="tsd-signature tsd-kind-icon">server<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> = &quot;api.quickbase.com&quot;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/b7026c3/src/quickbase.ts#L46">src/quickbase.ts:46</a></li>
+							<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/3e2ba14/src/quickbase.ts#L46">src/quickbase.ts:46</a></li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-object-literal">
 					<a name="defaults.useragent" class="tsd-anchor"></a>
 					<h3>user<wbr>Agent</h3>
-					<div class="tsd-signature tsd-kind-icon">user<wbr>Agent<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> = &#x60;node-quickbase/v${VERSION} ${IS_BROWSER ? (window.navigator ? window.navigator.userAgent : &#x27;&#x27;) : &#x27;nodejs/&#x27; + process.version}&#x60;</span></div>
+					<div class="tsd-signature tsd-kind-icon">user<wbr>Agent<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> = &#x60;node-quickbase/v${version} ${IS_BROWSER ? (window.navigator ? window.navigator.userAgent : &#x27;&#x27;) : &#x27;nodejs/&#x27; + process.version}&#x60;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/b7026c3/src/quickbase.ts#L52">src/quickbase.ts:52</a></li>
+							<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/3e2ba14/src/quickbase.ts#L52">src/quickbase.ts:52</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -3642,7 +3755,7 @@ img {
 					<div class="tsd-signature tsd-kind-icon">user<wbr>Token<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> = &quot;&quot;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/b7026c3/src/quickbase.ts#L50">src/quickbase.ts:50</a></li>
+							<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/3e2ba14/src/quickbase.ts#L50">src/quickbase.ts:50</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -3652,7 +3765,7 @@ img {
 					<div class="tsd-signature tsd-kind-icon">version<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> = &quot;v1&quot;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/b7026c3/src/quickbase.ts#L47">src/quickbase.ts:47</a></li>
+							<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/3e2ba14/src/quickbase.ts#L47">src/quickbase.ts:47</a></li>
 						</ul>
 					</aside>
 				</section>

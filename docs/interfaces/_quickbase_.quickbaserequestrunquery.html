@@ -2729,9 +2729,6 @@ img {
 			<a href="_quickbase_.quickbaseoptions.html" class="tsd-kind-icon">Quick<wbr>Base<wbr>Options</a>
 		</li>
 		<li class=" tsd-kind-interface tsd-parent-kind-module">
-			<a href="_quickbase_.quickbasequery.html" class="tsd-kind-icon">Quick<wbr>Base<wbr>Query</a>
-		</li>
-		<li class=" tsd-kind-interface tsd-parent-kind-module">
 			<a href="_quickbase_.quickbaserecord.html" class="tsd-kind-icon">Quick<wbr>Base<wbr>Record</a>
 		</li>
 		<li class=" tsd-kind-interface tsd-parent-kind-module">
@@ -2771,13 +2768,25 @@ img {
 			<a href="_quickbase_.quickbaserequestrunquery.html" class="tsd-kind-icon">Quick<wbr>Base<wbr>Request<wbr>Run<wbr>Query</a>
 			<ul>
 				<li class=" tsd-kind-property tsd-parent-kind-interface">
-					<a href="_quickbase_.quickbaserequestrunquery.html#query" class="tsd-kind-icon">query</a>
+					<a href="_quickbase_.quickbaserequestrunquery.html#groupby" class="tsd-kind-icon">group<wbr>By</a>
+				</li>
+				<li class=" tsd-kind-property tsd-parent-kind-interface">
+					<a href="_quickbase_.quickbaserequestrunquery.html#options" class="tsd-kind-icon">options</a>
 				</li>
 				<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 					<a href="_quickbase_.quickbaserequestrunquery.html#requestoptions" class="tsd-kind-icon">request<wbr>Options</a>
 				</li>
 				<li class=" tsd-kind-property tsd-parent-kind-interface">
+					<a href="_quickbase_.quickbaserequestrunquery.html#select" class="tsd-kind-icon">select</a>
+				</li>
+				<li class=" tsd-kind-property tsd-parent-kind-interface">
+					<a href="_quickbase_.quickbaserequestrunquery.html#sortby" class="tsd-kind-icon">sort<wbr>By</a>
+				</li>
+				<li class=" tsd-kind-property tsd-parent-kind-interface">
 					<a href="_quickbase_.quickbaserequestrunquery.html#tableid" class="tsd-kind-icon">table<wbr>Id</a>
+				</li>
+				<li class=" tsd-kind-property tsd-parent-kind-interface">
+					<a href="_quickbase_.quickbaserequestrunquery.html#where" class="tsd-kind-icon">where</a>
 				</li>
 			</ul>
 		</li>
@@ -2838,9 +2847,13 @@ img {
 					<section class="tsd-index-section ">
 						<h3>Properties</h3>
 						<ul class="tsd-index-list">
-							<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_quickbase_.quickbaserequestrunquery.html#query" class="tsd-kind-icon">query</a></li>
+							<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_quickbase_.quickbaserequestrunquery.html#groupby" class="tsd-kind-icon">group<wbr>By</a></li>
+							<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_quickbase_.quickbaserequestrunquery.html#options" class="tsd-kind-icon">options</a></li>
 							<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="_quickbase_.quickbaserequestrunquery.html#requestoptions" class="tsd-kind-icon">request<wbr>Options</a></li>
+							<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_quickbase_.quickbaserequestrunquery.html#select" class="tsd-kind-icon">select</a></li>
+							<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_quickbase_.quickbaserequestrunquery.html#sortby" class="tsd-kind-icon">sort<wbr>By</a></li>
 							<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_quickbase_.quickbaserequestrunquery.html#tableid" class="tsd-kind-icon">table<wbr>Id</a></li>
+							<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_quickbase_.quickbaserequestrunquery.html#where" class="tsd-kind-icon">where</a></li>
 						</ul>
 					</section>
 				</div>
@@ -2849,12 +2862,22 @@ img {
 		<section class="tsd-panel-group tsd-member-group ">
 			<h2>Properties</h2>
 			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-				<a name="query" class="tsd-anchor"></a>
-				<h3>query</h3>
-				<div class="tsd-signature tsd-kind-icon">query<span class="tsd-signature-symbol">:</span> <a href="_quickbase_.quickbasequery.html" class="tsd-signature-type">QuickBaseQuery</a></div>
+				<a name="groupby" class="tsd-anchor"></a>
+				<h3><span class="tsd-flag ts-flagOptional">Optional</span> group<wbr>By</h3>
+				<div class="tsd-signature tsd-kind-icon">group<wbr>By<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>by<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"string"</span><span class="tsd-signature-symbol">; </span>fieldId<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">[]</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/b7026c3/src/quickbase.ts#L488">src/quickbase.ts:488</a></li>
+						<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/3e2ba14/src/quickbase.ts#L672">src/quickbase.ts:672</a></li>
+					</ul>
+				</aside>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+				<a name="options" class="tsd-anchor"></a>
+				<h3><span class="tsd-flag ts-flagOptional">Optional</span> options</h3>
+				<div class="tsd-signature tsd-kind-icon">options<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">{ </span>skip<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>top<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> }</span></div>
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/3e2ba14/src/quickbase.ts#L668">src/quickbase.ts:668</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -2865,7 +2888,27 @@ img {
 				<aside class="tsd-sources">
 					<p>Inherited from <a href="_quickbase_.quickbaserequest.html">QuickBaseRequest</a>.<a href="_quickbase_.quickbaserequest.html#requestoptions">requestOptions</a></p>
 					<ul>
-						<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/b7026c3/src/quickbase.ts#L437">src/quickbase.ts:437</a></li>
+						<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/3e2ba14/src/quickbase.ts#L611">src/quickbase.ts:611</a></li>
+					</ul>
+				</aside>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+				<a name="select" class="tsd-anchor"></a>
+				<h3><span class="tsd-flag ts-flagOptional">Optional</span> select</h3>
+				<div class="tsd-signature tsd-kind-icon">select<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span></div>
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/3e2ba14/src/quickbase.ts#L667">src/quickbase.ts:667</a></li>
+					</ul>
+				</aside>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+				<a name="sortby" class="tsd-anchor"></a>
+				<h3><span class="tsd-flag ts-flagOptional">Optional</span> sort<wbr>By</h3>
+				<div class="tsd-signature tsd-kind-icon">sort<wbr>By<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>fieldId<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>order<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">[]</span></div>
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/3e2ba14/src/quickbase.ts#L663">src/quickbase.ts:663</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -2875,7 +2918,17 @@ img {
 				<div class="tsd-signature tsd-kind-icon">table<wbr>Id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/b7026c3/src/quickbase.ts#L487">src/quickbase.ts:487</a></li>
+						<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/3e2ba14/src/quickbase.ts#L661">src/quickbase.ts:661</a></li>
+					</ul>
+				</aside>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+				<a name="where" class="tsd-anchor"></a>
+				<h3><span class="tsd-flag ts-flagOptional">Optional</span> where</h3>
+				<div class="tsd-signature tsd-kind-icon">where<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></div>
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/3e2ba14/src/quickbase.ts#L662">src/quickbase.ts:662</a></li>
 					</ul>
 				</aside>
 			</section>

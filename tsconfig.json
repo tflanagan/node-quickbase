@@ -64,7 +64,8 @@
     // "emitDecoratorMetadata": true,         /* Enables experimental support for emitting type metadata for decorators. */
 
     /* Advanced Options */
-    "forceConsistentCasingInFileNames": true  /* Disallow inconsistently-cased references to the same file. */
+    "forceConsistentCasingInFileNames": true,  /* Disallow inconsistently-cased references to the same file. */
+    "resolveJsonModule": true
   },
   "include": [
     "./src/**/*",
@@ -72,7 +73,7 @@
   ],
   "typedocOptions": {
     "mode": "modules",
-    "readme": "none",
+    "readme": "./README.md",
     "out": "./docs/",
     "theme": "minimal",
     "name": "Node-QuickBase",
