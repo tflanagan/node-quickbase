@@ -56,7 +56,7 @@ test('updateTable()', async (t) => {
 		name: 'New Name'
 	});
 
-	t.truthy(results.name === 'New Name');
+	t.truthy(results.name === 'New Name' && results.description === 'Test Description');
 });
 
 test('getTable()', async (t) => {
