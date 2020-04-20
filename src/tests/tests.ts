@@ -1,4 +1,4 @@
-import test from 'ava';
+import { serial as test } from 'ava';
 import * as dotenv from 'dotenv';
 import { QuickBase } from '../quickbase';
 
@@ -7,13 +7,19 @@ dotenv.config();
 const QB_REALM = process.env.QB_REALM!;
 const QB_USERTOKEN = process.env.QB_USERTOKEN!;
 const QB_APPID = process.env.QB_APPID!;
-const QB_TABLEID = process.env.QB_TABLEID!;
-const QB_FIELDID = +process.env.QB_FIELDID!;
 
 const qb = new QuickBase({
 	realm: QB_REALM,
-	userToken: QB_USERTOKEN
+	userToken: QB_USERTOKEN,
+
+	userAgent: 'Testing'
 });
+
+const testValue: string = 'test value' // - б, в, г, д, ж, з, к, л, м, н, п, р, с, т, ф, х, ц, ч, ш, щ, а, э, ы, у, о, я, е, ё, ю, и';
+
+let newDbid: string;
+let newFid: number;
+let newRid: number;
 
 test('getApp()', async (t) => {
 	const results = await qb.getApp({
@@ -31,17 +37,39 @@ test('getAppTables()', async (t) => {
 	t.truthy(results[0].id);
 });
 
-test('getTable()', async (t) => {
-	const results = await qb.getTable({
-		tableId: QB_TABLEID
+test('createTable()', async (t) => {
+	const results = await qb.createTable({
+		appId: QB_APPID,
+		name: 'Test Name',
+		description: 'Test Description'
 	});
 
-	t.truthy(results.id);
+	newDbid = results.id;
+
+	t.truthy(newDbid && results.name === 'Test Name');
+});
+
+test('updateTable()', async (t) => {
+	const results = await qb.updateTable({
+		appId: QB_APPID,
+		tableId: newDbid,
+		name: 'New Name'
+	});
+
+	t.truthy(results.name === 'New Name');
+});
+
+test('getTable()', async (t) => {
+	const results = await qb.getTable({
+		tableId: newDbid
+	});
+
+	t.truthy(results.id === newDbid);
 });
 
 test('getTableReports()', async (t) => {
 	const results = await qb.getTableReports({
-		tableId: QB_TABLEID
+		tableId: newDbid
 	});
 
 	t.truthy(results[0].id);
@@ -49,75 +77,77 @@ test('getTableReports()', async (t) => {
 
 test('getReport()', async (t) => {
 	const results = await qb.getReport({
-		tableId: QB_TABLEID,
+		tableId: newDbid,
 		reportId: 1
 	});
 
 	t.truthy(results.id);
+});
+
+test('createField()', async (t) => {
+	const results = await qb.createField({
+		tableId: newDbid,
+		fieldType: 'text',
+		label: 'Test Field'
+	});
+
+	newFid = results.id;
+
+	t.truthy(newFid && results.label === 'Test Field');
+});
+
+test('updateField()', async (t) => {
+	const results = await qb.updateField({
+		tableId: newDbid,
+		fieldId: newFid,
+		fieldType: 'text',
+		label: 'Test Field 2',
+		appearsByDefault: true
+	});
+
+	t.truthy(results.label === 'Test Field 2');
 });
 
 test('getField()', async (t) => {
 	const results = await qb.getField({
-		tableId: QB_TABLEID,
-		fieldId: 1
+		tableId: newDbid,
+		fieldId: newFid
 	});
 
-	t.truthy(results.id);
+	t.truthy(results.id && results.label === 'Test Field 2');
 });
 
 test('getFields()', async (t) => {
 	const results = await qb.getFields({
-		tableId: QB_TABLEID
+		tableId: newDbid
 	});
 
-	t.truthy(results[0].id);
+	t.truthy(results[0].id === newFid);
 });
 
 test('getFieldUsage()', async (t) => {
 	const results = await qb.getFieldUsage({
-		tableId: QB_TABLEID,
-		fieldId: 1
+		tableId: newDbid,
+		fieldId: newFid
 	});
 
-	t.truthy(results.field.id);
+	t.truthy(results.field.id === newFid);
 });
 
 test('getFieldsUsage()', async (t) => {
 	const results = await qb.getFieldsUsage({
-		tableId: QB_TABLEID
+		tableId: newDbid
 	});
 
-	t.truthy(results[0].field.id);
+	t.truthy(results[0].field.id === newFid);
 });
 
-test('runQuery()', async (t) => {
-	const results = await qb.runQuery({
-		tableId: QB_TABLEID,
-		where: "{'3'.XEX.''}",
-		select: [3]
-	});
-
-	t.truthy(results.fields[0].id);
-});
-
-test('runReport()', async (t) => {
-	const results = await qb.runReport({
-		tableId: QB_TABLEID,
-		reportId: 1
-	});
-
-	t.truthy(results.fields[0].id);
-});
-
-const testValue: string = 'test value - б, в, г, д, ж, з, к, л, м, н, п, р, с, т, ф, х, ц, ч, ш, щ, а, э, ы, у, о, я, е, ё, ю, и';
-let newRid: number;
-
-test.serial('upsertRecords()', async (t) => {
+test('upsertRecords()', async (t) => {
 	const results = await qb.upsertRecords({
-		tableId: QB_TABLEID,
+		tableId: newDbid,
 		data: [
 			{
-				[QB_FIELDID]: {
+				[newFid]: {
 					value: testValue
 				}
 			}
@@ -129,29 +159,48 @@ test.serial('upsertRecords()', async (t) => {
 	t.truthy(newRid);
 });
 
-/* 
-Leave this commented out until Quick Base supports UTF-8
-
-test.serial('utf-8 characters', async (t) => {
+test('runQuery()', async (t) => {
 	const results = await qb.runQuery({
-		tableId: QB_TABLEID,
-		where: "{'3'.EX.'" + newRid + "'}",
-		select: [ QB_FIELDID ]
+		tableId: newDbid,
+		where: "{'3'.XEX.''}",
+		select: [ newFid ]
 	});
 
-	t.truthy(results.data[0][QB_FIELDID].value === testValue);
+	t.truthy(results.fields[0].id === newFid && results.data[0][newFid].value === testValue);
 });
-*/
 
-test.serial('deleteRecords()', async (t) => {
-	if(!newRid){
-		return t.fail('upsertRecords() failed, no record to delete');
-	}
+test('runReport()', async (t) => {
+	const results = await qb.runReport({
+		tableId: newDbid,
+		reportId: 1
+	});
 
+	t.truthy(results.data[0][newFid].value === testValue);
+});
+
+test('deleteRecords()', async (t) => {
 	const results = await qb.deleteRecords({
-		tableId: QB_TABLEID,
+		tableId: newDbid,
 		where: `{'3'.EX.'${newRid}'}`
 	});
 
 	t.truthy(results.numberDeleted);
+});
+
+test('deleteFields()', async (t) => {
+	const results = await qb.deleteFields({
+		tableId: newDbid,
+		fieldIds: [ newFid ]
+	});
+
+	t.truthy(results.deletedFieldIds[0] === newFid);
+});
+
+test('deleteTable()', async (t) => {
+	const results = await qb.deleteTable({
+		appId: QB_APPID,
+		tableId: newDbid
+	});
+
+	t.truthy(results.deletedTableId === newDbid);
 });

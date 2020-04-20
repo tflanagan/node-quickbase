@@ -14,11 +14,6 @@
  * limitations under the License.
 */
 
-/* TODO:
- - Get rid of any explicit anys, if possible
- - Add backwards compatibility with older API?
-*/
-
 'use strict';
 
 /* Dependencies */
@@ -41,25 +36,36 @@ const IS_BROWSER = typeof(window) !== 'undefined';
 /* Main Class */
 export class QuickBase {
 
+	/**
+	 * The loaded library version
+	 */
 	static readonly VERSION: string = VERSION;
+
+	/**
+	 * The default settings of a `QuickBase` instance
+	 */
 	static defaults: QuickBaseOptions = {
 		server: 'api.quickbase.com',
 		version: 'v1',
-
+	
 		realm: 'www',
 		userToken: '',
-
-		userAgent: `node-quickbase/v${VERSION} ${IS_BROWSER ? (window.navigator ? window.navigator.userAgent : '') : 'nodejs/' + process.version}`,
-
+		tempToken: '',
+	
+		userAgent: '',
+	
 		connectionLimit: 10,
 		errorOnConnectionLimit: false,
-
+	
 		proxy: false
 	};
 
 	private _id: number = 0;
 	private throttle: Throttle;
 
+	/**
+	 * The `QuickBase` instance settings
+	 */
 	public settings: QuickBaseOptions;
 
 	/**
@@ -91,8 +97,8 @@ export class QuickBase {
 			method: 'GET',
 			baseURL: `https://${this.settings.server}/${this.settings.version}`,
 			headers: {
-				[IS_BROWSER ? 'X-User-Agent' : 'User-Agent']: this.settings.userAgent,
-				'Authorization': `QB-USER-TOKEN ${this.settings.userToken}`,
+				[IS_BROWSER ? 'X-User-Agent' : 'User-Agent']: `${this.settings.userAgent} node-quickbase/v${VERSION} ${IS_BROWSER ? (window.navigator ? window.navigator.userAgent : '') : 'nodejs/' + process.version}`.trim(),
+ 				'Authorization': this.settings.tempToken ? `QB-TEMP-TOKEN ${this.settings.tempToken}` : `QB-USER-TOKEN ${this.settings.userToken}`,
 				'QB-Realm-Hostname': this.settings.realm
 			},
 			proxy: this.settings.proxy
@@ -132,13 +138,180 @@ export class QuickBase {
 					details: 'We were unable to determine the true error, please check your request and try again'
 				};
 
-				const nErr = new QuickBaseError(err.response.status, data.message, data.details);
+				const nErr = new QuickBaseError(err.response.status, data.message, data.description || data.details);
 
-				debugResponse(id, nErr);
+				debugResponse(id, nErr, data);
 
 				reject(nErr);
 			}
 		});
+	}
+
+	/**
+	 * Create a Quick Base Field
+	 * 
+	 * [Quick Base Documentation](https://www.ui.quickbase.com/ui/api-docs/operation/createField)
+	 * 
+	 * @param param0.tableId Quick Base Table DBID
+	 * @param param0.label Label of new field
+	 * @param param0.fieldType Type of new field ([Quick Base Documentation](https://help.quickbase.com/user-assistance/field_types.html))
+	 * @param param0.noWrap Wrap value of field in the Quick Base UI
+	 * @param param0.bold Display value of field as bold in the Quick Base UI
+	 * @param param0.required Required field
+	 * @param param0.appearsByDefault Set field as default in reports
+	 * @param param0.findEnabled Allows field to be searchable
+	 * @param param0.unique Marks field as unique
+	 * @param param0.doesDataCopy Allows field value to be copied
+	 * @param param0.fieldHelp Field help text
+	 * @param param0.audited Allow field to be tracked by Quick Base Audit Logs
+	 * @param param0.properties Field properties specific to `fieldType`
+	 * @param param0.permissions Field permissions for Quick Base roles
+	 * @param param0.requestOptions Override axios request configuration
+	 */
+	async createField({
+		tableId,
+		label,
+		fieldType,
+		noWrap,
+		bold,
+		required,
+		appearsByDefault,
+		findEnabled,
+		unique,
+		doesDataCopy,
+		fieldHelp,
+		audited,
+		properties,
+		permissions,
+		requestOptions
+	}: QuickBaseRequestCreateField): Promise<QuickBaseResponseCreateField> {
+		const data: any = {};
+
+		if(typeof(label) !== 'undefined'){
+			data.label = label;
+		}
+
+		if(typeof(fieldType) !== 'undefined'){
+			data.fieldType = fieldType;
+		}
+
+		if(typeof(noWrap) !== 'undefined'){
+			data.noWrap = noWrap;
+		}
+
+		if(typeof(bold) !== 'undefined'){
+			data.bold = bold;
+		}
+
+		if(typeof(required) !== 'undefined'){
+			data.required = required;
+		}
+
+		if(typeof(appearsByDefault) !== 'undefined'){
+			data.appearsByDefault = appearsByDefault;
+		}
+
+		if(typeof(findEnabled) !== 'undefined'){
+			data.findEnabled = findEnabled;
+		}
+
+		if(typeof(unique) !== 'undefined'){
+			data.unique = unique;
+		}
+
+		if(typeof(doesDataCopy) !== 'undefined'){
+			data.doesDataCopy = doesDataCopy;
+		}
+
+		if(typeof(fieldHelp) !== 'undefined'){
+			data.fieldHelp = fieldHelp;
+		}
+
+		if(typeof(audited) !== 'undefined'){
+			data.audited = audited;
+		}
+
+		if(typeof(properties) !== 'undefined'){
+			data.properties = properties;
+		}
+
+		if(typeof(permissions) !== 'undefined'){
+			data.permissions = permissions;
+		}
+
+		return await this.request({
+			method: 'POST',
+			url: `fields?tableId=${tableId}`,
+			data: data
+		}, requestOptions);
+	}
+
+	/**
+	 * Create a Quick Base Table
+	 * 
+	 * [Quick Base Documentation](https://www.ui.quickbase.com/ui/api-docs/operation/createTable)
+	 * 
+	 * @param param0.appId Quick Base Application DBID
+	 * @param param0.name Name of the new table
+	 * @param param0.description Description of the new table
+	 * @param param0.iconName Icon for the new table
+	 * @param param0.singularNoun Singular noun for a record in the new table
+	 * @param param0.pluralNoun Plural noun for records in the new table
+	 * @param param0.requestOptions Override axios request configuration
+	 */
+	async createTable({ appId, name, description, iconName, singularNoun, pluralNoun, requestOptions }: QuickBaseRequestCreateTable): Promise<QuickBaseResponseCreateTable> {
+		const data: any = {
+			name: name
+		};
+
+		if(typeof(description) !== 'undefined'){
+			data.description = description;
+		}
+
+		if(typeof(iconName) !== 'undefined'){
+			data.iconName = iconName;
+		}
+
+		if(typeof(singularNoun) !== 'undefined'){
+			data.singularNoun = singularNoun;
+		}
+
+		if(typeof(pluralNoun) !== 'undefined'){
+			data.pluralNoun = pluralNoun;
+		}
+		
+		return await this.request({
+			method: 'POST',
+			url: `tables?appId=${appId}`,
+			data: data
+		}, requestOptions);
+	}
+
+	/**
+	 * Delete fields from a Quick Base Table
+	 * 
+	 * [Quick Base Documentation](https://www.ui.quickbase.com/ui/api-docs/operation/deleteFields)
+	 * 
+	 * Example:
+	 * ```typescript
+	 * await qb.deleteFields({
+	 * 	tableId: 'xxxxxxxxx',
+	 * 	fieldIds: [ 6 ]
+	 * });
+	 * ```
+	 * 
+	 * @param param0.tableId Quick Base Table DBID
+	 * @param param0.fieldIds An array of Quick Base Field IDs
+	 * @param param0.requestOptions Override axios request configuration
+	 */
+	async deleteFields({ tableId, fieldIds, requestOptions }: QuickBaseRequestDeleteFields): Promise<QuickBaseResponseDeleteFields> {
+		return await this.request({
+			method: 'DELETE',
+			url: `fields?tableId=${tableId}`,
+			data: {
+				fieldIds
+			}
+		}, requestOptions);
 	}
 
 	/**
@@ -154,7 +327,6 @@ export class QuickBase {
 	 * });
 	 * ```
 	 * 
-	 * @param param0 API Call Parameters
 	 * @param param0.tableId Quick Base Table DBID
 	 * @param param0.where Quick Base Where Clause
 	 * @param param0.requestOptions Override axios request configuration
@@ -171,6 +343,30 @@ export class QuickBase {
 	}
 
 	/**
+	 * Delete a Table from a Quick Base Application
+	 * 
+	 * [Quick Base Documentation](https://www.ui.quickbase.com/ui/api-docs/operation/deleteTable)
+	 * 
+	 * Example:
+	 * ```typescript
+	 * await qb.deleteTable({
+	 * 	appId: 'xxxxxxxxx',
+	 * 	tableId: 'xxxxxxxxx'
+	 * });
+	 * ```
+	 * 
+	 * @param param0.appId Quick Base Application DBID
+	 * @param param0.tableId Quick Base Table DBID
+	 * @param param0.requestOptions Override axios request configuration
+	 */
+	async deleteTable({ appId, tableId, requestOptions }: QuickBaseRequestDeleteTable): Promise<QuickBaseResponseDeleteTable> {
+		return await this.request({
+			method: 'DELETE',
+			url: `tables/${tableId}?appId=${appId}`
+		}, requestOptions);
+	}
+
+	/**
 	 * Get the schema of a Quick Base Application
 	 * 
 	 * [Quick Base Documentation](https://www.ui.quickbase.com/ui/api-docs/operation/getApp)
@@ -182,7 +378,6 @@ export class QuickBase {
 	 * });
 	 * ```
 	 * 
-	 * @param param0 API Call Parameters
 	 * @param param0.appId Quick Base Application DBID
 	 * @param param0.requestOptions Override axios request configuration
 	 */
@@ -204,7 +399,6 @@ export class QuickBase {
 	 * });
 	 * ```
 	 * 
-	 * @param param0 API Call Parameters
 	 * @param param0.appId Quick Base Application DBID
 	 * @param param0.requestOptions Override axios request configuration
 	 */
@@ -230,7 +424,6 @@ export class QuickBase {
 	 * });
 	 * ```
 	 * 
-	 * @param param0 API Call Parameters
 	 * @param param0.tableId Quick Base Table DBID
 	 * @param param0.fieldId Quick Base Field ID
 	 * @param param0.requestOptions Override axios request configuration
@@ -256,7 +449,6 @@ export class QuickBase {
 	 * });
 	 * ```
 	 * 
-	 * @param param0 API Call Parameters
 	 * @param param0.tableId Quick Base Table DBID
 	 * @param param0.includeFieldPerms If `true`, returns field permissions
 	 * @param param0.requestOptions Override axios request configuration
@@ -291,7 +483,6 @@ export class QuickBase {
 	 * });
 	 * ```
 	 * 
-	 * @param param0 API Call Parameters
 	 * @param param0.tableId Quick Base Table DBID
 	 * @param param0.skip Number of fields to skip from list
 	 * @param param0.requestOptions Override axios request configuration
@@ -327,18 +518,17 @@ export class QuickBase {
 	 * });
 	 * ```
 	 * 
-	 * @param param0 API Call Parameters
 	 * @param param0.tableId Quick Base Table DBID
 	 * @param param0.fieldId Quick Base Field ID
 	 * @param param0.requestOptions Override axios request configuration
 	 */
 	async getFieldUsage({ tableId, fieldId, requestOptions }: QuickBaseRequestGetFieldUsage): Promise<QuickBaseResponseFieldUsage> {
-		return await this.request({
+		return (await this.request({
 			url: `fields/usage/${fieldId}`,
 			params: {
 				tableId: tableId
 			}
-		}, requestOptions);
+		}, requestOptions))[0];
 	}
 
 	/**
@@ -354,7 +544,6 @@ export class QuickBase {
 	 * });
 	 * ```
 	 * 
-	 * @param param0 API Call Parameters
 	 * @param param0.tableId Quick Base Table DBID
 	 * @param param0.reportId Quick Base Report ID
 	 * @param param0.requestOptions Override axios request configuration
@@ -380,7 +569,6 @@ export class QuickBase {
 	 * });
 	 * ```
 	 * 
-	 * @param param0 API Call Parameters
 	 * @param param0.tableId Quick Base Table DBID
 	 * @param param0.requestOptions Override axios request configuration
 	 */
@@ -402,7 +590,6 @@ export class QuickBase {
 	 * });
 	 * ```
 	 * 
-	 * @param param0 API Call Parameters
 	 * @param param0.tableId Quick Base Table DBID
 	 * @param param0.requestOptions Override axios request configuration
 	 */
@@ -412,6 +599,39 @@ export class QuickBase {
 			params: {
 				tableId: tableId
 			}
+		}, requestOptions);
+	}
+
+	/**
+	 * Get a temporary authentication token for Quick Base API requests.
+	 * 
+	 * Only meant to be used client-side, passing the results server-side.
+	 * 
+	 * Only valid against for passed in table.
+	 * 
+	 * Valid for 5 minutes
+	 * 
+	 * @param param0.tableId Quick Base Table DBID
+	 * @param param0.requestOptions Override axios request configuration
+	 */
+	async getTemporaryTableToken({ tableId, requestOptions }: QuickBaseRequestGetTemporaryTableToken): Promise<QuickBaseResponseGetTemporaryTableToken> {
+		return await this.request({
+			url: `auth/temporary/${tableId}`
+		}, requestOptions);
+	}
+
+	/**
+	 * Get a temporary authentication token for Quick Base API requests.
+	 * 
+	 * Only meant to be used client-side, passing the results server-side.
+	 * 
+	 * Valid for 5 minutes
+	 * 
+	 * @param requestOptions Override axios request configuration
+	 */
+	async getTemporaryToken(requestOptions?: AxiosRequestConfig): Promise<QuickBaseResponseGetTemporaryToken> {
+		return await this.request({
+			url: 'auth/temporary'
 		}, requestOptions);
 	}
 
@@ -441,7 +661,6 @@ export class QuickBase {
 	 * });
 	 * ```
 	 * 
-	 * @param param0 API Call Parameters
 	 * @param param0.tableId Quick Base Table DBID
 	 * @param param0.where Quick Base query string
 	 * @param param0.select Array of Field IDs to return
@@ -492,7 +711,6 @@ export class QuickBase {
 	 * });
 	 * ```
 	 * 
-	 * @param param0 API Call Parameters
 	 * @param param0.tableId Quick Base Table DBID
 	 * @param param0.reportId Quick Base Report ID
 	 * @param param0.options Report Options Object
@@ -525,6 +743,150 @@ export class QuickBase {
 	}
 
 	/**
+	 * Update a Quick Base Field
+	 * 
+	 * [Quick Base Documentation](https://www.ui.quickbase.com/ui/api-docs/operation/updateField)
+	 * 
+	 * @param param0.tableId Quick Base Table DBID
+	 * @param param0.fieldId Quick Base Field ID
+	 * @param param0.label Label of field
+	 * @param param0.fieldType Type of field ([Quick Base Documentation](https://help.quickbase.com/user-assistance/field_types.html))
+	 * @param param0.noWrap Wrap value of field in the Quick Base UI
+	 * @param param0.bold Display value of field as bold in the Quick Base UI
+	 * @param param0.required Required field
+	 * @param param0.appearsByDefault Set field as default in reports
+	 * @param param0.findEnabled Allows field to be searchable
+	 * @param param0.unique Marks field as unique
+	 * @param param0.doesDataCopy Allows field value to be copied
+	 * @param param0.fieldHelp Field help text
+	 * @param param0.audited Allow field to be tracked by Quick Base Audit Logs
+	 * @param param0.properties Field properties specific to `fieldType`
+	 * @param param0.permissions Field permissions for Quick Base roles
+	 * @param param0.requestOptions Override axios request configuration
+	 */
+	async updateField({
+		tableId,
+		fieldId,
+		label,
+		fieldType,
+		noWrap,
+		bold,
+		required,
+		appearsByDefault,
+		findEnabled,
+		unique,
+		doesDataCopy,
+		fieldHelp,
+		audited,
+		properties,
+		permissions,
+		requestOptions
+	}: QuickBaseRequestUpdateField): Promise<QuickBaseResponseUpdateField> {
+		const data: any = {};
+
+		if(typeof(label) !== 'undefined'){
+			data.label = label;
+		}
+
+		if(typeof(fieldType) !== 'undefined'){
+			data.fieldType = fieldType;
+		}
+
+		if(typeof(noWrap) !== 'undefined'){
+			data.noWrap = noWrap;
+		}
+
+		if(typeof(bold) !== 'undefined'){
+			data.bold = bold;
+		}
+
+		if(typeof(required) !== 'undefined'){
+			data.required = required;
+		}
+
+		if(typeof(appearsByDefault) !== 'undefined'){
+			data.appearsByDefault = appearsByDefault;
+		}
+
+		if(typeof(findEnabled) !== 'undefined'){
+			data.findEnabled = findEnabled;
+		}
+
+		if(typeof(unique) !== 'undefined'){
+			data.unique = unique;
+		}
+
+		if(typeof(doesDataCopy) !== 'undefined'){
+			data.doesDataCopy = doesDataCopy;
+		}
+
+		if(typeof(fieldHelp) !== 'undefined'){
+			data.fieldHelp = fieldHelp;
+		}
+
+		if(typeof(audited) !== 'undefined'){
+			data.audited = audited;
+		}
+
+		if(typeof(properties) !== 'undefined'){
+			data.properties = properties;
+		}
+
+		if(typeof(permissions) !== 'undefined'){
+			data.permissions = permissions;
+		}
+
+		return await this.request({
+			method: 'POST',
+			url: `fields/${fieldId}?tableId=${tableId}`,
+			data: data
+		}, requestOptions);
+	}
+
+	/**
+	 * Update a Quick Base Table
+	 * 
+	 * [Quick Base Documentation](https://www.ui.quickbase.com/ui/api-docs/operation/updateTable)
+	 * 
+	 * @param param0.appId Quick Base Application DBID
+	 * @param param0.name Name of the new table
+	 * @param param0.description Description of the new table
+	 * @param param0.iconName Icon for the new table
+	 * @param param0.singularNoun Singular noun for a record in the new table
+	 * @param param0.pluralNoun Plural noun for records in the new table
+	 * @param param0.requestOptions Override axios request configuration
+	 */
+	async updateTable({ appId, tableId, name, description, iconName, singularNoun, pluralNoun, requestOptions }: QuickBaseRequestUpdateTable): Promise<QuickBaseResponseUpdateTable> {
+		const data: any = {};
+
+		if(typeof(name) !== 'undefined'){
+			data.name = name;
+		}
+
+		if(typeof(description) !== 'undefined'){
+			data.description = description;
+		}
+
+		if(typeof(iconName) !== 'undefined'){
+			data.iconName = iconName;
+		}
+
+		if(typeof(singularNoun) !== 'undefined'){
+			data.singularNoun = singularNoun;
+		}
+
+		if(typeof(pluralNoun) !== 'undefined'){
+			data.pluralNoun = pluralNoun;
+		}
+
+		return await this.request({
+			method: 'POST',
+			url: `tables/${tableId}?appId=${appId}`,
+			data: data
+		}, requestOptions);
+	}
+
+	/**
 	 * Creates or updates records in a Quick Base Table
 	 * 
 	 * [Quick Base Documentation](https://www.ui.quickbase.com/ui/api-docs/operation/upsert)
@@ -553,7 +915,6 @@ export class QuickBase {
 	 * });
 	 * ```
 	 * 
-	 * @param param0 API Call Parameters
 	 * @param param0.tableId Quick Base Table DBID
 	 * @param param0.data Record data array
 	 * @param param0.mergeFieldId Merge Field ID
@@ -598,17 +959,73 @@ export class QuickBaseError extends Error {
 
 /* Quick Base Interfaces */
 export interface QuickBaseOptions {
+	/**
+	 * Quick Base API Server FQDN
+	 * 
+	 * Default is `api.quickbase.com`
+	 */
 	server?: string;
+
+	/**
+	 * Quick Base API Version
+	 * 
+	 * Default is `v1`
+	 */
 	version?: string;
 
+	/**
+	 * Quick Base Realm.
+	 * 
+	 * For example, if your Quick Base url is: `demo.quickbase.com`
+	 * Your realm is: `demo`
+	 */
 	realm: string;
-	userToken: string;
 
+	/**
+	 * A Quick Base User Token.
+	 * 
+	 * If both a `userToken` and `tempToken` are defined, the `tempToken` will be used
+	 * 
+	 * [Quick Base Documentation](https://www.ui.quickbase.com/ui/api-docs/auth)
+	 */
+	userToken?: string;
+
+	/**
+	 * A Temporary Authentication Token or Temporary Table Authentication Token.
+	 * 
+	 * If both a `userToken` and `tempToken` are defined, the `tempToken` will be used
+	 * 
+	 * [Quick Base Documentation](https://www.ui.quickbase.com/ui/api-docs/auth)
+	 */
+	tempToken?: string;
+
+	/**
+	 * Provide a custom User-Agent to help track API usage within your logs
+	 * 
+	 * When used in the browser, this sets the X-User-Agent header instead
+	 * as the browser will block any attempt to set a custom User-Agent
+	 */
 	userAgent?: string;
 
+	/**
+	 * The maximum number of open, pending API connections to Quick Base
+	 * 
+	 * Default is `10`
+	 */
 	connectionLimit?: number;
+
+	/**
+	 * Throw an error if the connection limit is exceeded
+	 * 
+	 * Default is `false`
+	 */
 	errorOnConnectionLimit?: boolean;
 
+	/**
+	 * Allows the use of a proxy for Quick Base API requests
+	 * 
+	 * Default is `false`
+	 */
 	proxy?: false | {
 		host: string;
 		port: number;
@@ -619,7 +1036,7 @@ export interface QuickBaseOptions {
 	}
 }
 
-export interface QuickBaseRequest {
+interface QuickBaseRequest {
 	requestOptions?: AxiosRequestConfig;
 }
 
@@ -703,6 +1120,88 @@ export interface QuickBaseRequestUpsertRecords extends QuickBaseRequest {
 	fieldsToReturn?: number[];
 }
 
+export interface QuickBaseRequestCreateTable extends QuickBaseRequest {
+	appId: string;
+	name: string;
+	description?: string;
+	iconName?: string;
+	singularNoun?: string;
+	pluralNoun?: string;
+}
+
+export interface QuickBaseRequestUpdateTable extends QuickBaseRequest {
+	appId: string;
+	tableId: string;
+	name?: string;
+	description?: string;
+	iconName?: string;
+	singularNoun?: string;
+	pluralNoun?: string;
+}
+
+export interface QuickBaseRequestDeleteTable extends QuickBaseRequest {
+	appId: string;
+	tableId: string;
+}
+
+export interface QuickBaseResponseCreateTable {
+	id: string;
+	name: string;
+	description: string;
+	iconName: string;
+	singularNoun: string;
+	pluralNoun: string;
+}
+
+export interface QuickBaseResponseUpdateTable extends QuickBaseResponseCreateTable {
+}
+
+export interface QuickBaseResponseDeleteTable {
+	deletedTableId: string;
+}
+
+export interface QuickBaseRequestCreateField extends QuickBaseRequest, QuickBaseField {
+	tableId: string;
+}
+
+export interface QuickBaseResponseCreateField extends QuickBaseResponseField {
+}
+
+export interface QuickBaseRequestDeleteFields extends QuickBaseRequest {
+	tableId: string;
+	fieldIds: number[];
+}
+
+export interface QuickBaseResponseDeleteFields {
+	deletedFieldIds: number[];
+	errors: string[];
+}
+
+export interface QuickBaseRequestUpdateField extends QuickBaseRequest, QuickBaseField {
+	tableId: string;
+	fieldId: number;
+}
+
+export interface QuickBaseResponseUpdateField extends QuickBaseResponseField {
+}
+
+export interface QuickBaseRequestGetTemporaryTableToken extends QuickBaseRequest {
+	tableId: string;
+}
+
+export interface QuickBaseResponseGetTemporaryToken {
+	temporaryAuthorization: string;
+}
+
+export interface QuickBaseResponseGetTemporaryTableToken {
+	temporaryAuthorization: string;
+}
+
+export interface QuickBaseVariable {
+	name: string;
+	value: string;
+}
+
 export interface QuickBaseResponseApp {
 	id: string;
 	created: number;
@@ -710,10 +1209,7 @@ export interface QuickBaseResponseApp {
 	name: string;
 	timeZone: string;
 	dateFormat: string;
-	variables: {
-		name: string;
-		value: string;
-	}[];
+	variables: QuickBaseVariable[];
 	hasEveryoneOnTheInternet: boolean;
 }
 
@@ -741,20 +1237,20 @@ export interface QuickBaseResponseFieldPermission {
 	permissionType: string;
 }
 
-export interface QuickBaseResponseField {
-	id: number;
+interface QuickBaseField {
 	fieldType: string;
-	mode: string;
 	label: string;
-	nowrap: boolean;
-	bold: boolean;
-	required: boolean;
-	appearsByDefault: boolean;
-	findEnabled: boolean;
-	unique: boolean;
-	doesDataCopy: boolean;
-	audited: boolean;
-	properties: {
+	mode?: string;
+	noWrap?: boolean;
+	fieldHelp?: string;
+	bold?: boolean;
+	required?: boolean;
+	appearsByDefault?: boolean;
+	findEnabled?: boolean;
+	unique?: boolean;
+	doesDataCopy?: boolean;
+	audited?: boolean;
+	properties?: {
 		defaultValue?: string;
 		foreignKey?: false;
 		allowNewChoices?: false;
@@ -791,6 +1287,10 @@ export interface QuickBaseResponseField {
 	permissions?: QuickBaseResponseFieldPermission[];
 }
 
+export interface QuickBaseResponseField extends QuickBaseField {
+	id: number;
+}
+
 export interface QuickBaseResponseReport {
 	id: string;
 	name: string;
@@ -813,7 +1313,7 @@ export interface QuickBaseResponseReport {
 		}[];
 		grouping: {
 			fieldId?: number;
-			by?: 'string';
+			by?: string;
 		}[];
 	};
 	properties: any;
