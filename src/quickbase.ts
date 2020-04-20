@@ -17,7 +17,7 @@
 'use strict';
 
 /* Dependencies */
-import merge from 'merge';
+import merge from 'deepmerge';
 import { debug } from 'debug';
 import { Throttle } from 'generic-throttle';
 import axios, {
@@ -61,7 +61,16 @@ export class QuickBase {
 		proxy: false
 	};
 
+	/**
+	 * The internal numerical id for API calls.
+	 * 
+	 * Increments by 1 with each request.
+	 */
 	private _id: number = 0;
+
+	/**
+	 * The internal throttler for rate-limiting API calls
+	 */
 	private throttle: Throttle;
 
 	/**
@@ -79,7 +88,7 @@ export class QuickBase {
 	 * ```
 	 */
 	constructor(options?: QuickBaseOptions){
-		this.settings = merge({}, QuickBase.defaults, options || {});
+		this.settings = merge(QuickBase.defaults, options || {});
 
 		this.throttle = new Throttle(this.settings.connectionLimit, this.settings.connectionLimitPeriod, this.settings.errorOnConnectionLimit);
 
@@ -94,14 +103,22 @@ export class QuickBase {
 	 * @returns Simple GET configuration with required authorization
 	 */
 	private getBasicRequest(): AxiosRequestConfig {
+		const headers = {
+			[IS_BROWSER ? 'X-User-Agent' : 'User-Agent']: `${this.settings.userAgent} node-quickbase/v${VERSION} ${IS_BROWSER ? (window.navigator ? window.navigator.userAgent : '') : 'nodejs/' + process.version}`.trim(),
+			'QB-Realm-Hostname': this.settings.realm
+		};
+
+		if(this.settings.tempToken){
+			headers.Authorization = `QB-TEMP-TOKEN ${this.settings.tempToken}`;
+		}else
+		if(this.settings.userToken){
+			headers.Authorization = `QB-USER-TOKEN ${this.settings.userToken}`;
+		}
+
 		return {
 			method: 'GET',
 			baseURL: `https://${this.settings.server}/${this.settings.version}`,
-			headers: {
-				[IS_BROWSER ? 'X-User-Agent' : 'User-Agent']: `${this.settings.userAgent} node-quickbase/v${VERSION} ${IS_BROWSER ? (window.navigator ? window.navigator.userAgent : '') : 'nodejs/' + process.version}`.trim(),
- 				'Authorization': this.settings.tempToken ? `QB-TEMP-TOKEN ${this.settings.tempToken}` : `QB-USER-TOKEN ${this.settings.userToken}`,
-				'QB-Realm-Hostname': this.settings.realm
-			},
+			headers: headers,
 			proxy: this.settings.proxy
 		};
 	}
@@ -117,7 +134,11 @@ export class QuickBase {
 	private async request(actOptions: AxiosRequestConfig, reqOptions?: AxiosRequestConfig): Promise<any> {
 		return await this.throttle.acquire(async (resolve, reject) => {
 			const id = 0 + (++this._id);
-			const options = merge(this.getBasicRequest(), actOptions, reqOptions || {});
+			const options = merge.all([
+				this.getBasicRequest(),
+				actOptions,
+				reqOptions || {}
+			]);
 
 			debugRequest(id, options);
 
@@ -134,12 +155,17 @@ export class QuickBase {
 					return reject(err);
 				}
 
-				const data = err.response.data || {
-					message: 'Unknown Quick Base Error',
-					details: 'We were unable to determine the true error, please check your request and try again'
-				};
+				// Error reporting seems a bit inconsistent
+				const data: {
+					message: string;
+					description: string;
+					errors?: string[];
+				} = merge({
+					message: 'Quick Base Error',
+					description: 'There was an unexpected error, please check your request and try again'
+				}, err.response.data || {});
 
-				const nErr = new QuickBaseError(err.response.status, data.message, data.description || data.details);
+				const nErr = new QuickBaseError(err.response.status, data.message, data.errors && data.errors.join(' ') || data.description);
 
 				debugResponse(id, nErr, data);
 
@@ -310,7 +336,7 @@ export class QuickBase {
 			method: 'DELETE',
 			url: `fields?tableId=${tableId}`,
 			data: {
-				fieldIds
+				fieldIds: fieldIds
 			}
 		}, requestOptions);
 	}
@@ -615,7 +641,7 @@ export class QuickBase {
 	 * @param param0.tableId Quick Base Table DBID
 	 * @param param0.requestOptions Override axios request configuration
 	 */
-	async getTemporaryTableToken({ tableId, requestOptions }: QuickBaseRequestGetTemporaryTableToken): Promise<QuickBaseResponseGetTemporaryTableToken> {
+	async getTempTableToken({ tableId, requestOptions }: QuickBaseRequestGetTempTableToken): Promise<QuickBaseResponseGetTempTableToken> {
 		return await this.request({
 			url: `auth/temporary/${tableId}`
 		}, requestOptions);
@@ -630,7 +656,7 @@ export class QuickBase {
 	 * 
 	 * @param requestOptions Override axios request configuration
 	 */
-	async getTemporaryToken(requestOptions?: AxiosRequestConfig): Promise<QuickBaseResponseGetTemporaryToken> {
+	async getTempToken(requestOptions?: AxiosRequestConfig): Promise<QuickBaseResponseGetTempToken> {
 		return await this.request({
 			url: 'auth/temporary'
 		}, requestOptions);
@@ -741,6 +767,17 @@ export class QuickBase {
 			url: `reports/${reportId}/run`,
 			params: params
 		}, requestOptions);
+	}
+
+	/**
+	 * Set the internally stored `tempToken` for use in subsequent API calls
+	 * 
+	 * @param tempToken Temporary Quick Base Authentication Token
+	 */
+	setTempToken(tempToken: string): QuickBase {
+		this.settings.tempToken = tempToken;
+
+		return this;
 	}
 
 	/**
@@ -950,9 +987,9 @@ export class QuickBaseError extends Error {
 	 * 
 	 * @param code Error code
 	 * @param message Error message
-	 * @param details Error details
+	 * @param description Error description
 	 */
-	constructor(public code: number, public message: string, public details?: string) {
+	constructor(public code: number, public message: string, public description?: string) {
 		super(message);
 	}
 
@@ -1193,15 +1230,15 @@ export interface QuickBaseRequestUpdateField extends QuickBaseRequest, QuickBase
 export interface QuickBaseResponseUpdateField extends QuickBaseResponseField {
 }
 
-export interface QuickBaseRequestGetTemporaryTableToken extends QuickBaseRequest {
+export interface QuickBaseRequestGetTempTableToken extends QuickBaseRequest {
 	tableId: string;
 }
 
-export interface QuickBaseResponseGetTemporaryToken {
+export interface QuickBaseResponseGetTempToken {
 	temporaryAuthorization: string;
 }
 
-export interface QuickBaseResponseGetTemporaryTableToken {
+export interface QuickBaseResponseGetTempTableToken {
 	temporaryAuthorization: string;
 }
 

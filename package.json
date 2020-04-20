@@ -1,6 +1,6 @@
 {
   "name": "quickbase",
-  "version": "3.0.0-alpha.8",
+  "version": "3.0.0-alpha.9",
   "description": "A lightweight, very flexible QuickBase API",
   "keywords": [
     "QuickBase",
@@ -50,8 +50,8 @@
     "@types/debug": "^4.1.5",
     "axios": "^0.19.2",
     "debug": "^4.1.1",
-    "generic-throttle": "^2.0.1",
-    "merge": "github:yeikos/js.merge"
+    "deepmerge": "^4.2.2",
+    "generic-throttle": "^2.0.1"
   },
   "devDependencies": {
     "@ava/typescript": "^1.1.1",

@@ -27,6 +27,70 @@ Documentation
 
 [TypeDoc Documentation](https://tflanagan.github.io/quickbase/)
 
+Server-Side Example
+-------------------
+```typescript
+import { QuickBase } from 'quickbase';
+
+const quickbase = new QuickBase({
+    realm: 'www',
+    userToken: 'xxxxxx_xxx_xxxxxxxxxxxxxxxxxxxxxxxxxx'
+    // Use tempToken if utilizing an authentication token sent
+    // up from client-side code. If possible, this is preferred.
+    // tempToken: 'xxxxxx_xxx_xxxxxxxxxxxxxxxxxxxxxxxxxx'
+});
+
+(async () => {
+    try {
+        const results = await quickbase.getApp({
+            appId: 'xxxxxxxxx'
+        });
+
+        console.log(results.name);
+    }catch(err){
+        console.error(err);
+    }
+})();
+```
+
+Client-Side Example
+-------------------
+Import `QuickBase` by loading `quickbase.browserify.min.js`
+
+```javascript
+var quickbase = new QuickBase({
+    realm: 'www'
+});
+
+// Using a Temporary Token
+quickbase.getTempToken().then(function(results){
+    quickbase.setTempToken(results.temporaryAuthorization);
+
+    return quickbase.getApp({
+        appId: 'xxxxxxxxx'
+    });
+}).then(function(results){
+    console.log(results.name);
+}).catch(function(err){
+    console.error(err);
+});
+
+// Using a Temporary Table Token
+quickbase.getTempTableToken({
+    tableId: 'xxxxxxxxx'
+}).then(function(results){
+    quickbase.setTempToken(results.temporaryAuthorization);
+
+    return quickbase.getTable({
+        tableId: 'xxxxxxxxx'
+    });
+}).then(function(results){
+    console.log(results.name);
+}).catch(function(err){
+    console.error(err);
+});
+```
+
 License
 -------
 Copyright 2014 Tristian Flanagan
