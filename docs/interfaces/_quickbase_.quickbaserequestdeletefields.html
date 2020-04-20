@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>QuickBaseRequestRunReport | Node-QuickBase - v3.0.0-alpha.8</title>
+	<title>QuickBaseRequestDeleteFields | Node-QuickBase - v3.0.0-alpha.8</title>
 	<meta name="description" content="Documentation for Node-QuickBase - v3.0.0-alpha.8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<style type="text/css">/*! normalize.css v1.1.3 | MIT License | git.io/normalize */
@@ -2721,19 +2721,16 @@ img {
 <nav class="tsd-navigation secondary">
 	<ul>
 		<li class="current tsd-kind-interface tsd-parent-kind-module">
-			<a href="_quickbase_.quickbaserequestrunreport.html" class="tsd-kind-icon">Quick<wbr>Base<wbr>Request<wbr>Run<wbr>Report</a>
+			<a href="_quickbase_.quickbaserequestdeletefields.html" class="tsd-kind-icon">Quick<wbr>Base<wbr>Request<wbr>Delete<wbr>Fields</a>
 			<ul>
 				<li class=" tsd-kind-property tsd-parent-kind-interface">
-					<a href="_quickbase_.quickbaserequestrunreport.html#options" class="tsd-kind-icon">options</a>
-				</li>
-				<li class=" tsd-kind-property tsd-parent-kind-interface">
-					<a href="_quickbase_.quickbaserequestrunreport.html#reportid" class="tsd-kind-icon">report<wbr>Id</a>
+					<a href="_quickbase_.quickbaserequestdeletefields.html#fieldids" class="tsd-kind-icon">field<wbr>Ids</a>
 				</li>
 				<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
-					<a href="_quickbase_.quickbaserequestrunreport.html#requestoptions" class="tsd-kind-icon">request<wbr>Options</a>
+					<a href="_quickbase_.quickbaserequestdeletefields.html#requestoptions" class="tsd-kind-icon">request<wbr>Options</a>
 				</li>
 				<li class=" tsd-kind-property tsd-parent-kind-interface">
-					<a href="_quickbase_.quickbaserequestrunreport.html#tableid" class="tsd-kind-icon">table<wbr>Id</a>
+					<a href="_quickbase_.quickbaserequestdeletefields.html#tableid" class="tsd-kind-icon">table<wbr>Id</a>
 				</li>
 			</ul>
 		</li>
@@ -2748,7 +2745,7 @@ img {
 					<span class="tsd-signature-type">QuickBaseRequest</span>
 					<ul class="tsd-hierarchy">
 						<li>
-							<span class="target">QuickBaseRequestRunReport</span>
+							<span class="target">QuickBaseRequestDeleteFields</span>
 						</li>
 					</ul>
 				</li>
@@ -2761,10 +2758,9 @@ img {
 					<section class="tsd-index-section ">
 						<h3>Properties</h3>
 						<ul class="tsd-index-list">
-							<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_quickbase_.quickbaserequestrunreport.html#options" class="tsd-kind-icon">options</a></li>
-							<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_quickbase_.quickbaserequestrunreport.html#reportid" class="tsd-kind-icon">report<wbr>Id</a></li>
-							<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="_quickbase_.quickbaserequestrunreport.html#requestoptions" class="tsd-kind-icon">request<wbr>Options</a></li>
-							<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_quickbase_.quickbaserequestrunreport.html#tableid" class="tsd-kind-icon">table<wbr>Id</a></li>
+							<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_quickbase_.quickbaserequestdeletefields.html#fieldids" class="tsd-kind-icon">field<wbr>Ids</a></li>
+							<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="_quickbase_.quickbaserequestdeletefields.html#requestoptions" class="tsd-kind-icon">request<wbr>Options</a></li>
+							<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_quickbase_.quickbaserequestdeletefields.html#tableid" class="tsd-kind-icon">table<wbr>Id</a></li>
 						</ul>
 					</section>
 				</div>
@@ -2773,22 +2769,12 @@ img {
 		<section class="tsd-panel-group tsd-member-group ">
 			<h2>Properties</h2>
 			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-				<a name="options" class="tsd-anchor"></a>
-				<h3><span class="tsd-flag ts-flagOptional">Optional</span> options</h3>
-				<div class="tsd-signature tsd-kind-icon">options<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">{ </span>skip<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>top<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> }</span></div>
+				<a name="fieldids" class="tsd-anchor"></a>
+				<h3>field<wbr>Ids</h3>
+				<div class="tsd-signature tsd-kind-icon">field<wbr>Ids<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/20ca47a/src/quickbase.ts#L1110">src/quickbase.ts:1110</a></li>
-					</ul>
-				</aside>
-			</section>
-			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-				<a name="reportid" class="tsd-anchor"></a>
-				<h3>report<wbr>Id</h3>
-				<div class="tsd-signature tsd-kind-icon">report<wbr>Id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
-				<aside class="tsd-sources">
-					<ul>
-						<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/20ca47a/src/quickbase.ts#L1109">src/quickbase.ts:1109</a></li>
+						<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/20ca47a/src/quickbase.ts#L1172">src/quickbase.ts:1172</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -2809,7 +2795,7 @@ img {
 				<div class="tsd-signature tsd-kind-icon">table<wbr>Id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/20ca47a/src/quickbase.ts#L1108">src/quickbase.ts:1108</a></li>
+						<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/20ca47a/src/quickbase.ts#L1171">src/quickbase.ts:1171</a></li>
 					</ul>
 				</aside>
 			</section>
