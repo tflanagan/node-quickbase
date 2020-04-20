@@ -55,6 +55,7 @@ export class QuickBase {
 		userAgent: '',
 	
 		connectionLimit: 10,
+		connectionLimitPeriod: 1000,
 		errorOnConnectionLimit: false,
 	
 		proxy: false
@@ -80,7 +81,7 @@ export class QuickBase {
 	constructor(options?: QuickBaseOptions){
 		this.settings = merge({}, QuickBase.defaults, options || {});
 
-		this.throttle = new Throttle(this.settings.connectionLimit, -1, this.settings.errorOnConnectionLimit);
+		this.throttle = new Throttle(this.settings.connectionLimit, this.settings.connectionLimitPeriod, this.settings.errorOnConnectionLimit);
 
 		debugMain('New Instance', this.settings);
 
@@ -1013,6 +1014,13 @@ export interface QuickBaseOptions {
 	 * Default is `10`
 	 */
 	connectionLimit?: number;
+
+	/**
+	 * The period length, in milliseconds, of connection limit
+	 *
+	 * Default is `1000`
+	 */
+	connectionLimitPeriod?: number;
 
 	/**
 	 * Throw an error if the connection limit is exceeded
