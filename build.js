@@ -1,12 +1,7 @@
 #!/usr/bin/env node
 
 /* Dependencies */
-const fs = require('fs');
-const join = require('path').join;
 const execNode = require('child_process').exec;
-
-const minifyPath = join('.', 'node_modules', 'minify', 'bin', 'minify.js');
-const browserifyPath = join('.', 'node_modules', 'browserify', 'bin', 'cmd.js');
 
 /* Helpers */
 const exec = async (cmd) => {
@@ -36,16 +31,14 @@ const exec = async (cmd) => {
 /* Build */
 (async () => {
 	try {
-		let results;
-
 		console.log('Compiling TypeScript...');
 		await exec('npx tsc');
 
 		console.log('Browserify...');
-		await exec('node ' + browserifyPath + ' ./dist/quickbase.js > ./dist/quickbase.browserify.js');
+		await exec('npx browserify ./dist/quickbase.js > ./dist/quickbase.browserify.js');
 
 		console.log('Minify...');
-		await exec('node ' + minifyPath + ' ./dist/quickbase.browserify.js > ./dist/quickbase.browserify.min.js');
+		await exec('npx minify ./dist/quickbase.browserify.js > ./dist/quickbase.browserify.min.js');
 
 		console.log('Cleanup...');
 		await exec([
