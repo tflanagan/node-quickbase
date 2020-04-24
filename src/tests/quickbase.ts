@@ -1,25 +1,57 @@
-import { serial as test } from 'ava';
-import * as dotenv from 'dotenv';
-import { QuickBase } from '../quickbase';
+'use strict';
 
+/* Dependencies */
+import * as dotenv from 'dotenv';
+import { serial as test } from 'ava';
+import { QuickBase, QuickBaseOptions } from '../quickbase';
+
+/* Tests */
 dotenv.config();
 
 const QB_REALM = process.env.QB_REALM!;
 const QB_USERTOKEN = process.env.QB_USERTOKEN!;
 const QB_APPID = process.env.QB_APPID!;
 
-const qb = new QuickBase({
+const qbOptions: QuickBaseOptions = {
+	server: 'api.quickbase.com',
+	version: 'v1',
+
 	realm: QB_REALM,
 	userToken: QB_USERTOKEN,
+	tempToken: '',
 
-	userAgent: 'Testing'
-});
+	userAgent: 'Testing',
+
+	connectionLimit: 10,
+	connectionLimitPeriod: 1000,
+	errorOnConnectionLimit: false,
+
+	proxy: false
+};
+
+const qb = new QuickBase(qbOptions);
 
 const testValue: string = 'test value' // - б, в, г, д, ж, з, к, л, м, н, п, р, с, т, ф, х, ц, ч, ш, щ, а, э, ы, у, о, я, е, ё, ю, и';
 
 let newDbid: string;
 let newFid: number;
 let newRid: number;
+
+test('toJSON()', async (t) => {
+	t.truthy(JSON.stringify(qb.toJSON()) === JSON.stringify(qbOptions));
+});
+
+test('fromJSON()', async (t) => {
+	qb.fromJSON(qbOptions);
+
+	t.truthy(JSON.stringify(qb.toJSON()) === JSON.stringify(qbOptions));
+});
+
+test('FromJSON()', async (t) => {
+	const nQb = QuickBase.fromJSON(qbOptions);
+
+	t.truthy(JSON.stringify(nQb.toJSON()) === JSON.stringify(qbOptions));
+});
 
 test('getApp()', async (t) => {
 	const results = await qb.getApp({

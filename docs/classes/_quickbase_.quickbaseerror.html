@@ -2744,6 +2744,15 @@ img {
 				<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-static">
 					<a href="_quickbase_.quickbaseerror.html#error" class="tsd-kind-icon">Error</a>
 				</li>
+				<li class=" tsd-kind-method tsd-parent-kind-class">
+					<a href="_quickbase_.quickbaseerror.html#fromjson" class="tsd-kind-icon">fromJSON</a>
+				</li>
+				<li class=" tsd-kind-method tsd-parent-kind-class">
+					<a href="_quickbase_.quickbaseerror.html#tojson" class="tsd-kind-icon">toJSON</a>
+				</li>
+				<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
+					<a href="_quickbase_.quickbaseerror.html#fromjson-1" class="tsd-kind-icon">fromJSON</a>
+				</li>
 			</ul>
 		</li>
 	</ul>
@@ -2784,6 +2793,14 @@ img {
 							<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><a href="_quickbase_.quickbaseerror.html#error" class="tsd-kind-icon">Error</a></li>
 						</ul>
 					</section>
+					<section class="tsd-index-section ">
+						<h3>Methods</h3>
+						<ul class="tsd-index-list">
+							<li class="tsd-kind-method tsd-parent-kind-class"><a href="_quickbase_.quickbaseerror.html#fromjson" class="tsd-kind-icon">fromJSON</a></li>
+							<li class="tsd-kind-method tsd-parent-kind-class"><a href="_quickbase_.quickbaseerror.html#tojson" class="tsd-kind-icon">toJSON</a></li>
+							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="_quickbase_.quickbaseerror.html#fromjson-1" class="tsd-kind-icon">fromJSON</a></li>
+						</ul>
+					</section>
 				</div>
 			</section>
 		</section>
@@ -2799,7 +2816,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/138213d/src/quickbase.ts#L982">src/quickbase.ts:982</a></li>
+								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/217dfa6/src/quickbase.ts#L1025">src/quickbase.ts:1025</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -2849,7 +2866,7 @@ img {
 				<div class="tsd-signature tsd-kind-icon">code<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/138213d/src/quickbase.ts#L996">src/quickbase.ts:996</a></li>
+						<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/217dfa6/src/quickbase.ts#L1039">src/quickbase.ts:1039</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -2864,7 +2881,7 @@ img {
 				<div class="tsd-signature tsd-kind-icon">description<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/138213d/src/quickbase.ts#L996">src/quickbase.ts:996</a></li>
+						<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/217dfa6/src/quickbase.ts#L1039">src/quickbase.ts:1039</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -2880,7 +2897,7 @@ img {
 				<aside class="tsd-sources">
 					<p>Overrides Error.message</p>
 					<ul>
-						<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/138213d/src/quickbase.ts#L996">src/quickbase.ts:996</a></li>
+						<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/217dfa6/src/quickbase.ts#L1039">src/quickbase.ts:1039</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -2922,6 +2939,93 @@ img {
 				</aside>
 			</section>
 		</section>
+		<section class="tsd-panel-group tsd-member-group ">
+			<h2>Methods</h2>
+			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+				<a name="fromjson" class="tsd-anchor"></a>
+				<h3>fromJSON</h3>
+				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+					<li class="tsd-signature tsd-kind-icon">fromJSON<span class="tsd-signature-symbol">(</span>json<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><a href="../interfaces/_quickbase_.quickbaseerrorjson.html" class="tsd-signature-type">QuickBaseErrorJSON</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_quickbase_.quickbaseerror.html" class="tsd-signature-type">QuickBaseError</a></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/217dfa6/src/quickbase.ts#L1059">src/quickbase.ts:1059</a></li>
+							</ul>
+						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Rebuild the QuickBaseError instance from serialized JSON</p>
+							</div>
+						</div>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>json: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><a href="../interfaces/_quickbase_.quickbaseerrorjson.html" class="tsd-signature-type">QuickBaseErrorJSON</a></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>Serialized QuickBaseError class options</p>
+								</div>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <a href="_quickbase_.quickbaseerror.html" class="tsd-signature-type">QuickBaseError</a></h4>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+				<a name="tojson" class="tsd-anchor"></a>
+				<h3>toJSON</h3>
+				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+					<li class="tsd-signature tsd-kind-icon">toJSON<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/_quickbase_.quickbaseerrorjson.html" class="tsd-signature-type">QuickBaseErrorJSON</a></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/217dfa6/src/quickbase.ts#L1046">src/quickbase.ts:1046</a></li>
+							</ul>
+						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Serialize the QuickBaseError instance into JSON</p>
+							</div>
+						</div>
+						<h4 class="tsd-returns-title">Returns <a href="../interfaces/_quickbase_.quickbaseerrorjson.html" class="tsd-signature-type">QuickBaseErrorJSON</a></h4>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-static">
+				<a name="fromjson-1" class="tsd-anchor"></a>
+				<h3><span class="tsd-flag ts-flagStatic">Static</span> fromJSON</h3>
+				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
+					<li class="tsd-signature tsd-kind-icon">fromJSON<span class="tsd-signature-symbol">(</span>json<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><a href="../interfaces/_quickbase_.quickbaseerrorjson.html" class="tsd-signature-type">QuickBaseErrorJSON</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_quickbase_.quickbaseerror.html" class="tsd-signature-type">QuickBaseError</a></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/217dfa6/src/quickbase.ts#L1080">src/quickbase.ts:1080</a></li>
+							</ul>
+						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Create a new QuickBase instance from serialized JSON</p>
+							</div>
+						</div>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>json: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><a href="../interfaces/_quickbase_.quickbaseerrorjson.html" class="tsd-signature-type">QuickBaseErrorJSON</a></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>Serialized QuickBaseError class options</p>
+								</div>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <a href="_quickbase_.quickbaseerror.html" class="tsd-signature-type">QuickBaseError</a></h4>
+					</li>
+				</ul>
+			</section>
+		</section>
 		<footer class="with-border-bottom">
 			<div class="container">
 				<h2>Legend</h2>
@@ -2930,15 +3034,17 @@ img {
 						<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
 						<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
 						<li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li>
+						<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
+					</ul>
+					<ul class="tsd-legend">
+						<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static property</span></li>
+						<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static method</span></li>
 					</ul>
 					<ul class="tsd-legend">
 						<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
 					</ul>
 					<ul class="tsd-legend">
 						<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited property</span></li>
-					</ul>
-					<ul class="tsd-legend">
-						<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static property</span></li>
 					</ul>
 				</div>
 			</div>

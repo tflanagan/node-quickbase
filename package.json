@@ -41,7 +41,7 @@
     "cleanup": "rm -rf ./dist/*",
     "reinstall": "rm -rf node_modules/ && npm install",
     "reinstall-dev": "rm -rf node_modules/ && npm install && npm install --dev",
-    "build": "npx tsc && browserify ./dist/quickbase.js > ./dist/quickbase.browserify.js && minify ./dist/quickbase.browserify.js > ./dist/quickbase.browserify.min.js && rm ./dist/quickbase.browserify.js",
+    "build": "node build.js",
     "docs": "mv ./docs/_config.yml ./ && npx typedoc src/quickbase.ts && mv ./_config.yml ./docs/",
     "test": "npx ava"
   },

@@ -976,6 +976,49 @@ export class QuickBase {
 		}, requestOptions);
 	}
 
+	/**
+	 * Rebuild the QuickBase instance from serialized JSON
+	 *
+	 * @param json QuickBase class options
+	 */
+	fromJSON(json: string | QuickBaseOptions): QuickBase {
+		if(typeof(json) === 'string'){
+			json = JSON.parse(json);
+		}
+
+		if(typeof(json) !== 'object'){
+			throw new TypeError('json argument must be type of object or a valid JSON string');
+		}
+
+		this.settings = merge(this.settings, json);
+
+		return this;
+	}
+
+	/**
+	 * Serialize the QuickBase instance into JSON
+	 */
+	toJSON(): QuickBaseOptions {
+		return merge({}, this.settings);
+	}
+
+	/**
+	 * Create a new QuickBase instance from serialized JSON
+	 *
+	 * @param json QuickBaseError class options
+	 */
+	static fromJSON(json: string | QuickBaseOptions): QuickBase {
+		if(typeof(json) === 'string'){
+			json = JSON.parse(json);
+		}
+
+		if(typeof(json) !== 'object'){
+			throw new TypeError('json argument must be type of object or a valid JSON string');
+		}
+
+		return new QuickBase(json);
+	}
+
 }
 
 /* Quick Base Error */
@@ -997,9 +1040,64 @@ export class QuickBaseError extends Error {
 		super(message);
 	}
 
+	/**
+	 * Serialize the QuickBaseError instance into JSON
+	 */
+	toJSON(): QuickBaseErrorJSON {
+		return {
+			code: this.code,
+			message: this.message,
+			description: this.description
+		};
+	}
+
+	/**
+	 * Rebuild the QuickBaseError instance from serialized JSON
+	 *
+	 * @param json Serialized QuickBaseError class options
+	 */
+	fromJSON(json: string | QuickBaseErrorJSON): QuickBaseError {
+		if(typeof(json) === 'string'){
+			json = JSON.parse(json);
+		}
+
+		if(typeof(json) !== 'object'){
+			throw new TypeError('json argument must be type of object or a valid JSON string');
+		}
+
+		this.code = json.code;
+		this.message = json.message;
+		this.description = json.description;
+
+		return this;
+	}
+
+	/**
+	 * Create a new QuickBase instance from serialized JSON
+	 *
+	 * @param json Serialized QuickBaseError class options
+	 */
+	static fromJSON(json: string | QuickBaseErrorJSON): QuickBaseError {
+		if(typeof(json) === 'string'){
+			json = JSON.parse(json);
+		}
+
+		if(typeof(json) !== 'object'){
+			throw new TypeError('json argument must be type of object or a valid JSON string');
+		}
+
+		return new QuickBaseError(json.code, json.message, json.description);
+	}
+
 }
 
 /* Quick Base Interfaces */
+export interface QuickBaseErrorJSON {
+	code: number;
+	message: string;
+	description?: string;
+}
+
 export interface QuickBaseOptions {
 	/**
 	 * Quick Base API Server FQDN
