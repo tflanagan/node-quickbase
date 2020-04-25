@@ -21,6 +21,7 @@
 	  "node_modules",
 	  "docs",
 	  "src",
+	  "build.js",
 	  "dist/tests",
 	  "dist/quickbase.js",
 	  "dist/quickbase.d.ts"
