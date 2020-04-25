@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 
 /* Dependencies */
+const fs = require('fs');
+const minify = require('minify');
 const execNode = require('child_process').exec;
 
 /* Helpers */
@@ -28,20 +30,83 @@ const exec = async (cmd) => {
 	});
 };
 
+const readFile = async (path) => {
+	return new Promise((resolve, reject) => {
+		fs.readFile(path, (err, buffer) => {
+			if(err){
+				return reject(err);
+			}
+
+			resolve(buffer);
+		});
+	});
+};
+
+const writeFile = async (path, data) => {
+	return new Promise((resolve, reject) => {
+		fs.writeFile(path, data, (err) => {
+			if(err){
+				return reject(err);
+			}
+
+			resolve();
+		});
+	});
+};
+
 /* Build */
 (async () => {
 	try {
-		console.log('Compiling TypeScript...');
+		let searchStr, searchRgx;
+
+		console.log('Compiling TypeScript for Node...');
 		await exec('npx tsc');
 
+		console.log('Injecting Promise polyfill...');
+		const source = await readFile('./dist/quickbase.js');
+
+		searchStr = 'const axios_1 =';
+		searchRgx = new RegExp(searchStr);
+
+		await writeFile('./dist/quickbase.prep.js', source.toString().replace(searchRgx, [
+			'const Promise = require(\'bluebird\');',
+			'if(!global.Promise){ global.Promise = Promise; }',
+			searchStr
+		].join('\n')));
+
 		console.log('Browserify...');
-		await exec('npx browserify ./dist/quickbase.js > ./dist/quickbase.browserify.js');
+		await exec('npx browserify ./dist/quickbase.prep.js > ./dist/quickbase.browserify.js');
+
+		console.log('Compiling for Browser...');
+		await exec('npx tsc --project ./tsconfig-es5.json');
 
 		console.log('Minify...');
-		await exec('npx minify ./dist/quickbase.browserify.js > ./dist/quickbase.browserify.min.js');
+		const results = await minify('./dist/tmp/quickbase.browserify.js');
+		const license = await readFile('./LICENSE');
+
+		searchStr = 'var i=this&&this.__importDefault';
+		searchRgx = new RegExp(searchStr);
+
+		await writeFile('./dist/quickbase.browserify.min.js', results.toString().replace(searchRgx, [
+			license.toString().split('\n').map((line, i, lines) => {
+				line = ' * ' + line;
+
+				if(i === 0){
+					line = '\n/*!\n' + line;
+				}else
+				if(i === lines.length - 1){
+					line += '\n*/';
+				}
+
+				return line;
+			}).join('\n'),
+			searchStr
+		].join('\n')));
 
 		console.log('Cleanup...');
 		await exec([
+			'rm -rf ./dist/tmp/',
+			'rm ./dist/quickbase.prep.js',
 			'rm ./dist/quickbase.browserify.js'
 		].join(' && '));
 

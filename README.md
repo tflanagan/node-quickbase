@@ -7,7 +7,19 @@ A lightweight, flexible promise based Quick Base API.
 
 Written in TypeScript, targets Nodejs and the Browser
 
-This library targets the new RESTful JSON-based API, not the old XML-based API. If you want to use the old XML-based API, then please use v2.x of this library.
+This library targets the new RESTful JSON-based API, not the old XML-based API. If you want to use the old XML-based API, then please use [v2.x](https://github.com/tflanagan/node-quickbase/tree/v2.x/src) of this library.
+
+```
+IE 11 Users, if you are receiving this error:
+XMLHttpRequest: Network Error 0x80070005, Access is denied.
+
+In order to use the new RESTful JSON-based API in Internet Explorer, you must change a security setting. This is not a limitation of the library, just how Quick Base's new API works.
+
+Internet Options -> Security -> Custom Level
+Scroll down to and find the "Miscellaneous" section
+Ensure "Access data sources across domains" is set to "Enable"
+Click "OK", "Yes", "OK"
+```
 
 Install
 -------
