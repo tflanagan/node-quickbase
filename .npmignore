@@ -1,6 +1,7 @@
 docs/
 src/
 bower.json
+tsconfig-es5.json
 tsconfig.json
 ava.config.js
 .env
