@@ -2,7 +2,6 @@ docs/
 src/
 bower.json
 build.js
-tsconfig-es5.json
 tsconfig.json
 ava.config.js
 .env

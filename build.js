@@ -4,8 +4,24 @@
 const fs = require('fs');
 const minify = require('minify');
 const execNode = require('child_process').exec;
+const Browserify = require('browserify');
+const { transpileModule } = require('typescript');
 
 /* Helpers */
+const browserify = async (files, options) => {
+	return new Promise((resolve, reject) => {
+		const b = new Browserify(files, options);
+
+		b.bundle((err, src) => {
+			if(err){
+				return reject(err);
+			}
+
+			resolve(src);
+		});
+	});
+};
+
 const exec = async (cmd) => {
 	return new Promise((resolve, reject) => {
 		execNode(cmd, (err, stdout, stderr) => {
@@ -75,16 +91,34 @@ const writeFile = async (path, data) => {
 		].join('\n')));
 
 		console.log('Browserify...');
-		await exec('npx browserify ./dist/quickbase.prep.js > ./dist/quickbase.browserify.js');
+		const browserifiedPrep = await browserify([
+			'./dist/quickbase.prep.js'
+		]);
 
 		console.log('Compiling for Browser...');
-		await exec('npx tsc --project ./tsconfig-es5.json');
+		const browserified = transpileModule(browserifiedPrep.toString(), {
+			compilerOptions: {
+				target: 'ES5',
+				module: 'commonjs',
+				lib: [
+					'dom',
+					'ES6'
+				],
+				allowJs: true,
+				checkJs: false,
+				sourceMap: false,
+				declaration: false,
+				removeComments: true
+			}
+		});
+
+		await writeFile('./dist/quickbase.browserify.js', browserified.outputText);
 
 		console.log('Minify...');
-		const results = await minify('./dist/tmp/quickbase.browserify.js');
+		const results = await minify('./dist/quickbase.browserify.js');
 		const license = await readFile('./LICENSE');
 
-		searchStr = 'var i=this&&this.__importDefault';
+		searchStr = '"use strict";var i=this&&this.__importDefault';
 		searchRgx = new RegExp(searchStr);
 
 		await writeFile('./dist/quickbase.browserify.min.js', results.toString().replace(searchRgx, [
@@ -105,7 +139,6 @@ const writeFile = async (path, data) => {
 
 		console.log('Cleanup...');
 		await exec([
-			'rm -rf ./dist/tmp/',
 			'rm ./dist/quickbase.prep.js',
 			'rm ./dist/quickbase.browserify.js'
 		].join(' && '));
