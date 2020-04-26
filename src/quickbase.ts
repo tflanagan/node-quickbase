@@ -48,7 +48,7 @@ export class QuickBase {
 		server: 'api.quickbase.com',
 		version: 'v1',
 
-		realm: 'www',
+		realm: IS_BROWSER ? window.location.host.split('.')[0] : '',
 		userToken: '',
 		tempToken: '',
 
@@ -1005,7 +1005,7 @@ export class QuickBase {
 	/**
 	 * Create a new QuickBase instance from serialized JSON
 	 *
-	 * @param json QuickBaseError class options
+	 * @param json QuickBase class options
 	 */
 	static fromJSON(json: string | QuickBaseOptions): QuickBase {
 		if(typeof(json) === 'string'){
@@ -1493,53 +1493,55 @@ export interface QuickBaseResponseRunQuery {
 	};
 }
 
+export interface QuickBaseFieldUsage {
+	actions: {
+		count: number;
+	};
+	appHomePages: {
+		count: number;
+	};
+	defaultReports: {
+		count: number;
+	};
+	exactForms: {
+		count: number;
+	};
+	fields: {
+		count: number;
+	};
+	forms: {
+		count: number;
+	};
+	notifications: {
+		count: number;
+	};
+	personalReports: {
+		count: number;
+	};
+	relationships: {
+		count: number;
+	};
+	reminders: {
+		count: number;
+	};
+	reports: {
+		count: number;
+	};
+	roles: {
+		count: number;
+	};
+	webhooks: {
+		count: number;
+	};
+}
+
 export interface QuickBaseResponseFieldUsage {
 	field: {
 		id: number;
 		name: string;
 		type: string;
 	};
-	usage: {
-		actions: {
-			count: number;
-		};
-		appHomePages: {
-			count: number;
-		};
-		defaultReports: {
-			count: number;
-		};
-		exactForms: {
-			count: number;
-		};
-		fields: {
-			count: number;
-		};
-		forms: {
-			count: number;
-		};
-		notifications: {
-			count: number;
-		};
-		personalReports: {
-			count: number;
-		};
-		relationships: {
-			count: number;
-		};
-		reminders: {
-			count: number;
-		};
-		reports: {
-			count: number;
-		};
-		roles: {
-			count: number;
-		};
-		webhooks: {
-			count: number;
-		};
-	};
+	usage: QuickBaseFieldUsage;
 }
 
 export interface QuickBaseResponseDeleteRecords {
