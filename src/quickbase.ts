@@ -1255,8 +1255,8 @@ export interface QuickBaseRequestRunReport extends QuickBaseRequest {
 	tableId: string;
 	reportId: number;
 	options?: {
-		skip: number;
-		top: number;
+		skip?: number;
+		top?: number;
 	};
 }
 
@@ -1466,14 +1466,14 @@ export interface QuickBaseResponseReport {
 	properties: any;
 }
 
-export interface QuickBaseRecord {
-	[index: number]: {
+export type QuickBaseRecord = {
+	[index in number | string]: {
 		value: any;
 	};
-}
+};
 
 export interface QuickBaseResponseUpsertRecords {
-	data: QuickBaseRecord;
+	data: QuickBaseRecord[];
 	metadata: {
 		createdRecordIds: number[];
 		totalNumberOfRecordsProcessed: number;
