@@ -10,6 +10,7 @@ dotenv.config();
 
 const QB_REALM = process.env.QB_REALM!;
 const QB_USERTOKEN = process.env.QB_USERTOKEN!;
+const QB_TICKET = process.env.QB_TICKET;
 const QB_APPID = process.env.QB_APPID!;
 
 const qbOptions: QuickBaseOptions = {
@@ -21,6 +22,9 @@ const qbOptions: QuickBaseOptions = {
 	tempToken: '',
 
 	userAgent: 'Testing',
+
+	autoConsumeTempTokens: true,
+	autoRenewTempTokens: true,
 
 	connectionLimit: 10,
 	connectionLimitPeriod: 1000,
@@ -52,6 +56,29 @@ test('FromJSON()', async (t) => {
 
 	t.truthy(JSON.stringify(nQb.toJSON()) === JSON.stringify(qbOptions));
 });
+
+if(QB_TICKET){
+	test('getTempToken()', async (t) => {
+		const results = await qb.getTempToken({
+			dbid: QB_APPID,
+			// Required for server-side usage
+			requestOptions: {
+				headers: {
+					Cookie: `TICKET_${QB_REALM}.quickbase.com=${QB_TICKET};`,
+					Referer: `https://${QB_REALM}.quickbase.com/db/${QB_APPID}`
+				}
+			}
+		});
+
+		t.truthy(results.temporaryAuthorization);
+	});
+}else{
+	test('getTempToken()', async (t) => {
+		console.warn('Ticket not found, unable to test getTempToken(), check .env file');
+
+		t.pass();
+	});
+} 
 
 test('getApp()', async (t) => {
 	const results = await qb.getApp({

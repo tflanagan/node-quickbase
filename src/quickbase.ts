@@ -54,6 +54,9 @@ export class QuickBase {
 
 		userAgent: '',
 
+		autoConsumeTempTokens: true,
+		autoRenewTempTokens: true,
+
 		connectionLimit: 10,
 		connectionLimitPeriod: 1000,
 		errorOnConnectionLimit: false,
@@ -67,6 +70,11 @@ export class QuickBase {
 	 * Increments by 1 with each request.
 	 */
 	private _id: number = 0;
+
+	/**
+	 * The internal DBID assigned to the temp token
+	 */
+	private _tempTokenTable: false | string = false;
 
 	/**
 	 * The internal throttler for rate-limiting API calls
@@ -131,7 +139,7 @@ export class QuickBase {
 	 *
 	 * @returns Direct results from API request
 	 */
-	private async request(actOptions: AxiosRequestConfig, reqOptions?: AxiosRequestConfig): Promise<any> {
+	private async request<T>(actOptions: AxiosRequestConfig, reqOptions?: AxiosRequestConfig): Promise<T> {
 		return await this.throttle.acquire(async (resolve, reject) => {
 			const id = 0 + (++this._id);
 			const options = merge.all([
@@ -167,9 +175,23 @@ export class QuickBase {
 
 				const nErr = new QuickBaseError(err.response.status, data.message, data.errors && data.errors.join(' ') || data.description);
 
-				debugResponse(id, nErr, data);
+				if(!this.settings.autoRenewTempTokens || this._tempTokenTable === false || !nErr.description || !nErr.description.match(/Your ticket has expired/)){
+					debugResponse(id, nErr, data);
 
-				reject(nErr);
+					return reject(nErr);
+				}
+
+				debugResponse(id, 'Expired token detected, renewing and trying again...', data);
+
+				let results = await this.getTempToken({
+					dbid: this._tempTokenTable
+				});
+
+				if(!this.settings.autoConsumeTempTokens){
+					this.setTempToken(results.temporaryAuthorization, this._tempTokenTable);
+				}
+
+				return this.request(actOptions, reqOptions).then(resolve).catch(reject);
 			}
 		});
 	}
@@ -212,7 +234,7 @@ export class QuickBase {
 		permissions,
 		requestOptions
 	}: QuickBaseRequestCreateField): Promise<QuickBaseResponseCreateField> {
-		const data: any = {};
+		const data: DataObj<QuickBaseRequestCreateField> = {};
 
 		if(typeof(label) !== 'undefined'){
 			data.label = label;
@@ -287,7 +309,7 @@ export class QuickBase {
 	 * @param param0.requestOptions Override axios request configuration
 	 */
 	async createTable({ appId, name, description, iconName, singularNoun, pluralNoun, requestOptions }: QuickBaseRequestCreateTable): Promise<QuickBaseResponseCreateTable> {
-		const data: any = {
+		const data: DataObj<QuickBaseRequestCreateTable> = {
 			name: name
 		};
 
@@ -550,7 +572,7 @@ export class QuickBase {
 	 * @param param0.requestOptions Override axios request configuration
 	 */
 	async getFieldUsage({ tableId, fieldId, requestOptions }: QuickBaseRequestGetFieldUsage): Promise<QuickBaseResponseFieldUsage> {
-		return (await this.request({
+		return (await this.request<QuickBaseResponseFieldUsage[]>({
 			url: `fields/usage/${fieldId}`,
 			params: {
 				tableId: tableId
@@ -630,7 +652,7 @@ export class QuickBase {
 	}
 
 	/**
-	 * Get a temporary authentication token for Quick Base API requests for a specific Quick Base table.
+	 * Get a temporary authentication token for Quick Base API requests for a specific Quick Base Application or Table.
 	 *
 	 * Only meant to be used client-side, passing the results server-side.
 	 *
@@ -638,32 +660,20 @@ export class QuickBase {
 	 *
 	 * [Quick Base Documentation](https://www.ui.quickbase.com/ui/api-docs/operation/getTempTokenDBID)
 	 *
-	 * @param param0.tableId Quick Base Table DBID
+	 * @param param0.dbid Quick Base Application DBID or Table DBID
 	 * @param param0.requestOptions Override axios request configuration
 	 */
-	async getTempTableToken({ tableId, requestOptions }: QuickBaseRequestGetTempTableToken): Promise<QuickBaseResponseGetTempTableToken> {
-		return await this.request({
-			url: `auth/temporary/${tableId}`,
+	async getTempToken({ dbid, requestOptions }: QuickBaseRequestGetTempToken): Promise<QuickBaseResponseGetTempToken> {
+		var results = await this.request<QuickBaseResponseGetTempToken>({
+			url: `auth/temporary/${dbid}`,
 			withCredentials: true
 		}, requestOptions);
-	}
 
-	/**
-	 * Get a temporary authentication token for Quick Base API requests.
-	 *
-	 * Only meant to be used client-side, passing the results server-side.
-	 *
-	 * Valid for 5 minutes
-	 *
-	 * [Quick Base Documentation](https://www.ui.quickbase.com/ui/api-docs/operation/getTempToken)
-	 *
-	 * @param requestOptions Override axios request configuration
-	 */
-	async getTempToken(requestOptions?: AxiosRequestConfig): Promise<QuickBaseResponseGetTempToken> {
-		return await this.request({
-			url: 'auth/temporary',
-			withCredentials: true
-		}, requestOptions);
+		if(this.settings.autoConsumeTempTokens){
+			this.setTempToken(results.temporaryAuthorization, dbid);
+		}
+
+		return results;
 	}
 
 	/**
@@ -777,9 +787,12 @@ export class QuickBase {
 	 * Set the internally stored `tempToken` for use in subsequent API calls
 	 *
 	 * @param tempToken Temporary Quick Base Authentication Token
+	 * @param dbid Quick Base Application DBID or Table DBID
 	 */
-	setTempToken(tempToken: string): QuickBase {
+	setTempToken(tempToken: string, dbid?: string): QuickBase {
 		this.settings.tempToken = tempToken;
+
+		this._tempTokenTable = dbid || false;
 
 		return this;
 	}
@@ -824,7 +837,7 @@ export class QuickBase {
 		permissions,
 		requestOptions
 	}: QuickBaseRequestUpdateField): Promise<QuickBaseResponseUpdateField> {
-		const data: any = {};
+		const data: DataObj<QuickBaseRequestUpdateField> = {};
 
 		if(typeof(label) !== 'undefined'){
 			data.label = label;
@@ -899,7 +912,7 @@ export class QuickBase {
 	 * @param param0.requestOptions Override axios request configuration
 	 */
 	async updateTable({ appId, tableId, name, description, iconName, singularNoun, pluralNoun, requestOptions }: QuickBaseRequestUpdateTable): Promise<QuickBaseResponseUpdateTable> {
-		const data: any = {};
+		const data: DataObj<QuickBaseRequestUpdateTable> = {};
 
 		if(typeof(name) !== 'undefined'){
 			data.name = name;
@@ -1092,6 +1105,23 @@ export class QuickBaseError extends Error {
 }
 
 /* Quick Base Interfaces */
+type DataObj<T> = Partial<Omit<T, 'requestOptions'>>;
+
+export interface QuickBaseQueryOptions {
+	skip?: number;
+	top?: number;
+}
+
+export interface QuickBaseSortBy {
+	fieldId: number;
+	order: string;
+};
+
+export interface QuickBaseGroupBy {
+	fieldId: number;
+	by: string;
+}
+
 export interface QuickBaseErrorJSON {
 	code: number;
 	message: string;
@@ -1146,6 +1176,20 @@ export interface QuickBaseOptions {
 	 * as the browser will block any attempt to set a custom User-Agent
 	 */
 	userAgent?: string;
+
+	/**
+	 * Automatically call `setTempToken()` after receiving a new Temporary Token
+	 *
+	 * Default is `true`
+	 */
+	autoConsumeTempTokens?: boolean;
+
+	/**
+	 * Automatically renew Temporary Tokens after they expire
+	 *
+	 * Default is `true`
+	 */
+	autoRenewTempTokens?: boolean;
 
 	/**
 	 * The maximum number of open, pending API connections to Quick Base
@@ -1236,28 +1280,16 @@ export interface QuickBaseRequestGetTableReports extends QuickBaseRequest {
 export interface QuickBaseRequestRunQuery extends QuickBaseRequest {
 	tableId: string;
 	where?: string;
-	sortBy?: {
-		fieldId?: number;
-		order?: string;
-	}[];
+	sortBy?: QuickBaseSortBy[];
 	select?: number[];
-	options?: {
-		skip?: number;
-		top?: number;
-	};
-	groupBy?: {
-		fieldId?: number;
-		by?: 'string';
-	}[];
+	options?: QuickBaseQueryOptions;
+	groupBy?: QuickBaseGroupBy[];
 }
 
 export interface QuickBaseRequestRunReport extends QuickBaseRequest {
 	tableId: string;
 	reportId: number;
-	options?: {
-		skip?: number;
-		top?: number;
-	};
+	options?: QuickBaseQueryOptions;
 }
 
 export interface QuickBaseRequestUpsertRecords extends QuickBaseRequest {
@@ -1332,15 +1364,11 @@ export interface QuickBaseRequestUpdateField extends QuickBaseRequest, QuickBase
 export interface QuickBaseResponseUpdateField extends QuickBaseResponseField {
 }
 
-export interface QuickBaseRequestGetTempTableToken extends QuickBaseRequest {
-	tableId: string;
+export interface QuickBaseRequestGetTempToken extends QuickBaseRequest {
+	dbid: string;
 }
 
 export interface QuickBaseResponseGetTempToken {
-	temporaryAuthorization: string;
-}
-
-export interface QuickBaseResponseGetTempTableToken {
 	temporaryAuthorization: string;
 }
 
@@ -1439,7 +1467,7 @@ export interface QuickBaseResponseField extends QuickBaseField {
 }
 
 export interface QuickBaseResponseReport {
-	id: string;
+	id: number;
 	name: string;
 	type: string;
 	description: string;
@@ -1454,14 +1482,8 @@ export interface QuickBaseResponseReport {
 			decimalPrecision?: number;
 		}[];
 		fields: number[];
-		sorting: {
-			fieldId?: number;
-			order?: string;
-		}[];
-		grouping: {
-			fieldId?: number;
-			by?: string;
-		}[];
+		sorting: QuickBaseSortBy[];
+		grouping: QuickBaseGroupBy[];
 	};
 	properties: any;
 }
