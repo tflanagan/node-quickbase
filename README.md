@@ -74,26 +74,11 @@ var quickbase = new QuickBase({
 });
 
 // Using a Temporary Token
-quickbase.getTempToken().then(function(results){
-    quickbase.setTempToken(results.temporaryAuthorization);
-
+quickbase.getTempToken({
+    dbid: 'xxxxxxxxx'
+}).then(function(results){
     return quickbase.getApp({
         appId: 'xxxxxxxxx'
-    });
-}).then(function(results){
-    console.log(results.name);
-}).catch(function(err){
-    console.error(err);
-});
-
-// Using a Temporary Table Token
-quickbase.getTempTableToken({
-    tableId: 'xxxxxxxxx'
-}).then(function(results){
-    quickbase.setTempToken(results.temporaryAuthorization);
-
-    return quickbase.getTable({
-        tableId: 'xxxxxxxxx'
     });
 }).then(function(results){
     console.log(results.name);

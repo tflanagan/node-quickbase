@@ -660,6 +660,15 @@ export class QuickBase {
 	 *
 	 * [Quick Base Documentation](https://www.ui.quickbase.com/ui/api-docs/operation/getTempTokenDBID)
 	 *
+	 * Example:
+	 * ```typescript
+	 * const results = await qb.getTempToken({
+	 * 	dbid: 'xxxxxxxxx'
+	 * });
+	 *
+	 * console.log(results.temporaryAuthorization); // '<base64 type>.<base64 value>';
+	 * ```
+	 *
 	 * @param param0.dbid Quick Base Application DBID or Table DBID
 	 * @param param0.requestOptions Override axios request configuration
 	 */
@@ -785,6 +794,11 @@ export class QuickBase {
 
 	/**
 	 * Set the internally stored `tempToken` for use in subsequent API calls
+	 *
+	 * Example:
+	 * ```typescript
+	 * qb.setTempToken('xxxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', 'xxxxxxxxx');
+	 * ```
 	 *
 	 * @param tempToken Temporary Quick Base Authentication Token
 	 * @param dbid Quick Base Application DBID or Table DBID
