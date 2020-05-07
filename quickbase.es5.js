@@ -621,6 +621,8 @@ var QueryBuilder = function () {
 
 								resolve(result);
 							});
+						} else if (('' + xmlResponse).match(/\<meta name\=\"captcha\-bypass\" id\=\"captcha-bypass\" \/\>/)) {
+							reject(new QuickBaseError(1003, 'Cloudflare Blocked Request', 'captcha-bypass'));
 						} else {
 							resolve(xmlResponse);
 						}
