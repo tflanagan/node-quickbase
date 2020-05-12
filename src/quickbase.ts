@@ -1121,6 +1121,11 @@ export class QuickBaseError extends Error {
 /* Quick Base Interfaces */
 type DataObj<T> = Partial<Omit<T, 'requestOptions'>>;
 
+export type fieldType = 'text' | 'multitext' | 'float' | 'currency' | 'percent' | 'rating' | 'date' | 'timestamp' | 'timeofday' | 'duration' | 'checkbox' | 'address' | 'phone' | 'email' | 'userid' | 'multiuserid' | 'file' | 'url' | 'dblink' | 'ICalendarButton' | 'vCardButton' | 'predecessor' | 'recordid';
+export type reportType = 'map' | 'gedit' | 'chart' | 'summary' | 'table' | 'timeline' | 'calendar';
+export type sortOrder = 'ASC' | 'DESC';
+export type groupBy = 'first-word' | 'first-letter' | 'same-value' | '1000000' | '100000' | '10000' | '1000' | '100' | '10' | '5' | '1' | '.1' | '.01' | '.001';
+
 export interface QuickBaseQueryOptions {
 	skip?: number;
 	top?: number;
@@ -1128,12 +1133,12 @@ export interface QuickBaseQueryOptions {
 
 export interface QuickBaseSortBy {
 	fieldId: number;
-	order: string;
+	order: sortOrder;
 };
 
 export interface QuickBaseGroupBy {
 	fieldId: number;
-	by: string;
+	grouping: groupBy;
 }
 
 export interface QuickBaseErrorJSON {
@@ -1417,17 +1422,17 @@ export interface QuickBaseResponseTable {
 	nextFieldId: number;
 	nextRecordId: number;
 	defaultSortFieldId: number;
-	defaultSortOrder: string;
+	defaultSortOrder: sortOrder;
 }
 
 export interface QuickBaseResponseFieldPermission {
 	role: string;
 	roleId: number;
-	permissionType: string;
+	permissionType: 'None' | 'View' | 'Modify';
 }
 
 interface QuickBaseField {
-	fieldType: string;
+	fieldType: fieldType;
 	label: string;
 	mode?: string;
 	noWrap?: boolean;
@@ -1483,7 +1488,7 @@ export interface QuickBaseResponseField extends QuickBaseField {
 export interface QuickBaseResponseReport {
 	id: number;
 	name: string;
-	type: string;
+	type: reportType;
 	description: string;
 	query: {
 		tableId: string;
@@ -1492,12 +1497,12 @@ export interface QuickBaseResponseReport {
 			formula: string;
 			label: string;
 			id: number;
-			fieldType: string;
+			fieldType: fieldType;
 			decimalPrecision?: number;
 		}[];
 		fields: number[];
-		sorting: QuickBaseSortBy[];
-		grouping: QuickBaseGroupBy[];
+		sortBy: QuickBaseSortBy[];
+		groupBy: QuickBaseGroupBy[];
 	};
 	properties: any;
 }
@@ -1575,7 +1580,7 @@ export interface QuickBaseResponseFieldUsage {
 	field: {
 		id: number;
 		name: string;
-		type: string;
+		type: fieldType;
 	};
 	usage: QuickBaseFieldUsage;
 }
