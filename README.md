@@ -48,7 +48,8 @@ const quickbase = new QuickBase({
     userToken: 'xxxxxx_xxx_xxxxxxxxxxxxxxxxxxxxxxxxxx'
     // Use tempToken if utilizing an authentication token sent
     // up from client-side code. If possible, this is preferred.
-    // tempToken: 'xxxxxx_xxx_xxxxxxxxxxxxxxxxxxxxxxxxxx'
+    // tempToken: 'xxxxxx_xxx_xxxxxxxxxxxxxxxxxxxxxxxxxx',
+    // appToken: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxx'
 });
 
 (async () => {
@@ -70,7 +71,8 @@ Import `QuickBase` by loading `quickbase.browserify.min.js`
 
 ```javascript
 var quickbase = new QuickBase({
-    realm: 'www'
+    realm: 'www',
+    appToken: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxx'
 });
 
 // Using a Temporary Token

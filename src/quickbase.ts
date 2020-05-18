@@ -51,6 +51,7 @@ export class QuickBase {
 		realm: IS_BROWSER ? window.location.host.split('.')[0] : '',
 		userToken: '',
 		tempToken: '',
+		appToken: '',
 
 		userAgent: '',
 
@@ -116,11 +117,16 @@ export class QuickBase {
 			'QB-Realm-Hostname': this.settings.realm
 		};
 
-		if(this.settings.tempToken){
-			headers.Authorization = `QB-TEMP-TOKEN ${this.settings.tempToken}`;
-		}else
 		if(this.settings.userToken){
 			headers.Authorization = `QB-USER-TOKEN ${this.settings.userToken}`;
+		}else{
+			if(this.settings.appToken){
+				headers['QB-App-Token'] = this.settings.appToken;
+			}
+
+			if(this.settings.tempToken){
+				headers.Authorization = `QB-TEMP-TOKEN ${this.settings.tempToken}`;
+			}
 		}
 
 		return {
@@ -1187,6 +1193,15 @@ export interface QuickBaseOptions {
 	 * [Quick Base Documentation](https://www.ui.quickbase.com/ui/api-docs/auth)
 	 */
 	tempToken?: string;
+
+	/**
+	 * A Quick Base Application Token
+	 *
+	 * Only required when using Temporary Tokens
+	 *
+	 * [Quick Base Documentation](https://help.quickbase.com/user-assistance/app_tokens.html)
+	 */
+	appToken?: string;
 
 	/**
 	 * Provide a custom User-Agent to help track API usage within your logs

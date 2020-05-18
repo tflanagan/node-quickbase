@@ -20,6 +20,7 @@ const qbOptions: QuickBaseOptions = {
 	realm: QB_REALM,
 	userToken: QB_USERTOKEN,
 	tempToken: '',
+	appToken: '',
 
 	userAgent: 'Testing',
 
