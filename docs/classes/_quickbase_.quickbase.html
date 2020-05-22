@@ -3,8 +3,8 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>QuickBase | Node-QuickBase - v3.0.0-alpha.16</title>
-	<meta name="description" content="Documentation for Node-QuickBase - v3.0.0-alpha.16">
+	<title>QuickBase | Node-QuickBase - v3.0.0-alpha.17</title>
+	<meta name="description" content="Documentation for Node-QuickBase - v3.0.0-alpha.17">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<style type="text/css">/*! normalize.css v1.1.3 | MIT License | git.io/normalize */
 /* ==========================================================================
@@ -2692,7 +2692,7 @@ img {
 		<div class="container">
 			<div class="table-wrap">
 				<div class="table-cell">
-					<strong><a href="../index.html">Node-QuickBase - v3.0.0-alpha.16</a></strong>
+					<strong><a href="../index.html">Node-QuickBase - v3.0.0-alpha.17</a></strong>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -2742,10 +2742,16 @@ img {
 					<a href="_quickbase_.quickbase.html#version" class="tsd-kind-icon">VERSION</a>
 				</li>
 				<li class=" tsd-kind-method tsd-parent-kind-class">
+					<a href="_quickbase_.quickbase.html#createapp" class="tsd-kind-icon">create<wbr>App</a>
+				</li>
+				<li class=" tsd-kind-method tsd-parent-kind-class">
 					<a href="_quickbase_.quickbase.html#createfield" class="tsd-kind-icon">create<wbr>Field</a>
 				</li>
 				<li class=" tsd-kind-method tsd-parent-kind-class">
 					<a href="_quickbase_.quickbase.html#createtable" class="tsd-kind-icon">create<wbr>Table</a>
+				</li>
+				<li class=" tsd-kind-method tsd-parent-kind-class">
+					<a href="_quickbase_.quickbase.html#deleteapp" class="tsd-kind-icon">delete<wbr>App</a>
 				</li>
 				<li class=" tsd-kind-method tsd-parent-kind-class">
 					<a href="_quickbase_.quickbase.html#deletefields" class="tsd-kind-icon">delete<wbr>Fields</a>
@@ -2808,6 +2814,9 @@ img {
 					<a href="_quickbase_.quickbase.html#tojson" class="tsd-kind-icon">toJSON</a>
 				</li>
 				<li class=" tsd-kind-method tsd-parent-kind-class">
+					<a href="_quickbase_.quickbase.html#updateapp" class="tsd-kind-icon">update<wbr>App</a>
+				</li>
+				<li class=" tsd-kind-method tsd-parent-kind-class">
 					<a href="_quickbase_.quickbase.html#updatefield" class="tsd-kind-icon">update<wbr>Field</a>
 				</li>
 				<li class=" tsd-kind-method tsd-parent-kind-class">
@@ -2859,8 +2868,10 @@ img {
 					<section class="tsd-index-section ">
 						<h3>Methods</h3>
 						<ul class="tsd-index-list">
+							<li class="tsd-kind-method tsd-parent-kind-class"><a href="_quickbase_.quickbase.html#createapp" class="tsd-kind-icon">create<wbr>App</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class"><a href="_quickbase_.quickbase.html#createfield" class="tsd-kind-icon">create<wbr>Field</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class"><a href="_quickbase_.quickbase.html#createtable" class="tsd-kind-icon">create<wbr>Table</a></li>
+							<li class="tsd-kind-method tsd-parent-kind-class"><a href="_quickbase_.quickbase.html#deleteapp" class="tsd-kind-icon">delete<wbr>App</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class"><a href="_quickbase_.quickbase.html#deletefields" class="tsd-kind-icon">delete<wbr>Fields</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class"><a href="_quickbase_.quickbase.html#deleterecords" class="tsd-kind-icon">delete<wbr>Records</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class"><a href="_quickbase_.quickbase.html#deletetable" class="tsd-kind-icon">delete<wbr>Table</a></li>
@@ -2881,6 +2892,7 @@ img {
 							<li class="tsd-kind-method tsd-parent-kind-class"><a href="_quickbase_.quickbase.html#runreport" class="tsd-kind-icon">run<wbr>Report</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class"><a href="_quickbase_.quickbase.html#settemptoken" class="tsd-kind-icon">set<wbr>Temp<wbr>Token</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class"><a href="_quickbase_.quickbase.html#tojson" class="tsd-kind-icon">toJSON</a></li>
+							<li class="tsd-kind-method tsd-parent-kind-class"><a href="_quickbase_.quickbase.html#updateapp" class="tsd-kind-icon">update<wbr>App</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class"><a href="_quickbase_.quickbase.html#updatefield" class="tsd-kind-icon">update<wbr>Field</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class"><a href="_quickbase_.quickbase.html#updatetable" class="tsd-kind-icon">update<wbr>Table</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class"><a href="_quickbase_.quickbase.html#upsertrecords" class="tsd-kind-icon">upsert<wbr>Records</a></li>
@@ -2908,7 +2920,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/0f4e8fc/src/quickbase.ts#L88">src/quickbase.ts:88</a></li>
+								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/c9f5cad/src/quickbase.ts#L88">src/quickbase.ts:88</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -2939,7 +2951,7 @@ img {
 				<div class="tsd-signature tsd-kind-icon">_id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 0</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/0f4e8fc/src/quickbase.ts#L73">src/quickbase.ts:73</a></li>
+						<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/c9f5cad/src/quickbase.ts#L73">src/quickbase.ts:73</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -2955,7 +2967,7 @@ img {
 				<div class="tsd-signature tsd-kind-icon">_temp<wbr>Token<wbr>Table<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> = false</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/0f4e8fc/src/quickbase.ts#L78">src/quickbase.ts:78</a></li>
+						<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/c9f5cad/src/quickbase.ts#L78">src/quickbase.ts:78</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -2970,7 +2982,7 @@ img {
 				<div class="tsd-signature tsd-kind-icon">settings<span class="tsd-signature-symbol">:</span> <a href="../interfaces/_quickbase_.quickbaseoptions.html" class="tsd-signature-type">QuickBaseOptions</a></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/0f4e8fc/src/quickbase.ts#L88">src/quickbase.ts:88</a></li>
+						<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/c9f5cad/src/quickbase.ts#L88">src/quickbase.ts:88</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -2985,7 +2997,7 @@ img {
 				<div class="tsd-signature tsd-kind-icon">throttle<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Throttle</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/0f4e8fc/src/quickbase.ts#L83">src/quickbase.ts:83</a></li>
+						<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/c9f5cad/src/quickbase.ts#L83">src/quickbase.ts:83</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -3000,7 +3012,7 @@ img {
 				<div class="tsd-signature tsd-kind-icon">VERSION<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> = VERSION</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/0f4e8fc/src/quickbase.ts#L42">src/quickbase.ts:42</a></li>
+						<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/c9f5cad/src/quickbase.ts#L42">src/quickbase.ts:42</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -3013,6 +3025,62 @@ img {
 		<section class="tsd-panel-group tsd-member-group ">
 			<h2>Methods</h2>
 			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+				<a name="createapp" class="tsd-anchor"></a>
+				<h3>create<wbr>App</h3>
+				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+					<li class="tsd-signature tsd-kind-icon">create<wbr>App<span class="tsd-signature-symbol">(</span>__namedParameters<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">{ </span>assignToken<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">; </span>description<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>requestOptions<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">AxiosRequestConfig</span><span class="tsd-signature-symbol">; </span>variables<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><a href="../interfaces/_quickbase_.quickbasevariable.html" class="tsd-signature-type">QuickBaseVariable</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_quickbase_.quickbaseresponseapp.html" class="tsd-signature-type">QuickBaseResponseApp</a><span class="tsd-signature-symbol">&gt;</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/c9f5cad/src/quickbase.ts#L229">src/quickbase.ts:229</a></li>
+							</ul>
+						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Create a Quick Base Application</p>
+							</div>
+							<p><a href="https://www.ui.quickbase.com/ui/api-docs/operation/createApp">Quick Base Documentation</a></p>
+							<p>Example:</p>
+							<pre><code class="language-typescript"><span class="hljs-keyword">await</span> qb.deleteApp({
+    name: <span class="hljs-string">'Application Name'</span>,
+    description: <span class="hljs-string">'A test application'</span>,
+    assignToken: <span class="hljs-literal">true</span>,
+    variables: [{
+        name: <span class="hljs-string">'Some Variable'</span>,
+        value: <span class="hljs-string">'Some Value'</span>
+    }]
+});</code></pre>
+						</div>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>__namedParameters: <span class="tsd-signature-symbol">{ </span>assignToken<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">; </span>description<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>requestOptions<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">AxiosRequestConfig</span><span class="tsd-signature-symbol">; </span>variables<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><a href="../interfaces/_quickbase_.quickbasevariable.html" class="tsd-signature-type">QuickBaseVariable</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> }</span></h5>
+								<ul class="tsd-parameters">
+									<li class="tsd-parameter">
+										<h5>assign<wbr>Token<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></h5>
+									</li>
+									<li class="tsd-parameter">
+										<h5>description<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h5>
+									</li>
+									<li class="tsd-parameter">
+										<h5>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h5>
+									</li>
+									<li class="tsd-parameter">
+										<h5>request<wbr>Options<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">AxiosRequestConfig</span></h5>
+									</li>
+									<li class="tsd-parameter">
+										<h5>variables<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><a href="../interfaces/_quickbase_.quickbasevariable.html" class="tsd-signature-type">QuickBaseVariable</a><span class="tsd-signature-symbol">[]</span></h5>
+									</li>
+								</ul>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_quickbase_.quickbaseresponseapp.html" class="tsd-signature-type">QuickBaseResponseApp</a><span class="tsd-signature-symbol">&gt;</span></h4>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
 				<a name="createfield" class="tsd-anchor"></a>
 				<h3>create<wbr>Field</h3>
 				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -3022,7 +3090,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/0f4e8fc/src/quickbase.ts#L226">src/quickbase.ts:226</a></li>
+								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/c9f5cad/src/quickbase.ts#L268">src/quickbase.ts:268</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -3098,7 +3166,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/0f4e8fc/src/quickbase.ts#L317">src/quickbase.ts:317</a></li>
+								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/c9f5cad/src/quickbase.ts#L359">src/quickbase.ts:359</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -3141,6 +3209,51 @@ img {
 				</ul>
 			</section>
 			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+				<a name="deleteapp" class="tsd-anchor"></a>
+				<h3>delete<wbr>App</h3>
+				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+					<li class="tsd-signature tsd-kind-icon">delete<wbr>App<span class="tsd-signature-symbol">(</span>__namedParameters<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">{ </span>appId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>requestOptions<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">AxiosRequestConfig</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_quickbase_.quickbaseresponsedeleteapp.html" class="tsd-signature-type">QuickBaseResponseDeleteApp</a><span class="tsd-signature-symbol">&gt;</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/c9f5cad/src/quickbase.ts#L404">src/quickbase.ts:404</a></li>
+							</ul>
+						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Delete an Application from Quick Base</p>
+							</div>
+							<p><a href="https://www.ui.quickbase.com/ui/api-docs/operation/deleteApp">Quick Base Documentation</a></p>
+							<p>Example:</p>
+							<pre><code class="language-typescript"><span class="hljs-keyword">await</span> qb.deleteApp({
+    appId: <span class="hljs-string">'xxxxxxxxx'</span>,
+    name: <span class="hljs-string">'Application Name'</span>
+});</code></pre>
+						</div>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>__namedParameters: <span class="tsd-signature-symbol">{ </span>appId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>requestOptions<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">AxiosRequestConfig</span><span class="tsd-signature-symbol"> }</span></h5>
+								<ul class="tsd-parameters">
+									<li class="tsd-parameter">
+										<h5>app<wbr>Id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h5>
+									</li>
+									<li class="tsd-parameter">
+										<h5>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h5>
+									</li>
+									<li class="tsd-parameter">
+										<h5>request<wbr>Options<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">AxiosRequestConfig</span></h5>
+									</li>
+								</ul>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_quickbase_.quickbaseresponsedeleteapp.html" class="tsd-signature-type">QuickBaseResponseDeleteApp</a><span class="tsd-signature-symbol">&gt;</span></h4>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
 				<a name="deletefields" class="tsd-anchor"></a>
 				<h3>delete<wbr>Fields</h3>
 				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -3150,7 +3263,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/0f4e8fc/src/quickbase.ts#L362">src/quickbase.ts:362</a></li>
+								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/c9f5cad/src/quickbase.ts#L431">src/quickbase.ts:431</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -3195,7 +3308,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/0f4e8fc/src/quickbase.ts#L389">src/quickbase.ts:389</a></li>
+								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/c9f5cad/src/quickbase.ts#L458">src/quickbase.ts:458</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -3240,7 +3353,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/0f4e8fc/src/quickbase.ts#L417">src/quickbase.ts:417</a></li>
+								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/c9f5cad/src/quickbase.ts#L486">src/quickbase.ts:486</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -3285,7 +3398,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/0f4e8fc/src/quickbase.ts#L1017">src/quickbase.ts:1017</a></li>
+								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/c9f5cad/src/quickbase.ts#L1132">src/quickbase.ts:1132</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -3316,7 +3429,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/0f4e8fc/src/quickbase.ts#L439">src/quickbase.ts:439</a></li>
+								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/c9f5cad/src/quickbase.ts#L508">src/quickbase.ts:508</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -3357,7 +3470,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/0f4e8fc/src/quickbase.ts#L460">src/quickbase.ts:460</a></li>
+								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/c9f5cad/src/quickbase.ts#L529">src/quickbase.ts:529</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -3398,7 +3511,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/0f4e8fc/src/quickbase.ts#L114">src/quickbase.ts:114</a></li>
+								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/c9f5cad/src/quickbase.ts#L114">src/quickbase.ts:114</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -3421,7 +3534,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/0f4e8fc/src/quickbase.ts#L486">src/quickbase.ts:486</a></li>
+								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/c9f5cad/src/quickbase.ts#L555">src/quickbase.ts:555</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -3466,7 +3579,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/0f4e8fc/src/quickbase.ts#L580">src/quickbase.ts:580</a></li>
+								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/c9f5cad/src/quickbase.ts#L649">src/quickbase.ts:649</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -3511,7 +3624,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/0f4e8fc/src/quickbase.ts#L511">src/quickbase.ts:511</a></li>
+								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/c9f5cad/src/quickbase.ts#L580">src/quickbase.ts:580</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -3555,7 +3668,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/0f4e8fc/src/quickbase.ts#L545">src/quickbase.ts:545</a></li>
+								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/c9f5cad/src/quickbase.ts#L614">src/quickbase.ts:614</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -3599,7 +3712,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/0f4e8fc/src/quickbase.ts#L606">src/quickbase.ts:606</a></li>
+								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/c9f5cad/src/quickbase.ts#L675">src/quickbase.ts:675</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -3638,13 +3751,13 @@ img {
 				<a name="gettable" class="tsd-anchor"></a>
 				<h3>get<wbr>Table</h3>
 				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-					<li class="tsd-signature tsd-kind-icon">get<wbr>Table<span class="tsd-signature-symbol">(</span>__namedParameters<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">{ </span>requestOptions<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">AxiosRequestConfig</span><span class="tsd-signature-symbol">; </span>tableId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_quickbase_.quickbaseresponsetable.html" class="tsd-signature-type">QuickBaseResponseTable</a><span class="tsd-signature-symbol">&gt;</span></li>
+					<li class="tsd-signature tsd-kind-icon">get<wbr>Table<span class="tsd-signature-symbol">(</span>__namedParameters<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">{ </span>appId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>requestOptions<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">AxiosRequestConfig</span><span class="tsd-signature-symbol">; </span>tableId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_quickbase_.quickbaseresponsetable.html" class="tsd-signature-type">QuickBaseResponseTable</a><span class="tsd-signature-symbol">&gt;</span></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/0f4e8fc/src/quickbase.ts#L630">src/quickbase.ts:630</a></li>
+								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/c9f5cad/src/quickbase.ts#L699">src/quickbase.ts:699</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -3660,8 +3773,11 @@ img {
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
-								<h5>__namedParameters: <span class="tsd-signature-symbol">{ </span>requestOptions<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">AxiosRequestConfig</span><span class="tsd-signature-symbol">; </span>tableId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span></h5>
+								<h5>__namedParameters: <span class="tsd-signature-symbol">{ </span>appId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>requestOptions<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">AxiosRequestConfig</span><span class="tsd-signature-symbol">; </span>tableId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span></h5>
 								<ul class="tsd-parameters">
+									<li class="tsd-parameter">
+										<h5>app<wbr>Id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h5>
+									</li>
 									<li class="tsd-parameter">
 										<h5>request<wbr>Options<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">AxiosRequestConfig</span></h5>
 									</li>
@@ -3685,7 +3801,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/0f4e8fc/src/quickbase.ts#L651">src/quickbase.ts:651</a></li>
+								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/c9f5cad/src/quickbase.ts#L720">src/quickbase.ts:720</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -3726,7 +3842,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/0f4e8fc/src/quickbase.ts#L681">src/quickbase.ts:681</a></li>
+								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/c9f5cad/src/quickbase.ts#L750">src/quickbase.ts:750</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -3771,7 +3887,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/0f4e8fc/src/quickbase.ts#L148">src/quickbase.ts:148</a></li>
+								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/c9f5cad/src/quickbase.ts#L148">src/quickbase.ts:148</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -3815,7 +3931,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/0f4e8fc/src/quickbase.ts#L730">src/quickbase.ts:730</a></li>
+								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/c9f5cad/src/quickbase.ts#L799">src/quickbase.ts:799</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -3885,7 +4001,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/0f4e8fc/src/quickbase.ts#L777">src/quickbase.ts:777</a></li>
+								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/c9f5cad/src/quickbase.ts#L846">src/quickbase.ts:846</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -3937,7 +4053,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/0f4e8fc/src/quickbase.ts#L812">src/quickbase.ts:812</a></li>
+								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/c9f5cad/src/quickbase.ts#L882">src/quickbase.ts:882</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -3976,7 +4092,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/0f4e8fc/src/quickbase.ts#L1034">src/quickbase.ts:1034</a></li>
+								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/c9f5cad/src/quickbase.ts#L1149">src/quickbase.ts:1149</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -3989,16 +4105,72 @@ img {
 				</ul>
 			</section>
 			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-				<a name="updatefield" class="tsd-anchor"></a>
-				<h3>update<wbr>Field</h3>
+				<a name="updateapp" class="tsd-anchor"></a>
+				<h3>update<wbr>App</h3>
 				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-					<li class="tsd-signature tsd-kind-icon">update<wbr>Field<span class="tsd-signature-symbol">(</span>__namedParameters<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">{ </span>appearsByDefault<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">; </span>audited<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">; </span>bold<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">; </span>doesDataCopy<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">; </span>fieldHelp<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>fieldId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>fieldType<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">"text"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"multitext"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"float"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"currency"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"percent"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"rating"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"date"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"timestamp"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"timeofday"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"duration"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"checkbox"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"address"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"phone"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"email"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"userid"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"multiuserid"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"file"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"url"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"dblink"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"ICalendarButton"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"vCardButton"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"predecessor"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"recordid"</span><span class="tsd-signature-symbol">; </span>findEnabled<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">; </span>label<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>noWrap<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">; </span>permissions<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><a href="../interfaces/_quickbase_.quickbaseresponsefieldpermission.html" class="tsd-signature-type">QuickBaseResponseFieldPermission</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">; </span>properties<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">{ </span>allowHTML<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol">; </span>allowNewChoices<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol">; </span>appendOnly<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol">; </span>blankIsZero<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">; </span>carryChoices<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">; </span>choices<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">; </span>commaStart<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>currencyFormat<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>currencySymbol<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>decimalPlaces<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>defaultKind<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>defaultToday<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">; </span>defaultValue<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>displayDayOfWeek<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">; </span>displayImages<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">; </span>displayMonth<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>displayRelative<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">; </span>displayTime<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">; </span>displayTimezone<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">; </span>displayUser<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>doesAverage<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">; </span>doesTotal<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">; </span>foreignKey<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol">; </span>formula<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>lookupReferenceFieldId<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>lookupTargetFieldId<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>maxLength<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>numLines<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>numberFormat<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>snapshotFieldId<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>sortAsGiven<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol">; </span>width<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">; </span>requestOptions<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">AxiosRequestConfig</span><span class="tsd-signature-symbol">; </span>required<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">; </span>tableId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>unique<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_quickbase_.quickbaseresponseupdatefield.html" class="tsd-signature-type">QuickBaseResponseUpdateField</a><span class="tsd-signature-symbol">&gt;</span></li>
+					<li class="tsd-signature tsd-kind-icon">update<wbr>App<span class="tsd-signature-symbol">(</span>__namedParameters<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">{ </span>appId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>description<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>requestOptions<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">AxiosRequestConfig</span><span class="tsd-signature-symbol">; </span>variables<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><a href="../interfaces/_quickbase_.quickbasevariable.html" class="tsd-signature-type">QuickBaseVariable</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_quickbase_.quickbaseresponseapp.html" class="tsd-signature-type">QuickBaseResponseApp</a><span class="tsd-signature-symbol">&gt;</span></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/0f4e8fc/src/quickbase.ts#L842">src/quickbase.ts:842</a></li>
+								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/c9f5cad/src/quickbase.ts#L914">src/quickbase.ts:914</a></li>
+							</ul>
+						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Update a Quick Base Application</p>
+							</div>
+							<p><a href="https://www.ui.quickbase.com/ui/api-docs/operation/updateApp">Quick Base Documentation</a></p>
+							<p>Example:</p>
+							<pre><code class="language-typescript"><span class="hljs-keyword">await</span> qb.updateApp({
+    appId: <span class="hljs-string">'xxxxxxxxx'</span>,
+    name: <span class="hljs-string">'Application Name'</span>,
+    description: <span class="hljs-string">'A test application'</span>,
+    variables: [{
+        name: <span class="hljs-string">'Some Variable'</span>,
+        value: <span class="hljs-string">'Some Other Value'</span>
+    }]
+});</code></pre>
+						</div>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>__namedParameters: <span class="tsd-signature-symbol">{ </span>appId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>description<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>requestOptions<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">AxiosRequestConfig</span><span class="tsd-signature-symbol">; </span>variables<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><a href="../interfaces/_quickbase_.quickbasevariable.html" class="tsd-signature-type">QuickBaseVariable</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> }</span></h5>
+								<ul class="tsd-parameters">
+									<li class="tsd-parameter">
+										<h5>app<wbr>Id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h5>
+									</li>
+									<li class="tsd-parameter">
+										<h5>description<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5>
+									</li>
+									<li class="tsd-parameter">
+										<h5>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5>
+									</li>
+									<li class="tsd-parameter">
+										<h5>request<wbr>Options<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">AxiosRequestConfig</span></h5>
+									</li>
+									<li class="tsd-parameter">
+										<h5>variables<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><a href="../interfaces/_quickbase_.quickbasevariable.html" class="tsd-signature-type">QuickBaseVariable</a><span class="tsd-signature-symbol">[]</span></h5>
+									</li>
+								</ul>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_quickbase_.quickbaseresponseapp.html" class="tsd-signature-type">QuickBaseResponseApp</a><span class="tsd-signature-symbol">&gt;</span></h4>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+				<a name="updatefield" class="tsd-anchor"></a>
+				<h3>update<wbr>Field</h3>
+				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+					<li class="tsd-signature tsd-kind-icon">update<wbr>Field<span class="tsd-signature-symbol">(</span>__namedParameters<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">{ </span>appearsByDefault<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">; </span>audited<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">; </span>bold<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">; </span>doesDataCopy<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">; </span>fieldHelp<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>fieldId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>fieldType<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"text"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"multitext"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"float"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"currency"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"percent"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"rating"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"date"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"timestamp"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"timeofday"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"duration"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"checkbox"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"address"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"phone"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"email"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"userid"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"multiuserid"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"file"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"url"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"dblink"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"ICalendarButton"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"vCardButton"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"predecessor"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"recordid"</span><span class="tsd-signature-symbol">; </span>findEnabled<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">; </span>label<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>noWrap<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">; </span>permissions<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><a href="../interfaces/_quickbase_.quickbaseresponsefieldpermission.html" class="tsd-signature-type">QuickBaseResponseFieldPermission</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">; </span>properties<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">{ </span>allowHTML<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol">; </span>allowNewChoices<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol">; </span>appendOnly<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol">; </span>blankIsZero<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">; </span>carryChoices<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">; </span>choices<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">; </span>commaStart<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>currencyFormat<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>currencySymbol<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>decimalPlaces<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>defaultKind<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>defaultToday<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">; </span>defaultValue<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>displayDayOfWeek<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">; </span>displayImages<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">; </span>displayMonth<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>displayRelative<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">; </span>displayTime<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">; </span>displayTimezone<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">; </span>displayUser<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>doesAverage<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">; </span>doesTotal<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">; </span>foreignKey<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol">; </span>formula<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>lookupReferenceFieldId<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>lookupTargetFieldId<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>maxLength<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>numLines<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>numberFormat<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>snapshotFieldId<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>sortAsGiven<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol">; </span>width<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">; </span>requestOptions<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">AxiosRequestConfig</span><span class="tsd-signature-symbol">; </span>required<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">; </span>tableId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>unique<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_quickbase_.quickbaseresponseupdatefield.html" class="tsd-signature-type">QuickBaseResponseUpdateField</a><span class="tsd-signature-symbol">&gt;</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/c9f5cad/src/quickbase.ts#L958">src/quickbase.ts:958</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -4010,7 +4182,7 @@ img {
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
-								<h5>__namedParameters: <span class="tsd-signature-symbol">{ </span>appearsByDefault<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">; </span>audited<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">; </span>bold<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">; </span>doesDataCopy<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">; </span>fieldHelp<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>fieldId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>fieldType<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">"text"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"multitext"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"float"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"currency"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"percent"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"rating"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"date"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"timestamp"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"timeofday"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"duration"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"checkbox"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"address"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"phone"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"email"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"userid"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"multiuserid"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"file"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"url"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"dblink"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"ICalendarButton"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"vCardButton"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"predecessor"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"recordid"</span><span class="tsd-signature-symbol">; </span>findEnabled<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">; </span>label<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>noWrap<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">; </span>permissions<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><a href="../interfaces/_quickbase_.quickbaseresponsefieldpermission.html" class="tsd-signature-type">QuickBaseResponseFieldPermission</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">; </span>properties<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">{ </span>allowHTML<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol">; </span>allowNewChoices<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol">; </span>appendOnly<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol">; </span>blankIsZero<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">; </span>carryChoices<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">; </span>choices<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">; </span>commaStart<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>currencyFormat<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>currencySymbol<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>decimalPlaces<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>defaultKind<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>defaultToday<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">; </span>defaultValue<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>displayDayOfWeek<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">; </span>displayImages<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">; </span>displayMonth<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>displayRelative<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">; </span>displayTime<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">; </span>displayTimezone<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">; </span>displayUser<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>doesAverage<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">; </span>doesTotal<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">; </span>foreignKey<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol">; </span>formula<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>lookupReferenceFieldId<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>lookupTargetFieldId<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>maxLength<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>numLines<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>numberFormat<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>snapshotFieldId<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>sortAsGiven<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol">; </span>width<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">; </span>requestOptions<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">AxiosRequestConfig</span><span class="tsd-signature-symbol">; </span>required<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">; </span>tableId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>unique<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol"> }</span></h5>
+								<h5>__namedParameters: <span class="tsd-signature-symbol">{ </span>appearsByDefault<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">; </span>audited<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">; </span>bold<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">; </span>doesDataCopy<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">; </span>fieldHelp<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>fieldId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>fieldType<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"text"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"multitext"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"float"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"currency"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"percent"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"rating"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"date"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"timestamp"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"timeofday"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"duration"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"checkbox"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"address"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"phone"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"email"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"userid"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"multiuserid"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"file"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"url"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"dblink"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"ICalendarButton"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"vCardButton"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"predecessor"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"recordid"</span><span class="tsd-signature-symbol">; </span>findEnabled<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">; </span>label<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>noWrap<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">; </span>permissions<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><a href="../interfaces/_quickbase_.quickbaseresponsefieldpermission.html" class="tsd-signature-type">QuickBaseResponseFieldPermission</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">; </span>properties<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">{ </span>allowHTML<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol">; </span>allowNewChoices<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol">; </span>appendOnly<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol">; </span>blankIsZero<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">; </span>carryChoices<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">; </span>choices<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">; </span>commaStart<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>currencyFormat<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>currencySymbol<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>decimalPlaces<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>defaultKind<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>defaultToday<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">; </span>defaultValue<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>displayDayOfWeek<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">; </span>displayImages<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">; </span>displayMonth<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>displayRelative<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">; </span>displayTime<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">; </span>displayTimezone<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">; </span>displayUser<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>doesAverage<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">; </span>doesTotal<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">; </span>foreignKey<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol">; </span>formula<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>lookupReferenceFieldId<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>lookupTargetFieldId<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>maxLength<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>numLines<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>numberFormat<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>snapshotFieldId<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>sortAsGiven<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol">; </span>width<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">; </span>requestOptions<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">AxiosRequestConfig</span><span class="tsd-signature-symbol">; </span>required<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">; </span>tableId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>unique<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol"> }</span></h5>
 								<ul class="tsd-parameters">
 									<li class="tsd-parameter">
 										<h5>appears<wbr>ByDefault<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span></h5>
@@ -4031,7 +4203,7 @@ img {
 										<h5>field<wbr>Id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></h5>
 									</li>
 									<li class="tsd-parameter">
-										<h5>field<wbr>Type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">"text"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"multitext"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"float"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"currency"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"percent"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"rating"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"date"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"timestamp"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"timeofday"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"duration"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"checkbox"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"address"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"phone"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"email"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"userid"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"multiuserid"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"file"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"url"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"dblink"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"ICalendarButton"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"vCardButton"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"predecessor"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"recordid"</span></h5>
+										<h5>field<wbr>Type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"text"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"multitext"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"float"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"currency"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"percent"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"rating"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"date"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"timestamp"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"timeofday"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"duration"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"checkbox"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"address"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"phone"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"email"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"userid"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"multiuserid"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"file"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"url"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"dblink"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"ICalendarButton"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"vCardButton"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"predecessor"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"recordid"</span></h5>
 									</li>
 									<li class="tsd-parameter">
 										<h5>find<wbr>Enabled<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span></h5>
@@ -4077,7 +4249,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/0f4e8fc/src/quickbase.ts#L934">src/quickbase.ts:934</a></li>
+								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/c9f5cad/src/quickbase.ts#L1050">src/quickbase.ts:1050</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -4132,7 +4304,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/0f4e8fc/src/quickbase.ts#L999">src/quickbase.ts:999</a></li>
+								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/c9f5cad/src/quickbase.ts#L1114">src/quickbase.ts:1114</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -4141,8 +4313,7 @@ img {
 							</div>
 							<p><a href="https://www.ui.quickbase.com/ui/api-docs/operation/upsert">Quick Base Documentation</a></p>
 							<p>Example:</p>
-							<pre><code class="language-typescript"><span class="hljs-keyword">await</span> qb.upsertRecords({
-    tableId: <span class="hljs-string">'xxxxxxxxx'</span>,
+							<pre><code class="language-typescript"><span class="hljs-keyword">await</span> qb.upsertRecords({c
     data: [{
         <span class="hljs-string">"6"</span>: {
             value: <span class="hljs-string">'Record 1 Field 6'</span>
@@ -4199,7 +4370,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/0f4e8fc/src/quickbase.ts#L1043">src/quickbase.ts:1043</a></li>
+								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/c9f5cad/src/quickbase.ts#L1158">src/quickbase.ts:1158</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -4229,7 +4400,7 @@ img {
 				<div class="tsd-signature tsd-kind-icon">defaults<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/0f4e8fc/src/quickbase.ts#L47">src/quickbase.ts:47</a></li>
+						<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/c9f5cad/src/quickbase.ts#L47">src/quickbase.ts:47</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -4243,7 +4414,7 @@ img {
 					<div class="tsd-signature tsd-kind-icon">app<wbr>Token<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> = &quot;&quot;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/0f4e8fc/src/quickbase.ts#L54">src/quickbase.ts:54</a></li>
+							<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/c9f5cad/src/quickbase.ts#L54">src/quickbase.ts:54</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -4253,7 +4424,7 @@ img {
 					<div class="tsd-signature tsd-kind-icon">auto<wbr>Consume<wbr>Temp<wbr>Tokens<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">true</span><span class="tsd-signature-symbol"> = true</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/0f4e8fc/src/quickbase.ts#L58">src/quickbase.ts:58</a></li>
+							<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/c9f5cad/src/quickbase.ts#L58">src/quickbase.ts:58</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -4263,7 +4434,7 @@ img {
 					<div class="tsd-signature tsd-kind-icon">auto<wbr>Renew<wbr>Temp<wbr>Tokens<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">true</span><span class="tsd-signature-symbol"> = true</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/0f4e8fc/src/quickbase.ts#L59">src/quickbase.ts:59</a></li>
+							<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/c9f5cad/src/quickbase.ts#L59">src/quickbase.ts:59</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -4273,7 +4444,7 @@ img {
 					<div class="tsd-signature tsd-kind-icon">connection<wbr>Limit<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 10</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/0f4e8fc/src/quickbase.ts#L61">src/quickbase.ts:61</a></li>
+							<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/c9f5cad/src/quickbase.ts#L61">src/quickbase.ts:61</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -4283,7 +4454,7 @@ img {
 					<div class="tsd-signature tsd-kind-icon">connection<wbr>Limit<wbr>Period<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 1000</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/0f4e8fc/src/quickbase.ts#L62">src/quickbase.ts:62</a></li>
+							<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/c9f5cad/src/quickbase.ts#L62">src/quickbase.ts:62</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -4293,7 +4464,7 @@ img {
 					<div class="tsd-signature tsd-kind-icon">error<wbr>OnConnection<wbr>Limit<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> = false</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/0f4e8fc/src/quickbase.ts#L63">src/quickbase.ts:63</a></li>
+							<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/c9f5cad/src/quickbase.ts#L63">src/quickbase.ts:63</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -4303,7 +4474,7 @@ img {
 					<div class="tsd-signature tsd-kind-icon">proxy<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> = false</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/0f4e8fc/src/quickbase.ts#L65">src/quickbase.ts:65</a></li>
+							<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/c9f5cad/src/quickbase.ts#L65">src/quickbase.ts:65</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -4313,7 +4484,7 @@ img {
 					<div class="tsd-signature tsd-kind-icon">realm<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> = IS_BROWSER ? window.location.host.split(&#x27;.&#x27;)[0] : &#x27;&#x27;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/0f4e8fc/src/quickbase.ts#L51">src/quickbase.ts:51</a></li>
+							<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/c9f5cad/src/quickbase.ts#L51">src/quickbase.ts:51</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -4323,7 +4494,7 @@ img {
 					<div class="tsd-signature tsd-kind-icon">server<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> = &quot;api.quickbase.com&quot;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/0f4e8fc/src/quickbase.ts#L48">src/quickbase.ts:48</a></li>
+							<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/c9f5cad/src/quickbase.ts#L48">src/quickbase.ts:48</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -4333,7 +4504,7 @@ img {
 					<div class="tsd-signature tsd-kind-icon">temp<wbr>Token<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> = &quot;&quot;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/0f4e8fc/src/quickbase.ts#L53">src/quickbase.ts:53</a></li>
+							<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/c9f5cad/src/quickbase.ts#L53">src/quickbase.ts:53</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -4343,7 +4514,7 @@ img {
 					<div class="tsd-signature tsd-kind-icon">user<wbr>Agent<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> = &quot;&quot;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/0f4e8fc/src/quickbase.ts#L56">src/quickbase.ts:56</a></li>
+							<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/c9f5cad/src/quickbase.ts#L56">src/quickbase.ts:56</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -4353,7 +4524,7 @@ img {
 					<div class="tsd-signature tsd-kind-icon">user<wbr>Token<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> = &quot;&quot;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/0f4e8fc/src/quickbase.ts#L52">src/quickbase.ts:52</a></li>
+							<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/c9f5cad/src/quickbase.ts#L52">src/quickbase.ts:52</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -4363,7 +4534,7 @@ img {
 					<div class="tsd-signature tsd-kind-icon">version<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> = &quot;v1&quot;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/0f4e8fc/src/quickbase.ts#L49">src/quickbase.ts:49</a></li>
+							<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/c9f5cad/src/quickbase.ts#L49">src/quickbase.ts:49</a></li>
 						</ul>
 					</aside>
 				</section>
