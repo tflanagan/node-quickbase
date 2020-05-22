@@ -203,6 +203,48 @@ export class QuickBase {
 	}
 
 	/**
+	 * Create a Quick Base Application
+	 * 
+	 * [Quick Base Documentation](https://www.ui.quickbase.com/ui/api-docs/operation/createApp)
+	 * 
+	 * Example:
+	 * ```typescript
+	 * await qb.deleteApp({
+	 * 	name: 'Application Name',
+	 * 	description: 'A test application',
+	 * 	assignToken: true,
+	 * 	variables: [{
+	 * 		name: 'Some Variable',
+	 * 		value: 'Some Value'
+	 * 	}]
+	 * });
+	 * ```
+	 * 
+	 * @param param0.name Application name
+	 * @param param0.description Application description
+	 * @param param0.assignToken Assign new application to current user token
+	 * @param param0.variables Array of Quick Base Variables
+	 * @param param0.requestOptions Override axios request configuration
+	 */
+	async createApp({ name, description = '', assignToken = false, variables, requestOptions }: QuickBaseRequestCreateApp): Promise<QuickBaseResponseApp> {
+		const data: DataObj<QuickBaseRequestCreateApp> = {
+			name: name,
+			description: description,
+			assignToken: assignToken
+		};
+
+		if(typeof(variables) !== 'undefined'){
+			data.variables = variables;
+		}
+
+		return await this.request({
+			method: 'POST',
+			url: 'apps',
+			data: data
+		}, requestOptions);
+	}
+
+	/**
 	 * Create a Quick Base Field
 	 *
 	 * [Quick Base Documentation](https://www.ui.quickbase.com/ui/api-docs/operation/createField)
@@ -339,6 +381,33 @@ export class QuickBase {
 			method: 'POST',
 			url: `tables?appId=${appId}`,
 			data: data
+		}, requestOptions);
+	}
+
+	/**
+	 * Delete an Application from Quick Base
+	 *
+	 * [Quick Base Documentation](https://www.ui.quickbase.com/ui/api-docs/operation/deleteApp)
+	 *
+	 * Example:
+	 * ```typescript
+	 * await qb.deleteApp({
+	 * 	appId: 'xxxxxxxxx',
+	 * 	name: 'Application Name'
+	 * });
+	 * ```
+	 *
+	 * @param param0.appId Quick Base Application DBID
+	 * @param param0.name Quick Base Application Name
+	 * @param param0.requestOptions Override axios request configuration
+	 */
+	async deleteApp({ appId, name, requestOptions }: QuickBaseRequestDeleteApp): Promise<QuickBaseResponseDeleteApp> {
+		return await this.request({
+			method: 'DELETE',
+			url: `apps/${appId}`,
+			data: {
+				name: name
+			}
 		}, requestOptions);
 	}
 
@@ -627,9 +696,9 @@ export class QuickBase {
 	 * @param param0.tableId Quick Base Table DBID
 	 * @param param0.requestOptions Override axios request configuration
 	 */
-	async getTable({ tableId, requestOptions }: QuickBaseRequestGetTable): Promise<QuickBaseResponseTable> {
+	async getTable({ appId, tableId, requestOptions }: QuickBaseRequestGetTable): Promise<QuickBaseResponseTable> {
 		return await this.request({
-			url: `tables/${tableId}`
+			url: `tables/${tableId}?appId=${appId}`
 		}, requestOptions);
 	}
 
@@ -794,7 +863,8 @@ export class QuickBase {
 		return await this.request({
 			method: 'POST',
 			url: `reports/${reportId}/run`,
-			params: params
+			params: params,
+			data: {}
 		}, requestOptions);
 	}
 
@@ -815,6 +885,52 @@ export class QuickBase {
 		this._tempTokenTable = dbid || false;
 
 		return this;
+	}
+
+	/**
+	 * Update a Quick Base Application
+	 * 
+	 * [Quick Base Documentation](https://www.ui.quickbase.com/ui/api-docs/operation/updateApp)
+	 * 
+	 * Example:
+	 * ```typescript
+	 * await qb.updateApp({
+	 * 	appId: 'xxxxxxxxx',
+	 * 	name: 'Application Name',
+	 * 	description: 'A test application',
+	 * 	variables: [{
+	 * 		name: 'Some Variable',
+	 * 		value: 'Some Other Value'
+	 * 	}]
+	 * });
+	 * ```
+	 * 
+	 * @param param0.appId Quick Base Application ID
+	 * @param param0.name Application name
+	 * @param param0.description Application Description
+	 * @param param0.variables Array of Quick Base Variables
+	 * @param param0.requestOptions Override axios request configuration
+	 */
+	async updateApp({ appId, name, description, variables, requestOptions }: QuickBaseRequestUpdateApp): Promise<QuickBaseResponseApp> {
+		const data: DataObj<QuickBaseRequestUpdateApp> = {};
+
+		if(typeof(name) !== 'undefined'){
+			data.name = name;
+		}
+
+		if(typeof(description) !== 'undefined'){
+			data.description = description;
+		}
+
+		if(typeof(variables) !== 'undefined'){
+			data.variables = variables;
+		}
+
+		return await this.request({
+			method: 'POST',
+			url: `apps/${appId}`,
+			data: data
+		}, requestOptions);
 	}
 
 	/**
@@ -968,8 +1084,7 @@ export class QuickBase {
 	 *
 	 * Example:
 	 * ```typescript
-	 * await qb.upsertRecords({
-	 * 	tableId: 'xxxxxxxxx',
+	 * await qb.upsertRecords({c
 	 * 	data: [{
 	 * 		"6": {
 	 * 			value: 'Record 1 Field 6'
@@ -1125,8 +1240,10 @@ export class QuickBaseError extends Error {
 }
 
 /* Quick Base Interfaces */
+type Optional<T, K extends keyof T> = Omit<T, K> & Partial<T>;
 type DataObj<T> = Partial<Omit<T, 'appId' | 'tableId' | 'fieldId' | 'requestOptions'>>;
 
+export type dateFormat = 'MM-DD-YYYY' | 'MM-DD-YY' | 'DD-MM-YYYY' | 'DD-MM-YY' | 'YYYY-MM-DD';
 export type fieldType = 'text' | 'multitext' | 'float' | 'currency' | 'percent' | 'rating' | 'date' | 'timestamp' | 'timeofday' | 'duration' | 'checkbox' | 'address' | 'phone' | 'email' | 'userid' | 'multiuserid' | 'file' | 'url' | 'dblink' | 'ICalendarButton' | 'vCardButton' | 'predecessor' | 'recordid';
 export type reportType = 'map' | 'gedit' | 'chart' | 'summary' | 'table' | 'timeline' | 'calendar';
 export type sortOrder = 'ASC' | 'DESC';
@@ -1265,6 +1382,29 @@ interface QuickBaseRequest {
 	requestOptions?: AxiosRequestConfig;
 }
 
+export interface QuickBaseRequestCreateApp extends QuickBaseRequest {
+	name: string;
+	description?: string;
+	assignToken?: boolean;
+	variables?: QuickBaseVariable[]
+}
+
+export interface QuickBaseRequestUpdateApp extends QuickBaseRequest {
+	appId: string;
+	name?: string;
+	description?: string;
+	variables?: QuickBaseVariable[]
+}
+
+export interface QuickBaseRequestDeleteApp extends QuickBaseRequest {
+	appId: string;
+	name: string;
+}
+
+export interface QuickBaseResponseDeleteApp {
+	deletedAppId: string;
+}
+
 export interface QuickBaseRequestDeleteRecords extends QuickBaseRequest {
 	tableId: string;
 	where: string;
@@ -1304,6 +1444,7 @@ export interface QuickBaseRequestGetReport extends QuickBaseRequest {
 }
 
 export interface QuickBaseRequestGetTable extends QuickBaseRequest {
+	appId: string;
 	tableId: string;
 }
 
@@ -1390,7 +1531,7 @@ export interface QuickBaseResponseDeleteFields {
 	errors: string[];
 }
 
-export interface QuickBaseRequestUpdateField extends QuickBaseRequest, QuickBaseField {
+export interface QuickBaseRequestUpdateField extends QuickBaseRequest, Optional<QuickBaseField, 'fieldType'> {
 	tableId: string;
 	fieldId: number;
 }
@@ -1416,8 +1557,9 @@ export interface QuickBaseResponseApp {
 	created: number;
 	updated: number;
 	name: string;
+	description: string;
 	timeZone: string;
-	dateFormat: string;
+	dateFormat: dateFormat;
 	variables: QuickBaseVariable[];
 	hasEveryoneOnTheInternet: boolean;
 }
@@ -1432,7 +1574,7 @@ export interface QuickBaseResponseTable {
 	singleRecordName: string;
 	pluralRecordName: string;
 	timeZone: string;
-	dateFormat: string;
+	dateFormat: dateFormat;
 	keyFieldId: number;
 	nextFieldId: number;
 	nextRecordId: number;
@@ -1535,6 +1677,9 @@ export interface QuickBaseResponseUpsertRecords {
 		totalNumberOfRecordsProcessed: number;
 		unchangedRecordIds: number[];
 		updatedRecordIds: number[];
+		lineErrors?: {
+			[index: string]: string[]
+		}
 	};
 }
 

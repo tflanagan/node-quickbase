@@ -10,8 +10,6 @@ dotenv.config();
 
 const QB_REALM = process.env.QB_REALM!;
 const QB_USERTOKEN = process.env.QB_USERTOKEN!;
-const QB_TICKET = process.env.QB_TICKET;
-const QB_APPID = process.env.QB_APPID!;
 
 const qbOptions: QuickBaseOptions = {
 	server: 'api.quickbase.com',
@@ -38,9 +36,62 @@ const qb = new QuickBase(qbOptions);
 
 const testValue: string = 'test value' // - б, в, г, д, ж, з, к, л, м, н, п, р, с, т, ф, х, ц, ч, ш, щ, а, э, ы, у, о, я, е, ё, ю, и';
 
+let newAppId: string;
 let newDbid: string;
 let newFid: number;
 let newRid: number;
+
+test.after.always('deleteRecords()', async (t) => {
+	if(!newRid){
+		return t.pass();
+	}
+
+	const results = await qb.deleteRecords({
+		tableId: newDbid,
+		where: `{'3'.EX.'${newRid}'}`
+	});
+
+	t.truthy(results.numberDeleted);
+});
+
+test.after.always('deleteFields()', async (t) => {
+	if(!newFid){
+		return t.pass();
+	}
+
+	const results = await qb.deleteFields({
+		tableId: newDbid,
+		fieldIds: [ newFid ]
+	});
+
+	t.truthy(results.deletedFieldIds[0] === newFid);
+});
+
+test.after.always('deleteTable()', async (t) => {
+	if(!newDbid){
+		return t.pass();
+	}
+
+	const results = await qb.deleteTable({
+		appId: newAppId,
+		tableId: newDbid
+	});
+
+	t.truthy(results.deletedTableId === newDbid);
+});
+
+test.after.always('deleteApp()', async (t) => {
+	if(!newAppId){
+		return t.pass();
+	}
+
+	const results = await qb.deleteApp({
+		appId: newAppId,
+		name: 'Test Node Quick Base Application'
+	});
+
+	t.truthy(results.deletedAppId === newAppId);
+});
 
 test('toJSON()', async (t) => {
 	t.truthy(JSON.stringify(qb.toJSON()) === JSON.stringify(qbOptions));
@@ -58,48 +109,41 @@ test('FromJSON()', async (t) => {
 	t.truthy(JSON.stringify(nQb.toJSON()) === JSON.stringify(qbOptions));
 });
 
-if(QB_TICKET){
-	test('getTempToken()', async (t) => {
-		const results = await qb.getTempToken({
-			dbid: QB_APPID,
-			// Required for server-side usage
-			requestOptions: {
-				headers: {
-					Cookie: `TICKET_${QB_REALM}.quickbase.com=${QB_TICKET};`,
-					Referer: `https://${QB_REALM}.quickbase.com/db/${QB_APPID}`
-				}
-			}
-		});
-
-		t.truthy(results.temporaryAuthorization);
+test('createApp()', async (t) => {
+	const results = await qb.createApp({
+		name: 'Test Node Quick Base Application',
+		assignToken: true
 	});
-}else{
-	test('getTempToken()', async (t) => {
-		console.warn('Ticket not found, unable to test getTempToken(), check .env file');
 
-		t.pass();
+	newAppId = results.id;
+
+	t.truthy(newAppId && results.name === 'Test Node Quick Base Application');
+});
+
+test('updateApp()', async (t) => {
+	const results = await qb.updateApp({
+		appId: newAppId,
+		description: 'Test Node Quick Base Application',
+		variables: [{
+			name: 'Test Variable',
+			value: 'Test Value'
+		}]
 	});
-} 
+
+	t.truthy(results.description === 'Test Node Quick Base Application');
+});
 
 test('getApp()', async (t) => {
 	const results = await qb.getApp({
-		appId: QB_APPID
+		appId: newAppId
 	});
 
 	t.truthy(results.id);
 });
 
-test('getAppTables()', async (t) => {
-	const results = await qb.getAppTables({
-		appId: QB_APPID
-	});
-
-	t.truthy(results[0].id);
-});
-
 test('createTable()', async (t) => {
 	const results = await qb.createTable({
-		appId: QB_APPID,
+		appId: newAppId,
 		name: 'Test Name',
 		description: 'Test Description'
 	});
@@ -109,9 +153,17 @@ test('createTable()', async (t) => {
 	t.truthy(newDbid && results.name === 'Test Name');
 });
 
+test('getAppTables()', async (t) => {
+	const results = await qb.getAppTables({
+		appId: newAppId
+	});
+
+	t.truthy(results[0].id);
+});
+
 test('updateTable()', async (t) => {
 	const results = await qb.updateTable({
-		appId: QB_APPID,
+		appId: newAppId,
 		tableId: newDbid,
 		name: 'New Name'
 	});
@@ -121,6 +173,7 @@ test('updateTable()', async (t) => {
 
 test('getTable()', async (t) => {
 	const results = await qb.getTable({
+		appId: newAppId,
 		tableId: newDbid
 	});
 
@@ -160,7 +213,6 @@ test('updateField()', async (t) => {
 	const results = await qb.updateField({
 		tableId: newDbid,
 		fieldId: newFid,
-		fieldType: 'text',
 		label: 'Test Field 2',
 		appearsByDefault: true
 	});
@@ -236,31 +288,4 @@ test('runReport()', async (t) => {
 	});
 
 	t.truthy(results.data[0][newFid].value === testValue);
-});
-
-test('deleteRecords()', async (t) => {
-	const results = await qb.deleteRecords({
-		tableId: newDbid,
-		where: `{'3'.EX.'${newRid}'}`
-	});
-
-	t.truthy(results.numberDeleted);
-});
-
-test('deleteFields()', async (t) => {
-	const results = await qb.deleteFields({
-		tableId: newDbid,
-		fieldIds: [ newFid ]
-	});
-
-	t.truthy(results.deletedFieldIds[0] === newFid);
-});
-
-test('deleteTable()', async (t) => {
-	const results = await qb.deleteTable({
-		appId: QB_APPID,
-		tableId: newDbid
-	});
-
-	t.truthy(results.deletedTableId === newDbid);
 });
