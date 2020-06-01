@@ -142,10 +142,11 @@ export class QuickBase {
 	 *
 	 * @param actOptions axios request configuration specific for API call
 	 * @param reqOptions axios request configuration passed in from user
+	 * @param passThrough resolve pure axios response object
 	 *
 	 * @returns Direct results from API request
 	 */
-	private async request<T>(actOptions: AxiosRequestConfig, reqOptions?: AxiosRequestConfig): Promise<T> {
+	private async request<T>(actOptions: AxiosRequestConfig, reqOptions?: AxiosRequestConfig, passThrough: boolean = false): Promise<T> {
 		return await this.throttle.acquire(async (resolve, reject) => {
 			const id = 0 + (++this._id);
 			const options = merge.all([
@@ -153,18 +154,34 @@ export class QuickBase {
 				actOptions,
 				reqOptions || {}
 			]);
+			const debugData: Partial<QuickBaseResponseDebug> = {};
+			const assignDebugHeaders = (headers: QuickBaseResponseDebug) => {
+				debugData.date = headers['date'];
+				debugData['qb-api-ray'] = headers['qb-api-ray'];
+				debugData['x-ratelimit-remaining'] = +headers['x-ratelimit-remaining'];
+				debugData['x-ratelimit-limit'] = +headers['x-ratelimit-limit'];
+				debugData['x-ratelimit-reset'] = +headers['x-ratelimit-reset'];
+			};
 
 			debugRequest(id, options);
 
 			try {
-				const results = (await axios.request(options)).data;
+				const results = await axios.request(options);
 
-				debugResponse(id, results);
+				if(results && results.headers){
+					assignDebugHeaders(results.headers);
+				}
 
-				resolve(results);
+				debugResponse(id, debugData, results.data);
+
+				resolve(passThrough ? results : results.data);
 			}catch(err){
+				if(err.response && err.response.headers){
+					assignDebugHeaders(err.response.headers);
+				}
+
 				if(!err.isAxiosError || !err.response){
-					debugResponse(id, err);
+					debugResponse(id, debugData, err);
 
 					return reject(err);
 				}
@@ -179,15 +196,15 @@ export class QuickBase {
 					description: 'There was an unexpected error, please check your request and try again'
 				}, err.response.data || {});
 
-				const nErr = new QuickBaseError(err.response.status, data.message, data.errors && data.errors.join(' ') || data.description);
+				const nErr = new QuickBaseError(err.response.status, data.message, data.errors && data.errors.join(' ') || data.description, debugData['qb-api-ray']);
 
 				if(!this.settings.autoRenewTempTokens || this._tempTokenTable === false || !nErr.description || !nErr.description.match(/Your ticket has expired/)){
-					debugResponse(id, nErr, data);
+					debugResponse(id, nErr, debugData, data);
 
 					return reject(nErr);
 				}
 
-				debugResponse(id, 'Expired token detected, renewing and trying again...', data);
+				debugResponse(id, 'Expired token detected, renewing and trying again...', debugData, data);
 
 				let results = await this.getTempToken({
 					dbid: this._tempTokenTable
@@ -197,7 +214,7 @@ export class QuickBase {
 					this.setTempToken(results.temporaryAuthorization, this._tempTokenTable);
 				}
 
-				return this.request(actOptions, reqOptions).then(resolve).catch(reject);
+				return this.request(actOptions, reqOptions, passThrough).then(resolve).catch(reject);
 			}
 		});
 	}
@@ -941,16 +958,12 @@ export class QuickBase {
 	 * @param param0.tableId Quick Base Table DBID
 	 * @param param0.fieldId Quick Base Field ID
 	 * @param param0.label Label of field
-	 * @param param0.fieldType Type of field ([Quick Base Documentation](https://help.quickbase.com/user-assistance/field_types.html))
 	 * @param param0.noWrap Wrap value of field in the Quick Base UI
 	 * @param param0.bold Display value of field as bold in the Quick Base UI
-	 * @param param0.required Required field
 	 * @param param0.appearsByDefault Set field as default in reports
+	 * @param param0.addToForms Add field to forms by default
 	 * @param param0.findEnabled Allows field to be searchable
-	 * @param param0.unique Marks field as unique
-	 * @param param0.doesDataCopy Allows field value to be copied
 	 * @param param0.fieldHelp Field help text
-	 * @param param0.audited Allow field to be tracked by Quick Base Audit Logs
 	 * @param param0.properties Field properties specific to `fieldType`
 	 * @param param0.permissions Field permissions for Quick Base roles
 	 * @param param0.requestOptions Override axios request configuration
@@ -959,16 +972,12 @@ export class QuickBase {
 		tableId,
 		fieldId,
 		label,
-		fieldType,
 		noWrap,
 		bold,
-		required,
 		appearsByDefault,
+		addToForms,
 		findEnabled,
-		unique,
-		doesDataCopy,
 		fieldHelp,
-		audited,
 		properties,
 		permissions,
 		requestOptions
@@ -979,20 +988,12 @@ export class QuickBase {
 			data.label = label;
 		}
 
-		if(typeof(fieldType) !== 'undefined'){
-			data.fieldType = fieldType;
-		}
-
 		if(typeof(noWrap) !== 'undefined'){
 			data.noWrap = noWrap;
 		}
 
 		if(typeof(bold) !== 'undefined'){
 			data.bold = bold;
-		}
-
-		if(typeof(required) !== 'undefined'){
-			data.required = required;
 		}
 
 		if(typeof(appearsByDefault) !== 'undefined'){
@@ -1003,20 +1004,12 @@ export class QuickBase {
 			data.findEnabled = findEnabled;
 		}
 
-		if(typeof(unique) !== 'undefined'){
-			data.unique = unique;
-		}
-
-		if(typeof(doesDataCopy) !== 'undefined'){
-			data.doesDataCopy = doesDataCopy;
+		if(typeof(addToForms) !== 'undefined'){
+			data.addToForms = addToForms;
 		}
 
 		if(typeof(fieldHelp) !== 'undefined'){
 			data.fieldHelp = fieldHelp;
-		}
-
-		if(typeof(audited) !== 'undefined'){
-			data.audited = audited;
 		}
 
 		if(typeof(properties) !== 'undefined'){
@@ -1084,7 +1077,7 @@ export class QuickBase {
 	 *
 	 * Example:
 	 * ```typescript
-	 * await qb.upsertRecords({c
+	 * await qb.upsertRecords({
 	 * 	data: [{
 	 * 		"6": {
 	 * 			value: 'Record 1 Field 6'
@@ -1112,7 +1105,10 @@ export class QuickBase {
 	 * @param param0.requestOptions Override axios request configuration
 	 */
 	async upsertRecords({ tableId, data, mergeFieldId, fieldsToReturn, requestOptions }: QuickBaseRequestUpsertRecords): Promise<QuickBaseResponseUpsertRecords> {
-		return await this.request({
+		const results = await this.request<{
+			headers: QuickBaseResponseDebug
+			data: QuickBaseResponseUpsertRecords
+		}>({
 			method: 'POST',
 			url: 'records',
 			data: {
@@ -1121,7 +1117,21 @@ export class QuickBase {
 				mergeFieldId: mergeFieldId,
 				fieldsToReturn: fieldsToReturn
 			}
-		}, requestOptions);
+		}, requestOptions, true);
+
+		const response = results.data;
+
+		if(response.metadata.lineErrors && response.data.length === 0){
+			const lines = Object.keys(response.metadata.lineErrors);
+
+			if(lines.length > 0){
+				throw new QuickBaseError(500, 'Error executing upsertRecords', lines.map((line) => {
+					return `Line #${line}: ${response.metadata.lineErrors![line].join('. ')}`;
+				}).join('\n'), results.headers['qb-api-ray']);
+			}
+		}
+
+		return response;
 	}
 
 	/**
@@ -1177,14 +1187,15 @@ export class QuickBaseError extends Error {
 	 *
 	 * Example:
 	 * ```typescript
-	 * const qbErr = new QuickBaseError(403, 'Access Denied', 'User token is invalid');
+	 * const qbErr = new QuickBaseError(403, 'Access Denied', 'User token is invalid', 'xxxx');
 	 * ```
 	 *
 	 * @param code Error code
 	 * @param message Error message
 	 * @param description Error description
+	 * @param rayId Quick Base API Ray ID
 	 */
-	constructor(public code: number, public message: string, public description?: string) {
+	constructor(public code: number, public message: string, public description?: string, public rayId?: string) {
 		super(message);
 	}
 
@@ -1195,7 +1206,8 @@ export class QuickBaseError extends Error {
 		return {
 			code: this.code,
 			message: this.message,
-			description: this.description
+			description: this.description,
+			rayId: this.rayId
 		};
 	}
 
@@ -1216,6 +1228,7 @@ export class QuickBaseError extends Error {
 		this.code = json.code;
 		this.message = json.message;
 		this.description = json.description;
+		this.rayId = json.rayId;
 
 		return this;
 	}
@@ -1234,13 +1247,12 @@ export class QuickBaseError extends Error {
 			throw new TypeError('json argument must be type of object or a valid JSON string');
 		}
 
-		return new QuickBaseError(json.code, json.message, json.description);
+		return new QuickBaseError(json.code, json.message, json.description, json.rayId);
 	}
 
 }
 
 /* Quick Base Interfaces */
-type Optional<T, K extends keyof T> = Omit<T, K> & Partial<T>;
 type DataObj<T> = Partial<Omit<T, 'appId' | 'tableId' | 'fieldId' | 'requestOptions'>>;
 
 export type dateFormat = 'MM-DD-YYYY' | 'MM-DD-YY' | 'DD-MM-YYYY' | 'DD-MM-YY' | 'YYYY-MM-DD';
@@ -1248,6 +1260,20 @@ export type fieldType = 'text' | 'multitext' | 'float' | 'currency' | 'percent' 
 export type reportType = 'map' | 'gedit' | 'chart' | 'summary' | 'table' | 'timeline' | 'calendar';
 export type sortOrder = 'ASC' | 'DESC';
 export type groupBy = 'first-word' | 'first-letter' | 'same-value' | '1000000' | '100000' | '10000' | '1000' | '100' | '10' | '5' | '1' | '.1' | '.01' | '.001';
+
+interface QuickBaseResponseDebug {
+	date: string;
+	'qb-api-ray': string;
+	'x-ratelimit-remaining': number;
+	'x-ratelimit-limit': number;
+	'x-ratelimit-reset': number;
+}
+
+export interface QuickBaseTruncatedField {
+	id: number;
+	name: string;
+	type: fieldType;
+}
 
 export interface QuickBaseQueryOptions {
 	skip?: number;
@@ -1268,6 +1294,7 @@ export interface QuickBaseErrorJSON {
 	code: number;
 	message: string;
 	description?: string;
+	rayId?: string;
 }
 
 export interface QuickBaseOptions {
@@ -1531,7 +1558,7 @@ export interface QuickBaseResponseDeleteFields {
 	errors: string[];
 }
 
-export interface QuickBaseRequestUpdateField extends QuickBaseRequest, Optional<QuickBaseField, 'fieldType'> {
+export interface QuickBaseRequestUpdateField extends QuickBaseRequest, Pick<QuickBaseField, 'label' | 'noWrap' | 'bold' | 'appearsByDefault' | 'findEnabled' | 'fieldHelp' | 'addToForms' | 'properties' | 'permissions'> {
 	tableId: string;
 	fieldId: number;
 }
@@ -1601,6 +1628,7 @@ interface QuickBaseField {
 	unique?: boolean;
 	doesDataCopy?: boolean;
 	audited?: boolean;
+	addToForms?: boolean;
 	properties?: {
 		defaultValue?: string;
 		foreignKey?: false;
@@ -1685,11 +1713,12 @@ export interface QuickBaseResponseUpsertRecords {
 
 export interface QuickBaseResponseRunQuery {
 	data: QuickBaseRecord[];
-	fields: QuickBaseResponseField[];
+	fields: QuickBaseTruncatedField[];
 	metadata: {
 		numFields: number;
 		numRecords: number;
 		skip: number;
+		top: number;
 		totalRecords: number;
 	};
 }
@@ -1737,11 +1766,7 @@ export interface QuickBaseFieldUsage {
 }
 
 export interface QuickBaseResponseFieldUsage {
-	field: {
-		id: number;
-		name: string;
-		type: fieldType;
-	};
+	field: QuickBaseTruncatedField;
 	usage: QuickBaseFieldUsage;
 }
 

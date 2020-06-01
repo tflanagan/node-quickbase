@@ -7,7 +7,7 @@ A lightweight, flexible promise based Quick Base API.
 
 Written in TypeScript, targets Nodejs and the Browser
 
-This library targets the new RESTful JSON-based API, not the old XML-based API. If you want to use the old XML-based API, then please use [v2.x](https://github.com/tflanagan/node-quickbase/tree/master/) of this library.
+This library targets the new RESTful JSON-based API, not the old XML-based API. If you want to use the old XML-based API, then please use [v2.x](https://github.com/tflanagan/node-quickbase/tree/v2.x/) of this library.
 
 ```
 IE 11 Users, if you are receiving this error:
@@ -26,11 +26,11 @@ change a security setting:
 Install
 -------
 ```
-# Install alpha channel
-$ npm install quickbase@alpha
+# Install
+$ npm install quickbase
 
 # Also available via Bower
-$ bower install quickbase@v3.0.0-alpha.11
+$ bower install quickbase
 ```
 
 Documentation
@@ -88,6 +88,13 @@ quickbase.getTempToken({
     console.error(err);
 });
 ```
+
+Debugging
+---------
+
+Server-side, set the environment variable `DEBUG` to `quickbase:*`
+
+In the browser, open the dev console and enter: `window.localStorage.debug = 'quickbase:*'`
 
 License
 -------

@@ -8,13 +8,14 @@ import { QuickBaseError } from '../quickbase';
 const errObj = {
 	code: 403,
 	message: 'Access Denied',
-	description: 'User token is invalid'
+	description: 'User token is invalid',
+	rayId: 'xxxx'
 };
 
-const qbErr = new QuickBaseError(errObj.code, errObj.message, errObj.description);
+const qbErr = new QuickBaseError(errObj.code, errObj.message, errObj.description, errObj.rayId);
 
 test('QuickBaseError', async (t) => {
-	t.truthy(qbErr.code === errObj.code && qbErr.message === errObj.message && qbErr.description === errObj.description);
+	t.truthy(qbErr.code === errObj.code && qbErr.message === errObj.message && qbErr.description === errObj.description && qbErr.rayId === errObj.rayId);
 });
 
 test('toJSON()', async (t) => {
