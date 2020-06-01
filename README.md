@@ -36,7 +36,7 @@ $ bower install quickbase
 Documentation
 -------------
 
-[TypeDoc Documentation](https://tflanagan.github.io/quickbase/)
+[TypeDoc Documentation](https://tflanagan.github.io/node-quickbase/)
 
 Server-Side Example
 -------------------
