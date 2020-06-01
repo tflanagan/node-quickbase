@@ -3,8 +3,8 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>QuickBaseError | Node-QuickBase - v3.0.0-alpha.17</title>
-	<meta name="description" content="Documentation for Node-QuickBase - v3.0.0-alpha.17">
+	<title>QuickBaseError | Node-QuickBase - v3.0.0</title>
+	<meta name="description" content="Documentation for Node-QuickBase - v3.0.0">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<style type="text/css">/*! normalize.css v1.1.3 | MIT License | git.io/normalize */
 /* ==========================================================================
@@ -2692,7 +2692,7 @@ img {
 		<div class="container">
 			<div class="table-wrap">
 				<div class="table-cell">
-					<strong><a href="../index.html">Node-QuickBase - v3.0.0-alpha.17</a></strong>
+					<strong><a href="../index.html">Node-QuickBase - v3.0.0</a></strong>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -2737,6 +2737,9 @@ img {
 				</li>
 				<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
 					<a href="_quickbase_.quickbaseerror.html#name" class="tsd-kind-icon">name</a>
+				</li>
+				<li class=" tsd-kind-property tsd-parent-kind-class">
+					<a href="_quickbase_.quickbaseerror.html#rayid" class="tsd-kind-icon">ray<wbr>Id</a>
 				</li>
 				<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
 					<a href="_quickbase_.quickbaseerror.html#stack" class="tsd-kind-icon">stack</a>
@@ -2789,6 +2792,7 @@ img {
 							<li class="tsd-kind-property tsd-parent-kind-class"><a href="_quickbase_.quickbaseerror.html#description" class="tsd-kind-icon">description</a></li>
 							<li class="tsd-kind-property tsd-parent-kind-class tsd-is-overwrite"><a href="_quickbase_.quickbaseerror.html#message" class="tsd-kind-icon">message</a></li>
 							<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="_quickbase_.quickbaseerror.html#name" class="tsd-kind-icon">name</a></li>
+							<li class="tsd-kind-property tsd-parent-kind-class"><a href="_quickbase_.quickbaseerror.html#rayid" class="tsd-kind-icon">ray<wbr>Id</a></li>
 							<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="_quickbase_.quickbaseerror.html#stack" class="tsd-kind-icon">stack</a></li>
 							<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><a href="_quickbase_.quickbaseerror.html#error" class="tsd-kind-icon">Error</a></li>
 						</ul>
@@ -2810,13 +2814,13 @@ img {
 				<a name="constructor" class="tsd-anchor"></a>
 				<h3>constructor</h3>
 				<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-					<li class="tsd-signature tsd-kind-icon">new <wbr>Quick<wbr>Base<wbr>Error<span class="tsd-signature-symbol">(</span>code<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, message<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, description<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_quickbase_.quickbaseerror.html" class="tsd-signature-type">QuickBaseError</a></li>
+					<li class="tsd-signature tsd-kind-icon">new <wbr>Quick<wbr>Base<wbr>Error<span class="tsd-signature-symbol">(</span>code<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, message<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, description<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span>, rayId<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_quickbase_.quickbaseerror.html" class="tsd-signature-type">QuickBaseError</a></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/c9f5cad/src/quickbase.ts#L1173">src/quickbase.ts:1173</a></li>
+								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/1475914/src/quickbase.ts#L1183">src/quickbase.ts:1183</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -2824,7 +2828,7 @@ img {
 								<p>Extends the native JavaScript <code>Error</code> object for use with Quick Base API errors</p>
 							</div>
 							<p>Example:</p>
-							<pre><code class="language-typescript"><span class="hljs-keyword">const</span> qbErr = <span class="hljs-keyword">new</span> QuickBaseError(<span class="hljs-number">403</span>, <span class="hljs-string">'Access Denied'</span>, <span class="hljs-string">'User token is invalid'</span>);</code></pre>
+							<pre><code class="language-typescript"><span class="hljs-keyword">const</span> qbErr = <span class="hljs-keyword">new</span> QuickBaseError(<span class="hljs-number">403</span>, <span class="hljs-string">'Access Denied'</span>, <span class="hljs-string">'User token is invalid'</span>, <span class="hljs-string">'xxxx'</span>);</code></pre>
 						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
@@ -2852,6 +2856,14 @@ img {
 									</div>
 								</div>
 							</li>
+							<li>
+								<h5><span class="tsd-flag ts-flagOptional">Optional</span> rayId: <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<div class="lead">
+										<p>Quick Base API Ray ID</p>
+									</div>
+								</div>
+							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <a href="_quickbase_.quickbaseerror.html" class="tsd-signature-type">QuickBaseError</a></h4>
 					</li>
@@ -2866,7 +2878,7 @@ img {
 				<div class="tsd-signature tsd-kind-icon">code<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/c9f5cad/src/quickbase.ts#L1187">src/quickbase.ts:1187</a></li>
+						<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/1475914/src/quickbase.ts#L1198">src/quickbase.ts:1198</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -2881,7 +2893,7 @@ img {
 				<div class="tsd-signature tsd-kind-icon">description<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/c9f5cad/src/quickbase.ts#L1187">src/quickbase.ts:1187</a></li>
+						<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/1475914/src/quickbase.ts#L1198">src/quickbase.ts:1198</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -2897,7 +2909,7 @@ img {
 				<aside class="tsd-sources">
 					<p>Overrides Error.message</p>
 					<ul>
-						<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/c9f5cad/src/quickbase.ts#L1187">src/quickbase.ts:1187</a></li>
+						<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/1475914/src/quickbase.ts#L1198">src/quickbase.ts:1198</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -2916,6 +2928,21 @@ img {
 						<li>Defined in node_modules/typescript/lib/lib.es5.d.ts:973</li>
 					</ul>
 				</aside>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+				<a name="rayid" class="tsd-anchor"></a>
+				<h3><span class="tsd-flag ts-flagOptional">Optional</span> ray<wbr>Id</h3>
+				<div class="tsd-signature tsd-kind-icon">ray<wbr>Id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></div>
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/1475914/src/quickbase.ts#L1198">src/quickbase.ts:1198</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Quick Base API Ray ID</p>
+					</div>
+				</div>
 			</section>
 			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
 				<a name="stack" class="tsd-anchor"></a>
@@ -2951,7 +2978,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/c9f5cad/src/quickbase.ts#L1207">src/quickbase.ts:1207</a></li>
+								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/1475914/src/quickbase.ts#L1219">src/quickbase.ts:1219</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -2982,7 +3009,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/c9f5cad/src/quickbase.ts#L1194">src/quickbase.ts:1194</a></li>
+								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/1475914/src/quickbase.ts#L1205">src/quickbase.ts:1205</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -3004,7 +3031,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/c9f5cad/src/quickbase.ts#L1228">src/quickbase.ts:1228</a></li>
+								<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/1475914/src/quickbase.ts#L1241">src/quickbase.ts:1241</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
