@@ -5,21 +5,18 @@ node-quickbase
 
 A lightweight, very flexible QuickBase API
 
-[API Documentation](https://github.com/tflanagan/node-quickbase/blob/master/documentation/api.md)
+[API Documentation](https://github.com/tflanagan/node-quickbase/blob/v2.x/documentation/api.md)
 
 [PHP Version](https://github.com/tflanagan/php-quickbase)
 
 Install
 -------
 ```
-# Latest Stable Release
-$ npm install quickbase
-
-# Latest Commit
-$ npm install tflanagan/node-quickbase
+# Install
+$ npm install quickbase@2
 
 # Bower Install
-$ bower install quickbase
+$ bower install quickbase#2.11.6
 ```
 
 Bower installation only includes the `quickbase.browserify.min.js` file.
