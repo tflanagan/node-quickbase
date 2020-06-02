@@ -222,7 +222,7 @@ export class QuickBase {
 	/**
 	 * Create a Quick Base Application
 	 * 
-	 * [Quick Base Documentation](https://www.ui.quickbase.com/ui/api-docs/operation/createApp)
+	 * [Quick Base Documentation](https://developer.quickbase.com/operation/createApp)
 	 * 
 	 * Example:
 	 * ```typescript
@@ -264,7 +264,7 @@ export class QuickBase {
 	/**
 	 * Create a Quick Base Field
 	 *
-	 * [Quick Base Documentation](https://www.ui.quickbase.com/ui/api-docs/operation/createField)
+	 * [Quick Base Documentation](https://developer.quickbase.com/operation/createField)
 	 *
 	 * @param param0.tableId Quick Base Table DBID
 	 * @param param0.label Label of new field
@@ -363,7 +363,7 @@ export class QuickBase {
 	/**
 	 * Create a Quick Base Table
 	 *
-	 * [Quick Base Documentation](https://www.ui.quickbase.com/ui/api-docs/operation/createTable)
+	 * [Quick Base Documentation](https://developer.quickbase.com/operation/createTable)
 	 *
 	 * @param param0.appId Quick Base Application DBID
 	 * @param param0.name Name of the new table
@@ -404,7 +404,7 @@ export class QuickBase {
 	/**
 	 * Delete an Application from Quick Base
 	 *
-	 * [Quick Base Documentation](https://www.ui.quickbase.com/ui/api-docs/operation/deleteApp)
+	 * [Quick Base Documentation](https://developer.quickbase.com/operation/deleteApp)
 	 *
 	 * Example:
 	 * ```typescript
@@ -431,7 +431,7 @@ export class QuickBase {
 	/**
 	 * Delete fields from a Quick Base Table
 	 *
-	 * [Quick Base Documentation](https://www.ui.quickbase.com/ui/api-docs/operation/deleteFields)
+	 * [Quick Base Documentation](https://developer.quickbase.com/operation/deleteFields)
 	 *
 	 * Example:
 	 * ```typescript
@@ -458,7 +458,7 @@ export class QuickBase {
 	/**
 	 * Delete records from a Quick Base Table
 	 *
-	 * [Quick Base Documentation](https://www.ui.quickbase.com/ui/api-docs/operation/deleteRecords)
+	 * [Quick Base Documentation](https://developer.quickbase.com/operation/deleteRecords)
 	 *
 	 * Example:
 	 * ```typescript
@@ -486,7 +486,7 @@ export class QuickBase {
 	/**
 	 * Delete a Table from a Quick Base Application
 	 *
-	 * [Quick Base Documentation](https://www.ui.quickbase.com/ui/api-docs/operation/deleteTable)
+	 * [Quick Base Documentation](https://developer.quickbase.com/operation/deleteTable)
 	 *
 	 * Example:
 	 * ```typescript
@@ -510,7 +510,7 @@ export class QuickBase {
 	/**
 	 * Get the schema of a Quick Base Application
 	 *
-	 * [Quick Base Documentation](https://www.ui.quickbase.com/ui/api-docs/operation/getApp)
+	 * [Quick Base Documentation](https://developer.quickbase.com/operation/getApp)
 	 *
 	 * Example:
 	 * ```typescript
@@ -531,7 +531,7 @@ export class QuickBase {
 	/**
 	 * Get all Quick Base Tables from a Quick Base Application
 	 *
-	 * [Quick Base Documentation](https://www.ui.quickbase.com/ui/api-docs/operation/getAppTables)
+	 * [Quick Base Documentation](https://developer.quickbase.com/operation/getAppTables)
 	 *
 	 * Example:
 	 * ```typescript
@@ -555,7 +555,7 @@ export class QuickBase {
 	/**
 	 * Get a single Quick Base Field from a Quick Base Table
 	 *
-	 * [Quick Base Documentation](https://www.ui.quickbase.com/ui/api-docs/operation/getField)
+	 * [Quick Base Documentation](https://developer.quickbase.com/operation/getField)
 	 *
 	 * Example:
 	 * ```typescript
@@ -581,7 +581,7 @@ export class QuickBase {
 	/**
 	 * Get all Quick Base Fields from a Quick Base Table
 	 *
-	 * [Quick Base Documentation](https://www.ui.quickbase.com/ui/api-docs/operation/getFields)
+	 * [Quick Base Documentation](https://developer.quickbase.com/operation/getFields)
 	 *
 	 * Example:
 	 * ```typescript
@@ -615,7 +615,7 @@ export class QuickBase {
 	/**
 	 * Get the usage of all Quick Base Fields in a Quick Base Table
 	 *
-	 * [Quick Base Documentation](https://www.ui.quickbase.com/ui/api-docs/operation/getFieldsUsage)
+	 * [Quick Base Documentation](https://developer.quickbase.com/operation/getFieldsUsage)
 	 *
 	 * Example:
 	 * ```typescript
@@ -649,7 +649,7 @@ export class QuickBase {
 	/**
 	 * Get the usage of a single Quick Base Field
 	 *
-	 * [Quick Base Documentation](https://www.ui.quickbase.com/ui/api-docs/operation/getFieldUsage)
+	 * [Quick Base Documentation](https://developer.quickbase.com/operation/getFieldUsage)
 	 *
 	 * Example:
 	 * ```typescript
@@ -675,7 +675,7 @@ export class QuickBase {
 	/**
 	 * Get a predefined Quick Base Report
 	 *
-	 * [Quick Base Documentation](https://www.ui.quickbase.com/ui/api-docs/operation/getReport)
+	 * [Quick Base Documentation](https://developer.quickbase.com/operation/getReport)
 	 *
 	 * Example:
 	 * ```typescript
@@ -701,7 +701,7 @@ export class QuickBase {
 	/**
 	 * Get the schema of a Quick Base Table
 	 *
-	 * [Quick Base Documentation](https://www.ui.quickbase.com/ui/api-docs/operation/getTable)
+	 * [Quick Base Documentation](https://developer.quickbase.com/operation/getTable)
 	 *
 	 * Example:
 	 * ```typescript
@@ -722,7 +722,7 @@ export class QuickBase {
 	/**
 	 * Get all predefined reports of a Quick Base Table
 	 *
-	 * [Quick Base Documentation](https://www.ui.quickbase.com/ui/api-docs/operation/getTableReports)
+	 * [Quick Base Documentation](https://developer.quickbase.com/operation/getTableReports)
 	 *
 	 * Example:
 	 * ```typescript
@@ -750,7 +750,7 @@ export class QuickBase {
 	 *
 	 * Valid for 5 minutes. Only valid against passed in table.
 	 *
-	 * [Quick Base Documentation](https://www.ui.quickbase.com/ui/api-docs/operation/getTempTokenDBID)
+	 * [Quick Base Documentation](https://developer.quickbase.com/operation/getTempTokenDBID)
 	 *
 	 * Example:
 	 * ```typescript
@@ -780,7 +780,7 @@ export class QuickBase {
 	/**
 	 * Run a custom Quick Base query
 	 *
-	 * [Quick Base Documentation](https://www.ui.quickbase.com/ui/api-docs/operation/runQuery)
+	 * [Quick Base Documentation](https://developer.quickbase.com/operation/runQuery)
 	 *
 	 * Example:
 	 * ```typescript
@@ -839,7 +839,7 @@ export class QuickBase {
 	/**
 	 * Run a predefined Quick Base report
 	 *
-	 * [Quick Base Documentation](https://www.ui.quickbase.com/ui/api-docs/operation/runReport)
+	 * [Quick Base Documentation](https://developer.quickbase.com/operation/runReport)
 	 *
 	 * Example:
 	 * ```typescript
@@ -907,7 +907,7 @@ export class QuickBase {
 	/**
 	 * Update a Quick Base Application
 	 * 
-	 * [Quick Base Documentation](https://www.ui.quickbase.com/ui/api-docs/operation/updateApp)
+	 * [Quick Base Documentation](https://developer.quickbase.com/operation/updateApp)
 	 * 
 	 * Example:
 	 * ```typescript
@@ -953,7 +953,7 @@ export class QuickBase {
 	/**
 	 * Update a Quick Base Field
 	 *
-	 * [Quick Base Documentation](https://www.ui.quickbase.com/ui/api-docs/operation/updateField)
+	 * [Quick Base Documentation](https://developer.quickbase.com/operation/updateField)
 	 *
 	 * @param param0.tableId Quick Base Table DBID
 	 * @param param0.fieldId Quick Base Field ID
@@ -1030,7 +1030,7 @@ export class QuickBase {
 	/**
 	 * Update a Quick Base Table
 	 *
-	 * [Quick Base Documentation](https://www.ui.quickbase.com/ui/api-docs/operation/updateTable)
+	 * [Quick Base Documentation](https://developer.quickbase.com/operation/updateTable)
 	 *
 	 * @param param0.appId Quick Base Application DBID
 	 * @param param0.name Name of the new table
@@ -1073,7 +1073,7 @@ export class QuickBase {
 	/**
 	 * Creates or updates records in a Quick Base Table
 	 *
-	 * [Quick Base Documentation](https://www.ui.quickbase.com/ui/api-docs/operation/upsert)
+	 * [Quick Base Documentation](https://developer.quickbase.com/operation/upsert)
 	 *
 	 * Example:
 	 * ```typescript
@@ -1325,7 +1325,7 @@ export interface QuickBaseOptions {
 	 *
 	 * If both a `userToken` and `tempToken` are defined, the `tempToken` will be used
 	 *
-	 * [Quick Base Documentation](https://www.ui.quickbase.com/ui/api-docs/auth)
+	 * [Quick Base Documentation](https://developer.quickbase.com/auth)
 	 */
 	userToken?: string;
 
@@ -1334,7 +1334,7 @@ export interface QuickBaseOptions {
 	 *
 	 * If both a `userToken` and `tempToken` are defined, the `tempToken` will be used
 	 *
-	 * [Quick Base Documentation](https://www.ui.quickbase.com/ui/api-docs/auth)
+	 * [Quick Base Documentation](https://developer.quickbase.com/auth)
 	 */
 	tempToken?: string;
 

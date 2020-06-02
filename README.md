@@ -37,6 +37,7 @@ Documentation
 -------------
 
 [TypeDoc Documentation](https://tflanagan.github.io/node-quickbase/)
+[Quick Base Documentation](https://developer.quickbase.com/)
 
 Server-Side Example
 -------------------
