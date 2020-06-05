@@ -209,11 +209,6 @@ test('createField()', async (t) => {
 	t.truthy(newFid && results.label === 'Test Field');
 });
 
-/*
-Quick Base has an internal issue with updateField right now:
-	"type property cannot be set while updating a field."
-Bob Gregor has confirmed it is being worked on
-
 test('updateField()', async (t) => {
 	const results = await qb.updateField({
 		tableId: newDbid,
@@ -223,7 +218,6 @@ test('updateField()', async (t) => {
 
 	t.truthy(results.label === 'Test Field 2');
 });
-*/
 
 test('getField()', async (t) => {
 	const results = await qb.getField({
