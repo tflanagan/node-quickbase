@@ -447,13 +447,24 @@ export class QuickBase {
 	 * @param param0.requestOptions Override axios request configuration
 	 */
 	async deleteFields({ tableId, fieldIds, requestOptions }: QuickBaseRequestDeleteFields): Promise<QuickBaseResponseDeleteFields> {
-		return await this.request({
+		const results = await this.request<{
+			headers: QuickBaseResponseDebug
+			data: QuickBaseResponseDeleteFields
+		}>({
 			method: 'DELETE',
 			url: `fields?tableId=${tableId}`,
 			data: {
 				fieldIds: fieldIds
 			}
-		}, requestOptions);
+		}, requestOptions, true);
+
+		const response = results.data;
+
+		if(response.deletedFieldIds.length === 0 && response.errors && response.errors.length > 0){
+			throw new QuickBaseError(500, 'Error executing deleteFields', response.errors.join(' '), results.headers['qb-api-ray']);
+		}
+
+		return response;
 	}
 
 	/**
