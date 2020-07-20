@@ -213,7 +213,9 @@ test('updateField()', async (t) => {
 	const results = await qb.updateField({
 		tableId: newDbid,
 		fieldId: newFid,
-		label: 'Test Field 2'
+		label: 'Test Field 2',
+		unique: true,
+		required: true
 	});
 
 	t.truthy(results.label === 'Test Field 2');

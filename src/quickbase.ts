@@ -272,10 +272,8 @@ export class QuickBase {
 	 * @param param0.fieldType Type of new field ([Quick Base Documentation](https://help.quickbase.com/user-assistance/field_types.html))
 	 * @param param0.noWrap Wrap value of field in the Quick Base UI
 	 * @param param0.bold Display value of field as bold in the Quick Base UI
-	 * @param param0.required Required field
 	 * @param param0.appearsByDefault Set field as default in reports
 	 * @param param0.findEnabled Allows field to be searchable
-	 * @param param0.unique Marks field as unique
 	 * @param param0.doesDataCopy Allows field value to be copied
 	 * @param param0.fieldHelp Field help text
 	 * @param param0.audited Allow field to be tracked by Quick Base Audit Logs
@@ -289,10 +287,8 @@ export class QuickBase {
 		fieldType,
 		noWrap,
 		bold,
-		required,
 		appearsByDefault,
 		findEnabled,
-		unique,
 		doesDataCopy,
 		fieldHelp,
 		audited,
@@ -318,20 +314,12 @@ export class QuickBase {
 			data.bold = bold;
 		}
 
-		if(typeof(required) !== 'undefined'){
-			data.required = required;
-		}
-
 		if(typeof(appearsByDefault) !== 'undefined'){
 			data.appearsByDefault = appearsByDefault;
 		}
 
 		if(typeof(findEnabled) !== 'undefined'){
 			data.findEnabled = findEnabled;
-		}
-
-		if(typeof(unique) !== 'undefined'){
-			data.unique = unique;
 		}
 
 		if(typeof(doesDataCopy) !== 'undefined'){
@@ -970,6 +958,8 @@ export class QuickBase {
 	 * @param param0.tableId Quick Base Table DBID
 	 * @param param0.fieldId Quick Base Field ID
 	 * @param param0.label Label of field
+	 * @param param0.unique Marks field as unique
+	 * @param param0.required Required field
 	 * @param param0.noWrap Wrap value of field in the Quick Base UI
 	 * @param param0.bold Display value of field as bold in the Quick Base UI
 	 * @param param0.appearsByDefault Set field as default in reports
@@ -984,6 +974,8 @@ export class QuickBase {
 		tableId,
 		fieldId,
 		label,
+		unique,
+		required,
 		noWrap,
 		bold,
 		appearsByDefault,
@@ -998,6 +990,14 @@ export class QuickBase {
 
 		if(typeof(label) !== 'undefined'){
 			data.label = label;
+		}
+
+		if(typeof(unique) !== 'undefined'){
+			data.unique = unique;
+		}
+
+		if(typeof(required) !== 'undefined'){
+			data.required = required;
 		}
 
 		if(typeof(noWrap) !== 'undefined'){
@@ -1570,7 +1570,7 @@ export interface QuickBaseResponseDeleteFields {
 	errors: string[];
 }
 
-export interface QuickBaseRequestUpdateField extends QuickBaseRequest, Pick<QuickBaseField, 'label' | 'noWrap' | 'bold' | 'appearsByDefault' | 'findEnabled' | 'fieldHelp' | 'addToForms' | 'properties' | 'permissions'> {
+export interface QuickBaseRequestUpdateField extends QuickBaseRequest, Pick<QuickBaseField, 'required' | 'unique' | 'label' | 'noWrap' | 'bold' | 'appearsByDefault' | 'findEnabled' | 'fieldHelp' | 'addToForms' | 'properties' | 'permissions'> {
 	tableId: string;
 	fieldId: number;
 }
