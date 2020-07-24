@@ -78,21 +78,9 @@ const writeFile = async (path, data) => {
 		console.log('Compiling TypeScript for Node...');
 		await exec('npx tsc');
 
-		console.log('Injecting Promise polyfill...');
-		const source = await readFile('./dist/quickbase.js');
-
-		searchStr = 'const axios_1 =';
-		searchRgx = new RegExp(searchStr);
-
-		await writeFile('./dist/quickbase.prep.js', source.toString().replace(searchRgx, [
-			'const Promise = require(\'bluebird\');',
-			'if(!global.Promise){ global.Promise = Promise; }',
-			searchStr
-		].join('\n')));
-
 		console.log('Browserify...');
 		const browserifiedPrep = await browserify([
-			'./dist/quickbase.prep.js'
+			'./dist/quickbase.js'
 		]);
 
 		console.log('Compiling for Browser...');
@@ -118,7 +106,7 @@ const writeFile = async (path, data) => {
 		const results = await minify('./dist/quickbase.browserify.js');
 		const license = await readFile('./LICENSE');
 
-		searchStr = '"use strict";var i=this&&this.__importDefault';
+		searchStr = '"use strict";var n=this&&this.__importDefault';
 		searchRgx = new RegExp(searchStr);
 
 		await writeFile('./dist/quickbase.browserify.min.js', results.toString().replace(searchRgx, [
@@ -139,7 +127,6 @@ const writeFile = async (path, data) => {
 
 		console.log('Cleanup...');
 		await exec([
-			'rm ./dist/quickbase.prep.js',
 			'rm ./dist/quickbase.browserify.js'
 		].join(' && '));
 

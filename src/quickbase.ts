@@ -147,7 +147,7 @@ export class QuickBase {
 	 * @returns Direct results from API request
 	 */
 	private async request<T>(actOptions: AxiosRequestConfig, reqOptions?: AxiosRequestConfig, passThrough: boolean = false): Promise<T> {
-		return await this.throttle.acquire(async (resolve, reject) => {
+		return await this.throttle.acquire(async () => {
 			const id = 0 + (++this._id);
 			const options = merge.all([
 				this.getBasicRequest(),
@@ -174,7 +174,7 @@ export class QuickBase {
 
 				debugResponse(id, debugData, results.data);
 
-				resolve(passThrough ? results : results.data);
+				return passThrough ? results : results.data;
 			}catch(err){
 				if(err.response && err.response.headers){
 					assignDebugHeaders(err.response.headers);
@@ -183,7 +183,7 @@ export class QuickBase {
 				if(!err.isAxiosError || !err.response){
 					debugResponse(id, debugData, err);
 
-					return reject(err);
+					throw err;
 				}
 
 				// Error reporting seems a bit inconsistent
@@ -202,7 +202,7 @@ export class QuickBase {
 				if(!this.settings.autoRenewTempTokens || this._tempTokenTable === false || !nErr.description || !nErr.description.match(/Your ticket has expired/)){
 					debugResponse(id, nErr, debugData, data);
 
-					return reject(nErr);
+					throw nErr;
 				}
 
 				debugResponse(id, 'Expired token detected, renewing and trying again...', debugData, data);
@@ -215,7 +215,7 @@ export class QuickBase {
 					this.setTempToken(results.temporaryAuthorization, this._tempTokenTable);
 				}
 
-				return this.request(actOptions, reqOptions, passThrough).then(resolve).catch(reject);
+				return await this.request(actOptions, reqOptions, passThrough);
 			}
 		});
 	}
