@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>QuickBaseResponseDeleteRecords | Node-QuickBase - v4.1.0</title>
+	<title>QuickBaseRequestGetRelationships | Node-QuickBase - v4.1.0</title>
 	<meta name="description" content="Documentation for Node-QuickBase - v4.1.0">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<style type="text/css">/*! normalize.css v1.1.3 | MIT License | git.io/normalize */
@@ -2721,10 +2721,13 @@ img {
 <nav class="tsd-navigation secondary">
 	<ul>
 		<li class="current tsd-kind-interface tsd-parent-kind-module">
-			<a href="_quickbase_.quickbaseresponsedeleterecords.html" class="tsd-kind-icon">Quick<wbr>Base<wbr>Response<wbr>Delete<wbr>Records</a>
+			<a href="_quickbase_.quickbaserequestgetrelationships.html" class="tsd-kind-icon">Quick<wbr>Base<wbr>Request<wbr>Get<wbr>Relationships</a>
 			<ul>
 				<li class=" tsd-kind-property tsd-parent-kind-interface">
-					<a href="_quickbase_.quickbaseresponsedeleterecords.html#numberdeleted" class="tsd-kind-icon">number<wbr>Deleted</a>
+					<a href="_quickbase_.quickbaserequestgetrelationships.html#childtableid" class="tsd-kind-icon">child<wbr>Table<wbr>Id</a>
+				</li>
+				<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+					<a href="_quickbase_.quickbaserequestgetrelationships.html#requestoptions" class="tsd-kind-icon">request<wbr>Options</a>
 				</li>
 			</ul>
 		</li>
@@ -2736,7 +2739,12 @@ img {
 			<h3>Hierarchy</h3>
 			<ul class="tsd-hierarchy">
 				<li>
-					<span class="target">QuickBaseResponseDeleteRecords</span>
+					<span class="tsd-signature-type">QuickBaseRequest</span>
+					<ul class="tsd-hierarchy">
+						<li>
+							<span class="target">QuickBaseRequestGetRelationships</span>
+						</li>
+					</ul>
 				</li>
 			</ul>
 		</section>
@@ -2747,7 +2755,8 @@ img {
 					<section class="tsd-index-section ">
 						<h3>Properties</h3>
 						<ul class="tsd-index-list">
-							<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_quickbase_.quickbaseresponsedeleterecords.html#numberdeleted" class="tsd-kind-icon">number<wbr>Deleted</a></li>
+							<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_quickbase_.quickbaserequestgetrelationships.html#childtableid" class="tsd-kind-icon">child<wbr>Table<wbr>Id</a></li>
+							<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="_quickbase_.quickbaserequestgetrelationships.html#requestoptions" class="tsd-kind-icon">request<wbr>Options</a></li>
 						</ul>
 					</section>
 				</div>
@@ -2756,12 +2765,23 @@ img {
 		<section class="tsd-panel-group tsd-member-group ">
 			<h2>Properties</h2>
 			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-				<a name="numberdeleted" class="tsd-anchor"></a>
-				<h3>number<wbr>Deleted</h3>
-				<div class="tsd-signature tsd-kind-icon">number<wbr>Deleted<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+				<a name="childtableid" class="tsd-anchor"></a>
+				<h3>child<wbr>Table<wbr>Id</h3>
+				<div class="tsd-signature tsd-kind-icon">child<wbr>Table<wbr>Id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/6c881e9/src/quickbase.ts#L1945">src/quickbase.ts:1945</a></li>
+						<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/6c881e9/src/quickbase.ts#L1949">src/quickbase.ts:1949</a></li>
+					</ul>
+				</aside>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+				<a name="requestoptions" class="tsd-anchor"></a>
+				<h3><span class="tsd-flag ts-flagOptional">Optional</span> request<wbr>Options</h3>
+				<div class="tsd-signature tsd-kind-icon">request<wbr>Options<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">AxiosRequestConfig</span></div>
+				<aside class="tsd-sources">
+					<p>Inherited from <a href="_quickbase_.quickbaserequestcreateapp.html">QuickBaseRequestCreateApp</a>.<a href="_quickbase_.quickbaserequestcreateapp.html#requestoptions">requestOptions</a></p>
+					<ul>
+						<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/6c881e9/src/quickbase.ts#L1580">src/quickbase.ts:1580</a></li>
 					</ul>
 				</aside>
 			</section>

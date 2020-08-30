@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>QuickBaseResponseDeleteRecords | Node-QuickBase - v4.1.0</title>
+	<title>QuickBaseRelationship | Node-QuickBase - v4.1.0</title>
 	<meta name="description" content="Documentation for Node-QuickBase - v4.1.0">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<style type="text/css">/*! normalize.css v1.1.3 | MIT License | git.io/normalize */
@@ -2721,10 +2721,28 @@ img {
 <nav class="tsd-navigation secondary">
 	<ul>
 		<li class="current tsd-kind-interface tsd-parent-kind-module">
-			<a href="_quickbase_.quickbaseresponsedeleterecords.html" class="tsd-kind-icon">Quick<wbr>Base<wbr>Response<wbr>Delete<wbr>Records</a>
+			<a href="_quickbase_.quickbaserelationship.html" class="tsd-kind-icon">Quick<wbr>Base<wbr>Relationship</a>
 			<ul>
 				<li class=" tsd-kind-property tsd-parent-kind-interface">
-					<a href="_quickbase_.quickbaseresponsedeleterecords.html#numberdeleted" class="tsd-kind-icon">number<wbr>Deleted</a>
+					<a href="_quickbase_.quickbaserelationship.html#childtableid" class="tsd-kind-icon">child<wbr>Table<wbr>Id</a>
+				</li>
+				<li class=" tsd-kind-property tsd-parent-kind-interface">
+					<a href="_quickbase_.quickbaserelationship.html#foreignkeyfield" class="tsd-kind-icon">foreign<wbr>Key<wbr>Field</a>
+				</li>
+				<li class=" tsd-kind-property tsd-parent-kind-interface">
+					<a href="_quickbase_.quickbaserelationship.html#id" class="tsd-kind-icon">id</a>
+				</li>
+				<li class=" tsd-kind-property tsd-parent-kind-interface">
+					<a href="_quickbase_.quickbaserelationship.html#iscrossapp" class="tsd-kind-icon">is<wbr>Cross<wbr>App</a>
+				</li>
+				<li class=" tsd-kind-property tsd-parent-kind-interface">
+					<a href="_quickbase_.quickbaserelationship.html#lookupfields" class="tsd-kind-icon">lookup<wbr>Fields</a>
+				</li>
+				<li class=" tsd-kind-property tsd-parent-kind-interface">
+					<a href="_quickbase_.quickbaserelationship.html#parenttableid" class="tsd-kind-icon">parent<wbr>Table<wbr>Id</a>
+				</li>
+				<li class=" tsd-kind-property tsd-parent-kind-interface">
+					<a href="_quickbase_.quickbaserelationship.html#summaryfields" class="tsd-kind-icon">summary<wbr>Fields</a>
 				</li>
 			</ul>
 		</li>
@@ -2736,7 +2754,7 @@ img {
 			<h3>Hierarchy</h3>
 			<ul class="tsd-hierarchy">
 				<li>
-					<span class="target">QuickBaseResponseDeleteRecords</span>
+					<span class="target">QuickBaseRelationship</span>
 				</li>
 			</ul>
 		</section>
@@ -2747,7 +2765,13 @@ img {
 					<section class="tsd-index-section ">
 						<h3>Properties</h3>
 						<ul class="tsd-index-list">
-							<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_quickbase_.quickbaseresponsedeleterecords.html#numberdeleted" class="tsd-kind-icon">number<wbr>Deleted</a></li>
+							<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_quickbase_.quickbaserelationship.html#childtableid" class="tsd-kind-icon">child<wbr>Table<wbr>Id</a></li>
+							<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_quickbase_.quickbaserelationship.html#foreignkeyfield" class="tsd-kind-icon">foreign<wbr>Key<wbr>Field</a></li>
+							<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_quickbase_.quickbaserelationship.html#id" class="tsd-kind-icon">id</a></li>
+							<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_quickbase_.quickbaserelationship.html#iscrossapp" class="tsd-kind-icon">is<wbr>Cross<wbr>App</a></li>
+							<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_quickbase_.quickbaserelationship.html#lookupfields" class="tsd-kind-icon">lookup<wbr>Fields</a></li>
+							<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_quickbase_.quickbaserelationship.html#parenttableid" class="tsd-kind-icon">parent<wbr>Table<wbr>Id</a></li>
+							<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_quickbase_.quickbaserelationship.html#summaryfields" class="tsd-kind-icon">summary<wbr>Fields</a></li>
 						</ul>
 					</section>
 				</div>
@@ -2756,12 +2780,72 @@ img {
 		<section class="tsd-panel-group tsd-member-group ">
 			<h2>Properties</h2>
 			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-				<a name="numberdeleted" class="tsd-anchor"></a>
-				<h3>number<wbr>Deleted</h3>
-				<div class="tsd-signature tsd-kind-icon">number<wbr>Deleted<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+				<a name="childtableid" class="tsd-anchor"></a>
+				<h3>child<wbr>Table<wbr>Id</h3>
+				<div class="tsd-signature tsd-kind-icon">child<wbr>Table<wbr>Id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/6c881e9/src/quickbase.ts#L1945">src/quickbase.ts:1945</a></li>
+						<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/6c881e9/src/quickbase.ts#L1956">src/quickbase.ts:1956</a></li>
+					</ul>
+				</aside>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+				<a name="foreignkeyfield" class="tsd-anchor"></a>
+				<h3>foreign<wbr>Key<wbr>Field</h3>
+				<div class="tsd-signature tsd-kind-icon">foreign<wbr>Key<wbr>Field<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Omit</span><span class="tsd-signature-symbol">&lt;</span><a href="_quickbase_.quickbasetruncatedfield.html" class="tsd-signature-type">QuickBaseTruncatedField</a><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">"name"</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-symbol">{ </span>label<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span></div>
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/6c881e9/src/quickbase.ts#L1957">src/quickbase.ts:1957</a></li>
+					</ul>
+				</aside>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+				<a name="id" class="tsd-anchor"></a>
+				<h3>id</h3>
+				<div class="tsd-signature tsd-kind-icon">id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/6c881e9/src/quickbase.ts#L1953">src/quickbase.ts:1953</a></li>
+					</ul>
+				</aside>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+				<a name="iscrossapp" class="tsd-anchor"></a>
+				<h3>is<wbr>Cross<wbr>App</h3>
+				<div class="tsd-signature tsd-kind-icon">is<wbr>Cross<wbr>App<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/6c881e9/src/quickbase.ts#L1954">src/quickbase.ts:1954</a></li>
+					</ul>
+				</aside>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+				<a name="lookupfields" class="tsd-anchor"></a>
+				<h3>lookup<wbr>Fields</h3>
+				<div class="tsd-signature tsd-kind-icon">lookup<wbr>Fields<span class="tsd-signature-symbol">:</span> <a href="_quickbase_.quickbasetruncatedfield.html" class="tsd-signature-type">QuickBaseTruncatedField</a><span class="tsd-signature-symbol">[]</span></div>
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/6c881e9/src/quickbase.ts#L1960">src/quickbase.ts:1960</a></li>
+					</ul>
+				</aside>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+				<a name="parenttableid" class="tsd-anchor"></a>
+				<h3>parent<wbr>Table<wbr>Id</h3>
+				<div class="tsd-signature tsd-kind-icon">parent<wbr>Table<wbr>Id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/6c881e9/src/quickbase.ts#L1955">src/quickbase.ts:1955</a></li>
+					</ul>
+				</aside>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+				<a name="summaryfields" class="tsd-anchor"></a>
+				<h3>summary<wbr>Fields</h3>
+				<div class="tsd-signature tsd-kind-icon">summary<wbr>Fields<span class="tsd-signature-symbol">:</span> <a href="_quickbase_.quickbasetruncatedfield.html" class="tsd-signature-type">QuickBaseTruncatedField</a><span class="tsd-signature-symbol">[]</span></div>
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/tflanagan/node-quickbase/blob/6c881e9/src/quickbase.ts#L1961">src/quickbase.ts:1961</a></li>
 					</ul>
 				</aside>
 			</section>
