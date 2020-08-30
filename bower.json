@@ -21,6 +21,7 @@
 	"ignore": [
 	  "**/.*",
 	  "node_modules",
+	  "assets",
 	  "docs",
 	  "src",
 	  "build.js",

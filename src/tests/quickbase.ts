@@ -35,11 +35,15 @@ const qbOptions: QuickBaseOptions = {
 const qb = new QuickBase(qbOptions);
 
 const testValue: string = 'test value' // - б, в, г, д, ж, з, к, л, м, н, п, р, с, т, ф, х, ц, ч, ш, щ, а, э, ы, у, о, я, е, ё, ю, и';
+// const testFile: string = 'SGVsbG8gV29ybGQhDQo=';
 
 let newAppId: string;
 let newDbid: string;
+let newChildDbid: string;
 let newFid: number;
+// let newFileFid: number;
 let newRid: number;
+let newRelationship: number;
 
 test.after.always('deleteRecords()', async (t) => {
 	if(!newRid){
@@ -68,16 +72,31 @@ test.after.always('deleteFields()', async (t) => {
 });
 
 test.after.always('deleteTable()', async (t) => {
-	if(!newDbid){
+	if(!newDbid && !newChildDbid){
 		return t.pass();
 	}
 
-	const results = await qb.deleteTable({
-		appId: newAppId,
-		tableId: newDbid
-	});
+	let results = true;
 
-	t.truthy(results.deletedTableId === newDbid);
+	if(newDbid){
+		if((await qb.deleteTable({
+			appId: newAppId,
+			tableId: newDbid
+		})).deletedTableId !== newDbid){
+			results = false;
+		}
+	}
+
+	if(newChildDbid){
+		if((await qb.deleteTable({
+			appId: newAppId,
+			tableId: newChildDbid
+		})).deletedTableId !== newChildDbid){
+			results = false;
+		}
+	}
+
+	t.truthy(results);
 });
 
 test.after.always('deleteApp()', async (t) => {
@@ -153,6 +172,18 @@ test('createTable()', async (t) => {
 	t.truthy(newDbid && results.name === 'Test Name');
 });
 
+test('createTable() - child', async (t) => {
+	const results = await qb.createTable({
+		appId: newAppId,
+		name: 'Test Child Table',
+		description: 'Child table for testing relationships'
+	});
+
+	newChildDbid = results.id;
+
+	t.truthy(newChildDbid && results.name === 'Test Child Table');
+});
+
 test('getAppTables()', async (t) => {
 	const results = await qb.getAppTables({
 		appId: newAppId
@@ -198,7 +229,15 @@ test('getReport()', async (t) => {
 });
 
 test('createField()', async (t) => {
-	const results = await qb.createField({
+	let results;/*  = await qb.createField({
+		tableId: newDbid,
+		fieldType: 'file',
+		label: 'Test Field'
+	});
+
+	newFileFid = results.id; */
+
+	results = await qb.createField({
 		tableId: newDbid,
 		fieldType: 'text',
 		label: 'Test Field'
@@ -262,7 +301,13 @@ test('upsertRecords()', async (t) => {
 			{
 				[newFid]: {
 					value: testValue
-				}
+				}/* ,
+				[newFileFid]: {
+					value: {
+						fileName: "hello world.txt",
+						data: testFile
+					}
+				} */
 			}
 		]
 	});
@@ -290,3 +335,73 @@ test('runReport()', async (t) => {
 
 	t.truthy(results.data[0][newFid].value === testValue);
 });
+
+test('createRelationship()', async (t) => {
+	const results = await qb.createRelationship({
+		parentTableId: newDbid,
+		childTableId: newChildDbid,
+		foreignKeyField: {
+			label: 'Related Parent'
+		},
+		lookupFieldIds: [ 6 ],
+		summaryFields: [{
+			label: 'Max Child Record ID#',
+			summaryFid: 3,
+			accumulationType: 'MAX'
+		}]
+	});
+
+	newRelationship = results.id;
+
+	t.truthy(results.foreignKeyField.label === 'Related Parent');
+});
+
+test('updateRelationship()', async (t) => {
+	const results = await qb.updateRelationship({
+		relationshipId: newRelationship,
+		parentTableId: newDbid,
+		childTableId: newChildDbid,
+		lookupFieldIds: [ 1 ]
+	});
+
+	t.truthy(newRelationship === results.id);
+});
+
+test('getRelationships()', async (t) => {
+	const results = await qb.getRelationships({
+		childTableId: newChildDbid
+	});
+
+	t.truthy(newRelationship === results.relationships[0].id);
+});
+
+test('deleteRelationship()', async (t) => {
+	const results = await qb.deleteRelationship({
+		relationshipId: newRelationship,
+		childTableId: newChildDbid
+	});
+
+	t.truthy(newRelationship === results.relationshipId);
+});
+
+/* test('downloadFile()', async (t) => {
+	const results = await qb.downloadFile({
+		tableId: newDbid,
+		fieldId: newFileFid,
+		recordId: newRid,
+		versionNumber: 0
+	});
+
+	t.truthy(results.data);
+});
+
+test('deleteFile()', async (t) => {
+	const results = await qb.deleteFile({
+		tableId: newDbid,
+		fieldId: newFileFid,
+		recordId: newRid,
+		versionNumber: 0
+	});
+
+	t.truthy(results.fileName);
+}); */

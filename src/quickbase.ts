@@ -156,11 +156,13 @@ export class QuickBase {
 			]);
 			const debugData: Partial<QuickBaseResponseDebug> = {};
 			const assignDebugHeaders = (headers: QuickBaseResponseDebug) => {
-				debugData.date = headers['date'];
-				debugData['qb-api-ray'] = headers['qb-api-ray'];
-				debugData['x-ratelimit-remaining'] = +headers['x-ratelimit-remaining'];
-				debugData['x-ratelimit-limit'] = +headers['x-ratelimit-limit'];
-				debugData['x-ratelimit-reset'] = +headers['x-ratelimit-reset'];
+				const tmp = objKeysToLower(headers);
+
+				debugData.date = tmp['date'];
+				debugData['qb-api-ray'] = tmp['qb-api-ray'];
+				debugData['x-ratelimit-remaining'] = +tmp['x-ratelimit-remaining'];
+				debugData['x-ratelimit-limit'] = +tmp['x-ratelimit-limit'];
+				debugData['x-ratelimit-reset'] = +tmp['x-ratelimit-reset'];
 			};
 
 			debugRequest(id, options);
@@ -350,6 +352,42 @@ export class QuickBase {
 	}
 
 	/**
+	 * Create a Quick Base Relationship
+	 *
+	 * [Quick Base Documentation](https://developer.quickbase.com/operation/createRelationship)
+	 *
+	 * @param param0.parentTableId Quick Base Table DBID of the Parent Table
+	 * @param param0.childTableId Quick Base Table DBID of the Child Table
+	 * @param param0.foreignKeyField An Object with a label property to describe the new reference field
+	 * @param param0.lookupFieldIds Array of Field IDs to bring from the Parent Table into the Child Table
+	 * @param param0.summaryFields Array of Summary Fields to create in the Parent Table
+	 * @param param0.requestOptions Override axios request configuration
+	 */
+	async createRelationship({ parentTableId, childTableId, foreignKeyField, lookupFieldIds, summaryFields, requestOptions }: QuickBaseRequestCreateRelationship): Promise<QuickBaseRelationship> {
+		const data: DataObj<QuickBaseRequestCreateRelationship> = {
+			parentTableId: parentTableId
+		};
+
+		if(typeof(foreignKeyField) !== undefined){
+			data.foreignKeyField = foreignKeyField;
+		}
+
+		if(typeof(lookupFieldIds) !== undefined){
+			data.lookupFieldIds = lookupFieldIds;
+		}
+
+		if(typeof(summaryFields) !== undefined){
+			data.summaryFields = summaryFields;
+		}
+
+		return await this.request({
+			method: 'POST',
+			url: `tables/${childTableId}/relationship`,
+			data: data
+		}, requestOptions);
+	}
+
+	/**
 	 * Create a Quick Base Table
 	 *
 	 * [Quick Base Documentation](https://developer.quickbase.com/operation/createTable)
@@ -456,6 +494,24 @@ export class QuickBase {
 	}
 
 	/**
+	 * Delete a file stored in a Quick Base file attachment field
+	 *
+	 * [Quick Base Documentation](https://developer.quickbase.com/operation/deleteFile)
+	 *
+	 * @param param0.tableId Quick Base Table DBID
+	 * @param param0.recordId Quick Base Record ID
+	 * @param param0.fieldId Quick Base Field ID
+	 * @param param0.versionNumber File attachment version number
+	 * @param param0.requestOptions Override axios request configuration
+	 */
+	async deleteFile({ tableId, recordId, fieldId, versionNumber, requestOptions }: QuickBaseRequestDeleteFile): Promise<QuickBaseResponseDeleteFile> {
+		return await this.request({
+			method: 'DELETE',
+			url: `files/${tableId}/${recordId}/${fieldId}/${versionNumber}`
+		}, requestOptions);
+	}
+
+	/**
 	 * Delete records from a Quick Base Table
 	 *
 	 * [Quick Base Documentation](https://developer.quickbase.com/operation/deleteRecords)
@@ -484,6 +540,22 @@ export class QuickBase {
 	}
 
 	/**
+	 * Delete a Quick Base Relationship
+	 *
+	 * [Quick Base Documentation](https://developer.quickbase.com/operation/updateRelationship)
+	 *
+	 * @param param0.childTableId Quick Base Table DBID of the Child Table
+	 * @param param0.relationshipId Quick Base Table Relationship ID
+	 * @param param0.requestOptions Override axios request configuration
+	 */
+	async deleteRelationship({ childTableId, relationshipId, requestOptions }: QuickBaseRequestDeleteRelationship): Promise<QuickBaseResponseDeleteRelationship> {
+		return await this.request({
+			method: 'DELETE',
+			url: `tables/${childTableId}/relationship/${relationshipId}`
+		}, requestOptions);
+	}
+
+	/**
 	 * Delete a Table from a Quick Base Application
 	 *
 	 * [Quick Base Documentation](https://developer.quickbase.com/operation/deleteTable)
@@ -505,6 +577,33 @@ export class QuickBase {
 			method: 'DELETE',
 			url: `tables/${tableId}?appId=${appId}`
 		}, requestOptions);
+	}
+
+	/**
+	 * Download a file stored in a Quick Base file attachment field
+	 *
+	 * [Quick Base Documentation](https://developer.quickbase.com/operation/downloadFile)
+	 *
+	 * @param param0.tableId Quick Base Table DBID
+	 * @param param0.recordId Quick Base Record ID
+	 * @param param0.fieldId Quick Base Field ID
+	 * @param param0.versionNumber File attachment version number
+	 * @param param0.requestOptions Override axios request configuration
+	 */
+	async downloadFile({ tableId, recordId, fieldId, versionNumber, requestOptions }: QuickBaseRequestDownloadFile): Promise<QuickBaseResponseDownloadFile> {
+		const results = await this.request<{
+			headers: {
+				'content-disposition': string;
+			};
+			data: string
+		}>({
+			url: `files/${tableId}/${recordId}/${fieldId}/${versionNumber}`
+		}, requestOptions, true);
+
+		return {
+			fileName: results.headers['content-disposition'],
+			data: Buffer.from(results.data, 'base64')
+		};
 	}
 
 	/**
@@ -695,6 +794,20 @@ export class QuickBase {
 			params: {
 				tableId: tableId
 			}
+		}, requestOptions);
+	}
+
+	/**
+	 * Get all Quick Base Relationships for a given Quick Base Child Table
+	 *
+	 * [Quick Base Documentation](https://developer.quickbase.com/operation/getRelationships)
+	 *
+	 * @param param0.childTableId Quick Base Child Table DBID
+	 * @param param0.requestOptions Override axios request configuration
+	 */
+	async getRelationships({ childTableId, requestOptions }: QuickBaseRequestGetRelationships): Promise<QuickBaseResponseRelationships> {
+		return await this.request({
+			url: `tables/${childTableId}/relationships`
 		}, requestOptions);
 	}
 
@@ -1040,6 +1153,38 @@ export class QuickBase {
 	}
 
 	/**
+	 * Update a Quick Base Relationship
+	 *
+	 * [Quick Base Documentation](https://developer.quickbase.com/operation/updateRelationship)
+	 *
+	 * @param param0.relationshipId Quick Base Table Relationship ID
+	 * @param param0.parentTableId Quick Base Table DBID of the Parent Table
+	 * @param param0.childTableId Quick Base Table DBID of the Child Table
+	 * @param param0.lookupFieldIds Array of Field IDs to bring from the Parent Table into the Child Table
+	 * @param param0.summaryFields Array of Summary Fields to create in the Parent Table
+	 * @param param0.requestOptions Override axios request configuration
+	 */
+	async updateRelationship({ relationshipId, parentTableId, childTableId, lookupFieldIds, summaryFields, requestOptions }: QuickBaseRequestUpdateRelationship): Promise<QuickBaseRelationship> {
+		const data: DataObj<QuickBaseRequestUpdateRelationship> = {
+			parentTableId: parentTableId
+		};
+
+		if(typeof(lookupFieldIds) !== undefined){
+			data.lookupFieldIds = lookupFieldIds;
+		}
+
+		if(typeof(summaryFields) !== undefined){
+			data.summaryFields = summaryFields;
+		}
+
+		return await this.request({
+			method: 'POST',
+			url: `tables/${childTableId}/relationship/${relationshipId}`,
+			data: data
+		}, requestOptions);
+	}
+
+	/**
 	 * Update a Quick Base Table
 	 *
 	 * [Quick Base Documentation](https://developer.quickbase.com/operation/updateTable)
@@ -1264,11 +1409,25 @@ export class QuickBaseError extends Error {
 
 }
 
+/* Helpers */
+function objKeysToLower<O>(obj: O): O {
+    return Object.keys(obj).reduce((result, key) => {
+		(result as Indexable)[key.toLowerCase()] = (obj as Indexable)[key];
+
+		return result;
+	}, {}) as O;
+}
+
 /* Quick Base Interfaces */
+interface Indexable {
+	[index: string]: any;
+}
+
 type DataObj<T> = Partial<Omit<T, 'appId' | 'tableId' | 'fieldId' | 'requestOptions'>>;
 
+export type accumulation = 'AVG' | 'SUM' | 'MAX' | 'MIN' | 'STD-DEV' | 'COUNT' | 'COMBINED-TEXT' | 'DISTINCT-COUNT';
 export type dateFormat = 'MM-DD-YYYY' | 'MM-DD-YY' | 'DD-MM-YYYY' | 'DD-MM-YY' | 'YYYY-MM-DD';
-export type fieldType = 'text' | 'multitext' | 'float' | 'currency' | 'percent' | 'rating' | 'date' | 'timestamp' | 'timeofday' | 'duration' | 'checkbox' | 'address' | 'phone' | 'email' | 'userid' | 'multiuserid' | 'file' | 'url' | 'dblink' | 'ICalendarButton' | 'vCardButton' | 'predecessor' | 'recordid';
+export type fieldType = 'text' | 'text-multiple-choice' | 'text-multi-line' | 'multitext' | 'float' | 'currency' | 'percent' | 'rating' | 'date' | 'timestamp' | 'timeofday' | 'duration' | 'checkbox' | 'address' | 'phone' | 'email' | 'userid' | 'multiuserid' | 'file' | 'url' | 'dblink' | 'ICalendarButton' | 'vCardButton' | 'predecessor' | 'recordid';
 export type reportType = 'map' | 'gedit' | 'chart' | 'summary' | 'table' | 'timeline' | 'calendar';
 export type sortOrder = 'ASC' | 'DESC';
 export type groupBy = 'first-word' | 'first-letter' | 'same-value' | '1000000' | '100000' | '10000' | '1000' | '100' | '10' | '5' | '1' | '.1' | '.01' | '.001';
@@ -1784,6 +1943,95 @@ export interface QuickBaseResponseFieldUsage {
 
 export interface QuickBaseResponseDeleteRecords {
 	numberDeleted: number;
+}
+
+export interface QuickBaseRequestGetRelationships extends QuickBaseRequest {
+	childTableId: string;
+}
+
+export interface QuickBaseRelationship {
+	id: number;
+	isCrossApp: boolean;
+	parentTableId: string;
+	childTableId: string;
+	foreignKeyField: Omit<QuickBaseTruncatedField, 'name'> & {
+		label: string;
+	};
+	lookupFields: QuickBaseTruncatedField[];
+	summaryFields: QuickBaseTruncatedField[];
+}
+
+export interface QuickBaseResponseRelationships {
+	metadata: {
+		numRelationships: number;
+		skip: number;
+		totalRelationships: number;
+	};
+	relationships: QuickBaseRelationship[]
+}
+
+export interface QuickBaseSummaryField {
+	summaryFid: number;
+	label: string;
+	accumulationType: accumulation;
+	where?: string;
+}
+
+export interface QuickBaseRequestCreateRelationship extends QuickBaseRequest {
+	parentTableId: string;
+	childTableId: string;
+	foreignKeyField: {
+		label: string;
+	};
+	lookupFieldIds: number[];
+	summaryFields: QuickBaseSummaryField[];
+}
+
+export interface QuickBaseRequestUpdateRelationship extends QuickBaseRequest {
+	relationshipId: number;
+	parentTableId: string;
+	childTableId: string;
+	lookupFieldIds?: number[];
+	summaryFields?: QuickBaseSummaryField[];
+}
+
+export interface QuickBaseRequestDeleteRelationship extends QuickBaseRequest {
+	childTableId: string;
+	relationshipId: number;
+}
+
+export interface QuickBaseResponseDeleteRelationship {
+	relationshipId: number;
+}
+
+export interface QuickBaseRequestDownloadFile extends QuickBaseRequest {
+	tableId: string;
+	recordId: number;
+	fieldId: number;
+	versionNumber: number;
+}
+
+export interface QuickBaseResponseDownloadFile {
+	fileName: string;
+	data: Buffer;
+}
+
+export interface QuickBaseRequestDeleteFile extends QuickBaseRequest {
+	tableId: string;
+	recordId: number;
+	fieldId: number;
+	versionNumber: number;
+}
+
+export interface QuickBaseResponseDeleteFile {
+	versionNumber: number;
+	fileName: string;
+	uploaded: string;
+	creator: {
+		email: string;
+		id: string;
+		name: string;
+	}
 }
 
 /* Export Supporting Types/Classes */
