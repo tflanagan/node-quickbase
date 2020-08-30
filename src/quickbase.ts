@@ -147,7 +147,7 @@ export class QuickBase {
 	 * @returns Direct results from API request
 	 */
 	private async request<T>(actOptions: AxiosRequestConfig, reqOptions?: AxiosRequestConfig, passThrough: boolean = false): Promise<T> {
-		return await this.throttle.acquire(async () => {
+		return this.throttle.acquire(async () => {
 			const id = 0 + (++this._id);
 			const options = merge.all([
 				this.getBasicRequest(),
@@ -217,7 +217,7 @@ export class QuickBase {
 					this.setTempToken(results.temporaryAuthorization, this._tempTokenTable);
 				}
 
-				return await this.request(actOptions, reqOptions, passThrough);
+				return this.request(actOptions, reqOptions, passThrough);
 			}
 		});
 	}
@@ -257,7 +257,7 @@ export class QuickBase {
 			data.variables = variables;
 		}
 
-		return await this.request({
+		return this.request({
 			method: 'POST',
 			url: 'apps',
 			data: data
@@ -344,7 +344,7 @@ export class QuickBase {
 			data.permissions = permissions;
 		}
 
-		return await this.request({
+		return this.request({
 			method: 'POST',
 			url: `fields?tableId=${tableId}`,
 			data: data
@@ -380,7 +380,7 @@ export class QuickBase {
 			data.summaryFields = summaryFields;
 		}
 
-		return await this.request({
+		return this.request({
 			method: 'POST',
 			url: `tables/${childTableId}/relationship`,
 			data: data
@@ -421,7 +421,7 @@ export class QuickBase {
 			data.pluralNoun = pluralNoun;
 		}
 
-		return await this.request({
+		return this.request({
 			method: 'POST',
 			url: `tables?appId=${appId}`,
 			data: data
@@ -446,7 +446,7 @@ export class QuickBase {
 	 * @param param0.requestOptions Override axios request configuration
 	 */
 	async deleteApp({ appId, name, requestOptions }: QuickBaseRequestDeleteApp): Promise<QuickBaseResponseDeleteApp> {
-		return await this.request({
+		return this.request({
 			method: 'DELETE',
 			url: `apps/${appId}`,
 			data: {
@@ -505,7 +505,7 @@ export class QuickBase {
 	 * @param param0.requestOptions Override axios request configuration
 	 */
 	async deleteFile({ tableId, recordId, fieldId, versionNumber, requestOptions }: QuickBaseRequestDeleteFile): Promise<QuickBaseResponseDeleteFile> {
-		return await this.request({
+		return this.request({
 			method: 'DELETE',
 			url: `files/${tableId}/${recordId}/${fieldId}/${versionNumber}`
 		}, requestOptions);
@@ -529,7 +529,7 @@ export class QuickBase {
 	 * @param param0.requestOptions Override axios request configuration
 	 */
 	async deleteRecords({ tableId, where, requestOptions }: QuickBaseRequestDeleteRecords): Promise<QuickBaseResponseDeleteRecords> {
-		return await this.request({
+		return this.request({
 			method: 'DELETE',
 			url: 'records',
 			data: {
@@ -549,7 +549,7 @@ export class QuickBase {
 	 * @param param0.requestOptions Override axios request configuration
 	 */
 	async deleteRelationship({ childTableId, relationshipId, requestOptions }: QuickBaseRequestDeleteRelationship): Promise<QuickBaseResponseDeleteRelationship> {
-		return await this.request({
+		return this.request({
 			method: 'DELETE',
 			url: `tables/${childTableId}/relationship/${relationshipId}`
 		}, requestOptions);
@@ -573,7 +573,7 @@ export class QuickBase {
 	 * @param param0.requestOptions Override axios request configuration
 	 */
 	async deleteTable({ appId, tableId, requestOptions }: QuickBaseRequestDeleteTable): Promise<QuickBaseResponseDeleteTable> {
-		return await this.request({
+		return this.request({
 			method: 'DELETE',
 			url: `tables/${tableId}?appId=${appId}`
 		}, requestOptions);
@@ -622,7 +622,7 @@ export class QuickBase {
 	 * @param param0.requestOptions Override axios request configuration
 	 */
 	async getApp({ appId, requestOptions }: QuickBaseRequestGetApp): Promise<QuickBaseResponseApp> {
-		return await this.request({
+		return this.request({
 			url: `apps/${appId}`
 		}, requestOptions);
 	}
@@ -643,7 +643,7 @@ export class QuickBase {
 	 * @param param0.requestOptions Override axios request configuration
 	 */
 	async getAppTables({ appId, requestOptions }: QuickBaseRequestGetAppTables): Promise<QuickBaseResponseTable[]> {
-		return await this.request({
+		return this.request({
 			url: 'tables',
 			params: {
 				appId: appId
@@ -669,7 +669,7 @@ export class QuickBase {
 	 * @param param0.requestOptions Override axios request configuration
 	 */
 	async getField({ tableId, fieldId, requestOptions }: QuickBaseRequestGetField): Promise<QuickBaseResponseField> {
-		return await this.request({
+		return this.request({
 			url: `fields/${fieldId}`,
 			params: {
 				tableId: tableId
@@ -705,7 +705,7 @@ export class QuickBase {
 			params.includeFieldPerms = includeFieldPerms;
 		}
 
-		return await this.request({
+		return this.request({
 			url: 'fields',
 			params: params
 		}, requestOptions);
@@ -739,7 +739,7 @@ export class QuickBase {
 			params.skip = skip;
 		}
 
-		return await this.request({
+		return this.request({
 			url: 'fields/usage',
 			params: params
 		}, requestOptions);
@@ -789,7 +789,7 @@ export class QuickBase {
 	 * @param param0.requestOptions Override axios request configuration
 	 */
 	async getReport({ tableId, reportId, requestOptions }: QuickBaseRequestGetReport): Promise<QuickBaseResponseReport> {
-		return await this.request({
+		return this.request({
 			url: `reports/${reportId}`,
 			params: {
 				tableId: tableId
@@ -806,7 +806,7 @@ export class QuickBase {
 	 * @param param0.requestOptions Override axios request configuration
 	 */
 	async getRelationships({ childTableId, requestOptions }: QuickBaseRequestGetRelationships): Promise<QuickBaseResponseRelationships> {
-		return await this.request({
+		return this.request({
 			url: `tables/${childTableId}/relationships`
 		}, requestOptions);
 	}
@@ -827,7 +827,7 @@ export class QuickBase {
 	 * @param param0.requestOptions Override axios request configuration
 	 */
 	async getTable({ appId, tableId, requestOptions }: QuickBaseRequestGetTable): Promise<QuickBaseResponseTable> {
-		return await this.request({
+		return this.request({
 			url: `tables/${tableId}?appId=${appId}`
 		}, requestOptions);
 	}
@@ -848,7 +848,7 @@ export class QuickBase {
 	 * @param param0.requestOptions Override axios request configuration
 	 */
 	async getTableReports({ tableId, requestOptions }: QuickBaseRequestGetTableReports): Promise<QuickBaseResponseReport[]> {
-		return await this.request({
+		return this.request({
 			url: 'reports',
 			params: {
 				tableId: tableId
@@ -935,7 +935,7 @@ export class QuickBase {
 		groupBy,
 		requestOptions
 	}: QuickBaseRequestRunQuery): Promise<QuickBaseResponseRunQuery> {
-		return await this.request({
+		return this.request({
 			method: 'POST',
 			url: 'records/query',
 			data: {
@@ -990,7 +990,7 @@ export class QuickBase {
 			params.top = options.top;
 		}
 
-		return await this.request({
+		return this.request({
 			method: 'POST',
 			url: `reports/${reportId}/run`,
 			params: params,
@@ -1056,7 +1056,7 @@ export class QuickBase {
 			data.variables = variables;
 		}
 
-		return await this.request({
+		return this.request({
 			method: 'POST',
 			url: `apps/${appId}`,
 			data: data
@@ -1145,7 +1145,7 @@ export class QuickBase {
 			data.permissions = permissions;
 		}
 
-		return await this.request({
+		return this.request({
 			method: 'POST',
 			url: `fields/${fieldId}?tableId=${tableId}`,
 			data: data
@@ -1177,7 +1177,7 @@ export class QuickBase {
 			data.summaryFields = summaryFields;
 		}
 
-		return await this.request({
+		return this.request({
 			method: 'POST',
 			url: `tables/${childTableId}/relationship/${relationshipId}`,
 			data: data
@@ -1220,7 +1220,7 @@ export class QuickBase {
 			data.pluralNoun = pluralNoun;
 		}
 
-		return await this.request({
+		return this.request({
 			method: 'POST',
 			url: `tables/${tableId}?appId=${appId}`,
 			data: data
