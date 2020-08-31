@@ -9,7 +9,7 @@ import axios, {
 } from 'axios';
 
 /* Debug */
-const debugMain = debug('quickbase');
+const debugMain = debug('quickbase:main');
 const debugRequest = debug('quickbase:request');
 const debugResponse = debug('quickbase:response');
 
@@ -28,6 +28,7 @@ export class QuickBase {
 	 * Allow code to check if an object is this class by look at this `CLASS_NAME`
 	 * property. Code can further check `VERSION` to ensure correct versioning
 	 */
+	public readonly CLASS_NAME: string = 'QuickBase';
 	static readonly CLASS_NAME: string = 'QuickBase';
 
 	/**
