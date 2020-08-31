@@ -96,14 +96,14 @@ const writeFile = async (path, data) => {
 /* Build */
 (async () => {
 	try {
-		let searchStr, searchRgx;
+		const mainFilename = pkg.name;
 
 		console.log('Compiling TypeScript for Node...');
 		await exec('npx tsc');
 
 		console.log('Browserify...');
 		const browserifiedPrep = await browserify([
-			'./dist/quickbase.js'
+			`./dist/${mainFilename}.js`
 		]);
 
 		console.log('Compiling for Browser...');
@@ -123,13 +123,13 @@ const writeFile = async (path, data) => {
 			}
 		});
 
-		await writeFile('./dist/quickbase.browserify.js', browserified.outputText);
+		await writeFile(`./dist/${mainFilename}.browserify.js`, browserified.outputText);
 
 		console.log('Minify Browser...');
-		const browserSource = await minify('./dist/quickbase.browserify.js');
+		const browserSource = await minify(`./dist/${mainFilename}.browserify.js`);
 
 		console.log('Loading Source...');
-		const source = (await readFile('./dist/quickbase.js')).toString().trim();
+		const source = (await readFile(`./dist/${mainFilename}.js`)).toString().trim();
 
 		console.log('Loading License...');
 		const license = (await readFile('./LICENSE')).toString().trim();
@@ -174,19 +174,19 @@ const writeFile = async (path, data) => {
 			return !!val;
 		}).join('\n').trim();
 
-		await writeFile('./dist/quickbase.browserify.min.js', [
+		await writeFile(`./dist/${mainFilename}.browserify.min.js`, [
 			projectInfo,
 			browserSource.trim()
 		].join('\n'));
 
-		await writeFile('./dist/quickbase.js', [
+		await writeFile(`./dist/${mainFilename}.js`, [
 			projectInfo,
 			source.trim()
 		].join('\n'));
 
 		console.log('Cleanup...');
 		await exec([
-			'rm ./dist/quickbase.browserify.js'
+			`rm ./dist/${mainFilename}.browserify.js`
 		].join(' && '));
 
 		console.log('Done building.');
