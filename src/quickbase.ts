@@ -21,6 +21,16 @@ const IS_BROWSER = typeof(window) !== 'undefined';
 export class QuickBase {
 
 	/**
+	 * The class name
+	 *
+	 * Loading multiple instances of this class results in failed `instanceof` checks.
+	 * `Function.name` is corrupted by the browserify/minify processes.
+	 * Allow code to check if an object is this class by look at this `CLASS_NAME`
+	 * property. Code can further check `VERSION` to ensure correct versioning
+	 */
+	static readonly CLASS_NAME: string = 'QuickBase';
+
+	/**
 	 * The loaded library version
 	 */
 	static readonly VERSION: string = VERSION;
