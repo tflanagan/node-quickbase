@@ -21,16 +21,8 @@
     "url": "https://github.com/tflanagan",
     "email": "contact@tristianflanagan.com"
   },
-  "maintainers": [
-    {
-      "name": "tflanagan",
-      "url": "https://github.com/tflanagan",
-      "email": "contact@tristianflanagan.com"
-    }
-  ],
-  "contributors": [
-    "Tristian Flanagan <contact@tristianflanagan.com> (https://github.com/tflanagan)"
-  ],
+  "maintainers": [],
+  "contributors": [ ],
   "main": "./dist/quickbase.js",
   "types": "./dist/quickbase.d.ts",
   "repository": {

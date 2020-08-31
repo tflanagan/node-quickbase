@@ -2,6 +2,7 @@
 
 /* Dependencies */
 const fs = require('fs');
+const pkg = require('./package.json');
 const minify = require('minify');
 const execNode = require('child_process').exec;
 const Browserify = require('browserify');
@@ -33,7 +34,7 @@ const exec = async (cmd) => {
 			}
 
 			if(stderr && !stderr.match(/ExperimentalWarning/)){
-				err = new Error('Command failed: ' + cmd);
+				err = new Error(`Command failed: ${cmd}`);
 
 				err.stdout = stdout;
 				err.stderr = stderr;
@@ -44,6 +45,28 @@ const exec = async (cmd) => {
 			resolve(stdout);
 		});
 	});
+};
+
+const formatPerson = (person) => {
+	if(typeof(person) === 'string'){
+		return person;
+	}
+
+	const parts = [];
+
+	if(person.name){
+		parts.push(person.name);
+	}
+
+	if(person.email){
+		parts.push(`<${person.email}>`);
+	}
+
+	if(person.url){
+		parts.push(`(${person.url})`);
+	}
+
+	return parts.join(' ');
 };
 
 const readFile = async (path) => {
@@ -102,15 +125,40 @@ const writeFile = async (path, data) => {
 
 		await writeFile('./dist/quickbase.browserify.js', browserified.outputText);
 
-		console.log('Minify...');
-		const results = await minify('./dist/quickbase.browserify.js');
-		const license = await readFile('./LICENSE');
+		console.log('Minify Browser...');
+		const browserSource = await minify('./dist/quickbase.browserify.js');
 
-		searchStr = '"use strict";var n=this&&this.__importDefault';
-		searchRgx = new RegExp(searchStr);
+		console.log('Loading Source...');
+		const source = (await readFile('./dist/quickbase.js')).toString().trim();
 
-		await writeFile('./dist/quickbase.browserify.min.js', results.toString().replace(searchRgx, [
-			license.toString().split('\n').map((line, i, lines) => {
+		console.log('Loading License...');
+		const license = (await readFile('./LICENSE')).toString().trim();
+
+		console.log('Prepending Build and Project Information...');
+		const projectInfo = [
+			'/*!',
+			` * Project Name: ${pkg.name}`,
+			` * Project Description: ${pkg.description}`,
+			` * Version: ${pkg.version}`,
+			` * Build Timestamp: ${new Date().toISOString()}`,
+			` * Project Homepage: ${pkg.homepage}`,
+			` * Git Location: ${pkg.repository.url}`,
+			` * Authored By: ${formatPerson(pkg.author)}`,
+			pkg.maintainers && pkg.maintainers.length > 0 ? [
+				' * Maintained By:',
+				pkg.maintainers.map((maintainer) => {
+					return ` *                ${formatPerson(maintainer)}`;
+				}).join('\n'),
+			].join('\n') : '',
+			pkg.contributors && pkg.contributors.length > 0 ? [
+				' * Contributors:',
+				pkg.contributors.map((contributor) => {
+					return ` *               ${formatPerson(contributor)}`;
+				}).join('\n'),
+			].join('\n') : '',
+			` * License: ${pkg.license}`,
+			'*/',
+			license.split('\n').map((line, i, lines) => {
 				line = ' * ' + line;
 
 				if(i === 0){
@@ -121,9 +169,20 @@ const writeFile = async (path, data) => {
 				}
 
 				return line;
-			}).join('\n'),
-			searchStr
-		].join('\n')));
+			}).join('\n').trim()
+		].filter((val) => {
+			return !!val;
+		}).join('\n').trim();
+
+		await writeFile('./dist/quickbase.browserify.min.js', [
+			projectInfo,
+			browserSource.trim()
+		].join('\n'));
+
+		await writeFile('./dist/quickbase.js', [
+			projectInfo,
+			source.trim()
+		].join('\n'));
 
 		console.log('Cleanup...');
 		await exec([
