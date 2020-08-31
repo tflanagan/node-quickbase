@@ -22,7 +22,7 @@
     "email": "contact@tristianflanagan.com"
   },
   "maintainers": [],
-  "contributors": [ ],
+  "contributors": [],
   "main": "./dist/quickbase.js",
   "types": "./dist/quickbase.d.ts",
   "repository": {
@@ -38,7 +38,7 @@
     "test": "npx ava"
   },
   "dependencies": {
-    "axios": "^0.19.2",
+    "axios": "^0.20.0",
     "debug": "^4.1.1",
     "deepmerge": "^4.2.2",
     "generic-throttle": "^3.0.1"
@@ -46,13 +46,13 @@
   "devDependencies": {
     "@ava/typescript": "^1.1.1",
     "@types/debug": "^4.1.5",
-    "@types/node": "^14.6.0",
-    "ava": "^3.11.1",
+    "@types/node": "^14.6.2",
+    "ava": "^3.12.1",
     "browserify": "^16.5.2",
     "dotenv": "^8.2.0",
     "minify": "^5.1.1",
-    "typedoc": "^0.17.8",
-    "typescript": "^3.9.7"
+    "typedoc": "^0.19.0",
+    "typescript": "^4.0.2"
   },
   "engines": {
     "node": ">=10.14.2"
