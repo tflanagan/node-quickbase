@@ -240,7 +240,20 @@ test('createField()', async (t) => {
 	results = await qb.createField({
 		tableId: newDbid,
 		fieldType: 'text',
-		label: 'Test Field'
+		label: 'Test Field',
+		noWrap: false,
+		bold: false,
+		appearsByDefault: false,
+		findEnabled: false,
+		fieldHelp: 'Test Help',
+		addToForms: false,
+		audited: false,
+		properties: {
+			maxLength: 0,
+			appendOnly: true,
+			defaultValue: 'Test value',
+			comments: 'Test Comment'
+		}
 	});
 
 	newFid = results.id;
@@ -253,8 +266,19 @@ test('updateField()', async (t) => {
 		tableId: newDbid,
 		fieldId: newFid,
 		label: 'Test Field 2',
+		noWrap: true,
+		bold: true,
 		unique: true,
-		required: true
+		required: true,
+		appearsByDefault: true,
+		findEnabled: true,
+		fieldHelp: 'Test Help 2',
+		addToForms: true,
+		properties: {
+			maxLength: 255,
+			appendOnly: false,
+			defaultValue: 'Test value 2'
+		}
 	});
 
 	t.truthy(results.label === 'Test Field 2');

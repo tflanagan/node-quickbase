@@ -271,7 +271,6 @@ export class QuickBase {
 	 * @param param0.bold Display value of field as bold in the Quick Base UI
 	 * @param param0.appearsByDefault Set field as default in reports
 	 * @param param0.findEnabled Allows field to be searchable
-	 * @param param0.doesDataCopy Allows field value to be copied
 	 * @param param0.fieldHelp Field help text
 	 * @param param0.audited Allow field to be tracked by Quick Base Audit Logs
 	 * @param param0.properties Field properties specific to `fieldType`
@@ -285,8 +284,8 @@ export class QuickBase {
 		noWrap,
 		bold,
 		appearsByDefault,
+		addToForms,
 		findEnabled,
-		doesDataCopy,
 		fieldHelp,
 		audited,
 		properties,
@@ -315,12 +314,12 @@ export class QuickBase {
 			data.appearsByDefault = appearsByDefault;
 		}
 
-		if(typeof(findEnabled) !== 'undefined'){
-			data.findEnabled = findEnabled;
+		if(typeof(addToForms) !== 'undefined'){
+			data.addToForms = addToForms;
 		}
 
-		if(typeof(doesDataCopy) !== 'undefined'){
-			data.doesDataCopy = doesDataCopy;
+		if(typeof(findEnabled) !== 'undefined'){
+			data.findEnabled = findEnabled;
 		}
 
 		if(typeof(fieldHelp) !== 'undefined'){
@@ -1707,7 +1706,8 @@ export interface QuickBaseResponseDeleteTable {
 	deletedTableId: string;
 }
 
-export interface QuickBaseRequestCreateField extends QuickBaseRequest, QuickBaseField {
+export interface QuickBaseRequestCreateField extends QuickBaseRequest,
+Pick<QuickBaseField, 'fieldType' | 'label' | 'noWrap' | 'bold' | 'appearsByDefault' | 'findEnabled' | 'fieldHelp' | 'addToForms' | 'audited' | 'properties' | 'permissions'> {
 	tableId: string;
 }
 
@@ -1796,38 +1796,62 @@ interface QuickBaseField {
 	audited?: boolean;
 	addToForms?: boolean;
 	properties?: {
-		defaultValue?: string;
-		foreignKey?: false;
-		allowNewChoices?: false;
-		sortAsGiven?: false;
-		carryChoices?: true;
-		numLines?: number;
-		maxLength?: number;
-		appendOnly?: false;
-		allowHTML?: false;
-		width?: number;
-		lookupTargetFieldId?: number;
-		lookupReferenceFieldId?: number;
-		displayTime?: boolean;
-		displayRelative?: boolean;
-		displayMonth?: string;
+		abbreviate?: boolean;
+		allowHTML?: boolean;
+		allowNewChoices?: boolean;
+		appearsAs?: string;
+		appendOnly?: boolean;
+		autoSave?: boolean;
+		blankIsZero?: boolean;
+		carryChoices?: boolean;
+		choices?: string[];
+		commaStart?: string;
+		comments?: string;
+		compositeFields?: QuickBaseTruncatedField[];
+		currencyFormat?: string;
+		currencySymbol?: string;
+		decimalPlaces?: string;
+		defaultDomain?: string;
+		defaultKind?: string;
 		defaultToday?: boolean;
+		defaultValue?: string;
+		defaultValueLuid?: number;
 		displayDayOfWeek?: boolean;
+		displayEmail?: string;
+		displayImages?: boolean;
+		displayMonth?: string;
+		displayRelative?: boolean;
+		displayTime?: boolean;
 		displayTimezone?: boolean;
+		displayUser?: string;
 		doesAverage?: boolean;
 		doesTotal?: boolean;
-		displayImages?: boolean;
-		snapshotFieldId?: number;
-		blankIsZero?: boolean;
-		currencySymbol?: string;
-		currencyFormat?: string;
-		decimalPlaces?: string;
-		commaStart?: string;
-		numberFormat?: string;
+		exact?: boolean;
+		foreignKey?: boolean;
+		format?: string;
 		formula?: string;
-		displayUser?: string;
-		defaultKind?: string;
-		choices?: string[];
+		hasExtension?: boolean;
+		hours24?: boolean;
+		linkText?: string;
+		lookupTargetFieldId?: number;
+		lookupReferenceFieldId?: number;
+		maxLength?: number;
+		maxVersions?: number;
+		numberFormat?: string;
+		numLines?: number;
+		parentFieldId?: number;
+		primaryKey?: boolean;
+		seeVersions?: boolean;
+		snapshotFieldId?: number;
+		sortAlpha?: boolean;
+		sortAsGiven?: boolean;
+		sourceFieldId?: number;
+		targetFieldId?: number;
+		targetTableName?: string;
+		units?: string;
+		useNewWindow?: boolean;
+		versionMode?: number;
+		width?: number;
 	};
 	permissions?: QuickBaseResponseFieldPermission[];
 }
