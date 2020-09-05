@@ -189,12 +189,19 @@ export class QuickBase {
 					description: string;
 					errors?: string[];
 					error?: string;
+					details?: string[];
 				} = merge({
 					message: 'Quick Base Error',
 					description: 'There was an unexpected error, please check your request and try again'
 				}, err.response.data || {});
 
-				const nErr = new QuickBaseError(err.response.status, data.message, data.errors && data.errors.join(' ') || data.error || data.description, debugData['qb-api-ray']);
+				let description = data.errors && data.errors.join(' ') || data.error || data.description;
+
+				if(data.details){
+					description += ':\n' + data.details.join('\n');
+				}
+
+				const nErr = new QuickBaseError(err.response.status, data.message, description, debugData['qb-api-ray']);
 
 				if(!this.settings.autoRenewTempTokens || this._tempTokenTable === false || !nErr.description || !nErr.description.match(/Your ticket has expired/)){
 					debugResponse(id, nErr, debugData, data);
