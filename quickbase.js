@@ -1080,7 +1080,8 @@ const actions = {
 
 						return record;
 					});
-				} else {
+				} else
+				if (results.rids.length > 0) {
 					results.rids = results.rids.map((record) => {
 						const ret = {
 							rid: record._

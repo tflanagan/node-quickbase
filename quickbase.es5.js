@@ -1127,7 +1127,7 @@ var actions = {
 
 						return record;
 					});
-				} else {
+				} else if (results.rids.length > 0) {
 					results.rids = results.rids.map(function (record) {
 						var ret = {
 							rid: record._
