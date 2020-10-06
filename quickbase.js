@@ -575,6 +575,16 @@ class QueryBuilder {
 							}
 
 							if (result.errcode !== settings.status.errcode) {
+								let errdetail = result.errdetail;
+
+								if (typeof(errdetail) === 'object') {
+									errdetail = errdetail._;
+
+									if (typeof(errdetail) === 'object') {
+										errdetail = errdetail.join('\n');
+									}
+								}
+
 								return reject(new QuickBaseError(result.errcode, result.errtext, result.errdetail, result.action));
 							}
 

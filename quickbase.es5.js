@@ -616,6 +616,16 @@ var QueryBuilder = function () {
 								}
 
 								if (result.errcode !== settings.status.errcode) {
+									var errdetail = result.errdetail;
+
+									if ((typeof errdetail === 'undefined' ? 'undefined' : _typeof(errdetail)) === 'object') {
+										errdetail = errdetail._;
+
+										if ((typeof errdetail === 'undefined' ? 'undefined' : _typeof(errdetail)) === 'object') {
+											errdetail = errdetail.join('\n');
+										}
+									}
+
 									return reject(new QuickBaseError(result.errcode, result.errtext, result.errdetail, result.action));
 								}
 
