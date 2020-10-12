@@ -543,7 +543,7 @@ export class QuickBase {
 	/**
 	 * Delete a Quick Base Relationship
 	 *
-	 * [Quick Base Documentation](https://developer.quickbase.com/operation/updateRelationship)
+	 * [Quick Base Documentation](https://developer.quickbase.com/operation/deleteRelationship)
 	 *
 	 * @param param0.childTableId Quick Base Table ID of the Child Table
 	 * @param param0.relationshipId Quick Base Table Relationship ID
