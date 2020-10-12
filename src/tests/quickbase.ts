@@ -383,7 +383,6 @@ test('createRelationship()', async (t) => {
 test('updateRelationship()', async (t) => {
 	const results = await qb.updateRelationship({
 		relationshipId: newRelationship,
-		parentTableId: newDbid,
 		childTableId: newChildDbid,
 		lookupFieldIds: [ 1 ]
 	});

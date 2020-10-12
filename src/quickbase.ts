@@ -1159,16 +1159,13 @@ export class QuickBase {
 	 * [Quick Base Documentation](https://developer.quickbase.com/operation/updateRelationship)
 	 *
 	 * @param param0.relationshipId Quick Base Table Relationship ID
-	 * @param param0.parentTableId Quick Base Table ID of the Parent Table
 	 * @param param0.childTableId Quick Base Table ID of the Child Table
 	 * @param param0.lookupFieldIds Array of Field IDs to bring from the Parent Table into the Child Table
 	 * @param param0.summaryFields Array of Summary Fields to create in the Parent Table
 	 * @param param0.requestOptions Override axios request configuration
 	 */
-	async updateRelationship({ relationshipId, parentTableId, childTableId, lookupFieldIds, summaryFields, requestOptions }: QuickBaseRequestUpdateRelationship): Promise<QuickBaseRelationship> {
-		const data: DataObj<QuickBaseRequestUpdateRelationship> = {
-			parentTableId: parentTableId
-		};
+	async updateRelationship({ relationshipId, childTableId, lookupFieldIds, summaryFields, requestOptions }: QuickBaseRequestUpdateRelationship): Promise<QuickBaseRelationship> {
+		const data: DataObj<QuickBaseRequestUpdateRelationship> = {};
 
 		if(typeof(lookupFieldIds) !== undefined){
 			data.lookupFieldIds = lookupFieldIds;
@@ -2015,7 +2012,6 @@ export interface QuickBaseRequestCreateRelationship extends QuickBaseRequest {
 
 export interface QuickBaseRequestUpdateRelationship extends QuickBaseRequest {
 	relationshipId: number;
-	parentTableId: string;
 	childTableId: string;
 	lookupFieldIds?: number[];
 	summaryFields?: QuickBaseSummaryField[];
