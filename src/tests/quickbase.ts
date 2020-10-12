@@ -3,13 +3,16 @@
 /* Dependencies */
 import * as dotenv from 'dotenv';
 import { serial as test } from 'ava';
-import { QuickBase, QuickBaseOptions } from '../quickbase';
+import { QuickBase, QuickBaseOptions, QuickBaseRecord } from '../quickbase';
 
 /* Tests */
 dotenv.config();
 
 const QB_REALM = process.env.QB_REALM!;
 const QB_USERTOKEN = process.env.QB_USERTOKEN!;
+
+const TEST_UTF_16 = process.env.TEST_UTF_16 === 'true';
+const TEST_FILE = process.env.TEST_FILE === 'true';
 
 const qbOptions: QuickBaseOptions = {
 	server: 'api.quickbase.com',
@@ -34,14 +37,14 @@ const qbOptions: QuickBaseOptions = {
 
 const qb = new QuickBase(qbOptions);
 
-const testValue: string = 'test value' // - б, в, г, д, ж, з, к, л, м, н, п, р, с, т, ф, х, ц, ч, ш, щ, а, э, ы, у, о, я, е, ё, ю, и';
-// const testFile: string = 'SGVsbG8gV29ybGQhDQo=';
+const testValue: string = 'test value' + (TEST_UTF_16 ? ' б, в, г, д, ж, з, к, л, м, н, п, р, с, т, ф, х, ц, ч, ш, щ, а, э, ы, у, о, я, е, ё, ю, и' : '');
+const testFile: string = 'SGVsbG8gV29ybGQhDQo=';
 
 let newAppId: string;
 let newDbid: string;
 let newChildDbid: string;
 let newFid: number;
-// let newFileFid: number;
+let newFileFid: number;
 let newRid: number;
 let newRelationship: number;
 
@@ -229,13 +232,21 @@ test('getReport()', async (t) => {
 });
 
 test('createField()', async (t) => {
-	let results;/*  = await qb.createField({
-		tableId: newDbid,
-		fieldType: 'file',
-		label: 'Test Field'
-	});
+	let results;
 
-	newFileFid = results.id; */
+	if(TEST_FILE){
+		results = await qb.createField({
+			tableId: newDbid,
+			fieldType: 'file',
+			label: 'Test Field'
+		});
+
+		newFileFid = results.id;
+
+		if(!newFileFid){
+			return t.fail('Unable to create File field');
+		}
+	}
 
 	results = await qb.createField({
 		tableId: newDbid,
@@ -319,21 +330,24 @@ test('getFieldsUsage()', async (t) => {
 });
 
 test('upsertRecords()', async (t) => {
+	const record: QuickBaseRecord = {
+		[newFid]: {
+			value: testValue
+		}
+	};
+
+	if(TEST_FILE){
+		record[newFileFid] = {
+			value: {
+				fileName: "hello world.txt",
+				data: testFile
+			}
+		};
+	}
+
 	const results = await qb.upsertRecords({
 		tableId: newDbid,
-		data: [
-			{
-				[newFid]: {
-					value: testValue
-				}/* ,
-				[newFileFid]: {
-					value: {
-						fileName: "hello world.txt",
-						data: testFile
-					}
-				} */
-			}
-		]
+		data: [ record ]
 	});
 
 	newRid = results.metadata.createdRecordIds[0];
@@ -348,7 +362,7 @@ test('runQuery()', async (t) => {
 		select: [ newFid ]
 	});
 
-	t.truthy(results.fields[0].id === newFid && results.data[0][newFid].value === testValue);
+	t.truthy(results.fields[0].id === newFid && results.data[0][newFid].value === testValue, `Expected values did not match: ${testValue} !== ${results.data[0][newFid].value}`);
 });
 
 test('runReport()', async (t) => {
@@ -407,24 +421,26 @@ test('deleteRelationship()', async (t) => {
 	t.truthy(newRelationship === results.relationshipId);
 });
 
-/* test('downloadFile()', async (t) => {
-	const results = await qb.downloadFile({
-		tableId: newDbid,
-		fieldId: newFileFid,
-		recordId: newRid,
-		versionNumber: 0
+if(TEST_FILE){
+	test('downloadFile()', async (t) => {
+		const results = await qb.downloadFile({
+			tableId: newDbid,
+			fieldId: newFileFid,
+			recordId: newRid,
+			versionNumber: 0
+		});
+
+		t.truthy(results.data);
 	});
 
-	t.truthy(results.data);
-});
+	test('deleteFile()', async (t) => {
+		const results = await qb.deleteFile({
+			tableId: newDbid,
+			fieldId: newFileFid,
+			recordId: newRid,
+			versionNumber: 0
+		});
 
-test('deleteFile()', async (t) => {
-	const results = await qb.deleteFile({
-		tableId: newDbid,
-		fieldId: newFileFid,
-		recordId: newRid,
-		versionNumber: 0
+		t.truthy(results.fileName);
 	});
-
-	t.truthy(results.fileName);
-}); */
+}
