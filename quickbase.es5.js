@@ -601,7 +601,7 @@ var QueryBuilder = function () {
 					});
 
 					response.on('end', function () {
-						if (response.headers['content-type'] === 'application/xml') {
+						if (('' + response.headers['content-type']).match(/application\/xml/)) {
 							xml.parseString(xmlResponse, {
 								async: true
 							}, function (err, result) {

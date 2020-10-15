@@ -560,7 +560,7 @@ class QueryBuilder {
 				});
 
 				response.on('end', () => {
-					if (response.headers['content-type'] === 'application/xml') {
+					if (('' + response.headers['content-type']).match(/application\/xml/)) {
 						xml.parseString(xmlResponse, {
 							async: true
 						}, (err, result) => {
