@@ -8,8 +8,12 @@ import { QuickBase, QuickBaseOptions, QuickBaseRecord } from '../quickbase';
 /* Tests */
 dotenv.config();
 
-const QB_REALM = process.env.QB_REALM!;
-const QB_USERTOKEN = process.env.QB_USERTOKEN!;
+const QB_REALM = process.env.QB_REALM;
+const QB_USERTOKEN = process.env.QB_USERTOKEN;
+
+if(!QB_REALM || !QB_USERTOKEN){
+	throw new Error('Please check your .env file');
+}
 
 const TEST_UTF_16 = process.env.TEST_UTF_16 === 'true';
 const TEST_FILE = process.env.TEST_FILE === 'true';

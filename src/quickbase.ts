@@ -102,6 +102,22 @@ export class QuickBase {
 	}
 
 	/**
+	 * Assigns debugging information from a Quick Base response to the passed in `debugObj` object
+	 *
+	 * @param debugObj Object containing Quick Base response debugging information
+	 * @param headers axios response headers (lowercase keys, values as strings)
+	 */
+	private assignDebugHeaders(debugObj: Partial<QuickBaseResponseDebug>, headers: QuickBaseResponseDebug): void {
+		const data = objKeysToLower(headers);
+
+		debugObj.date = data['date'];
+		debugObj['qb-api-ray'] = data['qb-api-ray'];
+		debugObj['x-ratelimit-remaining'] = +data['x-ratelimit-remaining'];
+		debugObj['x-ratelimit-limit'] = +data['x-ratelimit-limit'];
+		debugObj['x-ratelimit-reset'] = +data['x-ratelimit-reset'];
+	}
+
+	/**
 	 * Returns a simple axios request configuration block
 	 *
 	 * @returns Simple GET configuration with required authorization
@@ -150,15 +166,6 @@ export class QuickBase {
 				reqOptions || {}
 			]);
 			const debugData: Partial<QuickBaseResponseDebug> = {};
-			const assignDebugHeaders = (headers: QuickBaseResponseDebug) => {
-				const tmp = objKeysToLower(headers);
-
-				debugData.date = tmp['date'];
-				debugData['qb-api-ray'] = tmp['qb-api-ray'];
-				debugData['x-ratelimit-remaining'] = +tmp['x-ratelimit-remaining'];
-				debugData['x-ratelimit-limit'] = +tmp['x-ratelimit-limit'];
-				debugData['x-ratelimit-reset'] = +tmp['x-ratelimit-reset'];
-			};
 
 			debugRequest(id, options);
 
@@ -166,7 +173,7 @@ export class QuickBase {
 				const results = await axios.request(options);
 
 				if(results && results.headers){
-					assignDebugHeaders(results.headers);
+					this.assignDebugHeaders(debugData, results.headers);
 				}
 
 				debugResponse(id, debugData, results.data);
@@ -174,7 +181,7 @@ export class QuickBase {
 				return passThrough ? results : results.data;
 			}catch(err){
 				if(err.response && err.response.headers){
-					assignDebugHeaders(err.response.headers);
+					this.assignDebugHeaders(debugData, err.response.headers);
 				}
 
 				if(!err.isAxiosError || !err.response){
@@ -601,8 +608,15 @@ export class QuickBase {
 			url: `files/${tableId}/${recordId}/${fieldId}/${versionNumber}`
 		}, requestOptions, true);
 
+		let filename = results.headers['content-disposition'];
+		let match = filename.match(/filename=\"(.*)\";?/);
+
+		if(match){
+			filename = filename[1];
+		}
+
 		return {
-			fileName: results.headers['content-disposition'],
+			fileName: filename,
 			data: Buffer.from(results.data, 'base64')
 		};
 	}
@@ -1421,7 +1435,7 @@ interface Indexable {
 	[index: string]: any;
 }
 
-type DataObj<T> = Partial<Omit<T, 'appId' | 'tableId' | 'fieldId' | 'requestOptions'>>;
+type DataObj<T> = Partial<Omit<T, 'appId' | 'tableId' | 'childTableId' | 'fieldId' | 'requestOptions'>>;
 
 export type accumulation = 'AVG' | 'SUM' | 'MAX' | 'MIN' | 'STD-DEV' | 'COUNT' | 'COMBINED-TEXT' | 'DISTINCT-COUNT';
 export type dateFormat = 'MM-DD-YYYY' | 'MM-DD-YY' | 'DD-MM-YYYY' | 'DD-MM-YY' | 'YYYY-MM-DD';
@@ -1429,6 +1443,7 @@ export type fieldType = 'text' | 'text-multiple-choice' | 'text-multi-line' | 'm
 export type reportType = 'map' | 'gedit' | 'chart' | 'summary' | 'table' | 'timeline' | 'calendar';
 export type sortOrder = 'ASC' | 'DESC';
 export type groupBy = 'first-word' | 'first-letter' | 'same-value' | '1000000' | '100000' | '10000' | '1000' | '100' | '10' | '5' | '1' | '.1' | '.01' | '.001';
+export type permissionType = 'None' | 'View' | 'Modify';
 
 interface QuickBaseResponseDebug {
 	date: string;
@@ -1442,6 +1457,10 @@ export interface QuickBaseTruncatedField {
 	id: number;
 	name: string;
 	type: fieldType;
+}
+
+export interface QuickBaseForeignKeyField extends Omit<QuickBaseTruncatedField, 'name'> {
+	label: string;
 }
 
 export interface QuickBaseQueryOptions {
@@ -1782,7 +1801,7 @@ export interface QuickBaseResponseTable {
 export interface QuickBaseResponseFieldPermission {
 	role: string;
 	roleId: number;
-	permissionType: 'None' | 'View' | 'Modify';
+	permissionType: permissionType;
 }
 
 interface QuickBaseField {
@@ -1977,9 +1996,7 @@ export interface QuickBaseRelationship {
 	isCrossApp: boolean;
 	parentTableId: string;
 	childTableId: string;
-	foreignKeyField: Omit<QuickBaseTruncatedField, 'name'> & {
-		label: string;
-	};
+	foreignKeyField: QuickBaseForeignKeyField;
 	lookupFields: QuickBaseTruncatedField[];
 	summaryFields: QuickBaseTruncatedField[];
 }
