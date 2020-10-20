@@ -45,6 +45,7 @@ const testValue: string = 'test value' + (TEST_UTF_16 ? ' б, в, г, д, ж, з
 const testFile: string = 'SGVsbG8gV29ybGQhDQo=';
 
 let newAppId: string;
+let copiedAppId: string;
 let newDbid: string;
 let newChildDbid: string;
 let newFid: number;
@@ -116,6 +117,13 @@ test.after.always('deleteApp()', async (t) => {
 		name: 'Test Node Quick Base Application'
 	});
 
+	if(copiedAppId){
+		await qb.deleteApp({
+			appId: copiedAppId,
+			name: 'New Copy Application'
+		});
+	}
+
 	t.truthy(results.deletedAppId === newAppId);
 });
 
@@ -162,6 +170,19 @@ test('updateApp()', async (t) => {
 test('getApp()', async (t) => {
 	const results = await qb.getApp({
 		appId: newAppId
+	});
+
+	t.truthy(results.id);
+});
+
+test('copyApp()', async (t) => {
+	const results = await qb.copyApp({
+		appId: newAppId,
+		name: 'New Copy Application',
+		description: 'A copy of the first application',
+		properties: {
+			keepData: true
+		}
 	});
 
 	t.truthy(results.id);

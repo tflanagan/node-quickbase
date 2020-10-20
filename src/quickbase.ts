@@ -232,6 +232,55 @@ export class QuickBase {
 	}
 
 	/**
+	 * Copy a Quick Base Application
+	 * 
+	 * [Quick Base Documentation](https://developer.quickbase.com/operation/copyApp)
+	 * 
+	 * Example:
+	 * ```typescript
+	 * await qb.copyApp({
+	 * 	appId: 'xxxxxxxxx',
+	 * 	name: 'Copied Application',
+	 * 	description: 'A new copy of my application',
+	 * 	properties: {
+	 * 		assignUserToken: true,
+	 * 		excludeFiles: false,
+	 * 		keepData: true,
+	 * 		usersAndRoles: true
+	 * 	}
+	 * });
+	 * ```
+	 * 
+	 * @param param0.appId Quick Base Application ID that you want to copy
+	 * @param param0.name Application Name of the copied application
+	 * @param param0.description Application Description of the copied application
+	 * @param param0.properties Application properties of the copied application
+	 * @param param0.properties.assignUserToken Whether to add the used user token to the copied application
+	 * @param param0.properties.excludeFiles Whether to exclude file attachments
+	 * @param param0.properties.keepData Whether to copy the source application data
+	 * @param param0.properties.usersAndRoles Assign roles to users in the copied application
+	 */
+	async copyApp({ appId, name, description, properties, requestOptions }: QuickBaseRequestCopyApp): Promise<QuickBaseResponseCopyApp> {
+		const data: DataObj<QuickBaseRequestCopyApp> = {
+			name: name
+		};
+
+		if(typeof(description) !== 'undefined'){
+			data.description = description;
+		}
+
+		if(typeof(properties) !== 'undefined'){
+			data.properties = properties;
+		}
+
+		return this.request({
+			method: 'POST',
+			url: `apps/${appId}/copy`,
+			data: data
+		}, requestOptions);
+	}
+
+	/**
 	 * Create a Quick Base Application
 	 * 
 	 * [Quick Base Documentation](https://developer.quickbase.com/operation/createApp)
@@ -988,7 +1037,7 @@ export class QuickBase {
 	 * @param param0.options.top Maximum number of records to return
 	 * @param param0.requestOptions Override axios request configuration
 	 */
-	async runReport({ tableId, reportId, options, requestOptions }: QuickBaseRequestRunReport): Promise<QuickBaseResponseRunQuery> {
+	async runReport({ tableId, reportId, options, requestOptions }: QuickBaseRequestRunReport): Promise<QuickBaseResponseRunReport> {
 		const params: {
 			tableId: string;
 			skip?: number;
@@ -1455,17 +1504,23 @@ interface QuickBaseResponseDebug {
 
 export interface QuickBaseTruncatedField {
 	id: number;
-	name: string;
+	label: string;
 	type: fieldType;
 }
 
-export interface QuickBaseForeignKeyField extends Omit<QuickBaseTruncatedField, 'name'> {
-	label: string;
+export interface QuickBaseTruncatedReportField extends QuickBaseTruncatedField {
+	labelOverride: string;
+}
+
+export interface QuickBaseReportOptions {
+	skip?: number;
+	top?: number;
 }
 
 export interface QuickBaseQueryOptions {
 	skip?: number;
 	top?: number;
+	compareWithAppLocalTime?: boolean;
 }
 
 export interface QuickBaseSortBy {
@@ -1679,7 +1734,7 @@ export interface QuickBaseRequestRunQuery extends QuickBaseRequest {
 export interface QuickBaseRequestRunReport extends QuickBaseRequest {
 	tableId: string;
 	reportId: number;
-	options?: QuickBaseQueryOptions;
+	options?: QuickBaseReportOptions;
 }
 
 export interface QuickBaseRequestUpsertRecords extends QuickBaseRequest {
@@ -1759,6 +1814,18 @@ export interface QuickBaseRequestGetTempToken extends QuickBaseRequest {
 	dbid: string;
 }
 
+export interface QuickBaseRequestCopyApp extends QuickBaseRequest {
+	appId: string;
+	name: string;
+	description?: string;
+	properties?: {
+		keepData?: boolean;
+		excludeFiles?: boolean;
+		usersAndRoles?: boolean;
+		assignUserToken?: boolean;
+	}
+}
+
 export interface QuickBaseResponseGetTempToken {
 	temporaryAuthorization: string;
 }
@@ -1778,6 +1845,10 @@ export interface QuickBaseResponseApp {
 	dateFormat: dateFormat;
 	variables: QuickBaseVariable[];
 	hasEveryoneOnTheInternet: boolean;
+}
+
+export interface QuickBaseResponseCopyApp extends QuickBaseResponseApp {
+	ancestorId: string;
 }
 
 export interface QuickBaseResponseTable {
@@ -1883,6 +1954,16 @@ export interface QuickBaseResponseField extends QuickBaseField {
 	id: number;
 }
 
+export interface QuickBaseReportColumn {
+	fieldId: number;
+	labelOverride: string;
+}
+
+export interface QuickBaseReportProperties {
+	displayOnlyNewOrChangedRecords: boolean;
+	columnProperties: QuickBaseReportColumn[];
+}
+
 export interface QuickBaseResponseReport {
 	id: number;
 	name: string;
@@ -1902,7 +1983,9 @@ export interface QuickBaseResponseReport {
 		sortBy: QuickBaseSortBy[];
 		groupBy: QuickBaseGroupBy[];
 	};
-	properties: any;
+	properties: QuickBaseReportProperties;
+	usedLast: string;
+	usedCount: number;
 }
 
 export type QuickBaseRecord = {
@@ -1921,6 +2004,18 @@ export interface QuickBaseResponseUpsertRecords {
 		lineErrors?: {
 			[index: string]: string[]
 		}
+	};
+}
+
+export interface QuickBaseResponseRunReport {
+	data: QuickBaseRecord[];
+	fields: QuickBaseTruncatedReportField[];
+	metadata: {
+		numFields: number;
+		numRecords: number;
+		skip: number;
+		top: number;
+		totalRecords: number;
 	};
 }
 
@@ -1996,7 +2091,7 @@ export interface QuickBaseRelationship {
 	isCrossApp: boolean;
 	parentTableId: string;
 	childTableId: string;
-	foreignKeyField: QuickBaseForeignKeyField;
+	foreignKeyField: QuickBaseTruncatedField;
 	lookupFields: QuickBaseTruncatedField[];
 	summaryFields: QuickBaseTruncatedField[];
 }
