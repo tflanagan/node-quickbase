@@ -1,0 +1,19 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+indent_style = tab
+# Omitting indent_size allows developers to define their own tab width
+# indent_size = 4
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+# Ignore Dependencies and Generated Material
+[{node_modules,docs,dist,assets}/**]
+charset = unset
+end_of_line = unset
+indent_size = unset
+indent_style = unset
+trim_trailing_whitespace = unset
+insert_final_newline = unset

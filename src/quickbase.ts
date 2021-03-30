@@ -14,7 +14,7 @@ const debugRequest = debug('quickbase:request');
 const debugResponse = debug('quickbase:response');
 
 /* Globals */
-const VERSION = require('../package.json').version;
+const VERSION = require('../package.json').version; // eslint-disable-line @typescript-eslint/no-var-requires
 const IS_BROWSER = typeof(window) !== 'undefined';
 
 /* Main Class */
@@ -218,7 +218,7 @@ export class QuickBase {
 
 				debugResponse(id, 'Expired token detected, renewing and trying again...', debugData, data);
 
-				let results = await this.getTempToken({
+				const results = await this.getTempToken({
 					dbid: this._tempTokenTable
 				});
 
@@ -233,9 +233,9 @@ export class QuickBase {
 
 	/**
 	 * Copy a Quick Base Application
-	 * 
+	 *
 	 * [Quick Base Documentation](https://developer.quickbase.com/operation/copyApp)
-	 * 
+	 *
 	 * Example:
 	 * ```typescript
 	 * await qb.copyApp({
@@ -250,7 +250,7 @@ export class QuickBase {
 	 * 	}
 	 * });
 	 * ```
-	 * 
+	 *
 	 * @param param0.appId Quick Base Application ID that you want to copy
 	 * @param param0.name Application Name of the copied application
 	 * @param param0.description Application Description of the copied application
@@ -282,9 +282,9 @@ export class QuickBase {
 
 	/**
 	 * Create a Quick Base Application
-	 * 
+	 *
 	 * [Quick Base Documentation](https://developer.quickbase.com/operation/createApp)
-	 * 
+	 *
 	 * Example:
 	 * ```typescript
 	 * await qb.deleteApp({
@@ -297,7 +297,7 @@ export class QuickBase {
 	 * 	}]
 	 * });
 	 * ```
-	 * 
+	 *
 	 * @param param0.name Application name
 	 * @param param0.description Application description
 	 * @param param0.assignToken Assign new application to current user token
@@ -354,7 +354,7 @@ export class QuickBase {
 		properties,
 		permissions,
 		requestOptions
-	}: QuickBaseRequestCreateField): Promise<QuickBaseResponseCreateField> {
+	}: QuickBaseRequestCreateField): Promise<QuickBaseResponseField> {
 		const data: DataObj<QuickBaseRequestCreateField> = {};
 
 		if(typeof(label) !== 'undefined'){
@@ -452,12 +452,11 @@ export class QuickBase {
 	 * @param param0.appId Quick Base Application ID
 	 * @param param0.name Name of the new table
 	 * @param param0.description Description of the new table
-	 * @param param0.iconName Icon for the new table
-	 * @param param0.singularNoun Singular noun for a record in the new table
-	 * @param param0.pluralNoun Plural noun for records in the new table
+	 * @param param0.singleRecordName Singular noun for a record in the new table
+	 * @param param0.pluralRecordName Plural noun for records in the new table
 	 * @param param0.requestOptions Override axios request configuration
 	 */
-	async createTable({ appId, name, description, iconName, singularNoun, pluralNoun, requestOptions }: QuickBaseRequestCreateTable): Promise<QuickBaseResponseCreateTable> {
+	async createTable({ appId, name, description, singleRecordName, pluralRecordName, requestOptions }: QuickBaseRequestCreateTable): Promise<QuickBaseResponseTable> {
 		const data: DataObj<QuickBaseRequestCreateTable> = {
 			name: name
 		};
@@ -466,16 +465,12 @@ export class QuickBase {
 			data.description = description;
 		}
 
-		if(typeof(iconName) !== 'undefined'){
-			data.iconName = iconName;
+		if(typeof(singleRecordName) !== 'undefined'){
+			data.singleRecordName = singleRecordName;
 		}
 
-		if(typeof(singularNoun) !== 'undefined'){
-			data.singularNoun = singularNoun;
-		}
-
-		if(typeof(pluralNoun) !== 'undefined'){
-			data.pluralNoun = pluralNoun;
+		if(typeof(pluralRecordName) !== 'undefined'){
+			data.pluralRecordName = pluralRecordName;
 		}
 
 		return this.request({
@@ -658,14 +653,14 @@ export class QuickBase {
 		}, requestOptions, true);
 
 		let filename = results.headers['content-disposition'];
-		let match = filename.match(/filename=\"(.*)\";?/);
+		const match = filename.match(/filename="(.*)";?/);
 
 		if(match){
-			filename = filename[1];
+			filename = match[1];
 		}
 
 		return {
-			fileName: filename,
+			filename: filename,
 			data: Buffer.from(results.data, 'base64')
 		};
 	}
@@ -688,6 +683,27 @@ export class QuickBase {
 	async getApp({ appId, requestOptions }: QuickBaseRequestGetApp): Promise<QuickBaseResponseApp> {
 		return this.request({
 			url: `apps/${appId}`
+		}, requestOptions);
+	}
+
+	/**
+	 * Get all events of a Quick Base Application
+	 *
+	 * [Quick Base Documentation](https://developer.quickbase.com/operation/getAppEvents)
+	 *
+	 * Example:
+	 * ```typescript
+	 * await qb.getAppEvents({
+	 * 	appId: 'xxxxxxxxx'
+	 * });
+	 * ```
+	 *
+	 * @param param0.appId Quick Base Application ID
+	 * @param param0.requestOptions Override axios request configuration
+	 */
+	async getAppEvents({ appId, requestOptions }: QuickBaseRequestGetAppEvents): Promise<QuickBaseResponseAppEvent[]> {
+		return this.request({
+			url: `apps/${appId}/events`
 		}, requestOptions);
 	}
 
@@ -942,7 +958,7 @@ export class QuickBase {
 	 * @param param0.requestOptions Override axios request configuration
 	 */
 	async getTempToken({ dbid, requestOptions }: QuickBaseRequestGetTempToken): Promise<QuickBaseResponseGetTempToken> {
-		var results = await this.request<QuickBaseResponseGetTempToken>({
+		const results = await this.request<QuickBaseResponseGetTempToken>({
 			url: `auth/temporary/${dbid}`,
 			withCredentials: true
 		}, requestOptions);
@@ -1083,9 +1099,9 @@ export class QuickBase {
 
 	/**
 	 * Update a Quick Base Application
-	 * 
+	 *
 	 * [Quick Base Documentation](https://developer.quickbase.com/operation/updateApp)
-	 * 
+	 *
 	 * Example:
 	 * ```typescript
 	 * await qb.updateApp({
@@ -1098,7 +1114,7 @@ export class QuickBase {
 	 * 	}]
 	 * });
 	 * ```
-	 * 
+	 *
 	 * @param param0.appId Quick Base Application ID
 	 * @param param0.name Application name
 	 * @param param0.description Application Description
@@ -1162,7 +1178,7 @@ export class QuickBase {
 		properties,
 		permissions,
 		requestOptions
-	}: QuickBaseRequestUpdateField): Promise<QuickBaseResponseUpdateField> {
+	}: QuickBaseRequestUpdateField): Promise<QuickBaseResponseField> {
 		const data: DataObj<QuickBaseRequestUpdateField> = {};
 
 		if(typeof(label) !== 'undefined'){
@@ -1253,12 +1269,11 @@ export class QuickBase {
 	 * @param param0.appId Quick Base Application ID
 	 * @param param0.name Name of the new table
 	 * @param param0.description Description of the new table
-	 * @param param0.iconName Icon for the new table
-	 * @param param0.singularNoun Singular noun for a record in the new table
-	 * @param param0.pluralNoun Plural noun for records in the new table
+	 * @param param0.singleRecordName Singular noun for a record in the new table
+	 * @param param0.pluralRecordName Plural noun for records in the new table
 	 * @param param0.requestOptions Override axios request configuration
 	 */
-	async updateTable({ appId, tableId, name, description, iconName, singularNoun, pluralNoun, requestOptions }: QuickBaseRequestUpdateTable): Promise<QuickBaseResponseUpdateTable> {
+	async updateTable({ appId, tableId, name, description, singleRecordName, pluralRecordName, requestOptions }: QuickBaseRequestUpdateTable): Promise<QuickBaseResponseTable> {
 		const data: DataObj<QuickBaseRequestUpdateTable> = {};
 
 		if(typeof(name) !== 'undefined'){
@@ -1269,16 +1284,12 @@ export class QuickBase {
 			data.description = description;
 		}
 
-		if(typeof(iconName) !== 'undefined'){
-			data.iconName = iconName;
+		if(typeof(singleRecordName) !== 'undefined'){
+			data.singleRecordName = singleRecordName;
 		}
 
-		if(typeof(singularNoun) !== 'undefined'){
-			data.singularNoun = singularNoun;
-		}
-
-		if(typeof(pluralNoun) !== 'undefined'){
-			data.pluralNoun = pluralNoun;
+		if(typeof(pluralRecordName) !== 'undefined'){
+			data.pluralRecordName = pluralRecordName;
 		}
 
 		return this.request({
@@ -1344,6 +1355,7 @@ export class QuickBase {
 
 			if(lines.length > 0){
 				throw new QuickBaseError(500, 'Error executing upsertRecords', lines.map((line) => {
+					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 					return `Line #${line}: ${response.metadata.lineErrors![line].join('. ')}`;
 				}).join('\n'), results.headers['qb-api-ray']);
 			}
@@ -1481,7 +1493,7 @@ function objKeysToLower<O>(obj: O): O {
 
 /* Quick Base Interfaces */
 interface Indexable {
-	[index: string]: any;
+	[index: string]: any; // eslint-disable-line @typescript-eslint/no-explicit-any
 }
 
 type DataObj<T> = Partial<Omit<T, 'appId' | 'tableId' | 'childTableId' | 'fieldId' | 'requestOptions'>>;
@@ -1493,6 +1505,7 @@ export type reportType = 'map' | 'gedit' | 'chart' | 'summary' | 'table' | 'time
 export type sortOrder = 'ASC' | 'DESC';
 export type groupBy = 'first-word' | 'first-letter' | 'same-value' | '1000000' | '100000' | '10000' | '1000' | '100' | '10' | '5' | '1' | '.1' | '.01' | '.001';
 export type permissionType = 'None' | 'View' | 'Modify';
+export type eventType = 'qb-action' | 'webhook' | 'email-notification' | 'subscription' | 'reminder' | 'automation';
 
 interface QuickBaseResponseDebug {
 	date: string;
@@ -1500,6 +1513,12 @@ interface QuickBaseResponseDebug {
 	'x-ratelimit-remaining': number;
 	'x-ratelimit-limit': number;
 	'x-ratelimit-reset': number;
+}
+
+export interface QuickBaseUser {
+	email: string;
+	id: string;
+	name: string;
 }
 
 export interface QuickBaseTruncatedField {
@@ -1526,7 +1545,7 @@ export interface QuickBaseQueryOptions {
 export interface QuickBaseSortBy {
 	fieldId: number;
 	order: sortOrder;
-};
+}
 
 export interface QuickBaseGroupBy {
 	fieldId: number;
@@ -1684,6 +1703,10 @@ export interface QuickBaseRequestGetApp extends QuickBaseRequest {
 	appId: string;
 }
 
+export interface QuickBaseRequestGetAppEvents extends QuickBaseRequest {
+	appId: string;
+}
+
 export interface QuickBaseRequestGetAppTables extends QuickBaseRequest {
 	appId: string;
 }
@@ -1748,9 +1771,8 @@ export interface QuickBaseRequestCreateTable extends QuickBaseRequest {
 	appId: string;
 	name: string;
 	description?: string;
-	iconName?: string;
-	singularNoun?: string;
-	pluralNoun?: string;
+	singleRecordName?: string;
+	pluralRecordName?: string;
 }
 
 export interface QuickBaseRequestUpdateTable extends QuickBaseRequest {
@@ -1758,9 +1780,8 @@ export interface QuickBaseRequestUpdateTable extends QuickBaseRequest {
 	tableId: string;
 	name?: string;
 	description?: string;
-	iconName?: string;
-	singularNoun?: string;
-	pluralNoun?: string;
+	singleRecordName?: string;
+	pluralRecordName?: string;
 }
 
 export interface QuickBaseRequestDeleteTable extends QuickBaseRequest {
@@ -1768,16 +1789,32 @@ export interface QuickBaseRequestDeleteTable extends QuickBaseRequest {
 	tableId: string;
 }
 
-export interface QuickBaseResponseCreateTable {
-	id: string;
+export interface QuickBaseResponseAppEvent {
+	type: eventType;
+	owner: QuickBaseUser;
+	isActive: boolean;
+	tableId: string;
 	name: string;
-	description: string;
-	iconName: string;
-	singularNoun: string;
-	pluralNoun: string;
+	url?: string;
 }
 
-export interface QuickBaseResponseUpdateTable extends QuickBaseResponseCreateTable {
+export interface QuickBaseResponseTable {
+	id: string;
+	name: string;
+	created: string;
+	updated: string;
+	alias: string;
+	description: string;
+	nextRecordId: number;
+	nextFieldId: number;
+	defaultSortFieldId: number;
+	defaultSortOrder: sortOrder;
+	singleRecordName: string;
+	pluralRecordName: string;
+	keyFieldId: number;
+	sizeLimit: string;
+	spaceUsed: string;
+	spaceRemaining: string;
 }
 
 export interface QuickBaseResponseDeleteTable {
@@ -1787,9 +1824,6 @@ export interface QuickBaseResponseDeleteTable {
 export interface QuickBaseRequestCreateField extends QuickBaseRequest,
 Pick<QuickBaseField, 'fieldType' | 'label' | 'noWrap' | 'bold' | 'appearsByDefault' | 'findEnabled' | 'fieldHelp' | 'addToForms' | 'audited' | 'properties' | 'permissions'> {
 	tableId: string;
-}
-
-export interface QuickBaseResponseCreateField extends QuickBaseResponseField {
 }
 
 export interface QuickBaseRequestDeleteFields extends QuickBaseRequest {
@@ -1805,9 +1839,6 @@ export interface QuickBaseResponseDeleteFields {
 export interface QuickBaseRequestUpdateField extends QuickBaseRequest, Pick<QuickBaseField, 'required' | 'unique' | 'label' | 'noWrap' | 'bold' | 'appearsByDefault' | 'findEnabled' | 'fieldHelp' | 'addToForms' | 'properties' | 'permissions'> {
 	tableId: string;
 	fieldId: number;
-}
-
-export interface QuickBaseResponseUpdateField extends QuickBaseResponseField {
 }
 
 export interface QuickBaseRequestGetTempToken extends QuickBaseRequest {
@@ -1849,24 +1880,6 @@ export interface QuickBaseResponseApp {
 
 export interface QuickBaseResponseCopyApp extends QuickBaseResponseApp {
 	ancestorId: string;
-}
-
-export interface QuickBaseResponseTable {
-	id: string;
-	alias: string;
-	created: number;
-	updated: number;
-	name: string;
-	description: string;
-	singleRecordName: string;
-	pluralRecordName: string;
-	timeZone: string;
-	dateFormat: dateFormat;
-	keyFieldId: number;
-	nextFieldId: number;
-	nextRecordId: number;
-	defaultSortFieldId: number;
-	defaultSortOrder: sortOrder;
 }
 
 export interface QuickBaseResponseFieldPermission {
@@ -1940,6 +1953,10 @@ interface QuickBaseField {
 		sortAlpha?: boolean;
 		sortAsGiven?: boolean;
 		sourceFieldId?: number;
+		summaryReferenceFieldId?: number;
+		summaryTargetFieldId?: number;
+		summaryFunction?: accumulation;
+		summaryQuery?: string;
 		targetFieldId?: number;
 		targetTableName?: string;
 		units?: string;
@@ -1990,7 +2007,7 @@ export interface QuickBaseResponseReport {
 
 export type QuickBaseRecord = {
 	[index in number | string]: {
-		value: any;
+		value: any; // eslint-disable-line @typescript-eslint/no-explicit-any
 	};
 };
 
@@ -2146,7 +2163,7 @@ export interface QuickBaseRequestDownloadFile extends QuickBaseRequest {
 }
 
 export interface QuickBaseResponseDownloadFile {
-	fileName: string;
+	filename: string;
 	data: Buffer;
 }
 
@@ -2161,11 +2178,7 @@ export interface QuickBaseResponseDeleteFile {
 	versionNumber: number;
 	fileName: string;
 	uploaded: string;
-	creator: {
-		email: string;
-		id: string;
-		name: string;
-	}
+	creator: QuickBaseUser;
 }
 
 /* Export Supporting Types/Classes */
@@ -2175,6 +2188,5 @@ export {
 
 /* Export to Browser */
 if(IS_BROWSER){
-	// @ts-ignore
 	window.QuickBase = QuickBase;
 }

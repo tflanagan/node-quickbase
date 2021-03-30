@@ -5,5 +5,7 @@ bower.json
 build.js
 tsconfig.json
 ava.config.js
+.editorconfig
 .env
 .env.example
+.eslintrc.js

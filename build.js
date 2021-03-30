@@ -81,6 +81,18 @@ const readFile = async (path) => {
 	});
 };
 
+const unlinkFile = async (path) => {
+	return new Promise((resolve, reject) => {
+		fs.unlink(path, (err) => {
+			if(err){
+				return reject(err);
+			}
+
+			resolve();
+		});
+	});
+};
+
 const writeFile = async (path, data) => {
 	return new Promise((resolve, reject) => {
 		fs.writeFile(path, data, (err) => {
@@ -185,9 +197,7 @@ const writeFile = async (path, data) => {
 		].join('\n'));
 
 		console.log('Cleanup...');
-		await exec([
-			`rm ./dist/${mainFilename}.browserify.js`
-		].join(' && '));
+		await unlinkFile(`./dist/${mainFilename}.browserify.js`);
 
 		console.log('Done building.');
 	}catch(err){

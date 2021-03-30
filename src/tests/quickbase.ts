@@ -175,15 +175,30 @@ test('getApp()', async (t) => {
 	t.truthy(results.id);
 });
 
+test('getAppEvents()', async (t) => {
+	const results = await qb.getAppEvents({
+		appId: newAppId
+	});
+
+	// TODO: need some way to create an event
+
+	t.truthy(results.length === 0);
+});
+
 test('copyApp()', async (t) => {
 	const results = await qb.copyApp({
 		appId: newAppId,
 		name: 'New Copy Application',
 		description: 'A copy of the first application',
 		properties: {
-			keepData: true
+			keepData: true,
+			assignUserToken: true,
+			excludeFiles: false,
+			usersAndRoles: true
 		}
 	});
+
+	copiedAppId = results.id;
 
 	t.truthy(results.id);
 });
