@@ -102,9 +102,9 @@ export class QuickBase {
 	}
 
 	/**
-	 * Assigns debugging information from a Quick Base response to the passed in `debugObj` object
+	 * Assigns debugging information from a Quickbase response to the passed in `debugObj` object
 	 *
-	 * @param debugObj Object containing Quick Base response debugging information
+	 * @param debugObj Object containing Quickbase response debugging information
 	 * @param headers axios response headers (lowercase keys, values as strings)
 	 */
 	private assignDebugHeaders(debugObj: Partial<QuickBaseResponseDebug>, headers: QuickBaseResponseDebug): void {
@@ -149,7 +149,7 @@ export class QuickBase {
 	}
 
 	/**
-	 * Executes Quick Base API call
+	 * Executes Quickbase API call
 	 *
 	 * @param actOptions axios request configuration specific for API call
 	 * @param reqOptions axios request configuration passed in from user
@@ -198,7 +198,7 @@ export class QuickBase {
 					error?: string;
 					details?: string[];
 				} = merge({
-					message: 'Quick Base Error',
+					message: 'Quickbase Error',
 					description: 'There was an unexpected error, please check your request and try again'
 				}, err.response.data || {});
 
@@ -232,9 +232,9 @@ export class QuickBase {
 	}
 
 	/**
-	 * Copy a Quick Base Application
+	 * Copy a Quickbase Application
 	 *
-	 * [Quick Base Documentation](https://developer.quickbase.com/operation/copyApp)
+	 * [Quickbase Documentation](https://developer.quickbase.com/operation/copyApp)
 	 *
 	 * Example:
 	 * ```typescript
@@ -251,7 +251,7 @@ export class QuickBase {
 	 * });
 	 * ```
 	 *
-	 * @param param0.appId Quick Base Application ID that you want to copy
+	 * @param param0.appId Quickbase Application ID that you want to copy
 	 * @param param0.name Application Name of the copied application
 	 * @param param0.description Application Description of the copied application
 	 * @param param0.properties Application properties of the copied application
@@ -281,9 +281,9 @@ export class QuickBase {
 	}
 
 	/**
-	 * Create a Quick Base Application
+	 * Create a Quickbase Application
 	 *
-	 * [Quick Base Documentation](https://developer.quickbase.com/operation/createApp)
+	 * [Quickbase Documentation](https://developer.quickbase.com/operation/createApp)
 	 *
 	 * Example:
 	 * ```typescript
@@ -301,7 +301,7 @@ export class QuickBase {
 	 * @param param0.name Application name
 	 * @param param0.description Application description
 	 * @param param0.assignToken Assign new application to current user token
-	 * @param param0.variables Array of Quick Base Variables
+	 * @param param0.variables Array of Quickbase Variables
 	 * @param param0.requestOptions Override axios request configuration
 	 */
 	async createApp({ name, description = '', assignToken = false, variables, requestOptions }: QuickBaseRequestCreateApp): Promise<QuickBaseResponseApp> {
@@ -323,21 +323,21 @@ export class QuickBase {
 	}
 
 	/**
-	 * Create a Quick Base Field
+	 * Create a Quickbase Field
 	 *
-	 * [Quick Base Documentation](https://developer.quickbase.com/operation/createField)
+	 * [Quickbase Documentation](https://developer.quickbase.com/operation/createField)
 	 *
-	 * @param param0.tableId Quick Base Table ID
+	 * @param param0.tableId Quickbase Table ID
 	 * @param param0.label Label of new field
-	 * @param param0.fieldType Type of new field ([Quick Base Documentation](https://help.quickbase.com/user-assistance/field_types.html))
-	 * @param param0.noWrap Wrap value of field in the Quick Base UI
-	 * @param param0.bold Display value of field as bold in the Quick Base UI
+	 * @param param0.fieldType Type of new field ([Quickbase Documentation](https://help.quickbase.com/user-assistance/field_types.html))
+	 * @param param0.noWrap Wrap value of field in the Quickbase UI
+	 * @param param0.bold Display value of field as bold in the Quickbase UI
 	 * @param param0.appearsByDefault Set field as default in reports
 	 * @param param0.findEnabled Allows field to be searchable
 	 * @param param0.fieldHelp Field help text
-	 * @param param0.audited Allow field to be tracked by Quick Base Audit Logs
+	 * @param param0.audited Allow field to be tracked by Quickbase Audit Logs
 	 * @param param0.properties Field properties specific to `fieldType`
-	 * @param param0.permissions Field permissions for Quick Base roles
+	 * @param param0.permissions Field permissions for Quickbase roles
 	 * @param param0.requestOptions Override axios request configuration
 	 */
 	async createField({
@@ -409,12 +409,12 @@ export class QuickBase {
 	}
 
 	/**
-	 * Create a Quick Base Relationship
+	 * Create a Quickbase Relationship
 	 *
-	 * [Quick Base Documentation](https://developer.quickbase.com/operation/createRelationship)
+	 * [Quickbase Documentation](https://developer.quickbase.com/operation/createRelationship)
 	 *
-	 * @param param0.parentTableId Quick Base Table ID of the Parent Table
-	 * @param param0.childTableId Quick Base Table ID of the Child Table
+	 * @param param0.parentTableId Quickbase Table ID of the Parent Table
+	 * @param param0.childTableId Quickbase Table ID of the Child Table
 	 * @param param0.foreignKeyField An Object with a label property to describe the new reference field
 	 * @param param0.lookupFieldIds Array of Field IDs to bring from the Parent Table into the Child Table
 	 * @param param0.summaryFields Array of Summary Fields to create in the Parent Table
@@ -445,11 +445,11 @@ export class QuickBase {
 	}
 
 	/**
-	 * Create a Quick Base Table
+	 * Create a Quickbase Table
 	 *
-	 * [Quick Base Documentation](https://developer.quickbase.com/operation/createTable)
+	 * [Quickbase Documentation](https://developer.quickbase.com/operation/createTable)
 	 *
-	 * @param param0.appId Quick Base Application ID
+	 * @param param0.appId Quickbase Application ID
 	 * @param param0.name Name of the new table
 	 * @param param0.description Description of the new table
 	 * @param param0.singleRecordName Singular noun for a record in the new table
@@ -481,9 +481,9 @@ export class QuickBase {
 	}
 
 	/**
-	 * Delete an Application from Quick Base
+	 * Delete an Application from Quickbase
 	 *
-	 * [Quick Base Documentation](https://developer.quickbase.com/operation/deleteApp)
+	 * [Quickbase Documentation](https://developer.quickbase.com/operation/deleteApp)
 	 *
 	 * Example:
 	 * ```typescript
@@ -493,8 +493,8 @@ export class QuickBase {
 	 * });
 	 * ```
 	 *
-	 * @param param0.appId Quick Base Application ID
-	 * @param param0.name Quick Base Application Name
+	 * @param param0.appId Quickbase Application ID
+	 * @param param0.name Quickbase Application Name
 	 * @param param0.requestOptions Override axios request configuration
 	 */
 	async deleteApp({ appId, name, requestOptions }: QuickBaseRequestDeleteApp): Promise<QuickBaseResponseDeleteApp> {
@@ -508,9 +508,9 @@ export class QuickBase {
 	}
 
 	/**
-	 * Delete fields from a Quick Base Table
+	 * Delete fields from a Quickbase Table
 	 *
-	 * [Quick Base Documentation](https://developer.quickbase.com/operation/deleteFields)
+	 * [Quickbase Documentation](https://developer.quickbase.com/operation/deleteFields)
 	 *
 	 * Example:
 	 * ```typescript
@@ -520,8 +520,8 @@ export class QuickBase {
 	 * });
 	 * ```
 	 *
-	 * @param param0.tableId Quick Base Table Table ID
-	 * @param param0.fieldIds An array of Quick Base Field IDs
+	 * @param param0.tableId Quickbase Table Table ID
+	 * @param param0.fieldIds An array of Quickbase Field IDs
 	 * @param param0.requestOptions Override axios request configuration
 	 */
 	async deleteFields({ tableId, fieldIds, requestOptions }: QuickBaseRequestDeleteFields): Promise<QuickBaseResponseDeleteFields> {
@@ -546,13 +546,13 @@ export class QuickBase {
 	}
 
 	/**
-	 * Delete a file stored in a Quick Base file attachment field
+	 * Delete a file stored in a Quickbase file attachment field
 	 *
-	 * [Quick Base Documentation](https://developer.quickbase.com/operation/deleteFile)
+	 * [Quickbase Documentation](https://developer.quickbase.com/operation/deleteFile)
 	 *
-	 * @param param0.tableId Quick Base Table ID
-	 * @param param0.recordId Quick Base Record ID
-	 * @param param0.fieldId Quick Base Field ID
+	 * @param param0.tableId Quickbase Table ID
+	 * @param param0.recordId Quickbase Record ID
+	 * @param param0.fieldId Quickbase Field ID
 	 * @param param0.versionNumber File attachment version number
 	 * @param param0.requestOptions Override axios request configuration
 	 */
@@ -564,9 +564,9 @@ export class QuickBase {
 	}
 
 	/**
-	 * Delete records from a Quick Base Table
+	 * Delete records from a Quickbase Table
 	 *
-	 * [Quick Base Documentation](https://developer.quickbase.com/operation/deleteRecords)
+	 * [Quickbase Documentation](https://developer.quickbase.com/operation/deleteRecords)
 	 *
 	 * Example:
 	 * ```typescript
@@ -576,8 +576,8 @@ export class QuickBase {
 	 * });
 	 * ```
 	 *
-	 * @param param0.tableId Quick Base Table ID
-	 * @param param0.where Quick Base Where Clause
+	 * @param param0.tableId Quickbase Table ID
+	 * @param param0.where Quickbase Where Clause
 	 * @param param0.requestOptions Override axios request configuration
 	 */
 	async deleteRecords({ tableId, where, requestOptions }: QuickBaseRequestDeleteRecords): Promise<QuickBaseResponseDeleteRecords> {
@@ -592,12 +592,12 @@ export class QuickBase {
 	}
 
 	/**
-	 * Delete a Quick Base Relationship
+	 * Delete a Quickbase Relationship
 	 *
-	 * [Quick Base Documentation](https://developer.quickbase.com/operation/deleteRelationship)
+	 * [Quickbase Documentation](https://developer.quickbase.com/operation/deleteRelationship)
 	 *
-	 * @param param0.childTableId Quick Base Table ID of the Child Table
-	 * @param param0.relationshipId Quick Base Table Relationship ID
+	 * @param param0.childTableId Quickbase Table ID of the Child Table
+	 * @param param0.relationshipId Quickbase Table Relationship ID
 	 * @param param0.requestOptions Override axios request configuration
 	 */
 	async deleteRelationship({ childTableId, relationshipId, requestOptions }: QuickBaseRequestDeleteRelationship): Promise<QuickBaseResponseDeleteRelationship> {
@@ -608,9 +608,9 @@ export class QuickBase {
 	}
 
 	/**
-	 * Delete a Table from a Quick Base Application
+	 * Delete a Table from a Quickbase Application
 	 *
-	 * [Quick Base Documentation](https://developer.quickbase.com/operation/deleteTable)
+	 * [Quickbase Documentation](https://developer.quickbase.com/operation/deleteTable)
 	 *
 	 * Example:
 	 * ```typescript
@@ -620,8 +620,8 @@ export class QuickBase {
 	 * });
 	 * ```
 	 *
-	 * @param param0.appId Quick Base Application ID
-	 * @param param0.tableId Quick Base Table ID
+	 * @param param0.appId Quickbase Application ID
+	 * @param param0.tableId Quickbase Table ID
 	 * @param param0.requestOptions Override axios request configuration
 	 */
 	async deleteTable({ appId, tableId, requestOptions }: QuickBaseRequestDeleteTable): Promise<QuickBaseResponseDeleteTable> {
@@ -632,13 +632,13 @@ export class QuickBase {
 	}
 
 	/**
-	 * Download a file stored in a Quick Base file attachment field
+	 * Download a file stored in a Quickbase file attachment field
 	 *
-	 * [Quick Base Documentation](https://developer.quickbase.com/operation/downloadFile)
+	 * [Quickbase Documentation](https://developer.quickbase.com/operation/downloadFile)
 	 *
-	 * @param param0.tableId Quick Base Table ID
-	 * @param param0.recordId Quick Base Record ID
-	 * @param param0.fieldId Quick Base Field ID
+	 * @param param0.tableId Quickbase Table ID
+	 * @param param0.recordId Quickbase Record ID
+	 * @param param0.fieldId Quickbase Field ID
 	 * @param param0.versionNumber File attachment version number
 	 * @param param0.requestOptions Override axios request configuration
 	 */
@@ -666,9 +666,9 @@ export class QuickBase {
 	}
 
 	/**
-	 * Get the schema of a Quick Base Application
+	 * Get the schema of a Quickbase Application
 	 *
-	 * [Quick Base Documentation](https://developer.quickbase.com/operation/getApp)
+	 * [Quickbase Documentation](https://developer.quickbase.com/operation/getApp)
 	 *
 	 * Example:
 	 * ```typescript
@@ -677,7 +677,7 @@ export class QuickBase {
 	 * });
 	 * ```
 	 *
-	 * @param param0.appId Quick Base Application ID
+	 * @param param0.appId Quickbase Application ID
 	 * @param param0.requestOptions Override axios request configuration
 	 */
 	async getApp({ appId, requestOptions }: QuickBaseRequestGetApp): Promise<QuickBaseResponseApp> {
@@ -687,9 +687,9 @@ export class QuickBase {
 	}
 
 	/**
-	 * Get all events of a Quick Base Application
+	 * Get all events of a Quickbase Application
 	 *
-	 * [Quick Base Documentation](https://developer.quickbase.com/operation/getAppEvents)
+	 * [Quickbase Documentation](https://developer.quickbase.com/operation/getAppEvents)
 	 *
 	 * Example:
 	 * ```typescript
@@ -698,7 +698,7 @@ export class QuickBase {
 	 * });
 	 * ```
 	 *
-	 * @param param0.appId Quick Base Application ID
+	 * @param param0.appId Quickbase Application ID
 	 * @param param0.requestOptions Override axios request configuration
 	 */
 	async getAppEvents({ appId, requestOptions }: QuickBaseRequestGetAppEvents): Promise<QuickBaseResponseAppEvent[]> {
@@ -708,9 +708,9 @@ export class QuickBase {
 	}
 
 	/**
-	 * Get all Quick Base Tables from a Quick Base Application
+	 * Get all Quickbase Tables from a Quickbase Application
 	 *
-	 * [Quick Base Documentation](https://developer.quickbase.com/operation/getAppTables)
+	 * [Quickbase Documentation](https://developer.quickbase.com/operation/getAppTables)
 	 *
 	 * Example:
 	 * ```typescript
@@ -719,7 +719,7 @@ export class QuickBase {
 	 * });
 	 * ```
 	 *
-	 * @param param0.appId Quick Base Application ID
+	 * @param param0.appId Quickbase Application ID
 	 * @param param0.requestOptions Override axios request configuration
 	 */
 	async getAppTables({ appId, requestOptions }: QuickBaseRequestGetAppTables): Promise<QuickBaseResponseTable[]> {
@@ -732,9 +732,9 @@ export class QuickBase {
 	}
 
 	/**
-	 * Get a single Quick Base Field from a Quick Base Table
+	 * Get a single Quickbase Field from a Quickbase Table
 	 *
-	 * [Quick Base Documentation](https://developer.quickbase.com/operation/getField)
+	 * [Quickbase Documentation](https://developer.quickbase.com/operation/getField)
 	 *
 	 * Example:
 	 * ```typescript
@@ -744,8 +744,8 @@ export class QuickBase {
 	 * });
 	 * ```
 	 *
-	 * @param param0.tableId Quick Base Table ID
-	 * @param param0.fieldId Quick Base Field ID
+	 * @param param0.tableId Quickbase Table ID
+	 * @param param0.fieldId Quickbase Field ID
 	 * @param param0.requestOptions Override axios request configuration
 	 */
 	async getField({ tableId, fieldId, requestOptions }: QuickBaseRequestGetField): Promise<QuickBaseResponseField> {
@@ -758,9 +758,9 @@ export class QuickBase {
 	}
 
 	/**
-	 * Get all Quick Base Fields from a Quick Base Table
+	 * Get all Quickbase Fields from a Quickbase Table
 	 *
-	 * [Quick Base Documentation](https://developer.quickbase.com/operation/getFields)
+	 * [Quickbase Documentation](https://developer.quickbase.com/operation/getFields)
 	 *
 	 * Example:
 	 * ```typescript
@@ -769,7 +769,7 @@ export class QuickBase {
 	 * });
 	 * ```
 	 *
-	 * @param param0.tableId Quick Base Table ID
+	 * @param param0.tableId Quickbase Table ID
 	 * @param param0.includeFieldPerms If `true`, returns field permissions
 	 * @param param0.requestOptions Override axios request configuration
 	 */
@@ -792,9 +792,9 @@ export class QuickBase {
 	}
 
 	/**
-	 * Get the usage of all Quick Base Fields in a Quick Base Table
+	 * Get the usage of all Quickbase Fields in a Quickbase Table
 	 *
-	 * [Quick Base Documentation](https://developer.quickbase.com/operation/getFieldsUsage)
+	 * [Quickbase Documentation](https://developer.quickbase.com/operation/getFieldsUsage)
 	 *
 	 * Example:
 	 * ```typescript
@@ -803,7 +803,7 @@ export class QuickBase {
 	 * });
 	 * ```
 	 *
-	 * @param param0.tableId Quick Base Table ID
+	 * @param param0.tableId Quickbase Table ID
 	 * @param param0.skip Number of fields to skip from list
 	 * @param param0.requestOptions Override axios request configuration
 	 */
@@ -826,9 +826,9 @@ export class QuickBase {
 	}
 
 	/**
-	 * Get the usage of a single Quick Base Field
+	 * Get the usage of a single Quickbase Field
 	 *
-	 * [Quick Base Documentation](https://developer.quickbase.com/operation/getFieldUsage)
+	 * [Quickbase Documentation](https://developer.quickbase.com/operation/getFieldUsage)
 	 *
 	 * Example:
 	 * ```typescript
@@ -838,8 +838,8 @@ export class QuickBase {
 	 * });
 	 * ```
 	 *
-	 * @param param0.tableId Quick Base Table ID
-	 * @param param0.fieldId Quick Base Field ID
+	 * @param param0.tableId Quickbase Table ID
+	 * @param param0.fieldId Quickbase Field ID
 	 * @param param0.requestOptions Override axios request configuration
 	 */
 	async getFieldUsage({ tableId, fieldId, requestOptions }: QuickBaseRequestGetFieldUsage): Promise<QuickBaseResponseFieldUsage> {
@@ -852,9 +852,9 @@ export class QuickBase {
 	}
 
 	/**
-	 * Get a predefined Quick Base Report
+	 * Get a predefined Quickbase Report
 	 *
-	 * [Quick Base Documentation](https://developer.quickbase.com/operation/getReport)
+	 * [Quickbase Documentation](https://developer.quickbase.com/operation/getReport)
 	 *
 	 * Example:
 	 * ```typescript
@@ -864,8 +864,8 @@ export class QuickBase {
 	 * });
 	 * ```
 	 *
-	 * @param param0.tableId Quick Base Table ID
-	 * @param param0.reportId Quick Base Report ID
+	 * @param param0.tableId Quickbase Table ID
+	 * @param param0.reportId Quickbase Report ID
 	 * @param param0.requestOptions Override axios request configuration
 	 */
 	async getReport({ tableId, reportId, requestOptions }: QuickBaseRequestGetReport): Promise<QuickBaseResponseReport> {
@@ -878,11 +878,11 @@ export class QuickBase {
 	}
 
 	/**
-	 * Get all Quick Base Relationships for a given Quick Base Child Table
+	 * Get all Quickbase Relationships for a given Quickbase Child Table
 	 *
-	 * [Quick Base Documentation](https://developer.quickbase.com/operation/getRelationships)
+	 * [Quickbase Documentation](https://developer.quickbase.com/operation/getRelationships)
 	 *
-	 * @param param0.childTableId Quick Base Child Table ID
+	 * @param param0.childTableId Quickbase Child Table ID
 	 * @param param0.requestOptions Override axios request configuration
 	 */
 	async getRelationships({ childTableId, requestOptions }: QuickBaseRequestGetRelationships): Promise<QuickBaseResponseRelationships> {
@@ -892,9 +892,9 @@ export class QuickBase {
 	}
 
 	/**
-	 * Get the schema of a Quick Base Table
+	 * Get the schema of a Quickbase Table
 	 *
-	 * [Quick Base Documentation](https://developer.quickbase.com/operation/getTable)
+	 * [Quickbase Documentation](https://developer.quickbase.com/operation/getTable)
 	 *
 	 * Example:
 	 * ```typescript
@@ -903,7 +903,7 @@ export class QuickBase {
 	 * });
 	 * ```
 	 *
-	 * @param param0.tableId Quick Base Table ID
+	 * @param param0.tableId Quickbase Table ID
 	 * @param param0.requestOptions Override axios request configuration
 	 */
 	async getTable({ appId, tableId, requestOptions }: QuickBaseRequestGetTable): Promise<QuickBaseResponseTable> {
@@ -913,9 +913,9 @@ export class QuickBase {
 	}
 
 	/**
-	 * Get all predefined reports of a Quick Base Table
+	 * Get all predefined reports of a Quickbase Table
 	 *
-	 * [Quick Base Documentation](https://developer.quickbase.com/operation/getTableReports)
+	 * [Quickbase Documentation](https://developer.quickbase.com/operation/getTableReports)
 	 *
 	 * Example:
 	 * ```typescript
@@ -924,7 +924,7 @@ export class QuickBase {
 	 * });
 	 * ```
 	 *
-	 * @param param0.tableId Quick Base Table ID
+	 * @param param0.tableId Quickbase Table ID
 	 * @param param0.requestOptions Override axios request configuration
 	 */
 	async getTableReports({ tableId, requestOptions }: QuickBaseRequestGetTableReports): Promise<QuickBaseResponseReport[]> {
@@ -937,13 +937,13 @@ export class QuickBase {
 	}
 
 	/**
-	 * Get a temporary authentication token for Quick Base API requests for a specific Quick Base Application or Table.
+	 * Get a temporary authentication token for Quickbase API requests for a specific Quickbase Application or Table.
 	 *
 	 * Only meant to be used client-side, passing the results server-side.
 	 *
 	 * Valid for 5 minutes. Only valid against passed in table.
 	 *
-	 * [Quick Base Documentation](https://developer.quickbase.com/operation/getTempTokenDBID)
+	 * [Quickbase Documentation](https://developer.quickbase.com/operation/getTempTokenDBID)
 	 *
 	 * Example:
 	 * ```typescript
@@ -954,7 +954,7 @@ export class QuickBase {
 	 * console.log(results.temporaryAuthorization); // '<base64 type>.<base64 value>';
 	 * ```
 	 *
-	 * @param param0.dbid Quick Base Application ID or Table ID
+	 * @param param0.dbid Quickbase Application ID or Table ID
 	 * @param param0.requestOptions Override axios request configuration
 	 */
 	async getTempToken({ dbid, requestOptions }: QuickBaseRequestGetTempToken): Promise<QuickBaseResponseGetTempToken> {
@@ -971,9 +971,9 @@ export class QuickBase {
 	}
 
 	/**
-	 * Run a custom Quick Base query
+	 * Run a custom Quickbase query
 	 *
-	 * [Quick Base Documentation](https://developer.quickbase.com/operation/runQuery)
+	 * [Quickbase Documentation](https://developer.quickbase.com/operation/runQuery)
 	 *
 	 * Example:
 	 * ```typescript
@@ -996,8 +996,8 @@ export class QuickBase {
 	 * });
 	 * ```
 	 *
-	 * @param param0.tableId Quick Base Table ID
-	 * @param param0.where Quick Base query string
+	 * @param param0.tableId Quickbase Table ID
+	 * @param param0.where Quickbase query string
 	 * @param param0.select Array of Field IDs to return
 	 * @param param0.sortBy Array of Fields to sort the results by
 	 * @param param0.groupBy Array of Fields to group the results by
@@ -1030,9 +1030,9 @@ export class QuickBase {
 	}
 
 	/**
-	 * Run a predefined Quick Base report
+	 * Run a predefined Quickbase report
 	 *
-	 * [Quick Base Documentation](https://developer.quickbase.com/operation/runReport)
+	 * [Quickbase Documentation](https://developer.quickbase.com/operation/runReport)
 	 *
 	 * Example:
 	 * ```typescript
@@ -1046,8 +1046,8 @@ export class QuickBase {
 	 * });
 	 * ```
 	 *
-	 * @param param0.tableId Quick Base Table ID
-	 * @param param0.reportId Quick Base Report ID
+	 * @param param0.tableId Quickbase Table ID
+	 * @param param0.reportId Quickbase Report ID
 	 * @param param0.options Report Options Object
 	 * @param param0.options.skip Number of records to skip
 	 * @param param0.options.top Maximum number of records to return
@@ -1086,8 +1086,8 @@ export class QuickBase {
 	 * qb.setTempToken('xxxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', 'xxxxxxxxx');
 	 * ```
 	 *
-	 * @param tempToken Temporary Quick Base Authentication Token
-	 * @param dbid Quick Base Application ID or Table ID
+	 * @param tempToken Temporary Quickbase Authentication Token
+	 * @param dbid Quickbase Application ID or Table ID
 	 */
 	setTempToken(tempToken: string, dbid?: string): QuickBase {
 		this.settings.tempToken = tempToken;
@@ -1098,9 +1098,9 @@ export class QuickBase {
 	}
 
 	/**
-	 * Update a Quick Base Application
+	 * Update a Quickbase Application
 	 *
-	 * [Quick Base Documentation](https://developer.quickbase.com/operation/updateApp)
+	 * [Quickbase Documentation](https://developer.quickbase.com/operation/updateApp)
 	 *
 	 * Example:
 	 * ```typescript
@@ -1115,10 +1115,10 @@ export class QuickBase {
 	 * });
 	 * ```
 	 *
-	 * @param param0.appId Quick Base Application ID
+	 * @param param0.appId Quickbase Application ID
 	 * @param param0.name Application name
 	 * @param param0.description Application Description
-	 * @param param0.variables Array of Quick Base Variables
+	 * @param param0.variables Array of Quickbase Variables
 	 * @param param0.requestOptions Override axios request configuration
 	 */
 	async updateApp({ appId, name, description, variables, requestOptions }: QuickBaseRequestUpdateApp): Promise<QuickBaseResponseApp> {
@@ -1144,23 +1144,23 @@ export class QuickBase {
 	}
 
 	/**
-	 * Update a Quick Base Field
+	 * Update a Quickbase Field
 	 *
-	 * [Quick Base Documentation](https://developer.quickbase.com/operation/updateField)
+	 * [Quickbase Documentation](https://developer.quickbase.com/operation/updateField)
 	 *
-	 * @param param0.tableId Quick Base Table ID
-	 * @param param0.fieldId Quick Base Field ID
+	 * @param param0.tableId Quickbase Table ID
+	 * @param param0.fieldId Quickbase Field ID
 	 * @param param0.label Label of field
 	 * @param param0.unique Marks field as unique
 	 * @param param0.required Required field
-	 * @param param0.noWrap Wrap value of field in the Quick Base UI
-	 * @param param0.bold Display value of field as bold in the Quick Base UI
+	 * @param param0.noWrap Wrap value of field in the Quickbase UI
+	 * @param param0.bold Display value of field as bold in the Quickbase UI
 	 * @param param0.appearsByDefault Set field as default in reports
 	 * @param param0.addToForms Add field to forms by default
 	 * @param param0.findEnabled Allows field to be searchable
 	 * @param param0.fieldHelp Field help text
 	 * @param param0.properties Field properties specific to `fieldType`
-	 * @param param0.permissions Field permissions for Quick Base roles
+	 * @param param0.permissions Field permissions for Quickbase roles
 	 * @param param0.requestOptions Override axios request configuration
 	 */
 	async updateField({
@@ -1233,12 +1233,12 @@ export class QuickBase {
 	}
 
 	/**
-	 * Update a Quick Base Relationship
+	 * Update a Quickbase Relationship
 	 *
-	 * [Quick Base Documentation](https://developer.quickbase.com/operation/updateRelationship)
+	 * [Quickbase Documentation](https://developer.quickbase.com/operation/updateRelationship)
 	 *
-	 * @param param0.relationshipId Quick Base Table Relationship ID
-	 * @param param0.childTableId Quick Base Table ID of the Child Table
+	 * @param param0.relationshipId Quickbase Table Relationship ID
+	 * @param param0.childTableId Quickbase Table ID of the Child Table
 	 * @param param0.lookupFieldIds Array of Field IDs to bring from the Parent Table into the Child Table
 	 * @param param0.summaryFields Array of Summary Fields to create in the Parent Table
 	 * @param param0.requestOptions Override axios request configuration
@@ -1262,11 +1262,11 @@ export class QuickBase {
 	}
 
 	/**
-	 * Update a Quick Base Table
+	 * Update a Quickbase Table
 	 *
-	 * [Quick Base Documentation](https://developer.quickbase.com/operation/updateTable)
+	 * [Quickbase Documentation](https://developer.quickbase.com/operation/updateTable)
 	 *
-	 * @param param0.appId Quick Base Application ID
+	 * @param param0.appId Quickbase Application ID
 	 * @param param0.name Name of the new table
 	 * @param param0.description Description of the new table
 	 * @param param0.singleRecordName Singular noun for a record in the new table
@@ -1300,9 +1300,9 @@ export class QuickBase {
 	}
 
 	/**
-	 * Creates or updates records in a Quick Base Table
+	 * Creates or updates records in a Quickbase Table
 	 *
-	 * [Quick Base Documentation](https://developer.quickbase.com/operation/upsert)
+	 * [Quickbase Documentation](https://developer.quickbase.com/operation/upsert)
 	 *
 	 * Example:
 	 * ```typescript
@@ -1327,7 +1327,7 @@ export class QuickBase {
 	 * });
 	 * ```
 	 *
-	 * @param param0.tableId Quick Base Table ID
+	 * @param param0.tableId Quickbase Table ID
 	 * @param param0.data Record data array
 	 * @param param0.mergeFieldId Merge Field ID
 	 * @param param0.fieldsToReturn An array of Field IDs to return
@@ -1409,11 +1409,11 @@ export class QuickBase {
 
 }
 
-/* Quick Base Error */
+/* Quickbase Error */
 export class QuickBaseError extends Error {
 
 	/**
-	 * Extends the native JavaScript `Error` object for use with Quick Base API errors
+	 * Extends the native JavaScript `Error` object for use with Quickbase API errors
 	 *
 	 * Example:
 	 * ```typescript
@@ -1423,7 +1423,7 @@ export class QuickBaseError extends Error {
 	 * @param code Error code
 	 * @param message Error message
 	 * @param description Error description
-	 * @param rayId Quick Base API Ray ID
+	 * @param rayId Quickbase API Ray ID
 	 */
 	constructor(public code: number, public message: string, public description?: string, public rayId?: string) {
 		super(message);
@@ -1491,7 +1491,7 @@ function objKeysToLower<O>(obj: O): O {
 	}, {}) as O;
 }
 
-/* Quick Base Interfaces */
+/* Quickbase Interfaces */
 interface Indexable {
 	[index: string]: any; // eslint-disable-line @typescript-eslint/no-explicit-any
 }
@@ -1561,33 +1561,33 @@ export interface QuickBaseErrorJSON {
 
 export interface QuickBaseOptions {
 	/**
-	 * Quick Base API Server FQDN
+	 * Quickbase API Server FQDN
 	 *
 	 * Default is `api.quickbase.com`
 	 */
 	server?: string;
 
 	/**
-	 * Quick Base API Version
+	 * Quickbase API Version
 	 *
 	 * Default is `v1`
 	 */
 	version?: string;
 
 	/**
-	 * Quick Base Realm.
+	 * Quickbase Realm.
 	 *
-	 * For example, if your Quick Base url is: `demo.quickbase.com`
+	 * For example, if your Quickbase url is: `demo.quickbase.com`
 	 * Your realm is: `demo`
 	 */
 	realm: string;
 
 	/**
-	 * A Quick Base User Token.
+	 * A Quickbase User Token.
 	 *
 	 * If both a `userToken` and `tempToken` are defined, the `tempToken` will be used
 	 *
-	 * [Quick Base Documentation](https://developer.quickbase.com/auth)
+	 * [Quickbase Documentation](https://developer.quickbase.com/auth)
 	 */
 	userToken?: string;
 
@@ -1596,16 +1596,16 @@ export interface QuickBaseOptions {
 	 *
 	 * If both a `userToken` and `tempToken` are defined, the `tempToken` will be used
 	 *
-	 * [Quick Base Documentation](https://developer.quickbase.com/auth)
+	 * [Quickbase Documentation](https://developer.quickbase.com/auth)
 	 */
 	tempToken?: string;
 
 	/**
-	 * A Quick Base Application Token
+	 * A Quickbase Application Token
 	 *
 	 * Only required when using Temporary Tokens
 	 *
-	 * [Quick Base Documentation](https://help.quickbase.com/user-assistance/app_tokens.html)
+	 * [Quickbase Documentation](https://help.quickbase.com/user-assistance/app_tokens.html)
 	 */
 	appToken?: string;
 
@@ -1632,7 +1632,7 @@ export interface QuickBaseOptions {
 	autoRenewTempTokens?: boolean;
 
 	/**
-	 * The maximum number of open, pending API connections to Quick Base
+	 * The maximum number of open, pending API connections to Quickbase
 	 *
 	 * Default is `10`
 	 */
@@ -1653,7 +1653,7 @@ export interface QuickBaseOptions {
 	errorOnConnectionLimit?: boolean;
 
 	/**
-	 * Allows the use of a proxy for Quick Base API requests
+	 * Allows the use of a proxy for Quickbase API requests
 	 *
 	 * Default is `false`
 	 */

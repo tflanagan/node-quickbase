@@ -1,7 +1,7 @@
 {
   "name": "quickbase",
   "version": "4.2.0",
-  "description": "A lightweight, very flexible Quick Base API",
+  "description": "A lightweight, very flexible Quickbase API",
   "keywords": [
     "QuickBase",
     "quickbase",
@@ -30,29 +30,29 @@
     "url": "git://github.com/tflanagan/node-quickbase.git"
   },
   "scripts": {
+    "build": "node build.js",
     "cleanup": "rm -rf ./dist/*",
+    "docs": "mv ./docs/_config.yml ./ && npx typedoc src/quickbase.ts && mv ./_config.yml ./docs/",
     "reinstall": "rm -rf node_modules/ && npm install",
     "reinstall-dev": "rm -rf node_modules/ && npm install && npm install --dev",
-    "build": "node build.js",
-    "docs": "mv ./docs/_config.yml ./ && npx typedoc src/quickbase.ts && mv ./_config.yml ./docs/",
     "test": "npx ava"
   },
   "dependencies": {
-    "axios": "^0.20.0",
-    "debug": "^4.2.0",
+    "axios": "^0.21.1",
+    "debug": "^4.3.1",
     "deepmerge": "^4.2.2",
     "generic-throttle": "^3.0.1"
   },
   "devDependencies": {
     "@ava/typescript": "^1.1.1",
     "@types/debug": "^4.1.5",
-    "@types/node": "^14.14.0",
-    "ava": "^3.13.0",
-    "browserify": "^16.5.2",
+    "@types/node": "^14.14.37",
+    "ava": "^3.15.0",
+    "browserify": "^17.0.0",
     "dotenv": "^8.2.0",
-    "minify": "^5.2.0",
-    "typedoc": "^0.19.2",
-    "typescript": "^4.0.3"
+    "minify": "^7.0.1",
+    "typedoc": "^0.20.34",
+    "typescript": "^4.2.3"
   },
   "engines": {
     "node": ">=10.14.2"

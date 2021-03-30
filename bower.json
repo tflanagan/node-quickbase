@@ -1,6 +1,6 @@
 {
 	"name": "quickbase",
-	"description": "A lightweight, very flexible QuickBase API",
+	"description": "A lightweight, very flexible Quickbase API",
 	"main": "dist/quickbase.browserify.min.js",
 	"authors": [
 	  "Tristian Flanagan <contact@tristianflanagan.com> (https://github.com/tflanagan)"
@@ -35,4 +35,3 @@
 	},
 	"private": false
   }
-  

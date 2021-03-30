@@ -67,15 +67,12 @@
     "forceConsistentCasingInFileNames": true  /* Disallow inconsistently-cased references to the same file. */
   },
   "typedocOptions": {
-    "mode": "modules",
     "readme": "./README.md",
     "out": "./docs/",
     "theme": "minimal",
-    "name": "Node-QuickBase",
+    "name": "Node-Quickbase",
     "includeVersion": true,
-    "includeDeclarations": true,
     "excludeExternals": true,
-    "excludeNotExported": true,
     "disableOutputCheck": false
   }
 }

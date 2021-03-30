@@ -3,7 +3,7 @@ quickbase
 
 [![npm license](https://img.shields.io/npm/l/quickbase.svg)](https://www.npmjs.com/package/quickbase) [![npm version](https://img.shields.io/npm/v/quickbase.svg)](https://www.npmjs.com/package/quickbase) [![npm downloads](https://img.shields.io/npm/dm/quickbase.svg)](https://www.npmjs.com/package/quickbase)
 
-A lightweight, promise based Quick Base API.
+A lightweight, promise based Quickbase API.
 
 Written in TypeScript, targets Nodejs and the Browser
 
@@ -13,7 +13,7 @@ This library targets the new RESTful JSON-based API, not the old XML-based API. 
 IE 11 Users, if you are receiving this error:
 XMLHttpRequest: Network Error 0x80070005, Access is denied.
 
-This is not a limitation of the library, just how Quick Base's new API works.
+This is not a limitation of the library, just how Quickbase's new API works.
 In order to use the new RESTful JSON-based API in Internet Explorer, you must
 change a security setting:
 
@@ -37,7 +37,7 @@ Documentation
 -------------
 
 [TypeDoc Documentation](https://tflanagan.github.io/node-quickbase/)
-[Quick Base Documentation](https://developer.quickbase.com/)
+[Quickbase Documentation](https://developer.quickbase.com/)
 
 Server-Side Example
 -------------------
