@@ -232,6 +232,39 @@ export class QuickBase {
 	}
 
 	/**
+	 * Clones the authenticated Quickbase User Token
+	 *
+	 * [Quickbase Documentation](https://developer.quickbase.com/operation/cloneUserToken)
+	 *
+	 * Example:
+	 * ```typescript
+	 * await qb.cloneUserToken({
+	 * 	name: 'Clone Token',
+	 * 	description: 'A cloned user token for demonstration purposes'
+	 * });
+	 * ```
+	 *
+	 * @param param0.name Name of the cloned user token
+	 * @param param0.description Description of the cloned user token
+	 * @param param0.requestOptions Override axios request configuration
+	 */
+	async cloneUserToken({ name, description, requestOptions }: QuickBaseRequestCloneUserToken): Promise<QuickBaseResponseCloneUserToken> {
+		const data: DataObj<QuickBaseRequestCloneUserToken> = {
+			name: name
+		};
+
+		if(typeof(description) !== 'undefined'){
+			data.description = description;
+		}
+
+		return this.request({
+			method: 'POST',
+			url: 'usertoken/clone',
+			data: data
+		}, requestOptions);
+	}
+
+	/**
 	 * Copy a Quickbase Application
 	 *
 	 * [Quickbase Documentation](https://developer.quickbase.com/operation/copyApp)
@@ -259,6 +292,7 @@ export class QuickBase {
 	 * @param param0.properties.excludeFiles Whether to exclude file attachments
 	 * @param param0.properties.keepData Whether to copy the source application data
 	 * @param param0.properties.usersAndRoles Assign roles to users in the copied application
+	 * @param param0.requestOptions Override axios request configuration
 	 */
 	async copyApp({ appId, name, description, properties, requestOptions }: QuickBaseRequestCopyApp): Promise<QuickBaseResponseCopyApp> {
 		const data: DataObj<QuickBaseRequestCopyApp> = {
@@ -481,6 +515,25 @@ export class QuickBase {
 	}
 
 	/**
+	 * Deactivates the authenticated Quickbase User Token
+	 *
+	 * [Quickbase Documentation](https://developer.quickbase.com/operation/deactivateUserToken)
+	 *
+	 * Example:
+	 * ```typescript
+	 * await qb.deactivateUserToken();
+	 * ```
+	 *
+	 * @param param0.requestOptions Override axios request configuration
+	 */
+	 async deactivateUserToken({ requestOptions }: QuickBaseRequestDeactivateUserToken = {}): Promise<QuickBaseResponseDeactivateUserToken> {
+		return this.request({
+			method: 'POST',
+			url: 'usertoken/deactivate'
+		}, requestOptions);
+	}
+
+	/**
 	 * Delete an Application from Quickbase
 	 *
 	 * [Quickbase Documentation](https://developer.quickbase.com/operation/deleteApp)
@@ -628,6 +681,27 @@ export class QuickBase {
 		return this.request({
 			method: 'DELETE',
 			url: `tables/${tableId}?appId=${appId}`
+		}, requestOptions);
+	}
+
+	/**
+	 * Delete the authenticated Quickbase User Token.
+	 *
+	 * *WARNING: This is not reversible and the `QuickBase` instance will lose access to Quickbase.*
+	 *
+	 * [Quickbase Documentation](https://developer.quickbase.com/operation/deleteUserToken)
+	 *
+	 * Example:
+	 * ```typescript
+	 * await qb.deleteUserToken();
+	 * ```
+	 *
+	 * @param param0.requestOptions Override axios request configuration
+	 */
+	 async deleteUserToken({ requestOptions }: QuickBaseRequestDeleteUserToken = {}): Promise<QuickBaseResponseDeleteUserToken> {
+		return this.request({
+			method: 'DELETE',
+			url: 'usertoken'
 		}, requestOptions);
 	}
 
@@ -968,6 +1042,44 @@ export class QuickBase {
 		}
 
 		return results;
+	}
+
+	/**
+	 * Run a Quickbase formula
+	 *
+	 * [Quickbase Documentation](https://developer.quickbase.com/operation/runFormula)
+	 *
+	 * Example:
+	 * ```typescript
+	 * await qb.runFormula({
+	 * 	tableId: 'xxxxxxxxx',
+	 * 	recordId: 1,
+	 * 	formula: '[Some Summary Field]'
+	 * });
+	 * ```
+	 *
+	 * @param param0.tableId Quickbase Table ID
+	 * @param param0.recordId Quickbase Record ID
+	 * @param param0.formula A valid Quickbase formula to execute
+	 * @param param0.requestOptions Override axios request configuration
+	 */
+	async runFormula({
+		tableId,
+		recordId,
+		formula,
+		requestOptions
+	}: QuickBaseRequestRunFormula): Promise<string> {
+		const response = await this.request<QuickBaseResponseRunFormula>({
+			method: 'POST',
+			url: 'formula/run',
+			data: {
+				from: tableId,
+				formula: formula,
+				rid: recordId
+			}
+		}, requestOptions);
+
+		return response.result;
 	}
 
 	/**
@@ -1855,6 +1967,46 @@ export interface QuickBaseRequestCopyApp extends QuickBaseRequest {
 		usersAndRoles?: boolean;
 		assignUserToken?: boolean;
 	}
+}
+
+export interface QuickBaseRequestDeleteUserToken extends QuickBaseRequest {}
+
+export interface QuickBaseRequestDeactivateUserToken extends QuickBaseRequest {}
+
+export interface QuickBaseRequestCloneUserToken extends QuickBaseRequest {
+	name: string;
+	description?: string;
+}
+
+export interface QuickBaseRequestRunFormula extends QuickBaseRequest {
+	tableId: string;
+	recordId: number;
+	formula: string;
+}
+
+export interface QuickBaseResponseCloneUserToken {
+	active: boolean;
+	apps: {
+		id: string;
+		name: string;
+	}[];
+	lastUsed: string;
+	description: string;
+	id: number;
+	name: string;
+	token: string;
+}
+
+export interface QuickBaseResponseRunFormula {
+	result: string;
+}
+
+export interface QuickBaseResponseDeactivateUserToken {
+	id: number;
+}
+
+export interface QuickBaseResponseDeleteUserToken {
+	id: number;
 }
 
 export interface QuickBaseResponseGetTempToken {
