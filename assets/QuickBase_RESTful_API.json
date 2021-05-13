@@ -1767,6 +1767,14 @@
         "description": "Get a list of all relationships, and their definitions, for a specific table. Details are provided for both the parent and child sides of relationships within a given application. Limited details are returned for cross-application relationships.",
         "parameters": [
           {
+            "name": "skip",
+            "description": "The number of relationships to skip.",
+            "required": false,
+            "in": "query",
+            "example": 5,
+            "type": "integer"
+          },
+          {
             "name": "QB-Realm-Hostname",
             "description": "Your Quickbase domain, for example demo.quickbase.com",
             "required": true,
@@ -10527,6 +10535,14 @@
           "type": "string"
         },
         {
+          "name": "skip",
+          "description": "The number of relationships to skip.",
+          "required": false,
+          "in": "query",
+          "example": 5,
+          "type": "integer"
+        },
+        {
           "name": "QB-Realm-Hostname",
           "description": "Your Quickbase domain, for example demo.quickbase.com",
           "required": true,
@@ -10774,7 +10790,16 @@
           "type": "string"
         }
       ],
-      "queryParams": [],
+      "queryParams": [
+        {
+          "name": "skip",
+          "description": "The number of relationships to skip.",
+          "required": false,
+          "in": "query",
+          "example": 5,
+          "type": "integer"
+        }
+      ],
       "pathParams": [
         {
           "name": "tableId",
@@ -21634,6 +21659,14 @@
             "type": "string"
           },
           {
+            "name": "skip",
+            "description": "The number of relationships to skip.",
+            "required": false,
+            "in": "query",
+            "example": 5,
+            "type": "integer"
+          },
+          {
             "name": "QB-Realm-Hostname",
             "description": "Your Quickbase domain, for example demo.quickbase.com",
             "required": true,
@@ -21881,7 +21914,16 @@
             "type": "string"
           }
         ],
-        "queryParams": [],
+        "queryParams": [
+          {
+            "name": "skip",
+            "description": "The number of relationships to skip.",
+            "required": false,
+            "in": "query",
+            "example": 5,
+            "type": "integer"
+          }
+        ],
         "pathParams": [
           {
             "name": "tableId",

@@ -959,9 +959,12 @@ export class QuickBase {
 	 * @param param0.childTableId Quickbase Child Table ID
 	 * @param param0.requestOptions Override axios request configuration
 	 */
-	async getRelationships({ childTableId, requestOptions }: QuickBaseRequestGetRelationships): Promise<QuickBaseResponseRelationships> {
+	async getRelationships({ childTableId, skip, requestOptions }: QuickBaseRequestGetRelationships): Promise<QuickBaseResponseRelationships> {
 		return this.request({
-			url: `tables/${childTableId}/relationships`
+			url: `tables/${childTableId}/relationships`,
+			params: {
+				skip: skip
+			}
 		}, requestOptions);
 	}
 
@@ -2253,6 +2256,7 @@ export interface QuickBaseResponseDeleteRecords {
 
 export interface QuickBaseRequestGetRelationships extends QuickBaseRequest {
 	childTableId: string;
+	skip?: number;
 }
 
 export interface QuickBaseRelationship {
