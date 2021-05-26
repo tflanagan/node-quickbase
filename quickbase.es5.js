@@ -92,6 +92,7 @@ var defaults = {
 	realm: 'www',
 	domain: 'quickbase.com',
 	path: '/',
+	useRelative: false,
 	useSSL: true,
 
 	username: '',
@@ -582,8 +583,8 @@ var QueryBuilder = function () {
 				var settings = _this8.settings;
 				var protocol = settings.useSSL ? https : http;
 				var options = merge({}, {
-					hostname: [settings.realm, settings.domain].join('.'),
-					port: settings.useSSL ? 443 : 80,
+					hostname: settings.useRelative ? undefined : [settings.realm, settings.domain].join('.'),
+					port: settings.useRelative ? undefined : settings.useSSL ? 443 : 80,
 					path: settings.path + 'db/' + (_this8.options.dbid && !settings.flags.dbidAsParam ? _this8.options.dbid : 'main') + '?act=' + _this8.action + (!settings.flags.useXML ? _this8.payload : ''),
 					method: settings.flags.useXML ? 'POST' : 'GET',
 					headers: {

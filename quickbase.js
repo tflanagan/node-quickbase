@@ -72,6 +72,7 @@ const defaults = {
 	realm: 'www',
 	domain: 'quickbase.com',
 	path: '/',
+	useRelative: false,
 	useSSL: true,
 
 	username: '',
@@ -541,8 +542,8 @@ class QueryBuilder {
 			const settings = this.settings;
 			const protocol = settings.useSSL ? https : http;
 			const options = merge({}, {
-				hostname: [ settings.realm, settings.domain ].join('.'),
-				port: settings.useSSL ? 443 : 80,
+				hostname: settings.useRelative ? undefined : [ settings.realm, settings.domain ].join('.'),
+				port: settings.useRelative ? undefined : (settings.useSSL ? 443 : 80),
 				path: settings.path + 'db/' + (this.options.dbid && !settings.flags.dbidAsParam ? this.options.dbid : 'main') + '?act=' + this.action + (!settings.flags.useXML ? this.payload : ''),
 				method: settings.flags.useXML ? 'POST' : 'GET',
 				headers: {
