@@ -544,7 +544,7 @@ class QueryBuilder {
 			const options = merge({}, {
 				hostname: settings.useRelative ? undefined : [ settings.realm, settings.domain ].join('.'),
 				port: settings.useRelative ? undefined : (settings.useSSL ? 443 : 80),
-				path: settings.path + 'db/' + (this.options.dbid && !settings.flags.dbidAsParam ? this.options.dbid : 'main') + '?act=' + this.action + (!settings.flags.useXML ? this.payload : ''),
+				path: (settings.useRelative ? '' : settings.path + 'db/') + (this.options.dbid && !settings.flags.dbidAsParam ? this.options.dbid : 'main') + '?act=' + this.action + (!settings.flags.useXML ? this.payload : ''),
 				method: settings.flags.useXML ? 'POST' : 'GET',
 				headers: {
 					'Content-Type': 'application/xml; charset=' + this.options.encoding,
