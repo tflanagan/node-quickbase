@@ -23,6 +23,7 @@ const merge = require('lodash.merge');
 const debugRequest = require('debug')('quickbase:request');
 const debugResponse = require('debug')('quickbase:response');
 const Promise = require('bluebird');
+const iconv = require('iconv-lite');
 
 /* Backwards Compatibility */
 if (!Object.hasOwnProperty('extend') && Object.extend === undefined) {
@@ -74,6 +75,7 @@ const defaults = {
 	path: '/',
 	useRelative: false,
 	useSSL: true,
+	win1252: false,
 
 	username: '',
 	password: '',
@@ -555,9 +557,13 @@ class QueryBuilder {
 
 			const request = protocol.request(options, (response) => {
 				let xmlResponse = '';
-
+				
+				const encodeChunk = settings.win1252
+					? (chk) => iconv.encode(iconv.decode(chk, 'windows-1252'), 'utf8')
+					: (chk) => chk
+				
 				response.on('data', (chunk) => {
-					xmlResponse += chunk;
+					xmlResponse += encodeChunk(chunk)
 				});
 
 				response.on('end', () => {
