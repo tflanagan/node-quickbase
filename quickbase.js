@@ -557,13 +557,13 @@ class QueryBuilder {
 
 			const request = protocol.request(options, (response) => {
 				let xmlResponse = '';
-				
+
 				const encodeChunk = settings.win1252
-					? (chk) => iconv.encode(iconv.decode(chk, 'windows-1252'), 'utf8')
-					: (chk) => chk
-				
+					? (chk) => iconv.encode(iconv.decode(chk, 'windows-1252'), this.options.encoding)
+					: (chk) => chk;
+
 				response.on('data', (chunk) => {
-					xmlResponse += encodeChunk(chunk)
+					xmlResponse += encodeChunk(chunk);
 				});
 
 				response.on('end', () => {
