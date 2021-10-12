@@ -600,7 +600,7 @@ var QueryBuilder = function () {
 					var xmlResponse = '';
 
 					var encodeChunk = settings.win1252 ? function (chk) {
-						return iconv.encode(iconv.decode(chk, 'windows-1252'), 'utf8');
+						return iconv.encode(iconv.decode(chk, 'windows-1252'), _this8.options.encoding);
 					} : function (chk) {
 						return chk;
 					};
