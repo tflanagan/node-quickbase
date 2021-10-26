@@ -44,6 +44,7 @@
     "bluebird": "^3.5.0",
     "debug": "^2.6.4",
     "generic-throttle": "^1.0.1",
+    "iconv-lite": "^0.4.24",
     "lodash.merge": "^4.6.2",
     "xml2js": "^0.4.17"
   },
