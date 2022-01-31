@@ -56,6 +56,7 @@ export class QuickBase {
 		connectionLimit: 10,
 		connectionLimitPeriod: 1000,
 		errorOnConnectionLimit: false,
+		retryOnQuotaExceeded: true
 
 		proxy: false
 	};
@@ -207,7 +208,13 @@ export class QuickBase {
 				if(data.details){
 					description += ':\n' + data.details.join('\n');
 				}
-
+				
+				if (err.response.status === 429 && this.settings.retryOnQuotaExceeded) {
+				    console.log("Rate Limit reached - reattempting in " + debugData['x-ratelimit-reset'] + " milliseconds.");
+				    await new Promise(resolve => setTimeout(resolve, debugData['x-ratelimit-reset']));
+				    return this.request(actOptions, reqOptions, passThrough);
+				}
+				
 				const nErr = new QuickBaseError(err.response.status, data.message, description, debugData['qb-api-ray']);
 
 				if(!this.settings.autoRenewTempTokens || this._tempTokenTable === false || !nErr.description || !nErr.description.match(/Your ticket has expired/)){
@@ -1766,6 +1773,13 @@ export interface QuickBaseOptions {
 	 * Default is `false`
 	 */
 	errorOnConnectionLimit?: boolean;
+	
+	/**
+	 * Automatically retry if the QuickBase API rate limit is exceeded
+	 *
+	 * Default is `true`
+	 */
+	retryOnQuotaExceeded?: boolean;
 
 	/**
 	 * Allows the use of a proxy for Quickbase API requests
