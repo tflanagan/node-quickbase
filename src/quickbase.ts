@@ -210,7 +210,6 @@ export class QuickBase {
 				}
 				
 				if (err.response.status === 429 && this.settings.retryOnQuotaExceeded) {
-				    console.log("Rate Limit reached - reattempting in " + debugData['x-ratelimit-reset'] + " milliseconds.");
 				    await new Promise(resolve => setTimeout(resolve, debugData['x-ratelimit-reset']));
 				    return this.request(actOptions, reqOptions, passThrough);
 				}
