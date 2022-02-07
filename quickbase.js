@@ -90,7 +90,8 @@ const defaults = {
 		returnPercentage: false,
 		fmt: 'structured',
 		encoding: 'ISO-8859-1',
-		dbidAsParam: false
+		dbidAsParam: false,
+		returnHttpError: false
 	},
 
 	status: {
@@ -554,6 +555,10 @@ class QueryBuilder {
 				},
 				agent: false
 			}, this.parent.settings.reqOptions);
+
+			if (settings.flags.returnHttpError) {
+				options.headers['X_QUICKBASE_RETURN_HTTP_ERROR'] = 'true';
+			}
 
 			const request = protocol.request(options, (response) => {
 				let xmlResponse = '';

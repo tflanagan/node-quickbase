@@ -110,7 +110,8 @@ var defaults = {
 		returnPercentage: false,
 		fmt: 'structured',
 		encoding: 'ISO-8859-1',
-		dbidAsParam: false
+		dbidAsParam: false,
+		returnHttpError: false
 	},
 
 	status: {
@@ -595,6 +596,10 @@ var QueryBuilder = function () {
 					},
 					agent: false
 				}, _this8.parent.settings.reqOptions);
+
+				if (settings.flags.returnHttpError) {
+					options.headers['X_QUICKBASE_RETURN_HTTP_ERROR'] = 'true';
+				}
 
 				var request = protocol.request(options, function (response) {
 					var xmlResponse = '';
