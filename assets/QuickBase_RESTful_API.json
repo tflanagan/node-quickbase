@@ -3436,6 +3436,10 @@
                         "description": "Default user id value.",
                         "type": "integer"
                       },
+                      "useI18NFormat": {
+                        "description": "Whether phone numbers should be in E.164 standard international format.",
+                        "type": "boolean"
+                      },
                       "maxVersions": {
                         "description": "The maximum number of versions configured for a file attachment.",
                         "type": "integer"
@@ -3522,6 +3526,10 @@
                         "description": "The number of decimal places displayed in the product for this field.",
                         "type": "integer"
                       },
+                      "defaultCountryCode": {
+                        "description": "Controls the default country shown on international phone widgets on forms. Country code should be entered in the ISO 3166-1 alpha-2 format.",
+                        "type": "string"
+                      },
                       "seeVersions": {
                         "description": "Indicates if the user can see other versions, aside from the most recent, of a file attachment within the product.",
                         "type": "boolean"
@@ -3552,8 +3560,7 @@
                       },
                       "masterChoiceTableId": {
                         "description": "The id of the table that is the master in this relationship.",
-                        "type": "integer",
-                        "format": "int64"
+                        "type": "string"
                       },
                       "targetFieldId": {
                         "description": "The id of the target field.",
@@ -3613,6 +3620,11 @@
                       },
                       "currencyFormat": {
                         "description": "The currency format used when displaying field values within the product.",
+                        "enum": [
+                          "left",
+                          "right",
+                          "middle"
+                        ],
                         "type": "string"
                       },
                       "displayImages": {
@@ -3863,6 +3875,10 @@
                       "description": "Default user id value.",
                       "type": "integer"
                     },
+                    "useI18NFormat": {
+                      "description": "Whether phone numbers should be in E.164 standard international format",
+                      "type": "boolean"
+                    },
                     "maxVersions": {
                       "description": "The maximum number of versions configured for a file attachment.",
                       "type": "integer",
@@ -3920,6 +3936,10 @@
                     "decimalPlaces": {
                       "description": "The number of decimal places displayed in the product for this field.",
                       "type": "integer"
+                    },
+                    "defaultCountryCode": {
+                      "description": "Controls the default country shown on international phone widgets on forms. Country code should be entered in the ISO 3166-1 alpha-2 format.",
+                      "type": "string"
                     },
                     "displayMonth": {
                       "description": "How to display months.",
@@ -3995,6 +4015,11 @@
                     },
                     "currencyFormat": {
                       "description": "The currency format used when displaying field values within the product.",
+                      "enum": [
+                        "left",
+                        "right",
+                        "middle"
+                      ],
                       "type": "string"
                     },
                     "displayImages": {
@@ -4278,6 +4303,10 @@
                       "description": "Default user id value.",
                       "type": "integer"
                     },
+                    "useI18NFormat": {
+                      "description": "Whether phone numbers should be in E.164 standard international format.",
+                      "type": "boolean"
+                    },
                     "maxVersions": {
                       "description": "The maximum number of versions configured for a file attachment.",
                       "type": "integer"
@@ -4364,6 +4393,10 @@
                       "description": "The number of decimal places displayed in the product for this field.",
                       "type": "integer"
                     },
+                    "defaultCountryCode": {
+                      "description": "Controls the default country shown on international phone widgets on forms. Country code should be entered in the ISO 3166-1 alpha-2 format.",
+                      "type": "string"
+                    },
                     "seeVersions": {
                       "description": "Indicates if the user can see other versions, aside from the most recent, of a file attachment within the product.",
                       "type": "boolean"
@@ -4394,8 +4427,7 @@
                     },
                     "masterChoiceTableId": {
                       "description": "The id of the table that is the master in this relationship.",
-                      "type": "integer",
-                      "format": "int64"
+                      "type": "string"
                     },
                     "targetFieldId": {
                       "description": "The id of the target field.",
@@ -4455,6 +4487,11 @@
                     },
                     "currencyFormat": {
                       "description": "The currency format used when displaying field values within the product.",
+                      "enum": [
+                        "left",
+                        "right",
+                        "middle"
+                      ],
                       "type": "string"
                     },
                     "displayImages": {
@@ -4887,6 +4924,10 @@
                       "description": "Default user id value.",
                       "type": "integer"
                     },
+                    "useI18NFormat": {
+                      "description": "Whether phone numbers should be in E.164 standard international format.",
+                      "type": "boolean"
+                    },
                     "maxVersions": {
                       "description": "The maximum number of versions configured for a file attachment.",
                       "type": "integer"
@@ -4973,6 +5014,10 @@
                       "description": "The number of decimal places displayed in the product for this field.",
                       "type": "integer"
                     },
+                    "defaultCountryCode": {
+                      "description": "Controls the default country shown on international phone widgets on forms. Country code should be entered in the ISO 3166-1 alpha-2 format.",
+                      "type": "string"
+                    },
                     "seeVersions": {
                       "description": "Indicates if the user can see other versions, aside from the most recent, of a file attachment within the product.",
                       "type": "boolean"
@@ -5003,8 +5048,7 @@
                     },
                     "masterChoiceTableId": {
                       "description": "The id of the table that is the master in this relationship.",
-                      "type": "integer",
-                      "format": "int64"
+                      "type": "string"
                     },
                     "targetFieldId": {
                       "description": "The id of the target field.",
@@ -5064,6 +5108,11 @@
                     },
                     "currencyFormat": {
                       "description": "The currency format used when displaying field values within the product.",
+                      "enum": [
+                        "left",
+                        "right",
+                        "middle"
+                      ],
                       "type": "string"
                     },
                     "displayImages": {
@@ -5315,6 +5364,10 @@
                       "description": "Default user id value.",
                       "type": "integer"
                     },
+                    "useI18NFormat": {
+                      "description": "Whether phone numbers should be in E.164 standard international format",
+                      "type": "boolean"
+                    },
                     "maxVersions": {
                       "description": "The maximum number of versions configured for a file attachment.",
                       "type": "integer",
@@ -5395,6 +5448,10 @@
                       "description": "The number of decimal places displayed in the product for this field.",
                       "type": "integer"
                     },
+                    "defaultCountryCode": {
+                      "description": "Controls the default country shown on international phone widgets on forms. Country code should be entered in the ISO 3166-1 alpha-2 format.",
+                      "type": "string"
+                    },
                     "displayMonth": {
                       "description": "How to display months.",
                       "type": "string"
@@ -5473,6 +5530,11 @@
                     },
                     "currencyFormat": {
                       "description": "The currency format used when displaying field values within the product.",
+                      "enum": [
+                        "left",
+                        "right",
+                        "middle"
+                      ],
                       "type": "string"
                     },
                     "displayImages": {
@@ -5744,6 +5806,10 @@
                       "description": "Default user id value.",
                       "type": "integer"
                     },
+                    "useI18NFormat": {
+                      "description": "Whether phone numbers should be in E.164 standard international format.",
+                      "type": "boolean"
+                    },
                     "maxVersions": {
                       "description": "The maximum number of versions configured for a file attachment.",
                       "type": "integer"
@@ -5830,6 +5896,10 @@
                       "description": "The number of decimal places displayed in the product for this field.",
                       "type": "integer"
                     },
+                    "defaultCountryCode": {
+                      "description": "Controls the default country shown on international phone widgets on forms. Country code should be entered in the ISO 3166-1 alpha-2 format.",
+                      "type": "string"
+                    },
                     "seeVersions": {
                       "description": "Indicates if the user can see other versions, aside from the most recent, of a file attachment within the product.",
                       "type": "boolean"
@@ -5860,8 +5930,7 @@
                     },
                     "masterChoiceTableId": {
                       "description": "The id of the table that is the master in this relationship.",
-                      "type": "integer",
-                      "format": "int64"
+                      "type": "string"
                     },
                     "targetFieldId": {
                       "description": "The id of the target field.",
@@ -5921,6 +5990,11 @@
                     },
                     "currencyFormat": {
                       "description": "The currency format used when displaying field values within the product.",
+                      "enum": [
+                        "left",
+                        "right",
+                        "middle"
+                      ],
                       "type": "string"
                     },
                     "displayImages": {
@@ -6888,60 +6962,100 @@
             "in": "body",
             "name": "generated",
             "schema": {
-              "example": {
-                "value": {
-                  "to": "bck7gp3q2",
-                  "data": [
-                    {
-                      "6": {
-                        "value": "This is my text"
-                      },
-                      "7": {
-                        "value": 10
-                      },
-                      "8": {
-                        "value": "2019-12-18T08:00:00.000Z"
-                      },
-                      "9": {
-                        "value": [
-                          "a",
-                          "b"
-                        ]
-                      },
-                      "10": {
-                        "value": true
-                      },
-                      "11": {
-                        "value": "user@quickbase.com"
-                      },
-                      "12": {
-                        "value": "www.quickbase.com"
-                      },
-                      "13": {
-                        "value": [
-                          {
-                            "id": "123456.ab1s"
-                          },
-                          {
-                            "id": "254789.mkgp"
-                          },
-                          {
-                            "id": "789654.vc2s"
-                          }
-                        ]
+              "x-amf-examples": {
+                "Insert record": {
+                  "value": {
+                    "to": "bck7gp3q2",
+                    "data": [
+                      {
+                        "6": {
+                          "value": "This is my text"
+                        },
+                        "7": {
+                          "value": 10
+                        },
+                        "8": {
+                          "value": "2019-12-18T08:00:00.000Z"
+                        },
+                        "9": {
+                          "value": [
+                            "a",
+                            "b"
+                          ]
+                        },
+                        "10": {
+                          "value": true
+                        },
+                        "11": {
+                          "value": "user@quickbase.com"
+                        },
+                        "12": {
+                          "value": "www.quickbase.com"
+                        },
+                        "13": {
+                          "value": [
+                            {
+                              "id": "123456.ab1s"
+                            },
+                            {
+                              "id": "254789.mkgp"
+                            },
+                            {
+                              "id": "789654.vc2s"
+                            }
+                          ]
+                        }
                       }
-                    }
-                  ],
-                  "fieldsToReturn": [
-                    6,
-                    7,
-                    8,
-                    9,
-                    10,
-                    11,
-                    12,
-                    13
-                  ]
+                    ],
+                    "fieldsToReturn": [
+                      6,
+                      7,
+                      8,
+                      9,
+                      10,
+                      11,
+                      12,
+                      13
+                    ]
+                  }
+                },
+                "Update existing record": {
+                  "description": "For updating an existing record, add a mapping of the table key field ID (defaults to '3') to the record ID, in the data array. In the following example, we update the first record.",
+                  "value": {
+                    "to": "bck7gp3q2",
+                    "data": [
+                      {
+                        "3": {
+                          "value": 1
+                        },
+                        "6": {
+                          "value": "This is my new text"
+                        },
+                        "7": {
+                          "value": 20
+                        },
+                        "9": {
+                          "value": [
+                            "c",
+                            "d"
+                          ]
+                        },
+                        "10": {
+                          "value": false
+                        },
+                        "11": {
+                          "value": "newuser@quickbase.com"
+                        }
+                      }
+                    ],
+                    "fieldsToReturn": [
+                      6,
+                      7,
+                      9,
+                      10,
+                      11
+                    ]
+                  }
                 }
               },
               "type": "object",
@@ -6957,7 +7071,7 @@
                   "minLength": 1
                 },
                 "data": {
-                  "description": "Record data array.",
+                  "description": "Record data array, where each record contains key-value mappings of fields to be defined/updated and their values.",
                   "type": "array"
                 },
                 "mergeFieldId": {
@@ -8030,6 +8144,220 @@
         "operationId": "deleteFile",
         "tags": [
           "Files"
+        ]
+      }
+    },
+    "/users/deny": {
+      "put": {
+        "description": "Denies users access to the realm but leaves them listed in groups they have been added to.",
+        "parameters": [
+          {
+            "name": "QB-Realm-Hostname",
+            "description": "Your Quickbase domain, for example demo.quickbase.com",
+            "required": true,
+            "in": "header",
+            "example": "demo.quickbase.com",
+            "type": "string"
+          },
+          {
+            "name": "User-Agent",
+            "description": "This is entered by the person or utility invoking the API. You might custom create this or use the default one of your toolkit. Being descriptive here may offer more identification and troubleshooting capabilities.",
+            "required": false,
+            "in": "header",
+            "example": "FileService_Integration_V2.1",
+            "type": "string"
+          },
+          {
+            "name": "Authorization",
+            "description": "The Quickbase authentication scheme you are using to authenticate the request, as described on the [authorization page](../auth).",
+            "required": true,
+            "in": "header",
+            "example": "QB-USER-TOKEN xxxxxx_xxx_xxxxxxxxxxxxxxxxxxxxxxx",
+            "type": "string"
+          },
+          {
+            "x-amf-mediaType": "application/json",
+            "in": "body",
+            "name": "generated",
+            "schema": {
+              "description": "A list of user IDs that need to be denied.",
+              "example": [
+                "123456.ab1s",
+                "423123.vc2d",
+                "78910.ba1s"
+              ],
+              "type": "array",
+              "maxItems": 1000,
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "x-amf-mediaType": "application/json",
+            "schema": {
+              "example": {
+                "failure": [
+                  "423123.vc2d",
+                  "78910.ba1s"
+                ],
+                "success": [
+                  "123456.ab1s"
+                ]
+              },
+              "type": "object",
+              "additionalProperties": true,
+              "required": [
+                "failure",
+                "success"
+              ],
+              "properties": {
+                "failure": {
+                  "description": "A list of users that couldn't be denied. This also includes the ID's of users that are not valid.",
+                  "example": [
+                    "78910.qwer",
+                    "3512.asd1"
+                  ],
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "success": {
+                  "description": "A list of users that have successfully been denied.",
+                  "example": [
+                    "123456.ab1s"
+                  ],
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "Deny users",
+        "operationId": "denyUsers",
+        "tags": [
+          "Users"
+        ]
+      }
+    },
+    "/users/deny/{shouldDeleteFromGroups}": {
+      "parameters": [
+        {
+          "name": "shouldDeleteFromGroups",
+          "description": "Specifies if the users should also be removed from all groups.",
+          "required": true,
+          "in": "path",
+          "example": false,
+          "type": "boolean"
+        }
+      ],
+      "put": {
+        "description": "Denies users access to the realm and allows you to remove them from groups.",
+        "parameters": [
+          {
+            "name": "QB-Realm-Hostname",
+            "description": "Your Quickbase domain, for example demo.quickbase.com",
+            "required": true,
+            "in": "header",
+            "example": "demo.quickbase.com",
+            "type": "string"
+          },
+          {
+            "name": "User-Agent",
+            "description": "This is entered by the person or utility invoking the API. You might custom create this or use the default one of your toolkit. Being descriptive here may offer more identification and troubleshooting capabilities.",
+            "required": false,
+            "in": "header",
+            "example": "FileService_Integration_V2.1",
+            "type": "string"
+          },
+          {
+            "name": "Authorization",
+            "description": "The Quickbase authentication scheme you are using to authenticate the request, as described on the [authorization page](../auth).",
+            "required": true,
+            "in": "header",
+            "example": "QB-USER-TOKEN xxxxxx_xxx_xxxxxxxxxxxxxxxxxxxxxxx",
+            "type": "string"
+          },
+          {
+            "x-amf-mediaType": "application/json",
+            "in": "body",
+            "name": "generated",
+            "schema": {
+              "description": "A list of user IDs that need to be denied.",
+              "example": [
+                "123456.ab1s",
+                "423123.vc2d",
+                "78910.ba1s"
+              ],
+              "type": "array",
+              "maxItems": 1000,
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "x-amf-mediaType": "application/json",
+            "schema": {
+              "example": {
+                "failure": [
+                  "423123.vc2d",
+                  "78910.ba1s"
+                ],
+                "success": [
+                  "123456.ab1s"
+                ]
+              },
+              "type": "object",
+              "additionalProperties": true,
+              "required": [
+                "failure",
+                "success"
+              ],
+              "properties": {
+                "failure": {
+                  "description": "A list of users that couldn't be denied. This also includes the ID's of users that are not valid.",
+                  "example": [
+                    "78910.qwer",
+                    "3512.asd1"
+                  ],
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "success": {
+                  "description": "A list of users that have successfully been denied.",
+                  "example": [
+                    "123456.ab1s"
+                  ],
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "Deny and remove users from groups",
+        "operationId": "denyUsersAndGroups",
+        "tags": [
+          "Users"
         ]
       }
     }
@@ -12723,6 +13051,10 @@
                       "description": "Default user id value.",
                       "type": "integer"
                     },
+                    "useI18NFormat": {
+                      "description": "Whether phone numbers should be in E.164 standard international format.",
+                      "type": "boolean"
+                    },
                     "maxVersions": {
                       "description": "The maximum number of versions configured for a file attachment.",
                       "type": "integer"
@@ -12809,6 +13141,10 @@
                       "description": "The number of decimal places displayed in the product for this field.",
                       "type": "integer"
                     },
+                    "defaultCountryCode": {
+                      "description": "Controls the default country shown on international phone widgets on forms. Country code should be entered in the ISO 3166-1 alpha-2 format.",
+                      "type": "string"
+                    },
                     "seeVersions": {
                       "description": "Indicates if the user can see other versions, aside from the most recent, of a file attachment within the product.",
                       "type": "boolean"
@@ -12839,8 +13175,7 @@
                     },
                     "masterChoiceTableId": {
                       "description": "The id of the table that is the master in this relationship.",
-                      "type": "integer",
-                      "format": "int64"
+                      "type": "string"
                     },
                     "targetFieldId": {
                       "description": "The id of the target field.",
@@ -12900,6 +13235,11 @@
                     },
                     "currencyFormat": {
                       "description": "The currency format used when displaying field values within the product.",
+                      "enum": [
+                        "left",
+                        "right",
+                        "middle"
+                      ],
                       "type": "string"
                     },
                     "displayImages": {
@@ -13200,6 +13540,10 @@
                     "description": "Default user id value.",
                     "type": "integer"
                   },
+                  "useI18NFormat": {
+                    "description": "Whether phone numbers should be in E.164 standard international format",
+                    "type": "boolean"
+                  },
                   "maxVersions": {
                     "description": "The maximum number of versions configured for a file attachment.",
                     "type": "integer",
@@ -13257,6 +13601,10 @@
                   "decimalPlaces": {
                     "description": "The number of decimal places displayed in the product for this field.",
                     "type": "integer"
+                  },
+                  "defaultCountryCode": {
+                    "description": "Controls the default country shown on international phone widgets on forms. Country code should be entered in the ISO 3166-1 alpha-2 format.",
+                    "type": "string"
                   },
                   "displayMonth": {
                     "description": "How to display months.",
@@ -13332,6 +13680,11 @@
                   },
                   "currencyFormat": {
                     "description": "The currency format used when displaying field values within the product.",
+                    "enum": [
+                      "left",
+                      "right",
+                      "middle"
+                    ],
                     "type": "string"
                   },
                   "displayImages": {
@@ -13615,6 +13968,10 @@
                     "description": "Default user id value.",
                     "type": "integer"
                   },
+                  "useI18NFormat": {
+                    "description": "Whether phone numbers should be in E.164 standard international format.",
+                    "type": "boolean"
+                  },
                   "maxVersions": {
                     "description": "The maximum number of versions configured for a file attachment.",
                     "type": "integer"
@@ -13701,6 +14058,10 @@
                     "description": "The number of decimal places displayed in the product for this field.",
                     "type": "integer"
                   },
+                  "defaultCountryCode": {
+                    "description": "Controls the default country shown on international phone widgets on forms. Country code should be entered in the ISO 3166-1 alpha-2 format.",
+                    "type": "string"
+                  },
                   "seeVersions": {
                     "description": "Indicates if the user can see other versions, aside from the most recent, of a file attachment within the product.",
                     "type": "boolean"
@@ -13731,8 +14092,7 @@
                   },
                   "masterChoiceTableId": {
                     "description": "The id of the table that is the master in this relationship.",
-                    "type": "integer",
-                    "format": "int64"
+                    "type": "string"
                   },
                   "targetFieldId": {
                     "description": "The id of the target field.",
@@ -13792,6 +14152,11 @@
                   },
                   "currencyFormat": {
                     "description": "The currency format used when displaying field values within the product.",
+                    "enum": [
+                      "left",
+                      "right",
+                      "middle"
+                    ],
                     "type": "string"
                   },
                   "displayImages": {
@@ -14046,6 +14411,10 @@
                   "description": "Default user id value.",
                   "type": "integer"
                 },
+                "useI18NFormat": {
+                  "description": "Whether phone numbers should be in E.164 standard international format",
+                  "type": "boolean"
+                },
                 "maxVersions": {
                   "description": "The maximum number of versions configured for a file attachment.",
                   "type": "integer",
@@ -14103,6 +14472,10 @@
                 "decimalPlaces": {
                   "description": "The number of decimal places displayed in the product for this field.",
                   "type": "integer"
+                },
+                "defaultCountryCode": {
+                  "description": "Controls the default country shown on international phone widgets on forms. Country code should be entered in the ISO 3166-1 alpha-2 format.",
+                  "type": "string"
                 },
                 "displayMonth": {
                   "description": "How to display months.",
@@ -14178,6 +14551,11 @@
                 },
                 "currencyFormat": {
                   "description": "The currency format used when displaying field values within the product.",
+                  "enum": [
+                    "left",
+                    "right",
+                    "middle"
+                  ],
                   "type": "string"
                 },
                 "displayImages": {
@@ -14692,6 +15070,10 @@
                     "description": "Default user id value.",
                     "type": "integer"
                   },
+                  "useI18NFormat": {
+                    "description": "Whether phone numbers should be in E.164 standard international format.",
+                    "type": "boolean"
+                  },
                   "maxVersions": {
                     "description": "The maximum number of versions configured for a file attachment.",
                     "type": "integer"
@@ -14778,6 +15160,10 @@
                     "description": "The number of decimal places displayed in the product for this field.",
                     "type": "integer"
                   },
+                  "defaultCountryCode": {
+                    "description": "Controls the default country shown on international phone widgets on forms. Country code should be entered in the ISO 3166-1 alpha-2 format.",
+                    "type": "string"
+                  },
                   "seeVersions": {
                     "description": "Indicates if the user can see other versions, aside from the most recent, of a file attachment within the product.",
                     "type": "boolean"
@@ -14808,8 +15194,7 @@
                   },
                   "masterChoiceTableId": {
                     "description": "The id of the table that is the master in this relationship.",
-                    "type": "integer",
-                    "format": "int64"
+                    "type": "string"
                   },
                   "targetFieldId": {
                     "description": "The id of the target field.",
@@ -14869,6 +15254,11 @@
                   },
                   "currencyFormat": {
                     "description": "The currency format used when displaying field values within the product.",
+                    "enum": [
+                      "left",
+                      "right",
+                      "middle"
+                    ],
                     "type": "string"
                   },
                   "displayImages": {
@@ -15187,6 +15577,10 @@
                     "description": "Default user id value.",
                     "type": "integer"
                   },
+                  "useI18NFormat": {
+                    "description": "Whether phone numbers should be in E.164 standard international format",
+                    "type": "boolean"
+                  },
                   "maxVersions": {
                     "description": "The maximum number of versions configured for a file attachment.",
                     "type": "integer",
@@ -15267,6 +15661,10 @@
                     "description": "The number of decimal places displayed in the product for this field.",
                     "type": "integer"
                   },
+                  "defaultCountryCode": {
+                    "description": "Controls the default country shown on international phone widgets on forms. Country code should be entered in the ISO 3166-1 alpha-2 format.",
+                    "type": "string"
+                  },
                   "displayMonth": {
                     "description": "How to display months.",
                     "type": "string"
@@ -15345,6 +15743,11 @@
                   },
                   "currencyFormat": {
                     "description": "The currency format used when displaying field values within the product.",
+                    "enum": [
+                      "left",
+                      "right",
+                      "middle"
+                    ],
                     "type": "string"
                   },
                   "displayImages": {
@@ -15616,6 +16019,10 @@
                     "description": "Default user id value.",
                     "type": "integer"
                   },
+                  "useI18NFormat": {
+                    "description": "Whether phone numbers should be in E.164 standard international format.",
+                    "type": "boolean"
+                  },
                   "maxVersions": {
                     "description": "The maximum number of versions configured for a file attachment.",
                     "type": "integer"
@@ -15702,6 +16109,10 @@
                     "description": "The number of decimal places displayed in the product for this field.",
                     "type": "integer"
                   },
+                  "defaultCountryCode": {
+                    "description": "Controls the default country shown on international phone widgets on forms. Country code should be entered in the ISO 3166-1 alpha-2 format.",
+                    "type": "string"
+                  },
                   "seeVersions": {
                     "description": "Indicates if the user can see other versions, aside from the most recent, of a file attachment within the product.",
                     "type": "boolean"
@@ -15732,8 +16143,7 @@
                   },
                   "masterChoiceTableId": {
                     "description": "The id of the table that is the master in this relationship.",
-                    "type": "integer",
-                    "format": "int64"
+                    "type": "string"
                   },
                   "targetFieldId": {
                     "description": "The id of the target field.",
@@ -15793,6 +16203,11 @@
                   },
                   "currencyFormat": {
                     "description": "The currency format used when displaying field values within the product.",
+                    "enum": [
+                      "left",
+                      "right",
+                      "middle"
+                    ],
                     "type": "string"
                   },
                   "displayImages": {
@@ -16058,6 +16473,10 @@
                   "description": "Default user id value.",
                   "type": "integer"
                 },
+                "useI18NFormat": {
+                  "description": "Whether phone numbers should be in E.164 standard international format",
+                  "type": "boolean"
+                },
                 "maxVersions": {
                   "description": "The maximum number of versions configured for a file attachment.",
                   "type": "integer",
@@ -16138,6 +16557,10 @@
                   "description": "The number of decimal places displayed in the product for this field.",
                   "type": "integer"
                 },
+                "defaultCountryCode": {
+                  "description": "Controls the default country shown on international phone widgets on forms. Country code should be entered in the ISO 3166-1 alpha-2 format.",
+                  "type": "string"
+                },
                 "displayMonth": {
                   "description": "How to display months.",
                   "type": "string"
@@ -16216,6 +16639,11 @@
                 },
                 "currencyFormat": {
                   "description": "The currency format used when displaying field values within the product.",
+                  "enum": [
+                    "left",
+                    "right",
+                    "middle"
+                  ],
                   "type": "string"
                 },
                 "displayImages": {
@@ -17351,60 +17779,100 @@
           "in": "body",
           "name": "generated",
           "schema": {
-            "example": {
-              "value": {
-                "to": "bck7gp3q2",
-                "data": [
-                  {
-                    "6": {
-                      "value": "This is my text"
-                    },
-                    "7": {
-                      "value": 10
-                    },
-                    "8": {
-                      "value": "2019-12-18T08:00:00.000Z"
-                    },
-                    "9": {
-                      "value": [
-                        "a",
-                        "b"
-                      ]
-                    },
-                    "10": {
-                      "value": true
-                    },
-                    "11": {
-                      "value": "user@quickbase.com"
-                    },
-                    "12": {
-                      "value": "www.quickbase.com"
-                    },
-                    "13": {
-                      "value": [
-                        {
-                          "id": "123456.ab1s"
-                        },
-                        {
-                          "id": "254789.mkgp"
-                        },
-                        {
-                          "id": "789654.vc2s"
-                        }
-                      ]
+            "x-amf-examples": {
+              "Insert record": {
+                "value": {
+                  "to": "bck7gp3q2",
+                  "data": [
+                    {
+                      "6": {
+                        "value": "This is my text"
+                      },
+                      "7": {
+                        "value": 10
+                      },
+                      "8": {
+                        "value": "2019-12-18T08:00:00.000Z"
+                      },
+                      "9": {
+                        "value": [
+                          "a",
+                          "b"
+                        ]
+                      },
+                      "10": {
+                        "value": true
+                      },
+                      "11": {
+                        "value": "user@quickbase.com"
+                      },
+                      "12": {
+                        "value": "www.quickbase.com"
+                      },
+                      "13": {
+                        "value": [
+                          {
+                            "id": "123456.ab1s"
+                          },
+                          {
+                            "id": "254789.mkgp"
+                          },
+                          {
+                            "id": "789654.vc2s"
+                          }
+                        ]
+                      }
                     }
-                  }
-                ],
-                "fieldsToReturn": [
-                  6,
-                  7,
-                  8,
-                  9,
-                  10,
-                  11,
-                  12,
-                  13
-                ]
+                  ],
+                  "fieldsToReturn": [
+                    6,
+                    7,
+                    8,
+                    9,
+                    10,
+                    11,
+                    12,
+                    13
+                  ]
+                }
+              },
+              "Update existing record": {
+                "description": "For updating an existing record, add a mapping of the table key field ID (defaults to '3') to the record ID, in the data array. In the following example, we update the first record.",
+                "value": {
+                  "to": "bck7gp3q2",
+                  "data": [
+                    {
+                      "3": {
+                        "value": 1
+                      },
+                      "6": {
+                        "value": "This is my new text"
+                      },
+                      "7": {
+                        "value": 20
+                      },
+                      "9": {
+                        "value": [
+                          "c",
+                          "d"
+                        ]
+                      },
+                      "10": {
+                        "value": false
+                      },
+                      "11": {
+                        "value": "newuser@quickbase.com"
+                      }
+                    }
+                  ],
+                  "fieldsToReturn": [
+                    6,
+                    7,
+                    9,
+                    10,
+                    11
+                  ]
+                }
               }
             },
             "type": "object",
@@ -17420,7 +17888,7 @@
                 "minLength": 1
               },
               "data": {
-                "description": "Record data array.",
+                "description": "Record data array, where each record contains key-value mappings of fields to be defined/updated and their values.",
                 "type": "array"
               },
               "mergeFieldId": {
@@ -17688,60 +18156,100 @@
         "in": "body",
         "name": "generated",
         "schema": {
-          "example": {
-            "value": {
-              "to": "bck7gp3q2",
-              "data": [
-                {
-                  "6": {
-                    "value": "This is my text"
-                  },
-                  "7": {
-                    "value": 10
-                  },
-                  "8": {
-                    "value": "2019-12-18T08:00:00.000Z"
-                  },
-                  "9": {
-                    "value": [
-                      "a",
-                      "b"
-                    ]
-                  },
-                  "10": {
-                    "value": true
-                  },
-                  "11": {
-                    "value": "user@quickbase.com"
-                  },
-                  "12": {
-                    "value": "www.quickbase.com"
-                  },
-                  "13": {
-                    "value": [
-                      {
-                        "id": "123456.ab1s"
-                      },
-                      {
-                        "id": "254789.mkgp"
-                      },
-                      {
-                        "id": "789654.vc2s"
-                      }
-                    ]
+          "x-amf-examples": {
+            "Insert record": {
+              "value": {
+                "to": "bck7gp3q2",
+                "data": [
+                  {
+                    "6": {
+                      "value": "This is my text"
+                    },
+                    "7": {
+                      "value": 10
+                    },
+                    "8": {
+                      "value": "2019-12-18T08:00:00.000Z"
+                    },
+                    "9": {
+                      "value": [
+                        "a",
+                        "b"
+                      ]
+                    },
+                    "10": {
+                      "value": true
+                    },
+                    "11": {
+                      "value": "user@quickbase.com"
+                    },
+                    "12": {
+                      "value": "www.quickbase.com"
+                    },
+                    "13": {
+                      "value": [
+                        {
+                          "id": "123456.ab1s"
+                        },
+                        {
+                          "id": "254789.mkgp"
+                        },
+                        {
+                          "id": "789654.vc2s"
+                        }
+                      ]
+                    }
                   }
-                }
-              ],
-              "fieldsToReturn": [
-                6,
-                7,
-                8,
-                9,
-                10,
-                11,
-                12,
-                13
-              ]
+                ],
+                "fieldsToReturn": [
+                  6,
+                  7,
+                  8,
+                  9,
+                  10,
+                  11,
+                  12,
+                  13
+                ]
+              }
+            },
+            "Update existing record": {
+              "description": "For updating an existing record, add a mapping of the table key field ID (defaults to '3') to the record ID, in the data array. In the following example, we update the first record.",
+              "value": {
+                "to": "bck7gp3q2",
+                "data": [
+                  {
+                    "3": {
+                      "value": 1
+                    },
+                    "6": {
+                      "value": "This is my new text"
+                    },
+                    "7": {
+                      "value": 20
+                    },
+                    "9": {
+                      "value": [
+                        "c",
+                        "d"
+                      ]
+                    },
+                    "10": {
+                      "value": false
+                    },
+                    "11": {
+                      "value": "newuser@quickbase.com"
+                    }
+                  }
+                ],
+                "fieldsToReturn": [
+                  6,
+                  7,
+                  9,
+                  10,
+                  11
+                ]
+              }
             }
           },
           "type": "object",
@@ -17757,7 +18265,7 @@
               "minLength": 1
             },
             "data": {
-              "description": "Record data array.",
+              "description": "Record data array, where each record contains key-value mappings of fields to be defined/updated and their values.",
               "type": "array"
             },
             "mergeFieldId": {
@@ -19153,6 +19661,327 @@
           "type": "integer"
         }
       ]
+    },
+    {
+      "description": "Denies users access to the realm but leaves them listed in groups they have been added to.",
+      "parameters": [
+        {
+          "name": "QB-Realm-Hostname",
+          "description": "Your Quickbase domain, for example demo.quickbase.com",
+          "required": true,
+          "in": "header",
+          "example": "demo.quickbase.com",
+          "type": "string"
+        },
+        {
+          "name": "User-Agent",
+          "description": "This is entered by the person or utility invoking the API. You might custom create this or use the default one of your toolkit. Being descriptive here may offer more identification and troubleshooting capabilities.",
+          "required": false,
+          "in": "header",
+          "example": "FileService_Integration_V2.1",
+          "type": "string"
+        },
+        {
+          "name": "Authorization",
+          "description": "The Quickbase authentication scheme you are using to authenticate the request, as described on the [authorization page](../auth).",
+          "required": true,
+          "in": "header",
+          "example": "QB-USER-TOKEN xxxxxx_xxx_xxxxxxxxxxxxxxxxxxxxxxx",
+          "type": "string"
+        },
+        {
+          "x-amf-mediaType": "application/json",
+          "in": "body",
+          "name": "generated",
+          "schema": {
+            "description": "A list of user IDs that need to be denied.",
+            "example": [
+              "123456.ab1s",
+              "423123.vc2d",
+              "78910.ba1s"
+            ],
+            "type": "array",
+            "maxItems": 1000,
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Success",
+          "x-amf-mediaType": "application/json",
+          "schema": {
+            "example": {
+              "failure": [
+                "423123.vc2d",
+                "78910.ba1s"
+              ],
+              "success": [
+                "123456.ab1s"
+              ]
+            },
+            "type": "object",
+            "additionalProperties": true,
+            "required": [
+              "failure",
+              "success"
+            ],
+            "properties": {
+              "failure": {
+                "description": "A list of users that couldn't be denied. This also includes the ID's of users that are not valid.",
+                "example": [
+                  "78910.qwer",
+                  "3512.asd1"
+                ],
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "success": {
+                "description": "A list of users that have successfully been denied.",
+                "example": [
+                  "123456.ab1s"
+                ],
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "summary": "Deny users",
+      "operationId": "denyUsers",
+      "tags": [
+        "Users"
+      ],
+      "id": "denyUsers",
+      "path": "/users/deny",
+      "host": "https://api.quickbase.com/v1",
+      "method": "put",
+      "headerParams": [
+        {
+          "name": "QB-Realm-Hostname",
+          "description": "Your Quickbase domain, for example demo.quickbase.com",
+          "required": true,
+          "in": "header",
+          "example": "demo.quickbase.com",
+          "type": "string"
+        },
+        {
+          "name": "User-Agent",
+          "description": "This is entered by the person or utility invoking the API. You might custom create this or use the default one of your toolkit. Being descriptive here may offer more identification and troubleshooting capabilities.",
+          "required": false,
+          "in": "header",
+          "example": "FileService_Integration_V2.1",
+          "type": "string"
+        },
+        {
+          "name": "Authorization",
+          "description": "The Quickbase authentication scheme you are using to authenticate the request, as described on the [authorization page](../auth).",
+          "required": true,
+          "in": "header",
+          "example": "QB-USER-TOKEN xxxxxx_xxx_xxxxxxxxxxxxxxxxxxxxxxx",
+          "type": "string"
+        }
+      ],
+      "queryParams": [],
+      "pathParams": [],
+      "requests": {
+        "x-amf-mediaType": "application/json",
+        "in": "body",
+        "name": "generated",
+        "schema": {
+          "description": "A list of user IDs that need to be denied.",
+          "example": [
+            "123456.ab1s",
+            "423123.vc2d",
+            "78910.ba1s"
+          ],
+          "type": "array",
+          "maxItems": 1000,
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    {
+      "description": "Denies users access to the realm and allows you to remove them from groups.",
+      "parameters": [
+        {
+          "name": "shouldDeleteFromGroups",
+          "description": "Specifies if the users should also be removed from all groups.",
+          "required": true,
+          "in": "path",
+          "example": false,
+          "type": "boolean"
+        },
+        {
+          "name": "QB-Realm-Hostname",
+          "description": "Your Quickbase domain, for example demo.quickbase.com",
+          "required": true,
+          "in": "header",
+          "example": "demo.quickbase.com",
+          "type": "string"
+        },
+        {
+          "name": "User-Agent",
+          "description": "This is entered by the person or utility invoking the API. You might custom create this or use the default one of your toolkit. Being descriptive here may offer more identification and troubleshooting capabilities.",
+          "required": false,
+          "in": "header",
+          "example": "FileService_Integration_V2.1",
+          "type": "string"
+        },
+        {
+          "name": "Authorization",
+          "description": "The Quickbase authentication scheme you are using to authenticate the request, as described on the [authorization page](../auth).",
+          "required": true,
+          "in": "header",
+          "example": "QB-USER-TOKEN xxxxxx_xxx_xxxxxxxxxxxxxxxxxxxxxxx",
+          "type": "string"
+        },
+        {
+          "x-amf-mediaType": "application/json",
+          "in": "body",
+          "name": "generated",
+          "schema": {
+            "description": "A list of user IDs that need to be denied.",
+            "example": [
+              "123456.ab1s",
+              "423123.vc2d",
+              "78910.ba1s"
+            ],
+            "type": "array",
+            "maxItems": 1000,
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Success",
+          "x-amf-mediaType": "application/json",
+          "schema": {
+            "example": {
+              "failure": [
+                "423123.vc2d",
+                "78910.ba1s"
+              ],
+              "success": [
+                "123456.ab1s"
+              ]
+            },
+            "type": "object",
+            "additionalProperties": true,
+            "required": [
+              "failure",
+              "success"
+            ],
+            "properties": {
+              "failure": {
+                "description": "A list of users that couldn't be denied. This also includes the ID's of users that are not valid.",
+                "example": [
+                  "78910.qwer",
+                  "3512.asd1"
+                ],
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "success": {
+                "description": "A list of users that have successfully been denied.",
+                "example": [
+                  "123456.ab1s"
+                ],
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "summary": "Deny and remove users from groups",
+      "operationId": "denyUsersAndGroups",
+      "tags": [
+        "Users"
+      ],
+      "id": "denyUsersAndGroups",
+      "path": "/users/deny/{shouldDeleteFromGroups}",
+      "host": "https://api.quickbase.com/v1",
+      "method": "put",
+      "headerParams": [
+        {
+          "name": "QB-Realm-Hostname",
+          "description": "Your Quickbase domain, for example demo.quickbase.com",
+          "required": true,
+          "in": "header",
+          "example": "demo.quickbase.com",
+          "type": "string"
+        },
+        {
+          "name": "User-Agent",
+          "description": "This is entered by the person or utility invoking the API. You might custom create this or use the default one of your toolkit. Being descriptive here may offer more identification and troubleshooting capabilities.",
+          "required": false,
+          "in": "header",
+          "example": "FileService_Integration_V2.1",
+          "type": "string"
+        },
+        {
+          "name": "Authorization",
+          "description": "The Quickbase authentication scheme you are using to authenticate the request, as described on the [authorization page](../auth).",
+          "required": true,
+          "in": "header",
+          "example": "QB-USER-TOKEN xxxxxx_xxx_xxxxxxxxxxxxxxxxxxxxxxx",
+          "type": "string"
+        }
+      ],
+      "queryParams": [],
+      "pathParams": [
+        {
+          "name": "shouldDeleteFromGroups",
+          "description": "Specifies if the users should also be removed from all groups.",
+          "required": true,
+          "in": "path",
+          "example": false,
+          "type": "boolean"
+        }
+      ],
+      "requests": {
+        "x-amf-mediaType": "application/json",
+        "in": "body",
+        "name": "generated",
+        "schema": {
+          "description": "A list of user IDs that need to be denied.",
+          "example": [
+            "123456.ab1s",
+            "423123.vc2d",
+            "78910.ba1s"
+          ],
+          "type": "array",
+          "maxItems": 1000,
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          }
+        }
+      }
     }
   ],
   "groups": {
@@ -23851,6 +24680,10 @@
                         "description": "Default user id value.",
                         "type": "integer"
                       },
+                      "useI18NFormat": {
+                        "description": "Whether phone numbers should be in E.164 standard international format.",
+                        "type": "boolean"
+                      },
                       "maxVersions": {
                         "description": "The maximum number of versions configured for a file attachment.",
                         "type": "integer"
@@ -23937,6 +24770,10 @@
                         "description": "The number of decimal places displayed in the product for this field.",
                         "type": "integer"
                       },
+                      "defaultCountryCode": {
+                        "description": "Controls the default country shown on international phone widgets on forms. Country code should be entered in the ISO 3166-1 alpha-2 format.",
+                        "type": "string"
+                      },
                       "seeVersions": {
                         "description": "Indicates if the user can see other versions, aside from the most recent, of a file attachment within the product.",
                         "type": "boolean"
@@ -23967,8 +24804,7 @@
                       },
                       "masterChoiceTableId": {
                         "description": "The id of the table that is the master in this relationship.",
-                        "type": "integer",
-                        "format": "int64"
+                        "type": "string"
                       },
                       "targetFieldId": {
                         "description": "The id of the target field.",
@@ -24028,6 +24864,11 @@
                       },
                       "currencyFormat": {
                         "description": "The currency format used when displaying field values within the product.",
+                        "enum": [
+                          "left",
+                          "right",
+                          "middle"
+                        ],
                         "type": "string"
                       },
                       "displayImages": {
@@ -24328,6 +25169,10 @@
                       "description": "Default user id value.",
                       "type": "integer"
                     },
+                    "useI18NFormat": {
+                      "description": "Whether phone numbers should be in E.164 standard international format",
+                      "type": "boolean"
+                    },
                     "maxVersions": {
                       "description": "The maximum number of versions configured for a file attachment.",
                       "type": "integer",
@@ -24385,6 +25230,10 @@
                     "decimalPlaces": {
                       "description": "The number of decimal places displayed in the product for this field.",
                       "type": "integer"
+                    },
+                    "defaultCountryCode": {
+                      "description": "Controls the default country shown on international phone widgets on forms. Country code should be entered in the ISO 3166-1 alpha-2 format.",
+                      "type": "string"
                     },
                     "displayMonth": {
                       "description": "How to display months.",
@@ -24460,6 +25309,11 @@
                     },
                     "currencyFormat": {
                       "description": "The currency format used when displaying field values within the product.",
+                      "enum": [
+                        "left",
+                        "right",
+                        "middle"
+                      ],
                       "type": "string"
                     },
                     "displayImages": {
@@ -24743,6 +25597,10 @@
                       "description": "Default user id value.",
                       "type": "integer"
                     },
+                    "useI18NFormat": {
+                      "description": "Whether phone numbers should be in E.164 standard international format.",
+                      "type": "boolean"
+                    },
                     "maxVersions": {
                       "description": "The maximum number of versions configured for a file attachment.",
                       "type": "integer"
@@ -24829,6 +25687,10 @@
                       "description": "The number of decimal places displayed in the product for this field.",
                       "type": "integer"
                     },
+                    "defaultCountryCode": {
+                      "description": "Controls the default country shown on international phone widgets on forms. Country code should be entered in the ISO 3166-1 alpha-2 format.",
+                      "type": "string"
+                    },
                     "seeVersions": {
                       "description": "Indicates if the user can see other versions, aside from the most recent, of a file attachment within the product.",
                       "type": "boolean"
@@ -24859,8 +25721,7 @@
                     },
                     "masterChoiceTableId": {
                       "description": "The id of the table that is the master in this relationship.",
-                      "type": "integer",
-                      "format": "int64"
+                      "type": "string"
                     },
                     "targetFieldId": {
                       "description": "The id of the target field.",
@@ -24920,6 +25781,11 @@
                     },
                     "currencyFormat": {
                       "description": "The currency format used when displaying field values within the product.",
+                      "enum": [
+                        "left",
+                        "right",
+                        "middle"
+                      ],
                       "type": "string"
                     },
                     "displayImages": {
@@ -25174,6 +26040,10 @@
                     "description": "Default user id value.",
                     "type": "integer"
                   },
+                  "useI18NFormat": {
+                    "description": "Whether phone numbers should be in E.164 standard international format",
+                    "type": "boolean"
+                  },
                   "maxVersions": {
                     "description": "The maximum number of versions configured for a file attachment.",
                     "type": "integer",
@@ -25231,6 +26101,10 @@
                   "decimalPlaces": {
                     "description": "The number of decimal places displayed in the product for this field.",
                     "type": "integer"
+                  },
+                  "defaultCountryCode": {
+                    "description": "Controls the default country shown on international phone widgets on forms. Country code should be entered in the ISO 3166-1 alpha-2 format.",
+                    "type": "string"
                   },
                   "displayMonth": {
                     "description": "How to display months.",
@@ -25306,6 +26180,11 @@
                   },
                   "currencyFormat": {
                     "description": "The currency format used when displaying field values within the product.",
+                    "enum": [
+                      "left",
+                      "right",
+                      "middle"
+                    ],
                     "type": "string"
                   },
                   "displayImages": {
@@ -25820,6 +26699,10 @@
                       "description": "Default user id value.",
                       "type": "integer"
                     },
+                    "useI18NFormat": {
+                      "description": "Whether phone numbers should be in E.164 standard international format.",
+                      "type": "boolean"
+                    },
                     "maxVersions": {
                       "description": "The maximum number of versions configured for a file attachment.",
                       "type": "integer"
@@ -25906,6 +26789,10 @@
                       "description": "The number of decimal places displayed in the product for this field.",
                       "type": "integer"
                     },
+                    "defaultCountryCode": {
+                      "description": "Controls the default country shown on international phone widgets on forms. Country code should be entered in the ISO 3166-1 alpha-2 format.",
+                      "type": "string"
+                    },
                     "seeVersions": {
                       "description": "Indicates if the user can see other versions, aside from the most recent, of a file attachment within the product.",
                       "type": "boolean"
@@ -25936,8 +26823,7 @@
                     },
                     "masterChoiceTableId": {
                       "description": "The id of the table that is the master in this relationship.",
-                      "type": "integer",
-                      "format": "int64"
+                      "type": "string"
                     },
                     "targetFieldId": {
                       "description": "The id of the target field.",
@@ -25997,6 +26883,11 @@
                     },
                     "currencyFormat": {
                       "description": "The currency format used when displaying field values within the product.",
+                      "enum": [
+                        "left",
+                        "right",
+                        "middle"
+                      ],
                       "type": "string"
                     },
                     "displayImages": {
@@ -26315,6 +27206,10 @@
                       "description": "Default user id value.",
                       "type": "integer"
                     },
+                    "useI18NFormat": {
+                      "description": "Whether phone numbers should be in E.164 standard international format",
+                      "type": "boolean"
+                    },
                     "maxVersions": {
                       "description": "The maximum number of versions configured for a file attachment.",
                       "type": "integer",
@@ -26395,6 +27290,10 @@
                       "description": "The number of decimal places displayed in the product for this field.",
                       "type": "integer"
                     },
+                    "defaultCountryCode": {
+                      "description": "Controls the default country shown on international phone widgets on forms. Country code should be entered in the ISO 3166-1 alpha-2 format.",
+                      "type": "string"
+                    },
                     "displayMonth": {
                       "description": "How to display months.",
                       "type": "string"
@@ -26473,6 +27372,11 @@
                     },
                     "currencyFormat": {
                       "description": "The currency format used when displaying field values within the product.",
+                      "enum": [
+                        "left",
+                        "right",
+                        "middle"
+                      ],
                       "type": "string"
                     },
                     "displayImages": {
@@ -26744,6 +27648,10 @@
                       "description": "Default user id value.",
                       "type": "integer"
                     },
+                    "useI18NFormat": {
+                      "description": "Whether phone numbers should be in E.164 standard international format.",
+                      "type": "boolean"
+                    },
                     "maxVersions": {
                       "description": "The maximum number of versions configured for a file attachment.",
                       "type": "integer"
@@ -26830,6 +27738,10 @@
                       "description": "The number of decimal places displayed in the product for this field.",
                       "type": "integer"
                     },
+                    "defaultCountryCode": {
+                      "description": "Controls the default country shown on international phone widgets on forms. Country code should be entered in the ISO 3166-1 alpha-2 format.",
+                      "type": "string"
+                    },
                     "seeVersions": {
                       "description": "Indicates if the user can see other versions, aside from the most recent, of a file attachment within the product.",
                       "type": "boolean"
@@ -26860,8 +27772,7 @@
                     },
                     "masterChoiceTableId": {
                       "description": "The id of the table that is the master in this relationship.",
-                      "type": "integer",
-                      "format": "int64"
+                      "type": "string"
                     },
                     "targetFieldId": {
                       "description": "The id of the target field.",
@@ -26921,6 +27832,11 @@
                     },
                     "currencyFormat": {
                       "description": "The currency format used when displaying field values within the product.",
+                      "enum": [
+                        "left",
+                        "right",
+                        "middle"
+                      ],
                       "type": "string"
                     },
                     "displayImages": {
@@ -27186,6 +28102,10 @@
                     "description": "Default user id value.",
                     "type": "integer"
                   },
+                  "useI18NFormat": {
+                    "description": "Whether phone numbers should be in E.164 standard international format",
+                    "type": "boolean"
+                  },
                   "maxVersions": {
                     "description": "The maximum number of versions configured for a file attachment.",
                     "type": "integer",
@@ -27266,6 +28186,10 @@
                     "description": "The number of decimal places displayed in the product for this field.",
                     "type": "integer"
                   },
+                  "defaultCountryCode": {
+                    "description": "Controls the default country shown on international phone widgets on forms. Country code should be entered in the ISO 3166-1 alpha-2 format.",
+                    "type": "string"
+                  },
                   "displayMonth": {
                     "description": "How to display months.",
                     "type": "string"
@@ -27344,6 +28268,11 @@
                   },
                   "currencyFormat": {
                     "description": "The currency format used when displaying field values within the product.",
+                    "enum": [
+                      "left",
+                      "right",
+                      "middle"
+                    ],
                     "type": "string"
                   },
                   "displayImages": {
@@ -28483,60 +29412,100 @@
             "in": "body",
             "name": "generated",
             "schema": {
-              "example": {
-                "value": {
-                  "to": "bck7gp3q2",
-                  "data": [
-                    {
-                      "6": {
-                        "value": "This is my text"
-                      },
-                      "7": {
-                        "value": 10
-                      },
-                      "8": {
-                        "value": "2019-12-18T08:00:00.000Z"
-                      },
-                      "9": {
-                        "value": [
-                          "a",
-                          "b"
-                        ]
-                      },
-                      "10": {
-                        "value": true
-                      },
-                      "11": {
-                        "value": "user@quickbase.com"
-                      },
-                      "12": {
-                        "value": "www.quickbase.com"
-                      },
-                      "13": {
-                        "value": [
-                          {
-                            "id": "123456.ab1s"
-                          },
-                          {
-                            "id": "254789.mkgp"
-                          },
-                          {
-                            "id": "789654.vc2s"
-                          }
-                        ]
+              "x-amf-examples": {
+                "Insert record": {
+                  "value": {
+                    "to": "bck7gp3q2",
+                    "data": [
+                      {
+                        "6": {
+                          "value": "This is my text"
+                        },
+                        "7": {
+                          "value": 10
+                        },
+                        "8": {
+                          "value": "2019-12-18T08:00:00.000Z"
+                        },
+                        "9": {
+                          "value": [
+                            "a",
+                            "b"
+                          ]
+                        },
+                        "10": {
+                          "value": true
+                        },
+                        "11": {
+                          "value": "user@quickbase.com"
+                        },
+                        "12": {
+                          "value": "www.quickbase.com"
+                        },
+                        "13": {
+                          "value": [
+                            {
+                              "id": "123456.ab1s"
+                            },
+                            {
+                              "id": "254789.mkgp"
+                            },
+                            {
+                              "id": "789654.vc2s"
+                            }
+                          ]
+                        }
                       }
-                    }
-                  ],
-                  "fieldsToReturn": [
-                    6,
-                    7,
-                    8,
-                    9,
-                    10,
-                    11,
-                    12,
-                    13
-                  ]
+                    ],
+                    "fieldsToReturn": [
+                      6,
+                      7,
+                      8,
+                      9,
+                      10,
+                      11,
+                      12,
+                      13
+                    ]
+                  }
+                },
+                "Update existing record": {
+                  "description": "For updating an existing record, add a mapping of the table key field ID (defaults to '3') to the record ID, in the data array. In the following example, we update the first record.",
+                  "value": {
+                    "to": "bck7gp3q2",
+                    "data": [
+                      {
+                        "3": {
+                          "value": 1
+                        },
+                        "6": {
+                          "value": "This is my new text"
+                        },
+                        "7": {
+                          "value": 20
+                        },
+                        "9": {
+                          "value": [
+                            "c",
+                            "d"
+                          ]
+                        },
+                        "10": {
+                          "value": false
+                        },
+                        "11": {
+                          "value": "newuser@quickbase.com"
+                        }
+                      }
+                    ],
+                    "fieldsToReturn": [
+                      6,
+                      7,
+                      9,
+                      10,
+                      11
+                    ]
+                  }
                 }
               },
               "type": "object",
@@ -28552,7 +29521,7 @@
                   "minLength": 1
                 },
                 "data": {
-                  "description": "Record data array.",
+                  "description": "Record data array, where each record contains key-value mappings of fields to be defined/updated and their values.",
                   "type": "array"
                 },
                 "mergeFieldId": {
@@ -28820,60 +29789,100 @@
           "in": "body",
           "name": "generated",
           "schema": {
-            "example": {
-              "value": {
-                "to": "bck7gp3q2",
-                "data": [
-                  {
-                    "6": {
-                      "value": "This is my text"
-                    },
-                    "7": {
-                      "value": 10
-                    },
-                    "8": {
-                      "value": "2019-12-18T08:00:00.000Z"
-                    },
-                    "9": {
-                      "value": [
-                        "a",
-                        "b"
-                      ]
-                    },
-                    "10": {
-                      "value": true
-                    },
-                    "11": {
-                      "value": "user@quickbase.com"
-                    },
-                    "12": {
-                      "value": "www.quickbase.com"
-                    },
-                    "13": {
-                      "value": [
-                        {
-                          "id": "123456.ab1s"
-                        },
-                        {
-                          "id": "254789.mkgp"
-                        },
-                        {
-                          "id": "789654.vc2s"
-                        }
-                      ]
+            "x-amf-examples": {
+              "Insert record": {
+                "value": {
+                  "to": "bck7gp3q2",
+                  "data": [
+                    {
+                      "6": {
+                        "value": "This is my text"
+                      },
+                      "7": {
+                        "value": 10
+                      },
+                      "8": {
+                        "value": "2019-12-18T08:00:00.000Z"
+                      },
+                      "9": {
+                        "value": [
+                          "a",
+                          "b"
+                        ]
+                      },
+                      "10": {
+                        "value": true
+                      },
+                      "11": {
+                        "value": "user@quickbase.com"
+                      },
+                      "12": {
+                        "value": "www.quickbase.com"
+                      },
+                      "13": {
+                        "value": [
+                          {
+                            "id": "123456.ab1s"
+                          },
+                          {
+                            "id": "254789.mkgp"
+                          },
+                          {
+                            "id": "789654.vc2s"
+                          }
+                        ]
+                      }
                     }
-                  }
-                ],
-                "fieldsToReturn": [
-                  6,
-                  7,
-                  8,
-                  9,
-                  10,
-                  11,
-                  12,
-                  13
-                ]
+                  ],
+                  "fieldsToReturn": [
+                    6,
+                    7,
+                    8,
+                    9,
+                    10,
+                    11,
+                    12,
+                    13
+                  ]
+                }
+              },
+              "Update existing record": {
+                "description": "For updating an existing record, add a mapping of the table key field ID (defaults to '3') to the record ID, in the data array. In the following example, we update the first record.",
+                "value": {
+                  "to": "bck7gp3q2",
+                  "data": [
+                    {
+                      "3": {
+                        "value": 1
+                      },
+                      "6": {
+                        "value": "This is my new text"
+                      },
+                      "7": {
+                        "value": 20
+                      },
+                      "9": {
+                        "value": [
+                          "c",
+                          "d"
+                        ]
+                      },
+                      "10": {
+                        "value": false
+                      },
+                      "11": {
+                        "value": "newuser@quickbase.com"
+                      }
+                    }
+                  ],
+                  "fieldsToReturn": [
+                    6,
+                    7,
+                    9,
+                    10,
+                    11
+                  ]
+                }
               }
             },
             "type": "object",
@@ -28889,7 +29898,7 @@
                 "minLength": 1
               },
               "data": {
-                "description": "Record data array.",
+                "description": "Record data array, where each record contains key-value mappings of fields to be defined/updated and their values.",
                 "type": "array"
               },
               "mergeFieldId": {
@@ -30291,6 +31300,329 @@
             "type": "integer"
           }
         ]
+      }
+    ],
+    "Users": [
+      {
+        "description": "Denies users access to the realm but leaves them listed in groups they have been added to.",
+        "parameters": [
+          {
+            "name": "QB-Realm-Hostname",
+            "description": "Your Quickbase domain, for example demo.quickbase.com",
+            "required": true,
+            "in": "header",
+            "example": "demo.quickbase.com",
+            "type": "string"
+          },
+          {
+            "name": "User-Agent",
+            "description": "This is entered by the person or utility invoking the API. You might custom create this or use the default one of your toolkit. Being descriptive here may offer more identification and troubleshooting capabilities.",
+            "required": false,
+            "in": "header",
+            "example": "FileService_Integration_V2.1",
+            "type": "string"
+          },
+          {
+            "name": "Authorization",
+            "description": "The Quickbase authentication scheme you are using to authenticate the request, as described on the [authorization page](../auth).",
+            "required": true,
+            "in": "header",
+            "example": "QB-USER-TOKEN xxxxxx_xxx_xxxxxxxxxxxxxxxxxxxxxxx",
+            "type": "string"
+          },
+          {
+            "x-amf-mediaType": "application/json",
+            "in": "body",
+            "name": "generated",
+            "schema": {
+              "description": "A list of user IDs that need to be denied.",
+              "example": [
+                "123456.ab1s",
+                "423123.vc2d",
+                "78910.ba1s"
+              ],
+              "type": "array",
+              "maxItems": 1000,
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "x-amf-mediaType": "application/json",
+            "schema": {
+              "example": {
+                "failure": [
+                  "423123.vc2d",
+                  "78910.ba1s"
+                ],
+                "success": [
+                  "123456.ab1s"
+                ]
+              },
+              "type": "object",
+              "additionalProperties": true,
+              "required": [
+                "failure",
+                "success"
+              ],
+              "properties": {
+                "failure": {
+                  "description": "A list of users that couldn't be denied. This also includes the ID's of users that are not valid.",
+                  "example": [
+                    "78910.qwer",
+                    "3512.asd1"
+                  ],
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "success": {
+                  "description": "A list of users that have successfully been denied.",
+                  "example": [
+                    "123456.ab1s"
+                  ],
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "Deny users",
+        "operationId": "denyUsers",
+        "tags": [
+          "Users"
+        ],
+        "id": "denyUsers",
+        "path": "/users/deny",
+        "host": "https://api.quickbase.com/v1",
+        "method": "put",
+        "headerParams": [
+          {
+            "name": "QB-Realm-Hostname",
+            "description": "Your Quickbase domain, for example demo.quickbase.com",
+            "required": true,
+            "in": "header",
+            "example": "demo.quickbase.com",
+            "type": "string"
+          },
+          {
+            "name": "User-Agent",
+            "description": "This is entered by the person or utility invoking the API. You might custom create this or use the default one of your toolkit. Being descriptive here may offer more identification and troubleshooting capabilities.",
+            "required": false,
+            "in": "header",
+            "example": "FileService_Integration_V2.1",
+            "type": "string"
+          },
+          {
+            "name": "Authorization",
+            "description": "The Quickbase authentication scheme you are using to authenticate the request, as described on the [authorization page](../auth).",
+            "required": true,
+            "in": "header",
+            "example": "QB-USER-TOKEN xxxxxx_xxx_xxxxxxxxxxxxxxxxxxxxxxx",
+            "type": "string"
+          }
+        ],
+        "queryParams": [],
+        "pathParams": [],
+        "requests": {
+          "x-amf-mediaType": "application/json",
+          "in": "body",
+          "name": "generated",
+          "schema": {
+            "description": "A list of user IDs that need to be denied.",
+            "example": [
+              "123456.ab1s",
+              "423123.vc2d",
+              "78910.ba1s"
+            ],
+            "type": "array",
+            "maxItems": 1000,
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      {
+        "description": "Denies users access to the realm and allows you to remove them from groups.",
+        "parameters": [
+          {
+            "name": "shouldDeleteFromGroups",
+            "description": "Specifies if the users should also be removed from all groups.",
+            "required": true,
+            "in": "path",
+            "example": false,
+            "type": "boolean"
+          },
+          {
+            "name": "QB-Realm-Hostname",
+            "description": "Your Quickbase domain, for example demo.quickbase.com",
+            "required": true,
+            "in": "header",
+            "example": "demo.quickbase.com",
+            "type": "string"
+          },
+          {
+            "name": "User-Agent",
+            "description": "This is entered by the person or utility invoking the API. You might custom create this or use the default one of your toolkit. Being descriptive here may offer more identification and troubleshooting capabilities.",
+            "required": false,
+            "in": "header",
+            "example": "FileService_Integration_V2.1",
+            "type": "string"
+          },
+          {
+            "name": "Authorization",
+            "description": "The Quickbase authentication scheme you are using to authenticate the request, as described on the [authorization page](../auth).",
+            "required": true,
+            "in": "header",
+            "example": "QB-USER-TOKEN xxxxxx_xxx_xxxxxxxxxxxxxxxxxxxxxxx",
+            "type": "string"
+          },
+          {
+            "x-amf-mediaType": "application/json",
+            "in": "body",
+            "name": "generated",
+            "schema": {
+              "description": "A list of user IDs that need to be denied.",
+              "example": [
+                "123456.ab1s",
+                "423123.vc2d",
+                "78910.ba1s"
+              ],
+              "type": "array",
+              "maxItems": 1000,
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "x-amf-mediaType": "application/json",
+            "schema": {
+              "example": {
+                "failure": [
+                  "423123.vc2d",
+                  "78910.ba1s"
+                ],
+                "success": [
+                  "123456.ab1s"
+                ]
+              },
+              "type": "object",
+              "additionalProperties": true,
+              "required": [
+                "failure",
+                "success"
+              ],
+              "properties": {
+                "failure": {
+                  "description": "A list of users that couldn't be denied. This also includes the ID's of users that are not valid.",
+                  "example": [
+                    "78910.qwer",
+                    "3512.asd1"
+                  ],
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "success": {
+                  "description": "A list of users that have successfully been denied.",
+                  "example": [
+                    "123456.ab1s"
+                  ],
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "Deny and remove users from groups",
+        "operationId": "denyUsersAndGroups",
+        "tags": [
+          "Users"
+        ],
+        "id": "denyUsersAndGroups",
+        "path": "/users/deny/{shouldDeleteFromGroups}",
+        "host": "https://api.quickbase.com/v1",
+        "method": "put",
+        "headerParams": [
+          {
+            "name": "QB-Realm-Hostname",
+            "description": "Your Quickbase domain, for example demo.quickbase.com",
+            "required": true,
+            "in": "header",
+            "example": "demo.quickbase.com",
+            "type": "string"
+          },
+          {
+            "name": "User-Agent",
+            "description": "This is entered by the person or utility invoking the API. You might custom create this or use the default one of your toolkit. Being descriptive here may offer more identification and troubleshooting capabilities.",
+            "required": false,
+            "in": "header",
+            "example": "FileService_Integration_V2.1",
+            "type": "string"
+          },
+          {
+            "name": "Authorization",
+            "description": "The Quickbase authentication scheme you are using to authenticate the request, as described on the [authorization page](../auth).",
+            "required": true,
+            "in": "header",
+            "example": "QB-USER-TOKEN xxxxxx_xxx_xxxxxxxxxxxxxxxxxxxxxxx",
+            "type": "string"
+          }
+        ],
+        "queryParams": [],
+        "pathParams": [
+          {
+            "name": "shouldDeleteFromGroups",
+            "description": "Specifies if the users should also be removed from all groups.",
+            "required": true,
+            "in": "path",
+            "example": false,
+            "type": "boolean"
+          }
+        ],
+        "requests": {
+          "x-amf-mediaType": "application/json",
+          "in": "body",
+          "name": "generated",
+          "schema": {
+            "description": "A list of user IDs that need to be denied.",
+            "example": [
+              "123456.ab1s",
+              "423123.vc2d",
+              "78910.ba1s"
+            ],
+            "type": "array",
+            "maxItems": 1000,
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string"
+            }
+          }
+        }
       }
     ]
   }

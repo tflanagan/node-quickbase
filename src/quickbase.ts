@@ -56,6 +56,7 @@ export class QuickBase {
 		connectionLimit: 10,
 		connectionLimitPeriod: 1000,
 		errorOnConnectionLimit: false,
+		retryOnQuotaExceeded: true,
 
 		proxy: false
 	};
@@ -188,6 +189,12 @@ export class QuickBase {
 					debugResponse(id, debugData, err);
 
 					throw err;
+				}
+
+				if(err.response.status === 429 && typeof(debugData['x-ratelimit-reset']) !== 'undefined' && this.settings.retryOnQuotaExceeded){
+					await delay(debugData['x-ratelimit-reset']);
+
+					return this.request(actOptions, reqOptions, passThrough);
 				}
 
 				// Error reporting seems a bit inconsistent
@@ -1598,6 +1605,12 @@ export class QuickBaseError extends Error {
 }
 
 /* Helpers */
+function delay(time: number){
+	return new Promise((resolve) => {
+		setTimeout(resolve, +time);
+	});
+}
+
 function objKeysToLower<O>(obj: O): O {
     return Object.keys(obj).reduce((result, key) => {
 		(result as Indexable)[key.toLowerCase()] = (obj as Indexable)[key];
@@ -1766,6 +1779,13 @@ export interface QuickBaseOptions {
 	 * Default is `false`
 	 */
 	errorOnConnectionLimit?: boolean;
+
+	/**
+	 * Automatically retry if the Quickbase API rate limit is exceeded
+	 *
+	 * Default is `true`
+	 */
+	retryOnQuotaExceeded?: boolean;
 
 	/**
 	 * Allows the use of a proxy for Quickbase API requests
@@ -2073,6 +2093,7 @@ interface QuickBaseField {
 		currencyFormat?: string;
 		currencySymbol?: string;
 		decimalPlaces?: string;
+		defaultCountryCode?: string;
 		defaultDomain?: string;
 		defaultKind?: string;
 		defaultToday?: boolean;
@@ -2115,6 +2136,7 @@ interface QuickBaseField {
 		targetFieldId?: number;
 		targetTableName?: string;
 		units?: string;
+		useI18NFormat?: boolean;
 		useNewWindow?: boolean;
 		versionMode?: number;
 		width?: number;
