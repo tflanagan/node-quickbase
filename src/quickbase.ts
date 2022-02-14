@@ -179,7 +179,7 @@ export class QuickBase {
 				debugResponse(id, debugData, results.data);
 
 				return passThrough ? results : results.data;
-			}catch(err){
+			}catch(err: any){
 				if(err.response && err.response.headers){
 					this.assignDebugHeaders(debugData, err.response.headers);
 				}
@@ -1622,7 +1622,7 @@ export type groupBy = 'first-word' | 'first-letter' | 'same-value' | '1000000' |
 export type permissionType = 'None' | 'View' | 'Modify';
 export type eventType = 'qb-action' | 'webhook' | 'email-notification' | 'subscription' | 'reminder' | 'automation';
 
-interface QuickBaseResponseDebug {
+export interface QuickBaseResponseDebug {
 	date: string;
 	'qb-api-ray': string;
 	'x-ratelimit-remaining': number;

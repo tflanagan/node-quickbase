@@ -69,10 +69,9 @@
   "typedocOptions": {
     "readme": "./README.md",
     "out": "./docs/",
-    "theme": "minimal",
+    "theme": "default",
     "name": "Node-Quickbase",
     "includeVersion": true,
-    "excludeExternals": true,
-    "disableOutputCheck": false
+    "excludeExternals": true
   }
 }
