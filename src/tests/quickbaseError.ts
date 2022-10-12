@@ -1,7 +1,7 @@
 'use strict';
 
 /* Dependencies */
-import { serial as test } from 'ava';
+import ava from 'ava';
 import { QuickBaseError } from '../quickbase';
 
 /* Tests */
@@ -14,22 +14,22 @@ const errObj = {
 
 const qbErr = new QuickBaseError(errObj.code, errObj.message, errObj.description, errObj.rayId);
 
-test('QuickBaseError', async (t) => {
-	t.truthy(qbErr.code === errObj.code && qbErr.message === errObj.message && qbErr.description === errObj.description && qbErr.rayId === errObj.rayId);
+ava.serial('QuickBaseError', async (t) => {
+	return t.truthy(qbErr.code === errObj.code && qbErr.message === errObj.message && qbErr.description === errObj.description && qbErr.rayId === errObj.rayId);
 });
 
-test('toJSON()', async (t) => {
-	t.truthy(JSON.stringify(qbErr.toJSON()) === JSON.stringify(errObj));
+ava.serial('toJSON()', async (t) => {
+	return t.truthy(JSON.stringify(qbErr.toJSON()) === JSON.stringify(errObj));
 });
 
-test('fromJSON()', async (t) => {
+ava.serial('fromJSON()', async (t) => {
 	qbErr.fromJSON(errObj);
 
-	t.truthy(JSON.stringify(qbErr.toJSON()) === JSON.stringify(errObj));
+	return t.truthy(JSON.stringify(qbErr.toJSON()) === JSON.stringify(errObj));
 });
 
-test('FromJSON()', async (t) => {
+ava.serial('FromJSON()', async (t) => {
 	const nQbErr = QuickBaseError.fromJSON(errObj);
 
-	t.truthy(JSON.stringify(nQbErr.toJSON()) === JSON.stringify(errObj));
+	return t.truthy(JSON.stringify(nQbErr.toJSON()) === JSON.stringify(errObj));
 });

@@ -1,11 +1,9 @@
 assets/
 docs/
 src/
-bower.json
-build.js
-tsconfig.json
-ava.config.js
 .editorconfig
 .env
 .env.example
-.eslintrc.js
+ava.config.mjs
+package-lock.json
+tsconfig.json
