@@ -1341,6 +1341,7 @@ export class QuickBase {
 		const results = await this.api<QuickBaseResponseGetTempTokenDBID>({
 			method: 'GET',
 			url: `/auth/temporary/${dbid}`,
+			withCredentials: true,
 		}, requestOptions);
 	
 		this.setTempToken(dbid, results.data.temporaryAuthorization);

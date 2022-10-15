@@ -221,8 +221,9 @@ const typeOverrides = {
 
 const overrides: Record<string, Partial<{
 	request: Partial<{
-		args: Record<string, string>,
-		schema: Partial<SwaggerBodySchema>
+		args: Record<string, string>;
+		schema: Partial<SwaggerBodySchema>;
+		withCredentials: boolean;
 	}>;
 	response: Partial<SwaggerResponseBody>;
 	arrayMerge?: boolean;
@@ -548,6 +549,11 @@ const overrides: Record<string, Partial<{
 			}
 		}
 	},
+	getTempTokenDBID: {
+		request: {
+			withCredentials: true
+		}
+	},
 	runFormula: {
 		request: {
 			args: {
@@ -739,6 +745,7 @@ const buildAPIFunction = (operationObj: SwaggerOperation) => {
 
 	const method = operationObj.method.toUpperCase();
 	let url = operationObj.path;
+	const withCredentials = overrides[operationObj.id]?.request?.withCredentials || false;
 	const bodyParam = operationObj.parameters.filter((param) => {
 		return param.in === 'body' && param.schema.properties;
 	})[0] as SwaggerParameterBody;
@@ -874,6 +881,7 @@ const buildAPIFunction = (operationObj: SwaggerOperation) => {
 		`	const results = await this.api<${resTypeName}>({`,
 		`		method: '${method}',`,
 		`		url: \`${url}\`,`,
+		!!withCredentials ? `		withCredentials: true,` : false,
 		!!bodyParam ? `		data: ${getAxiosDataParam(operationObj)},` : false,
 		operationObj.queryParams.length === 0 ? false : `		params: {\n${operationObj.queryParams.map((queryParam) => {
 				return `			${queryParam.name}`;
