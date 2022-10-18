@@ -1,6 +1,5 @@
 assets/
 docs/
-src/
 .editorconfig
 .env
 .env.example
