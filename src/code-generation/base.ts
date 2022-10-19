@@ -478,5 +478,5 @@ export type QuickBaseRequest = {
 
 /* Export to Browser */
 if(IS_BROWSER){
-	window.QuickBase = QuickBase;
+	window.QuickBase = exports;
 }
