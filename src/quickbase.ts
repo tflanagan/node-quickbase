@@ -241,7 +241,7 @@ export class QuickBase {
 				}
 
 				if(this.settings.autoRenewTempTokens && qbErr.description.match(/Your ticket has expired/) && this.settings.tempTokenDbid){
-					debugResponse(id, `Gettomg new temporary ticket for ${this.settings.tempTokenDbid}...`);
+					debugResponse(id, `Getting new temporary ticket for ${this.settings.tempTokenDbid}...`);
 
 					const results = await this.request(merge.all([
 						this.getBaseRequest(),
