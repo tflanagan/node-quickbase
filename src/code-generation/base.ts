@@ -25,6 +25,25 @@ const delay = (time: number) => {
 	});
 };
 
+const getRetryDelay = (headers: {
+	'retry-after'?: string;
+	'x-ratelimit-reset'?: string;
+}) => {
+	const retryAfter = headers['retry-after'];
+
+	if(retryAfter){
+		let retryDelay = Math.round(parseFloat(retryAfter) * 1000);
+
+		if (isNaN(retryDelay)) {
+			retryDelay = Math.max(0, new Date(retryAfter).valueOf() - new Date().valueOf());
+		}
+
+		return retryDelay;
+	}
+
+	return +(headers['x-ratelimit-reset'] || 10000);
+};
+
 type LowerKeysObject<T extends object> = {
 	[K in keyof T as (K extends string ? Lowercase<K> : K)]: T[K]
 };
@@ -214,7 +233,8 @@ export class QuickBase {
 		}catch(err: any){
 			if(err.response){
 				const headers = objKeysToLowercase<{
-					'x-ratelimit-reset': number;
+					'x-ratelimit-reset': string;
+					'retry-after': string;
 					'qb-api-ray': string;
 				}>(err.response.headers);
 
@@ -227,8 +247,8 @@ export class QuickBase {
 
 				debugResponse(id, 'Quickbase Error', qbErr);
 
-				if(this.settings.retryOnQuotaExceeded && qbErr.code === 429 && typeof(headers['x-ratelimit-reset']) !== 'undefined'){
-					const delayMs = +headers['x-ratelimit-reset'];
+				if(this.settings.retryOnQuotaExceeded && qbErr.code === 429){
+					const delayMs = getRetryDelay(headers);
 					
 					debugResponse(id, `Waiting ${delayMs}ms until retrying...`);
 
@@ -239,7 +259,11 @@ export class QuickBase {
 					return await this.request<T>(options);
 				}
 
-				if(this.settings.autoRenewTempTokens && qbErr.description.match(/Your ticket has expired/) && this.settings.tempTokenDbid){
+				if(this.settings.autoRenewTempTokens && this.settings.tempTokenDbid && (
+					qbErr.description.match(/Your ticket has expired/)
+					||
+					qbErr.description.match(/Invalid Authorization/)
+				)){
 					debugResponse(id, `Getting new temporary ticket for ${this.settings.tempTokenDbid}...`);
 
 					const results = await this.request(merge.all([
