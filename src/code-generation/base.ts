@@ -6,6 +6,7 @@ import { debug } from 'debug';
 import { Throttle } from 'generic-throttle';
 import axios, {
 	AxiosRequestConfig,
+	AxiosRequestHeaders,
 	AxiosResponse
 } from 'axios';
 
@@ -190,12 +191,10 @@ export class QuickBase {
 		return this;
 	}
 
-	private getBaseRequest(){
-		const headers = {
-			'Content-Type': 'application/json; charset=UTF-8',
-			[IS_BROWSER ? 'X-User-Agent' : 'User-Agent']: `${this.settings.userAgent} node-quickbase/v${VERSION} ${IS_BROWSER ? (window.navigator ? window.navigator.userAgent : '') : 'nodejs/' + process.version}`.trim(),
-			'QB-Realm-Hostname': this.settings.realm
-		};
+	private assignAuthorizationHeaders(headers?: AxiosRequestHeaders){
+		if(!headers){
+			headers = {};
+		}
 
 		if(this.settings.userToken){
 			headers.Authorization = `QB-USER-TOKEN ${this.settings.userToken}`;
@@ -209,10 +208,18 @@ export class QuickBase {
 			}
 		}
 
+		return headers;
+	}
+
+	private getBaseRequest(){
 		return {
 			method: 'GET',
 			baseURL: `https://${this.settings.server}/${this.settings.version}`,
-			headers: headers,
+			headers: {
+				'Content-Type': 'application/json; charset=UTF-8',
+				[IS_BROWSER ? 'X-User-Agent' : 'User-Agent']: `${this.settings.userAgent} node-quickbase/v${VERSION} ${IS_BROWSER ? (window.navigator ? window.navigator.userAgent : '') : 'nodejs/' + process.version}`.trim(),
+				'QB-Realm-Hostname': this.settings.realm
+			},
 			proxy: this.settings.proxy
 		};
 	}
@@ -222,6 +229,8 @@ export class QuickBase {
 
 		try {
 			debugRequest(id, options);
+
+			options.headers = this.assignAuthorizationHeaders(options.headers);
 
 			const results = await axios.request<T>(options);
 
