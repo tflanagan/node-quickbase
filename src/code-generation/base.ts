@@ -191,19 +191,21 @@ export class QuickBase {
 		return this;
 	}
 
-	private assignAuthorizationHeaders(headers?: AxiosRequestHeaders){
+	private assignAuthorizationHeaders(headers?: AxiosRequestHeaders, addToken = true){
 		if(!headers){
 			headers = {};
 		}
 
 		if(this.settings.userToken){
-			headers.Authorization = `QB-USER-TOKEN ${this.settings.userToken}`;
+			if(addToken){
+				headers.Authorization = `QB-USER-TOKEN ${this.settings.userToken}`;
+			}
 		}else{
 			if(this.settings.appToken){
 				headers['QB-App-Token'] = this.settings.appToken;
 			}
 
-			if(this.settings.tempToken){
+			if(addToken && this.settings.tempToken){
 				headers.Authorization = `QB-TEMP-TOKEN ${this.settings.tempToken}`;
 			}
 		}
@@ -230,7 +232,7 @@ export class QuickBase {
 		try {
 			debugRequest(id, options);
 
-			options.headers = this.assignAuthorizationHeaders(options.headers);
+			options.headers = this.assignAuthorizationHeaders(options.headers, options.url?.startsWith('auth/temporary'));
 
 			const results = await axios.request<T>(options);
 
@@ -258,11 +260,11 @@ export class QuickBase {
 
 				if(this.settings.retryOnQuotaExceeded && qbErr.code === 429){
 					const delayMs = getRetryDelay(headers);
-					
+
 					debugResponse(id, `Waiting ${delayMs}ms until retrying...`);
 
 					await delay(delayMs);
-					
+
 					debugResponse(id, `Retrying...`);
 
 					return await this.request<T>(options);
@@ -284,12 +286,12 @@ export class QuickBase {
 					]));
 
 					this.setTempToken(this.settings.tempTokenDbid, results.data.temporaryAuthorization);
-				
+
 					debugResponse(id, `Retrying...`);
 
 					return await this.request<T>(options);
 				}
-			
+
 				throw qbErr;
 			}
 
@@ -299,7 +301,7 @@ export class QuickBase {
 		}
 	}
 
-	// @ts-ignore/@remove-line - `api` is consumed by the genarated code, typescript doesn't know this 
+	// @ts-ignore/@remove-line - `api` is consumed by the genarated code, typescript doesn't know this
 	private async api<T = any>(actOptions: AxiosRequestConfig, reqOptions?: AxiosRequestConfig): Promise<AxiosResponse<T>> {
 		return this.throttle.acquire(async () => {
 			return await this.request<T>(merge.all([
@@ -373,7 +375,7 @@ export class QuickBase {
 
 	/**
 	 * Test if a variable is a `quickbase` object
-	 * 
+	 *
 	 * @param obj A variable you'd like to test
 	 */
 	static IsQuickBase(obj: any): obj is QuickBase {
