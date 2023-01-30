@@ -233,7 +233,7 @@ export class QuickBase {
 		try {
 			debugRequest(id, options);
 
-			options.headers = this.assignAuthorizationHeaders(options.headers, options.url?.startsWith('auth/temporary'));
+			options.headers = this.assignAuthorizationHeaders(options.headers, !options.url?.startsWith('auth/temporary'));
 
 			const results = await axios.request<T>(options);
 
