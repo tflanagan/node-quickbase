@@ -226,13 +226,13 @@ export class QuickBase {
 		};
 	}
 
-	private async request<T = any>(options: AxiosRequestConfig): Promise<AxiosResponse<T>> {
+	private async request<T = any>(options: AxiosRequestConfig, attempt = 0): Promise<AxiosResponse<T>> {
 		const id = 0 + (++this._id);
 
 		try {
 			debugRequest(id, options);
 
-			options.headers = this.assignAuthorizationHeaders(options.headers, !options.url?.startsWith('auth/temporary'));
+			options.headers = this.assignAuthorizationHeaders(options.headers, !options.url?.startsWith('/auth/temporary'));
 
 			const results = await axios.request<T>(options);
 
@@ -270,6 +270,10 @@ export class QuickBase {
 					return await this.request<T>(options);
 				}
 
+				if(attempt >= 3){
+					throw qbErr;
+				}
+
 				if(this.settings.autoRenewTempTokens && this.settings.tempTokenDbid && (
 					qbErr.description.match(/Your ticket has expired/)
 					||
@@ -283,13 +287,13 @@ export class QuickBase {
 							url: `auth/temporary/${this.settings.tempTokenDbid}`,
 							withCredentials: true
 						}
-					]));
+					]), attempt + 1);
 
 					this.setTempToken(this.settings.tempTokenDbid, results.data.temporaryAuthorization);
 
 					debugResponse(id, `Retrying...`);
 
-					return await this.request<T>(options);
+					return await this.request<T>(options, attempt + 1);
 				}
 
 				throw qbErr;
