@@ -276,9 +276,11 @@ export class QuickBase {
 				}
 
 				if(this.settings.autoRenewTempTokens && this.settings.tempTokenDbid && (
-					qbErr.description.match(/Your ticket has expired/)
+					qbErr.description.match(/Your ticket has expired/i)
 					||
-					qbErr.description.match(/Invalid Authorization/)
+					qbErr.description.match(/Invalid Authorization/i)
+					||
+					qbErr.description.match(/Required header 'authorization' not found/i)
 				)){
 					debugResponse(id, `Getting new temporary ticket for ${this.settings.tempTokenDbid}...`);
 
