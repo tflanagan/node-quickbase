@@ -40,7 +40,8 @@
   "dependencies": {
     "axios": "^0.27.2",
     "debug": "^4.3.4",
-    "generic-throttle": "^3.1.0"
+    "generic-throttle": "^3.1.0",
+    "deepmerge": "^4.2.2"
   },
   "devDependencies": {
     "@ava/typescript": "^3.0.1",
@@ -49,7 +50,6 @@
     "@types/node": "^18.7.18",
     "ava": "^4.3.3",
     "browserify": "^17.0.0",
-    "deepmerge": "^4.2.2",
     "dotenv": "^16.0.2",
     "minify": "7.2.2",
     "ts-node": "^10.9.1",
