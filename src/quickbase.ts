@@ -1341,7 +1341,7 @@ export class QuickBase {
 	 * @param options.options.top The maximum number of records to display.
 	 * @param options.where The filter, using the Quickbase query language, which determines the records to return. If this parameter is omitted, the query will return all records.
 	 * @param options.groupBy[].fieldId The unique identifier of a field in a table.
-	 * @param options.groupBy[].grouping Group by based on ascending order (ASC), descending order (DESC) or equal values (equal-values)
+	 * @param options.groupBy[].grouping Group by based on equal values (equal-values)
 	 * @param options.sortBy[].fieldId The unique identifier of a field in a table.
 	 * @param options.sortBy[].order Sort based on ascending order (ASC), descending order (DESC) or equal values (equal-values)
 	 * @param options.select An array of field ids for the fields that should be returned in the response. If empty, the default columns on the table will be returned.
@@ -1761,13 +1761,13 @@ export class QuickBase {
 	/**
 	 * Get audit logs
 	 *
-	 * Returns 1000 audit events with the nextToken parameter which can be passed back to the API to fetch subsequent logs.  
-	 * **Note:** This API is available for enterprise users only.
+	 * Gathers the audit logs for a single day from a realm. By default, this API returns 10,000 entries. This can be changed with the numRows parameter. Integrators can iterate through batches to get an entire day's worth of logs. Each realm has a maximum entitlement of querying 1,000 days per year (allowing lookbacks for up to two years). Requests for paginated data do not count towards the annual limit. Transactional rate limits are 10 per 10 seconds.
 	 *
 	 * [Quickbase Documentation](https://developer.quickbase.com/operation/audit)
 	 *
 	 * @param options Get audit logs method options object
 	 * @param options.nextToken Token specifying start of page. For first page don't supply this.
+	 * @param options.numRows Number of logs to return per page, default is 10000, minimum is 1000, max is 50000.
 	 * @param options.queryId The query id of an audit log request. This id is needed to fetch subsequent paged results of a single query.
 	 * @param options.date The date for which audit logs need to be fetched. This must be date-time only, as YYYY-MM-DD, and a valid date in the past.
 	 * @param options.requestOptions Override axios request configuration
@@ -3090,12 +3090,12 @@ export type QuickBaseRequestRunQuery = QuickBaseRequest & {
 		 */
 		fieldId: number;
 		/**
-		 * Group by based on ascending order (ASC), descending order (DESC) or equal values (equal-values)
+		 * Group by based on equal values (equal-values)
 		 */
-		grouping: 'ASC' | 'DESC' | 'equal-values' | 'first-word' | 'first-letter' | 'equal-values' | '1000000' | '100000' | '10000' | '1000' | '100' | '10' | '1' | '.1' | '.01' | '.001';
+		grouping: 'equal-values' | 'first-word' | 'first-letter' | 'equal-values' | '1000000' | '100000' | '10000' | '1000' | '100' | '10' | '1' | '.1' | '.01' | '.001';
 	}[];
 	/**
-	 * By default, queries will be sorted by the given sort fields or the default sort if the query does not provide any. Set to false to avoid sorting when the order of the data returned is not important. Returning data without sorting can improve performance.
+	 * An array of field IDs and sort directions. If this attribute is not set or set to false, queries will be unsorted to improve performance.
 	 */
 	sortBy?: {
 		/**
@@ -3270,6 +3270,10 @@ export type QuickBaseRequestAudit = QuickBaseRequest & {
 	 * Token specifying start of page. For first page don't supply this.
 	 */
 	nextToken: string;
+	/**
+	 * Number of logs to return per page, default is 10000, minimum is 1000, max is 50000.
+	 */
+	numRows: number;
 	/**
 	 * The query id of an audit log request. This id is needed to fetch subsequent paged results of a single query.
 	 */

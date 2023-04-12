@@ -7936,10 +7936,8 @@
                         "type": "integer"
                       },
                       "grouping": {
-                        "description": "Group by based on ascending order (ASC), descending order (DESC) or equal values (equal-values)",
+                        "description": "Group by based on equal values (equal-values)",
                         "enum": [
-                          "ASC",
-                          "DESC",
                           "equal-values"
                         ],
                         "type": "string"
@@ -7948,7 +7946,7 @@
                   }
                 },
                 "sortBy": {
-                  "description": "By default, queries will be sorted by the given sort fields or the default sort if the query does not provide any. Set to false to avoid sorting when the order of the data returned is not important. Returning data without sorting can improve performance.",
+                  "description": "An array of field IDs and sort directions. If this attribute is not set or set to false, queries will be unsorted to improve performance.",
                   "x-amf-union": [
                     {
                       "type": "array",
@@ -9918,7 +9916,7 @@
     },
     "/audit": {
       "post": {
-        "description": "Returns 1000 audit events with the nextToken parameter which can be passed back to the API to fetch subsequent logs.  \n**Note:** This API is available for enterprise users only.",
+        "description": "Gathers the audit logs for a single day from a realm. By default, this API returns 10,000 entries. This can be changed with the numRows parameter. Integrators can iterate through batches to get an entire day's worth of logs. Each realm has a maximum entitlement of querying 1,000 days per year (allowing lookbacks for up to two years). Requests for paginated data do not count towards the annual limit. Transactional rate limits are 10 per 10 seconds.",
         "summary": "Get audit logs",
         "operationId": "audit",
         "consumes": [
@@ -9965,8 +9963,13 @@
               "properties": {
                 "nextToken": {
                   "description": "Token specifying start of page. For first page don't supply this.",
-                  "example": "1000",
+                  "example": "6a.f12x",
                   "type": "string"
+                },
+                "numRows": {
+                  "description": "Number of logs to return per page, default is 10000, minimum is 1000, max is 50000.",
+                  "example": 10000,
+                  "type": "integer"
                 },
                 "queryId": {
                   "description": "The query id of an audit log request. This id is needed to fetch subsequent paged results of a single query.",
@@ -10003,7 +10006,8 @@
                     "time": "2020-04-21T14:41:51.886Z"
                   }
                 ],
-                "queryId": "797c0726-f8f4-4df9-883f-c7e8cbdf2f77.ALtInpuyQeBoW+fWrAqLrjPGqDqPl++IMb3bOxlmoF4="
+                "nextToken": "6a.f12x",
+                "queryId": "jCB5QMWZc4a4F9l4yl0Xs6N0onYvQ9m8jSKx6934pv8=.bsz8kniab"
               },
               "type": "object",
               "additionalProperties": true,
@@ -10138,7 +10142,7 @@
             "x-amf-mediaType": "application/json",
             "schema": {
               "example": {
-                "queryId": "797c0726-f8f4-4df9-883f-c7e8cbdf2f77.ALtInpuyQeBoW+fWrAqLrjPGqDqPl++IMb3bOxlmoF4="
+                "queryId": "jCB5QMWZc4a4F9l4yl0Xs6N0onYvQ9m8jSKx6934pv8=.bsz8kniab"
               },
               "type": "object",
               "additionalProperties": true,
@@ -20952,10 +20956,8 @@
                       "type": "integer"
                     },
                     "grouping": {
-                      "description": "Group by based on ascending order (ASC), descending order (DESC) or equal values (equal-values)",
+                      "description": "Group by based on equal values (equal-values)",
                       "enum": [
-                        "ASC",
-                        "DESC",
                         "equal-values"
                       ],
                       "type": "string"
@@ -20964,7 +20966,7 @@
                 }
               },
               "sortBy": {
-                "description": "By default, queries will be sorted by the given sort fields or the default sort if the query does not provide any. Set to false to avoid sorting when the order of the data returned is not important. Returning data without sorting can improve performance.",
+                "description": "An array of field IDs and sort directions. If this attribute is not set or set to false, queries will be unsorted to improve performance.",
                 "x-amf-union": [
                   {
                     "type": "array",
@@ -21232,10 +21234,8 @@
                     "type": "integer"
                   },
                   "grouping": {
-                    "description": "Group by based on ascending order (ASC), descending order (DESC) or equal values (equal-values)",
+                    "description": "Group by based on equal values (equal-values)",
                     "enum": [
-                      "ASC",
-                      "DESC",
                       "equal-values"
                     ],
                     "type": "string"
@@ -21244,7 +21244,7 @@
               }
             },
             "sortBy": {
-              "description": "By default, queries will be sorted by the given sort fields or the default sort if the query does not provide any. Set to false to avoid sorting when the order of the data returned is not important. Returning data without sorting can improve performance.",
+              "description": "An array of field IDs and sort directions. If this attribute is not set or set to false, queries will be unsorted to improve performance.",
               "x-amf-union": [
                 {
                   "type": "array",
@@ -24027,7 +24027,7 @@
       }
     },
     {
-      "description": "Returns 1000 audit events with the nextToken parameter which can be passed back to the API to fetch subsequent logs.  \n**Note:** This API is available for enterprise users only.",
+      "description": "Gathers the audit logs for a single day from a realm. By default, this API returns 10,000 entries. This can be changed with the numRows parameter. Integrators can iterate through batches to get an entire day's worth of logs. Each realm has a maximum entitlement of querying 1,000 days per year (allowing lookbacks for up to two years). Requests for paginated data do not count towards the annual limit. Transactional rate limits are 10 per 10 seconds.",
       "summary": "Get audit logs",
       "operationId": "audit",
       "consumes": [
@@ -24074,8 +24074,13 @@
             "properties": {
               "nextToken": {
                 "description": "Token specifying start of page. For first page don't supply this.",
-                "example": "1000",
+                "example": "6a.f12x",
                 "type": "string"
+              },
+              "numRows": {
+                "description": "Number of logs to return per page, default is 10000, minimum is 1000, max is 50000.",
+                "example": 10000,
+                "type": "integer"
               },
               "queryId": {
                 "description": "The query id of an audit log request. This id is needed to fetch subsequent paged results of a single query.",
@@ -24112,7 +24117,8 @@
                   "time": "2020-04-21T14:41:51.886Z"
                 }
               ],
-              "queryId": "797c0726-f8f4-4df9-883f-c7e8cbdf2f77.ALtInpuyQeBoW+fWrAqLrjPGqDqPl++IMb3bOxlmoF4="
+              "nextToken": "6a.f12x",
+              "queryId": "jCB5QMWZc4a4F9l4yl0Xs6N0onYvQ9m8jSKx6934pv8=.bsz8kniab"
             },
             "type": "object",
             "additionalProperties": true,
@@ -24247,7 +24253,7 @@
           "x-amf-mediaType": "application/json",
           "schema": {
             "example": {
-              "queryId": "797c0726-f8f4-4df9-883f-c7e8cbdf2f77.ALtInpuyQeBoW+fWrAqLrjPGqDqPl++IMb3bOxlmoF4="
+              "queryId": "jCB5QMWZc4a4F9l4yl0Xs6N0onYvQ9m8jSKx6934pv8=.bsz8kniab"
             },
             "type": "object",
             "additionalProperties": true,
@@ -24311,8 +24317,13 @@
           "properties": {
             "nextToken": {
               "description": "Token specifying start of page. For first page don't supply this.",
-              "example": "1000",
+              "example": "6a.f12x",
               "type": "string"
+            },
+            "numRows": {
+              "description": "Number of logs to return per page, default is 10000, minimum is 1000, max is 50000.",
+              "example": 10000,
+              "type": "integer"
             },
             "queryId": {
               "description": "The query id of an audit log request. This id is needed to fetch subsequent paged results of a single query.",
@@ -35173,10 +35184,8 @@
                         "type": "integer"
                       },
                       "grouping": {
-                        "description": "Group by based on ascending order (ASC), descending order (DESC) or equal values (equal-values)",
+                        "description": "Group by based on equal values (equal-values)",
                         "enum": [
-                          "ASC",
-                          "DESC",
                           "equal-values"
                         ],
                         "type": "string"
@@ -35185,7 +35194,7 @@
                   }
                 },
                 "sortBy": {
-                  "description": "By default, queries will be sorted by the given sort fields or the default sort if the query does not provide any. Set to false to avoid sorting when the order of the data returned is not important. Returning data without sorting can improve performance.",
+                  "description": "An array of field IDs and sort directions. If this attribute is not set or set to false, queries will be unsorted to improve performance.",
                   "x-amf-union": [
                     {
                       "type": "array",
@@ -35453,10 +35462,8 @@
                       "type": "integer"
                     },
                     "grouping": {
-                      "description": "Group by based on ascending order (ASC), descending order (DESC) or equal values (equal-values)",
+                      "description": "Group by based on equal values (equal-values)",
                       "enum": [
-                        "ASC",
-                        "DESC",
                         "equal-values"
                       ],
                       "type": "string"
@@ -35465,7 +35472,7 @@
                 }
               },
               "sortBy": {
-                "description": "By default, queries will be sorted by the given sort fields or the default sort if the query does not provide any. Set to false to avoid sorting when the order of the data returned is not important. Returning data without sorting can improve performance.",
+                "description": "An array of field IDs and sort directions. If this attribute is not set or set to false, queries will be unsorted to improve performance.",
                 "x-amf-union": [
                   {
                     "type": "array",
@@ -38258,7 +38265,7 @@
     ],
     "Audit": [
       {
-        "description": "Returns 1000 audit events with the nextToken parameter which can be passed back to the API to fetch subsequent logs.  \n**Note:** This API is available for enterprise users only.",
+        "description": "Gathers the audit logs for a single day from a realm. By default, this API returns 10,000 entries. This can be changed with the numRows parameter. Integrators can iterate through batches to get an entire day's worth of logs. Each realm has a maximum entitlement of querying 1,000 days per year (allowing lookbacks for up to two years). Requests for paginated data do not count towards the annual limit. Transactional rate limits are 10 per 10 seconds.",
         "summary": "Get audit logs",
         "operationId": "audit",
         "consumes": [
@@ -38305,8 +38312,13 @@
               "properties": {
                 "nextToken": {
                   "description": "Token specifying start of page. For first page don't supply this.",
-                  "example": "1000",
+                  "example": "6a.f12x",
                   "type": "string"
+                },
+                "numRows": {
+                  "description": "Number of logs to return per page, default is 10000, minimum is 1000, max is 50000.",
+                  "example": 10000,
+                  "type": "integer"
                 },
                 "queryId": {
                   "description": "The query id of an audit log request. This id is needed to fetch subsequent paged results of a single query.",
@@ -38343,7 +38355,8 @@
                     "time": "2020-04-21T14:41:51.886Z"
                   }
                 ],
-                "queryId": "797c0726-f8f4-4df9-883f-c7e8cbdf2f77.ALtInpuyQeBoW+fWrAqLrjPGqDqPl++IMb3bOxlmoF4="
+                "nextToken": "6a.f12x",
+                "queryId": "jCB5QMWZc4a4F9l4yl0Xs6N0onYvQ9m8jSKx6934pv8=.bsz8kniab"
               },
               "type": "object",
               "additionalProperties": true,
@@ -38478,7 +38491,7 @@
             "x-amf-mediaType": "application/json",
             "schema": {
               "example": {
-                "queryId": "797c0726-f8f4-4df9-883f-c7e8cbdf2f77.ALtInpuyQeBoW+fWrAqLrjPGqDqPl++IMb3bOxlmoF4="
+                "queryId": "jCB5QMWZc4a4F9l4yl0Xs6N0onYvQ9m8jSKx6934pv8=.bsz8kniab"
               },
               "type": "object",
               "additionalProperties": true,
@@ -38542,8 +38555,13 @@
             "properties": {
               "nextToken": {
                 "description": "Token specifying start of page. For first page don't supply this.",
-                "example": "1000",
+                "example": "6a.f12x",
                 "type": "string"
+              },
+              "numRows": {
+                "description": "Number of logs to return per page, default is 10000, minimum is 1000, max is 50000.",
+                "example": 10000,
+                "type": "integer"
               },
               "queryId": {
                 "description": "The query id of an audit log request. This id is needed to fetch subsequent paged results of a single query.",
