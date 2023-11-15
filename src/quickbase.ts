@@ -1275,7 +1275,7 @@ export class QuickBase {
 	 * Insert/Update record(s)
 	 *
 	 * Insert and/or update record(s) in a table. In this single API call, inserts and updates can be submitted. Update can use the key field on the table, or any other supported unique field. Refer to the [Field types page](../fieldInfo) for more information about how each field type should be formatted. This operation allows for incremental processing of successful records, even when some of the records fail.  
-	 * **Note:** This endpoint supports a maximum payload size of 10MB.
+	 * **Note:** This endpoint supports a maximum payload size of 25MB.
 	 *
 	 * [Quickbase Documentation](https://developer.quickbase.com/operation/upsert)
 	 *
@@ -1369,7 +1369,7 @@ export class QuickBase {
 	/**
 	 * Get a temporary token for a dbid
 	 *
-	 * Use this endpoint to get a temporary authorization token, scoped to either an app or a table. You can then use this token to make other API calls (see [authorization](../auth)).  This token expires in 5 minutes.
+	 * Use this endpoint to get a temporary authorization token, scoped to either an app or a table. It can only be used inside of code pages for client-side authentication because it relies on the browser session. Learn more about [extending Quickbase](https://helpv2.quickbase.com/hc/en-us/articles/4570341709844-Extending-Quickbase). You can then use this token to make other API calls (see [authorization](../auth)).  This token expires in 5 minutes.
 	 *
 	 * [Quickbase Documentation](https://developer.quickbase.com/operation/getTempTokenDBID)
 	 *
@@ -1388,6 +1388,33 @@ export class QuickBase {
 		}, requestOptions);
 	
 		this.setTempToken(dbid, results.data.temporaryAuthorization);
+	
+		return returnAxios ? results : results.data;
+	}
+
+	/**
+	 * Exchange an SSO token
+	 *
+	 * Use this endpoint to exchange a SAML assertion for a Quickbase token following [RFC 8693](https://www.rfc-editor.org/rfc/rfc8693.html). Callers can choose to return a token compatible with SCIM, XML, or RESTful APIs. The token duration is determined by the [SAML timeout session time](https://helpv2.quickbase.com/hc/en-us/articles/4570410646420-SAML-assertion-example#:~:text=Setting%20SAML%20timeout%20session%20time). You must be able to create a SAML assertion in your code to use this endpoint. The SAML assertion is verified against the configuration on the realm. Learn more about about [SAML assertions](https://helpv2.quickbase.com/hc/en-us/articles/4570410646420-SAML-assertion-example).
+	 *
+	 * [Quickbase Documentation](https://developer.quickbase.com/operation/exchangeSsoToken)
+	 *
+	 * @param options Exchange an SSO token method options object
+	 * @param options.grant_type The value `urn:ietf:params:oauth:grant-type:token-exchange` indicates that a token exchange is being performed.
+	 * @param options.requested_token_type An identifier for the type of the requested security token. For the RESTful API, use `urn:quickbase:params:oauth:token-type:temp_token`. For the XML or SCIM APIs use `urn:quickbase:params:oauth:token-type:temp_ticket`.
+	 * @param options.subject_token A security token that represents the identity of the party on behalf of whom the request is being made. For SAML 2.0, the value should be a base64url-encoded SAML 2.0 assertion.
+	 * @param options.subject_token_type An identifier that indicates the type of the security token in the `subject_token` parameter.
+	 * @param options.requestOptions Override axios request configuration
+	 * @param options.returnAxios If `true`, the returned object will be the entire `AxiosResponse` object
+	 */
+	public async exchangeSsoToken({ requestOptions, returnAxios = false, ...body }: QuickBaseRequestExchangeSsoToken & { returnAxios?: false }): Promise<QuickBaseResponseExchangeSsoToken>;
+	public async exchangeSsoToken({ requestOptions, returnAxios = true, ...body }: QuickBaseRequestExchangeSsoToken & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseExchangeSsoToken>>;
+	public async exchangeSsoToken({ requestOptions, returnAxios = false, ...body }: QuickBaseRequestExchangeSsoToken): Promise<QuickBaseResponseExchangeSsoToken | AxiosResponse<QuickBaseResponseExchangeSsoToken>> {
+		const results = await this.api<QuickBaseResponseExchangeSsoToken>({
+			method: 'POST',
+			url: `/auth/oauth/token`,
+			data: body,
+		}, requestOptions);
 	
 		return returnAxios ? results : results.data;
 	}
@@ -1763,7 +1790,8 @@ export class QuickBase {
 	/**
 	 * Get audit logs
 	 *
-	 * Gathers the audit logs for a single day from a realm. By default, this API returns 10,000 entries. This can be changed with the numRows parameter. Integrators can iterate through batches to get an entire day's worth of logs. Each realm has a maximum entitlement of querying 1,000 days per year (allowing lookbacks for up to two years). Requests for paginated data do not count towards the annual limit. Transactional rate limits are 10 per 10 seconds.
+	 * Gathers the audit logs for a single day from a realm. By default, this API returns 10,000 entries. This can be changed with the numRows parameter. Integrators can iterate through batches to get an entire day's worth of logs. Each realm has a maximum entitlement of querying 1,000 days per year (allowing lookbacks for up to two years). Requests for paginated data do not count towards the annual limit. Transactional rate limits are 10 per 10 seconds.  
+	 * **Note:** This API is available for enterprise users only.
 	 *
 	 * [Quickbase Documentation](https://developer.quickbase.com/operation/audit)
 	 *
@@ -3124,6 +3152,25 @@ export type QuickBaseRequestGetTempTokenDBID = QuickBaseRequest & {
 	 * The unique identifier of an app or table.
 	 */
 	dbid: string;
+};
+
+export type QuickBaseRequestExchangeSsoToken = QuickBaseRequest & {
+	/**
+	 * The value `urn:ietf:params:oauth:grant-type:token-exchange` indicates that a token exchange is being performed.
+	 */
+	grant_type: 'urn:ietf:params:oauth:grant-type:token-exchange';
+	/**
+	 * An identifier for the type of the requested security token. For the RESTful API, use `urn:quickbase:params:oauth:token-type:temp_token`. For the XML or SCIM APIs use `urn:quickbase:params:oauth:token-type:temp_ticket`.
+	 */
+	requested_token_type: 'urn:quickbase:params:oauth:token-type:temp_ticket' | 'urn:quickbase:params:oauth:token-type:temp_token';
+	/**
+	 * A security token that represents the identity of the party on behalf of whom the request is being made. For SAML 2.0, the value should be a base64url-encoded SAML 2.0 assertion.
+	 */
+	subject_token: string;
+	/**
+	 * An identifier that indicates the type of the security token in the `subject_token` parameter.
+	 */
+	subject_token_type: 'urn:ietf:params:oauth:token-type:saml2';
 };
 
 export type QuickBaseRequestCloneUserToken = QuickBaseRequest & {
@@ -5864,99 +5911,9 @@ export type QuickBaseResponseGetFieldsUsage = {
 	 */
 	usage: {
 		/**
-		 * The number of default reports where the given field is referenced.
-		 */
-		defaultReports: {
-			/**
-			 * the number of times a field has been used for the given item.
-			 */
-			count: number;
-		};
-		/**
-		 * The number of notifications where the given field is referenced.
-		 */
-		notifications: {
-			/**
-			 * the number of times a field has been used for the given item.
-			 */
-			count: number;
-		};
-		/**
-		 * The number of reminders where the given field is referenced.
-		 */
-		reminders: {
-			/**
-			 * the number of times a field has been used for the given item.
-			 */
-			count: number;
-		};
-		/**
-		 * The number of forms where the given field is referenced.
-		 */
-		forms: {
-			/**
-			 * the number of times a field has been used for the given item.
-			 */
-			count: number;
-		};
-		/**
 		 * The number of quickbase actions where the given field is referenced.
 		 */
 		actions: {
-			/**
-			 * the number of times a field has been used for the given item.
-			 */
-			count: number;
-		};
-		/**
-		 * The number of personal reports where the given field is referenced.
-		 */
-		personalReports: {
-			/**
-			 * the number of times a field has been used for the given item.
-			 */
-			count: number;
-		};
-		/**
-		 * The number of roles where the given field is referenced.
-		 */
-		roles: {
-			/**
-			 * the number of times a field has been used for the given item.
-			 */
-			count: number;
-		};
-		/**
-		 * The number of reports where the given field is referenced.
-		 */
-		reports: {
-			/**
-			 * the number of times a field has been used for the given item.
-			 */
-			count: number;
-		};
-		/**
-		 * The number of fields where the given field is referenced.
-		 */
-		fields: {
-			/**
-			 * the number of times a field has been used for the given item.
-			 */
-			count: number;
-		};
-		/**
-		 * The number of relationships where the given field is referenced.
-		 */
-		relationships: {
-			/**
-			 * the number of times a field has been used for the given item.
-			 */
-			count: number;
-		};
-		/**
-		 * The number of webhooks where the given field is referenced.
-		 */
-		webhooks: {
 			/**
 			 * the number of times a field has been used for the given item.
 			 */
@@ -5972,9 +5929,126 @@ export type QuickBaseResponseGetFieldsUsage = {
 			count: number;
 		};
 		/**
+		 * The number of dashboards where the given field is referenced.
+		 */
+		dashboards: {
+			/**
+			 * the number of times a field has been used for the given item.
+			 */
+			count: number;
+		};
+		/**
+		 * The number of default reports where the given field is referenced.
+		 */
+		defaultReports: {
+			/**
+			 * the number of times a field has been used for the given item.
+			 */
+			count: number;
+		};
+		/**
 		 * The number of exact forms where the given field is referenced.
 		 */
 		exactForms: {
+			/**
+			 * the number of times a field has been used for the given item.
+			 */
+			count: number;
+		};
+		/**
+		 * The number of fields where the given field is referenced.
+		 */
+		fields: {
+			/**
+			 * the number of times a field has been used for the given item.
+			 */
+			count: number;
+		};
+		/**
+		 * The number of forms where the given field is referenced.
+		 */
+		forms: {
+			/**
+			 * the number of times a field has been used for the given item.
+			 */
+			count: number;
+		};
+		/**
+		 * The number of notifications where the given field is referenced.
+		 */
+		notifications: {
+			/**
+			 * the number of times a field has been used for the given item.
+			 */
+			count: number;
+		};
+		/**
+		 * The number of personal reports where the given field is referenced.
+		 */
+		personalReports: {
+			/**
+			 * the number of times a field has been used for the given item.
+			 */
+			count: number;
+		};
+		/**
+		 * The number of relationships where the given field is referenced.
+		 */
+		relationships: {
+			/**
+			 * the number of times a field has been used for the given item.
+			 */
+			count: number;
+		};
+		/**
+		 * The number of reminders where the given field is referenced.
+		 */
+		reminders: {
+			/**
+			 * the number of times a field has been used for the given item.
+			 */
+			count: number;
+		};
+		/**
+		 * The number of reports where the given field is referenced.
+		 */
+		reports: {
+			/**
+			 * the number of times a field has been used for the given item.
+			 */
+			count: number;
+		};
+		/**
+		 * The number of roles where the given field is referenced.
+		 */
+		roles: {
+			/**
+			 * the number of times a field has been used for the given item.
+			 */
+			count: number;
+		};
+		/**
+		 * The number of table imports where the given field is referenced.
+		 */
+		tableImports: {
+			/**
+			 * the number of times a field has been used for the given item.
+			 */
+			count: number;
+		};
+		/**
+		 * The number of table rules where the given field is referenced.
+		 */
+		tableRules: {
+			/**
+			 * the number of times a field has been used for the given item.
+			 */
+			count: number;
+		};
+		/**
+		 * The number of webhooks where the given field is referenced.
+		 */
+		webhooks: {
 			/**
 			 * the number of times a field has been used for the given item.
 			 */
@@ -6006,99 +6080,9 @@ export type QuickBaseResponseGetFieldUsage = {
 	 */
 	usage: {
 		/**
-		 * The number of default reports where the given field is referenced.
-		 */
-		defaultReports: {
-			/**
-			 * the number of times a field has been used for the given item.
-			 */
-			count: number;
-		};
-		/**
-		 * The number of notifications where the given field is referenced.
-		 */
-		notifications: {
-			/**
-			 * the number of times a field has been used for the given item.
-			 */
-			count: number;
-		};
-		/**
-		 * The number of reminders where the given field is referenced.
-		 */
-		reminders: {
-			/**
-			 * the number of times a field has been used for the given item.
-			 */
-			count: number;
-		};
-		/**
-		 * The number of forms where the given field is referenced.
-		 */
-		forms: {
-			/**
-			 * the number of times a field has been used for the given item.
-			 */
-			count: number;
-		};
-		/**
 		 * The number of quickbase actions where the given field is referenced.
 		 */
 		actions: {
-			/**
-			 * the number of times a field has been used for the given item.
-			 */
-			count: number;
-		};
-		/**
-		 * The number of personal reports where the given field is referenced.
-		 */
-		personalReports: {
-			/**
-			 * the number of times a field has been used for the given item.
-			 */
-			count: number;
-		};
-		/**
-		 * The number of roles where the given field is referenced.
-		 */
-		roles: {
-			/**
-			 * the number of times a field has been used for the given item.
-			 */
-			count: number;
-		};
-		/**
-		 * The number of reports where the given field is referenced.
-		 */
-		reports: {
-			/**
-			 * the number of times a field has been used for the given item.
-			 */
-			count: number;
-		};
-		/**
-		 * The number of fields where the given field is referenced.
-		 */
-		fields: {
-			/**
-			 * the number of times a field has been used for the given item.
-			 */
-			count: number;
-		};
-		/**
-		 * The number of relationships where the given field is referenced.
-		 */
-		relationships: {
-			/**
-			 * the number of times a field has been used for the given item.
-			 */
-			count: number;
-		};
-		/**
-		 * The number of webhooks where the given field is referenced.
-		 */
-		webhooks: {
 			/**
 			 * the number of times a field has been used for the given item.
 			 */
@@ -6114,9 +6098,126 @@ export type QuickBaseResponseGetFieldUsage = {
 			count: number;
 		};
 		/**
+		 * The number of dashboards where the given field is referenced.
+		 */
+		dashboards: {
+			/**
+			 * the number of times a field has been used for the given item.
+			 */
+			count: number;
+		};
+		/**
+		 * The number of default reports where the given field is referenced.
+		 */
+		defaultReports: {
+			/**
+			 * the number of times a field has been used for the given item.
+			 */
+			count: number;
+		};
+		/**
 		 * The number of exact forms where the given field is referenced.
 		 */
 		exactForms: {
+			/**
+			 * the number of times a field has been used for the given item.
+			 */
+			count: number;
+		};
+		/**
+		 * The number of fields where the given field is referenced.
+		 */
+		fields: {
+			/**
+			 * the number of times a field has been used for the given item.
+			 */
+			count: number;
+		};
+		/**
+		 * The number of forms where the given field is referenced.
+		 */
+		forms: {
+			/**
+			 * the number of times a field has been used for the given item.
+			 */
+			count: number;
+		};
+		/**
+		 * The number of notifications where the given field is referenced.
+		 */
+		notifications: {
+			/**
+			 * the number of times a field has been used for the given item.
+			 */
+			count: number;
+		};
+		/**
+		 * The number of personal reports where the given field is referenced.
+		 */
+		personalReports: {
+			/**
+			 * the number of times a field has been used for the given item.
+			 */
+			count: number;
+		};
+		/**
+		 * The number of relationships where the given field is referenced.
+		 */
+		relationships: {
+			/**
+			 * the number of times a field has been used for the given item.
+			 */
+			count: number;
+		};
+		/**
+		 * The number of reminders where the given field is referenced.
+		 */
+		reminders: {
+			/**
+			 * the number of times a field has been used for the given item.
+			 */
+			count: number;
+		};
+		/**
+		 * The number of reports where the given field is referenced.
+		 */
+		reports: {
+			/**
+			 * the number of times a field has been used for the given item.
+			 */
+			count: number;
+		};
+		/**
+		 * The number of roles where the given field is referenced.
+		 */
+		roles: {
+			/**
+			 * the number of times a field has been used for the given item.
+			 */
+			count: number;
+		};
+		/**
+		 * The number of table imports where the given field is referenced.
+		 */
+		tableImports: {
+			/**
+			 * the number of times a field has been used for the given item.
+			 */
+			count: number;
+		};
+		/**
+		 * The number of table rules where the given field is referenced.
+		 */
+		tableRules: {
+			/**
+			 * the number of times a field has been used for the given item.
+			 */
+			count: number;
+		};
+		/**
+		 * The number of webhooks where the given field is referenced.
+		 */
+		webhooks: {
 			/**
 			 * the number of times a field has been used for the given item.
 			 */
@@ -6225,6 +6326,21 @@ export type QuickBaseResponseGetTempTokenDBID = {
 	 * Temporary authorization token.
 	 */
 	temporaryAuthorization: string;
+};
+
+export type QuickBaseResponseExchangeSsoToken = {
+	/**
+	 * The security token issued by the authorization server in response to the token exchange request. The identifier `access_token` is used for historical reasons and the issued token need not be an OAuth access token.
+	 */
+	access_token: string;
+	/**
+	 * An identifier for the representation of the issued security token.
+	 */
+	issued_token_type: 'urn:quickbase:params:oauth:token-type:temp_ticket' | 'urn:quickbase:params:oauth:token-type:temp_token';
+	/**
+	 * Will always return `N_A`
+	 */
+	token_type: 'N_A';
 };
 
 export type QuickBaseResponseCloneUserToken = {

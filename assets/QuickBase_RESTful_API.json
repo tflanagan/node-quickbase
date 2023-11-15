@@ -6615,6 +6615,9 @@
                     "appHomePages": {
                       "count": 0
                     },
+                    "dashboards": {
+                      "count": 2
+                    },
                     "defaultReports": {
                       "count": 1
                     },
@@ -6644,6 +6647,12 @@
                     },
                     "roles": {
                       "count": 2
+                    },
+                    "tableImports": {
+                      "count": 3
+                    },
+                    "tableRules": {
+                      "count": 1
                     },
                     "webhooks": {
                       "count": 0
@@ -6689,163 +6698,26 @@
                     "type": "object",
                     "additionalProperties": true,
                     "required": [
-                      "defaultReports",
-                      "notifications",
-                      "reminders",
-                      "forms",
                       "actions",
-                      "personalReports",
-                      "roles",
-                      "reports",
-                      "fields",
-                      "relationships",
-                      "webhooks",
                       "appHomePages",
-                      "exactForms"
+                      "dashboards",
+                      "defaultReports",
+                      "exactForms",
+                      "fields",
+                      "forms",
+                      "notifications",
+                      "personalReports",
+                      "relationships",
+                      "reminders",
+                      "reports",
+                      "roles",
+                      "tableImports",
+                      "tableRules",
+                      "webhooks"
                     ],
                     "properties": {
-                      "defaultReports": {
-                        "description": "The number of default reports where the given field is referenced.",
-                        "type": "object",
-                        "additionalProperties": true,
-                        "required": [
-                          "count"
-                        ],
-                        "properties": {
-                          "count": {
-                            "description": "the number of times a field has been used for the given item.",
-                            "type": "integer"
-                          }
-                        }
-                      },
-                      "notifications": {
-                        "description": "The number of notifications where the given field is referenced.",
-                        "type": "object",
-                        "additionalProperties": true,
-                        "required": [
-                          "count"
-                        ],
-                        "properties": {
-                          "count": {
-                            "description": "the number of times a field has been used for the given item.",
-                            "type": "integer"
-                          }
-                        }
-                      },
-                      "reminders": {
-                        "description": "The number of reminders where the given field is referenced.",
-                        "type": "object",
-                        "additionalProperties": true,
-                        "required": [
-                          "count"
-                        ],
-                        "properties": {
-                          "count": {
-                            "description": "the number of times a field has been used for the given item.",
-                            "type": "integer"
-                          }
-                        }
-                      },
-                      "forms": {
-                        "description": "The number of forms where the given field is referenced.",
-                        "type": "object",
-                        "additionalProperties": true,
-                        "required": [
-                          "count"
-                        ],
-                        "properties": {
-                          "count": {
-                            "description": "the number of times a field has been used for the given item.",
-                            "type": "integer"
-                          }
-                        }
-                      },
                       "actions": {
                         "description": "The number of quickbase actions where the given field is referenced.",
-                        "type": "object",
-                        "additionalProperties": true,
-                        "required": [
-                          "count"
-                        ],
-                        "properties": {
-                          "count": {
-                            "description": "the number of times a field has been used for the given item.",
-                            "type": "integer"
-                          }
-                        }
-                      },
-                      "personalReports": {
-                        "description": "The number of personal reports where the given field is referenced.",
-                        "type": "object",
-                        "additionalProperties": true,
-                        "required": [
-                          "count"
-                        ],
-                        "properties": {
-                          "count": {
-                            "description": "the number of times a field has been used for the given item.",
-                            "type": "integer"
-                          }
-                        }
-                      },
-                      "roles": {
-                        "description": "The number of roles where the given field is referenced.",
-                        "type": "object",
-                        "additionalProperties": true,
-                        "required": [
-                          "count"
-                        ],
-                        "properties": {
-                          "count": {
-                            "description": "the number of times a field has been used for the given item.",
-                            "type": "integer"
-                          }
-                        }
-                      },
-                      "reports": {
-                        "description": "The number of reports where the given field is referenced.",
-                        "type": "object",
-                        "additionalProperties": true,
-                        "required": [
-                          "count"
-                        ],
-                        "properties": {
-                          "count": {
-                            "description": "the number of times a field has been used for the given item.",
-                            "type": "integer"
-                          }
-                        }
-                      },
-                      "fields": {
-                        "description": "The number of fields where the given field is referenced.",
-                        "type": "object",
-                        "additionalProperties": true,
-                        "required": [
-                          "count"
-                        ],
-                        "properties": {
-                          "count": {
-                            "description": "the number of times a field has been used for the given item.",
-                            "type": "integer"
-                          }
-                        }
-                      },
-                      "relationships": {
-                        "description": "The number of relationships where the given field is referenced.",
-                        "type": "object",
-                        "additionalProperties": true,
-                        "required": [
-                          "count"
-                        ],
-                        "properties": {
-                          "count": {
-                            "description": "the number of times a field has been used for the given item.",
-                            "type": "integer"
-                          }
-                        }
-                      },
-                      "webhooks": {
-                        "description": "The number of webhooks where the given field is referenced.",
                         "type": "object",
                         "additionalProperties": true,
                         "required": [
@@ -6872,8 +6744,187 @@
                           }
                         }
                       },
+                      "dashboards": {
+                        "required": [
+                          "count"
+                        ],
+                        "type": "object",
+                        "properties": {
+                          "count": {
+                            "type": "integer",
+                            "description": "the number of times a field has been used for the given item."
+                          }
+                        },
+                        "description": "The number of dashboards where the given field is referenced."
+                      },
+                      "defaultReports": {
+                        "description": "The number of default reports where the given field is referenced.",
+                        "type": "object",
+                        "additionalProperties": true,
+                        "required": [
+                          "count"
+                        ],
+                        "properties": {
+                          "count": {
+                            "description": "the number of times a field has been used for the given item.",
+                            "type": "integer"
+                          }
+                        }
+                      },
                       "exactForms": {
                         "description": "The number of exact forms where the given field is referenced.",
+                        "type": "object",
+                        "additionalProperties": true,
+                        "required": [
+                          "count"
+                        ],
+                        "properties": {
+                          "count": {
+                            "description": "the number of times a field has been used for the given item.",
+                            "type": "integer"
+                          }
+                        }
+                      },
+                      "fields": {
+                        "description": "The number of fields where the given field is referenced.",
+                        "type": "object",
+                        "additionalProperties": true,
+                        "required": [
+                          "count"
+                        ],
+                        "properties": {
+                          "count": {
+                            "description": "the number of times a field has been used for the given item.",
+                            "type": "integer"
+                          }
+                        }
+                      },
+                      "forms": {
+                        "description": "The number of forms where the given field is referenced.",
+                        "type": "object",
+                        "additionalProperties": true,
+                        "required": [
+                          "count"
+                        ],
+                        "properties": {
+                          "count": {
+                            "description": "the number of times a field has been used for the given item.",
+                            "type": "integer"
+                          }
+                        }
+                      },
+                      "notifications": {
+                        "description": "The number of notifications where the given field is referenced.",
+                        "type": "object",
+                        "additionalProperties": true,
+                        "required": [
+                          "count"
+                        ],
+                        "properties": {
+                          "count": {
+                            "description": "the number of times a field has been used for the given item.",
+                            "type": "integer"
+                          }
+                        }
+                      },
+                      "personalReports": {
+                        "description": "The number of personal reports where the given field is referenced.",
+                        "type": "object",
+                        "additionalProperties": true,
+                        "required": [
+                          "count"
+                        ],
+                        "properties": {
+                          "count": {
+                            "description": "the number of times a field has been used for the given item.",
+                            "type": "integer"
+                          }
+                        }
+                      },
+                      "relationships": {
+                        "description": "The number of relationships where the given field is referenced.",
+                        "type": "object",
+                        "additionalProperties": true,
+                        "required": [
+                          "count"
+                        ],
+                        "properties": {
+                          "count": {
+                            "description": "the number of times a field has been used for the given item.",
+                            "type": "integer"
+                          }
+                        }
+                      },
+                      "reminders": {
+                        "description": "The number of reminders where the given field is referenced.",
+                        "type": "object",
+                        "additionalProperties": true,
+                        "required": [
+                          "count"
+                        ],
+                        "properties": {
+                          "count": {
+                            "description": "the number of times a field has been used for the given item.",
+                            "type": "integer"
+                          }
+                        }
+                      },
+                      "reports": {
+                        "description": "The number of reports where the given field is referenced.",
+                        "type": "object",
+                        "additionalProperties": true,
+                        "required": [
+                          "count"
+                        ],
+                        "properties": {
+                          "count": {
+                            "description": "the number of times a field has been used for the given item.",
+                            "type": "integer"
+                          }
+                        }
+                      },
+                      "roles": {
+                        "description": "The number of roles where the given field is referenced.",
+                        "type": "object",
+                        "additionalProperties": true,
+                        "required": [
+                          "count"
+                        ],
+                        "properties": {
+                          "count": {
+                            "description": "the number of times a field has been used for the given item.",
+                            "type": "integer"
+                          }
+                        }
+                      },
+                      "tableImports": {
+                        "required": [
+                          "count"
+                        ],
+                        "type": "object",
+                        "properties": {
+                          "count": {
+                            "type": "integer",
+                            "description": "the number of times a field has been used for the given item."
+                          }
+                        },
+                        "description": "The number of table imports where the given field is referenced."
+                      },
+                      "tableRules": {
+                        "required": [
+                          "count"
+                        ],
+                        "type": "object",
+                        "properties": {
+                          "count": {
+                            "type": "integer",
+                            "description": "the number of times a field has been used for the given item."
+                          }
+                        },
+                        "description": "The number of table rules where the given field is referenced."
+                      },
+                      "webhooks": {
+                        "description": "The number of webhooks where the given field is referenced.",
                         "type": "object",
                         "additionalProperties": true,
                         "required": [
@@ -6970,6 +7021,9 @@
                     "appHomePages": {
                       "count": 0
                     },
+                    "dashboards": {
+                      "count": 2
+                    },
                     "defaultReports": {
                       "count": 1
                     },
@@ -6999,6 +7053,12 @@
                     },
                     "roles": {
                       "count": 2
+                    },
+                    "tableImports": {
+                      "count": 2
+                    },
+                    "tableRules": {
+                      "count": 1
                     },
                     "webhooks": {
                       "count": 0
@@ -7044,163 +7104,26 @@
                     "type": "object",
                     "additionalProperties": true,
                     "required": [
-                      "defaultReports",
-                      "notifications",
-                      "reminders",
-                      "forms",
                       "actions",
-                      "personalReports",
-                      "roles",
-                      "reports",
-                      "fields",
-                      "relationships",
-                      "webhooks",
                       "appHomePages",
-                      "exactForms"
+                      "dashboards",
+                      "defaultReports",
+                      "exactForms",
+                      "fields",
+                      "forms",
+                      "notifications",
+                      "personalReports",
+                      "relationships",
+                      "reminders",
+                      "reports",
+                      "roles",
+                      "tableImports",
+                      "tableRules",
+                      "webhooks"
                     ],
                     "properties": {
-                      "defaultReports": {
-                        "description": "The number of default reports where the given field is referenced.",
-                        "type": "object",
-                        "additionalProperties": true,
-                        "required": [
-                          "count"
-                        ],
-                        "properties": {
-                          "count": {
-                            "description": "the number of times a field has been used for the given item.",
-                            "type": "integer"
-                          }
-                        }
-                      },
-                      "notifications": {
-                        "description": "The number of notifications where the given field is referenced.",
-                        "type": "object",
-                        "additionalProperties": true,
-                        "required": [
-                          "count"
-                        ],
-                        "properties": {
-                          "count": {
-                            "description": "the number of times a field has been used for the given item.",
-                            "type": "integer"
-                          }
-                        }
-                      },
-                      "reminders": {
-                        "description": "The number of reminders where the given field is referenced.",
-                        "type": "object",
-                        "additionalProperties": true,
-                        "required": [
-                          "count"
-                        ],
-                        "properties": {
-                          "count": {
-                            "description": "the number of times a field has been used for the given item.",
-                            "type": "integer"
-                          }
-                        }
-                      },
-                      "forms": {
-                        "description": "The number of forms where the given field is referenced.",
-                        "type": "object",
-                        "additionalProperties": true,
-                        "required": [
-                          "count"
-                        ],
-                        "properties": {
-                          "count": {
-                            "description": "the number of times a field has been used for the given item.",
-                            "type": "integer"
-                          }
-                        }
-                      },
                       "actions": {
                         "description": "The number of quickbase actions where the given field is referenced.",
-                        "type": "object",
-                        "additionalProperties": true,
-                        "required": [
-                          "count"
-                        ],
-                        "properties": {
-                          "count": {
-                            "description": "the number of times a field has been used for the given item.",
-                            "type": "integer"
-                          }
-                        }
-                      },
-                      "personalReports": {
-                        "description": "The number of personal reports where the given field is referenced.",
-                        "type": "object",
-                        "additionalProperties": true,
-                        "required": [
-                          "count"
-                        ],
-                        "properties": {
-                          "count": {
-                            "description": "the number of times a field has been used for the given item.",
-                            "type": "integer"
-                          }
-                        }
-                      },
-                      "roles": {
-                        "description": "The number of roles where the given field is referenced.",
-                        "type": "object",
-                        "additionalProperties": true,
-                        "required": [
-                          "count"
-                        ],
-                        "properties": {
-                          "count": {
-                            "description": "the number of times a field has been used for the given item.",
-                            "type": "integer"
-                          }
-                        }
-                      },
-                      "reports": {
-                        "description": "The number of reports where the given field is referenced.",
-                        "type": "object",
-                        "additionalProperties": true,
-                        "required": [
-                          "count"
-                        ],
-                        "properties": {
-                          "count": {
-                            "description": "the number of times a field has been used for the given item.",
-                            "type": "integer"
-                          }
-                        }
-                      },
-                      "fields": {
-                        "description": "The number of fields where the given field is referenced.",
-                        "type": "object",
-                        "additionalProperties": true,
-                        "required": [
-                          "count"
-                        ],
-                        "properties": {
-                          "count": {
-                            "description": "the number of times a field has been used for the given item.",
-                            "type": "integer"
-                          }
-                        }
-                      },
-                      "relationships": {
-                        "description": "The number of relationships where the given field is referenced.",
-                        "type": "object",
-                        "additionalProperties": true,
-                        "required": [
-                          "count"
-                        ],
-                        "properties": {
-                          "count": {
-                            "description": "the number of times a field has been used for the given item.",
-                            "type": "integer"
-                          }
-                        }
-                      },
-                      "webhooks": {
-                        "description": "The number of webhooks where the given field is referenced.",
                         "type": "object",
                         "additionalProperties": true,
                         "required": [
@@ -7227,8 +7150,187 @@
                           }
                         }
                       },
+                      "dashboards": {
+                        "required": [
+                          "count"
+                        ],
+                        "type": "object",
+                        "properties": {
+                          "count": {
+                            "type": "integer",
+                            "description": "the number of times a field has been used for the given item."
+                          }
+                        },
+                        "description": "The number of dashboards where the given field is referenced."
+                      },
+                      "defaultReports": {
+                        "description": "The number of default reports where the given field is referenced.",
+                        "type": "object",
+                        "additionalProperties": true,
+                        "required": [
+                          "count"
+                        ],
+                        "properties": {
+                          "count": {
+                            "description": "the number of times a field has been used for the given item.",
+                            "type": "integer"
+                          }
+                        }
+                      },
                       "exactForms": {
                         "description": "The number of exact forms where the given field is referenced.",
+                        "type": "object",
+                        "additionalProperties": true,
+                        "required": [
+                          "count"
+                        ],
+                        "properties": {
+                          "count": {
+                            "description": "the number of times a field has been used for the given item.",
+                            "type": "integer"
+                          }
+                        }
+                      },
+                      "fields": {
+                        "description": "The number of fields where the given field is referenced.",
+                        "type": "object",
+                        "additionalProperties": true,
+                        "required": [
+                          "count"
+                        ],
+                        "properties": {
+                          "count": {
+                            "description": "the number of times a field has been used for the given item.",
+                            "type": "integer"
+                          }
+                        }
+                      },
+                      "forms": {
+                        "description": "The number of forms where the given field is referenced.",
+                        "type": "object",
+                        "additionalProperties": true,
+                        "required": [
+                          "count"
+                        ],
+                        "properties": {
+                          "count": {
+                            "description": "the number of times a field has been used for the given item.",
+                            "type": "integer"
+                          }
+                        }
+                      },
+                      "notifications": {
+                        "description": "The number of notifications where the given field is referenced.",
+                        "type": "object",
+                        "additionalProperties": true,
+                        "required": [
+                          "count"
+                        ],
+                        "properties": {
+                          "count": {
+                            "description": "the number of times a field has been used for the given item.",
+                            "type": "integer"
+                          }
+                        }
+                      },
+                      "personalReports": {
+                        "description": "The number of personal reports where the given field is referenced.",
+                        "type": "object",
+                        "additionalProperties": true,
+                        "required": [
+                          "count"
+                        ],
+                        "properties": {
+                          "count": {
+                            "description": "the number of times a field has been used for the given item.",
+                            "type": "integer"
+                          }
+                        }
+                      },
+                      "relationships": {
+                        "description": "The number of relationships where the given field is referenced.",
+                        "type": "object",
+                        "additionalProperties": true,
+                        "required": [
+                          "count"
+                        ],
+                        "properties": {
+                          "count": {
+                            "description": "the number of times a field has been used for the given item.",
+                            "type": "integer"
+                          }
+                        }
+                      },
+                      "reminders": {
+                        "description": "The number of reminders where the given field is referenced.",
+                        "type": "object",
+                        "additionalProperties": true,
+                        "required": [
+                          "count"
+                        ],
+                        "properties": {
+                          "count": {
+                            "description": "the number of times a field has been used for the given item.",
+                            "type": "integer"
+                          }
+                        }
+                      },
+                      "reports": {
+                        "description": "The number of reports where the given field is referenced.",
+                        "type": "object",
+                        "additionalProperties": true,
+                        "required": [
+                          "count"
+                        ],
+                        "properties": {
+                          "count": {
+                            "description": "the number of times a field has been used for the given item.",
+                            "type": "integer"
+                          }
+                        }
+                      },
+                      "roles": {
+                        "description": "The number of roles where the given field is referenced.",
+                        "type": "object",
+                        "additionalProperties": true,
+                        "required": [
+                          "count"
+                        ],
+                        "properties": {
+                          "count": {
+                            "description": "the number of times a field has been used for the given item.",
+                            "type": "integer"
+                          }
+                        }
+                      },
+                      "tableImports": {
+                        "required": [
+                          "count"
+                        ],
+                        "type": "object",
+                        "properties": {
+                          "count": {
+                            "type": "integer",
+                            "description": "the number of times a field has been used for the given item."
+                          }
+                        },
+                        "description": "The number of table imports where the given field is referenced."
+                      },
+                      "tableRules": {
+                        "required": [
+                          "count"
+                        ],
+                        "type": "object",
+                        "properties": {
+                          "count": {
+                            "type": "integer",
+                            "description": "the number of times a field has been used for the given item."
+                          }
+                        },
+                        "description": "The number of table rules where the given field is referenced."
+                      },
+                      "webhooks": {
+                        "description": "The number of webhooks where the given field is referenced.",
                         "type": "object",
                         "additionalProperties": true,
                         "required": [
@@ -7350,7 +7452,7 @@
     },
     "/records": {
       "post": {
-        "description": "Insert and/or update record(s) in a table. In this single API call, inserts and updates can be submitted. Update can use the key field on the table, or any other supported unique field. Refer to the [Field types page](../fieldInfo) for more information about how each field type should be formatted. This operation allows for incremental processing of successful records, even when some of the records fail.  \n**Note:** This endpoint supports a maximum payload size of 10MB.",
+        "description": "Insert and/or update record(s) in a table. In this single API call, inserts and updates can be submitted. Update can use the key field on the table, or any other supported unique field. Refer to the [Field types page](../fieldInfo) for more information about how each field type should be formatted. This operation allows for incremental processing of successful records, even when some of the records fail.  \n**Note:** This endpoint supports a maximum payload size of 25MB.",
         "summary": "Insert/Update record(s)",
         "operationId": "upsert",
         "consumes": [
@@ -8106,7 +8208,7 @@
     },
     "/auth/temporary/{dbid}": {
       "get": {
-        "description": "Use this endpoint to get a temporary authorization token, scoped to either an app or a table. You can then use this token to make other API calls (see [authorization](../auth)).  This token expires in 5 minutes.",
+        "description": "Use this endpoint to get a temporary authorization token, scoped to either an app or a table. It can only be used inside of code pages for client-side authentication because it relies on the browser session. Learn more about [extending Quickbase](https://helpv2.quickbase.com/hc/en-us/articles/4570341709844-Extending-Quickbase). You can then use this token to make other API calls (see [authorization](../auth)).  This token expires in 5 minutes.",
         "summary": "Get a temporary token for a dbid",
         "operationId": "getTempTokenDBID",
         "consumes": [
@@ -8163,6 +8265,125 @@
                 "temporaryAuthorization": {
                   "description": "Temporary authorization token.",
                   "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/auth/oauth/token": {
+      "post": {
+        "description": "Use this endpoint to exchange a SAML assertion for a Quickbase token following [RFC 8693](https://www.rfc-editor.org/rfc/rfc8693.html). Callers can choose to return a token compatible with SCIM, XML, or RESTful APIs. The token duration is determined by the [SAML timeout session time](https://helpv2.quickbase.com/hc/en-us/articles/4570410646420-SAML-assertion-example#:~:text=Setting%20SAML%20timeout%20session%20time). You must be able to create a SAML assertion in your code to use this endpoint. The SAML assertion is verified against the configuration on the realm. Learn more about about [SAML assertions](https://helpv2.quickbase.com/hc/en-us/articles/4570410646420-SAML-assertion-example).",
+        "summary": "Exchange an SSO token",
+        "operationId": "exchangeSsoToken",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "QB-Realm-Hostname",
+            "description": "Your Quickbase domain, for example demo.quickbase.com",
+            "required": true,
+            "in": "header",
+            "example": "demo.quickbase.com",
+            "type": "string"
+          },
+          {
+            "name": "User-Agent",
+            "description": "This is entered by the person or utility invoking the API. You might custom create this or use the default one of your toolkit. Being descriptive here may offer more identification and troubleshooting capabilities.",
+            "required": false,
+            "in": "header",
+            "example": "FileService_Integration_V2.1",
+            "type": "string"
+          },
+          {
+            "x-amf-mediaType": "application/json",
+            "in": "body",
+            "name": "generated",
+            "schema": {
+              "example": {
+                "grant_type": "urn:ietf:params:oauth:grant-type:token-exchange",
+                "requested_token_type": "urn:quickbase:params:oauth:token-type:temp_ticket",
+                "subject_token": "PHNhbWxwOlJlc3BvbnNlDQogICAgeG1sbnM6c2FtbHA9bjp...",
+                "subject_token_type": "urn:ietf:params:oauth:token-type:saml2"
+              },
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "grant_type",
+                "subject_token",
+                "subject_token_type",
+                "requested_token_type"
+              ],
+              "properties": {
+                "grant_type": {
+                  "type": "string",
+                  "description": "The value `urn:ietf:params:oauth:grant-type:token-exchange` indicates that a token exchange is being performed.",
+                  "enum": [
+                    "urn:ietf:params:oauth:grant-type:token-exchange"
+                  ]
+                },
+                "requested_token_type": {
+                  "type": "string",
+                  "description": "An identifier for the type of the requested security token. For the RESTful API, use `urn:quickbase:params:oauth:token-type:temp_token`. For the XML or SCIM APIs use `urn:quickbase:params:oauth:token-type:temp_ticket`.",
+                  "enum": [
+                    "urn:quickbase:params:oauth:token-type:temp_ticket",
+                    "urn:quickbase:params:oauth:token-type:temp_token"
+                  ]
+                },
+                "subject_token": {
+                  "type": "string",
+                  "description": "A security token that represents the identity of the party on behalf of whom the request is being made. For SAML 2.0, the value should be a base64url-encoded SAML 2.0 assertion."
+                },
+                "subject_token_type": {
+                  "type": "string",
+                  "description": "An identifier that indicates the type of the security token in the `subject_token` parameter.",
+                  "enum": [
+                    "urn:ietf:params:oauth:token-type:saml2"
+                  ]
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "x-amf-mediaType": "application/json",
+            "schema": {
+              "example": {
+                "access_token": "example_token_1NiIsImtpZCI6IjllciJ9w",
+                "issued_token_type": "urn:quickbase:params:oauth:token-type:temp_ticket",
+                "token_type": "N_A"
+              },
+              "type": "object",
+              "additionalProperties": true,
+              "properties": {
+                "access_token": {
+                  "type": "string",
+                  "description": "The security token issued by the authorization server in response to the token exchange request. The identifier `access_token` is used for historical reasons and the issued token need not be an OAuth access token."
+                },
+                "issued_token_type": {
+                  "type": "string",
+                  "description": "An identifier for the representation of the issued security token.",
+                  "enum": [
+                    "urn:quickbase:params:oauth:token-type:temp_ticket",
+                    "urn:quickbase:params:oauth:token-type:temp_token"
+                  ]
+                },
+                "token_type": {
+                  "type": "string",
+                  "description": "Will always return `N_A`",
+                  "enum": [
+                    "N_A"
+                  ]
                 }
               }
             }
@@ -9916,7 +10137,7 @@
     },
     "/audit": {
       "post": {
-        "description": "Gathers the audit logs for a single day from a realm. By default, this API returns 10,000 entries. This can be changed with the numRows parameter. Integrators can iterate through batches to get an entire day's worth of logs. Each realm has a maximum entitlement of querying 1,000 days per year (allowing lookbacks for up to two years). Requests for paginated data do not count towards the annual limit. Transactional rate limits are 10 per 10 seconds.",
+        "description": "Gathers the audit logs for a single day from a realm. By default, this API returns 10,000 entries. This can be changed with the numRows parameter. Integrators can iterate through batches to get an entire day's worth of logs. Each realm has a maximum entitlement of querying 1,000 days per year (allowing lookbacks for up to two years). Requests for paginated data do not count towards the annual limit. Transactional rate limits are 10 per 10 seconds.  \n**Note:** This API is available for enterprise users only.",
         "summary": "Get audit logs",
         "operationId": "audit",
         "consumes": [
@@ -19243,6 +19464,9 @@
                   "appHomePages": {
                     "count": 0
                   },
+                  "dashboards": {
+                    "count": 2
+                  },
                   "defaultReports": {
                     "count": 1
                   },
@@ -19272,6 +19496,12 @@
                   },
                   "roles": {
                     "count": 2
+                  },
+                  "tableImports": {
+                    "count": 3
+                  },
+                  "tableRules": {
+                    "count": 1
                   },
                   "webhooks": {
                     "count": 0
@@ -19317,163 +19547,26 @@
                   "type": "object",
                   "additionalProperties": true,
                   "required": [
-                    "defaultReports",
-                    "notifications",
-                    "reminders",
-                    "forms",
                     "actions",
-                    "personalReports",
-                    "roles",
-                    "reports",
-                    "fields",
-                    "relationships",
-                    "webhooks",
                     "appHomePages",
-                    "exactForms"
+                    "dashboards",
+                    "defaultReports",
+                    "exactForms",
+                    "fields",
+                    "forms",
+                    "notifications",
+                    "personalReports",
+                    "relationships",
+                    "reminders",
+                    "reports",
+                    "roles",
+                    "tableImports",
+                    "tableRules",
+                    "webhooks"
                   ],
                   "properties": {
-                    "defaultReports": {
-                      "description": "The number of default reports where the given field is referenced.",
-                      "type": "object",
-                      "additionalProperties": true,
-                      "required": [
-                        "count"
-                      ],
-                      "properties": {
-                        "count": {
-                          "description": "the number of times a field has been used for the given item.",
-                          "type": "integer"
-                        }
-                      }
-                    },
-                    "notifications": {
-                      "description": "The number of notifications where the given field is referenced.",
-                      "type": "object",
-                      "additionalProperties": true,
-                      "required": [
-                        "count"
-                      ],
-                      "properties": {
-                        "count": {
-                          "description": "the number of times a field has been used for the given item.",
-                          "type": "integer"
-                        }
-                      }
-                    },
-                    "reminders": {
-                      "description": "The number of reminders where the given field is referenced.",
-                      "type": "object",
-                      "additionalProperties": true,
-                      "required": [
-                        "count"
-                      ],
-                      "properties": {
-                        "count": {
-                          "description": "the number of times a field has been used for the given item.",
-                          "type": "integer"
-                        }
-                      }
-                    },
-                    "forms": {
-                      "description": "The number of forms where the given field is referenced.",
-                      "type": "object",
-                      "additionalProperties": true,
-                      "required": [
-                        "count"
-                      ],
-                      "properties": {
-                        "count": {
-                          "description": "the number of times a field has been used for the given item.",
-                          "type": "integer"
-                        }
-                      }
-                    },
                     "actions": {
                       "description": "The number of quickbase actions where the given field is referenced.",
-                      "type": "object",
-                      "additionalProperties": true,
-                      "required": [
-                        "count"
-                      ],
-                      "properties": {
-                        "count": {
-                          "description": "the number of times a field has been used for the given item.",
-                          "type": "integer"
-                        }
-                      }
-                    },
-                    "personalReports": {
-                      "description": "The number of personal reports where the given field is referenced.",
-                      "type": "object",
-                      "additionalProperties": true,
-                      "required": [
-                        "count"
-                      ],
-                      "properties": {
-                        "count": {
-                          "description": "the number of times a field has been used for the given item.",
-                          "type": "integer"
-                        }
-                      }
-                    },
-                    "roles": {
-                      "description": "The number of roles where the given field is referenced.",
-                      "type": "object",
-                      "additionalProperties": true,
-                      "required": [
-                        "count"
-                      ],
-                      "properties": {
-                        "count": {
-                          "description": "the number of times a field has been used for the given item.",
-                          "type": "integer"
-                        }
-                      }
-                    },
-                    "reports": {
-                      "description": "The number of reports where the given field is referenced.",
-                      "type": "object",
-                      "additionalProperties": true,
-                      "required": [
-                        "count"
-                      ],
-                      "properties": {
-                        "count": {
-                          "description": "the number of times a field has been used for the given item.",
-                          "type": "integer"
-                        }
-                      }
-                    },
-                    "fields": {
-                      "description": "The number of fields where the given field is referenced.",
-                      "type": "object",
-                      "additionalProperties": true,
-                      "required": [
-                        "count"
-                      ],
-                      "properties": {
-                        "count": {
-                          "description": "the number of times a field has been used for the given item.",
-                          "type": "integer"
-                        }
-                      }
-                    },
-                    "relationships": {
-                      "description": "The number of relationships where the given field is referenced.",
-                      "type": "object",
-                      "additionalProperties": true,
-                      "required": [
-                        "count"
-                      ],
-                      "properties": {
-                        "count": {
-                          "description": "the number of times a field has been used for the given item.",
-                          "type": "integer"
-                        }
-                      }
-                    },
-                    "webhooks": {
-                      "description": "The number of webhooks where the given field is referenced.",
                       "type": "object",
                       "additionalProperties": true,
                       "required": [
@@ -19500,8 +19593,187 @@
                         }
                       }
                     },
+                    "dashboards": {
+                      "required": [
+                        "count"
+                      ],
+                      "type": "object",
+                      "properties": {
+                        "count": {
+                          "type": "integer",
+                          "description": "the number of times a field has been used for the given item."
+                        }
+                      },
+                      "description": "The number of dashboards where the given field is referenced."
+                    },
+                    "defaultReports": {
+                      "description": "The number of default reports where the given field is referenced.",
+                      "type": "object",
+                      "additionalProperties": true,
+                      "required": [
+                        "count"
+                      ],
+                      "properties": {
+                        "count": {
+                          "description": "the number of times a field has been used for the given item.",
+                          "type": "integer"
+                        }
+                      }
+                    },
                     "exactForms": {
                       "description": "The number of exact forms where the given field is referenced.",
+                      "type": "object",
+                      "additionalProperties": true,
+                      "required": [
+                        "count"
+                      ],
+                      "properties": {
+                        "count": {
+                          "description": "the number of times a field has been used for the given item.",
+                          "type": "integer"
+                        }
+                      }
+                    },
+                    "fields": {
+                      "description": "The number of fields where the given field is referenced.",
+                      "type": "object",
+                      "additionalProperties": true,
+                      "required": [
+                        "count"
+                      ],
+                      "properties": {
+                        "count": {
+                          "description": "the number of times a field has been used for the given item.",
+                          "type": "integer"
+                        }
+                      }
+                    },
+                    "forms": {
+                      "description": "The number of forms where the given field is referenced.",
+                      "type": "object",
+                      "additionalProperties": true,
+                      "required": [
+                        "count"
+                      ],
+                      "properties": {
+                        "count": {
+                          "description": "the number of times a field has been used for the given item.",
+                          "type": "integer"
+                        }
+                      }
+                    },
+                    "notifications": {
+                      "description": "The number of notifications where the given field is referenced.",
+                      "type": "object",
+                      "additionalProperties": true,
+                      "required": [
+                        "count"
+                      ],
+                      "properties": {
+                        "count": {
+                          "description": "the number of times a field has been used for the given item.",
+                          "type": "integer"
+                        }
+                      }
+                    },
+                    "personalReports": {
+                      "description": "The number of personal reports where the given field is referenced.",
+                      "type": "object",
+                      "additionalProperties": true,
+                      "required": [
+                        "count"
+                      ],
+                      "properties": {
+                        "count": {
+                          "description": "the number of times a field has been used for the given item.",
+                          "type": "integer"
+                        }
+                      }
+                    },
+                    "relationships": {
+                      "description": "The number of relationships where the given field is referenced.",
+                      "type": "object",
+                      "additionalProperties": true,
+                      "required": [
+                        "count"
+                      ],
+                      "properties": {
+                        "count": {
+                          "description": "the number of times a field has been used for the given item.",
+                          "type": "integer"
+                        }
+                      }
+                    },
+                    "reminders": {
+                      "description": "The number of reminders where the given field is referenced.",
+                      "type": "object",
+                      "additionalProperties": true,
+                      "required": [
+                        "count"
+                      ],
+                      "properties": {
+                        "count": {
+                          "description": "the number of times a field has been used for the given item.",
+                          "type": "integer"
+                        }
+                      }
+                    },
+                    "reports": {
+                      "description": "The number of reports where the given field is referenced.",
+                      "type": "object",
+                      "additionalProperties": true,
+                      "required": [
+                        "count"
+                      ],
+                      "properties": {
+                        "count": {
+                          "description": "the number of times a field has been used for the given item.",
+                          "type": "integer"
+                        }
+                      }
+                    },
+                    "roles": {
+                      "description": "The number of roles where the given field is referenced.",
+                      "type": "object",
+                      "additionalProperties": true,
+                      "required": [
+                        "count"
+                      ],
+                      "properties": {
+                        "count": {
+                          "description": "the number of times a field has been used for the given item.",
+                          "type": "integer"
+                        }
+                      }
+                    },
+                    "tableImports": {
+                      "required": [
+                        "count"
+                      ],
+                      "type": "object",
+                      "properties": {
+                        "count": {
+                          "type": "integer",
+                          "description": "the number of times a field has been used for the given item."
+                        }
+                      },
+                      "description": "The number of table imports where the given field is referenced."
+                    },
+                    "tableRules": {
+                      "required": [
+                        "count"
+                      ],
+                      "type": "object",
+                      "properties": {
+                        "count": {
+                          "type": "integer",
+                          "description": "the number of times a field has been used for the given item."
+                        }
+                      },
+                      "description": "The number of table rules where the given field is referenced."
+                    },
+                    "webhooks": {
+                      "description": "The number of webhooks where the given field is referenced.",
                       "type": "object",
                       "additionalProperties": true,
                       "required": [
@@ -19653,6 +19925,9 @@
                   "appHomePages": {
                     "count": 0
                   },
+                  "dashboards": {
+                    "count": 2
+                  },
                   "defaultReports": {
                     "count": 1
                   },
@@ -19682,6 +19957,12 @@
                   },
                   "roles": {
                     "count": 2
+                  },
+                  "tableImports": {
+                    "count": 2
+                  },
+                  "tableRules": {
+                    "count": 1
                   },
                   "webhooks": {
                     "count": 0
@@ -19727,163 +20008,26 @@
                   "type": "object",
                   "additionalProperties": true,
                   "required": [
-                    "defaultReports",
-                    "notifications",
-                    "reminders",
-                    "forms",
                     "actions",
-                    "personalReports",
-                    "roles",
-                    "reports",
-                    "fields",
-                    "relationships",
-                    "webhooks",
                     "appHomePages",
-                    "exactForms"
+                    "dashboards",
+                    "defaultReports",
+                    "exactForms",
+                    "fields",
+                    "forms",
+                    "notifications",
+                    "personalReports",
+                    "relationships",
+                    "reminders",
+                    "reports",
+                    "roles",
+                    "tableImports",
+                    "tableRules",
+                    "webhooks"
                   ],
                   "properties": {
-                    "defaultReports": {
-                      "description": "The number of default reports where the given field is referenced.",
-                      "type": "object",
-                      "additionalProperties": true,
-                      "required": [
-                        "count"
-                      ],
-                      "properties": {
-                        "count": {
-                          "description": "the number of times a field has been used for the given item.",
-                          "type": "integer"
-                        }
-                      }
-                    },
-                    "notifications": {
-                      "description": "The number of notifications where the given field is referenced.",
-                      "type": "object",
-                      "additionalProperties": true,
-                      "required": [
-                        "count"
-                      ],
-                      "properties": {
-                        "count": {
-                          "description": "the number of times a field has been used for the given item.",
-                          "type": "integer"
-                        }
-                      }
-                    },
-                    "reminders": {
-                      "description": "The number of reminders where the given field is referenced.",
-                      "type": "object",
-                      "additionalProperties": true,
-                      "required": [
-                        "count"
-                      ],
-                      "properties": {
-                        "count": {
-                          "description": "the number of times a field has been used for the given item.",
-                          "type": "integer"
-                        }
-                      }
-                    },
-                    "forms": {
-                      "description": "The number of forms where the given field is referenced.",
-                      "type": "object",
-                      "additionalProperties": true,
-                      "required": [
-                        "count"
-                      ],
-                      "properties": {
-                        "count": {
-                          "description": "the number of times a field has been used for the given item.",
-                          "type": "integer"
-                        }
-                      }
-                    },
                     "actions": {
                       "description": "The number of quickbase actions where the given field is referenced.",
-                      "type": "object",
-                      "additionalProperties": true,
-                      "required": [
-                        "count"
-                      ],
-                      "properties": {
-                        "count": {
-                          "description": "the number of times a field has been used for the given item.",
-                          "type": "integer"
-                        }
-                      }
-                    },
-                    "personalReports": {
-                      "description": "The number of personal reports where the given field is referenced.",
-                      "type": "object",
-                      "additionalProperties": true,
-                      "required": [
-                        "count"
-                      ],
-                      "properties": {
-                        "count": {
-                          "description": "the number of times a field has been used for the given item.",
-                          "type": "integer"
-                        }
-                      }
-                    },
-                    "roles": {
-                      "description": "The number of roles where the given field is referenced.",
-                      "type": "object",
-                      "additionalProperties": true,
-                      "required": [
-                        "count"
-                      ],
-                      "properties": {
-                        "count": {
-                          "description": "the number of times a field has been used for the given item.",
-                          "type": "integer"
-                        }
-                      }
-                    },
-                    "reports": {
-                      "description": "The number of reports where the given field is referenced.",
-                      "type": "object",
-                      "additionalProperties": true,
-                      "required": [
-                        "count"
-                      ],
-                      "properties": {
-                        "count": {
-                          "description": "the number of times a field has been used for the given item.",
-                          "type": "integer"
-                        }
-                      }
-                    },
-                    "fields": {
-                      "description": "The number of fields where the given field is referenced.",
-                      "type": "object",
-                      "additionalProperties": true,
-                      "required": [
-                        "count"
-                      ],
-                      "properties": {
-                        "count": {
-                          "description": "the number of times a field has been used for the given item.",
-                          "type": "integer"
-                        }
-                      }
-                    },
-                    "relationships": {
-                      "description": "The number of relationships where the given field is referenced.",
-                      "type": "object",
-                      "additionalProperties": true,
-                      "required": [
-                        "count"
-                      ],
-                      "properties": {
-                        "count": {
-                          "description": "the number of times a field has been used for the given item.",
-                          "type": "integer"
-                        }
-                      }
-                    },
-                    "webhooks": {
-                      "description": "The number of webhooks where the given field is referenced.",
                       "type": "object",
                       "additionalProperties": true,
                       "required": [
@@ -19910,8 +20054,187 @@
                         }
                       }
                     },
+                    "dashboards": {
+                      "required": [
+                        "count"
+                      ],
+                      "type": "object",
+                      "properties": {
+                        "count": {
+                          "type": "integer",
+                          "description": "the number of times a field has been used for the given item."
+                        }
+                      },
+                      "description": "The number of dashboards where the given field is referenced."
+                    },
+                    "defaultReports": {
+                      "description": "The number of default reports where the given field is referenced.",
+                      "type": "object",
+                      "additionalProperties": true,
+                      "required": [
+                        "count"
+                      ],
+                      "properties": {
+                        "count": {
+                          "description": "the number of times a field has been used for the given item.",
+                          "type": "integer"
+                        }
+                      }
+                    },
                     "exactForms": {
                       "description": "The number of exact forms where the given field is referenced.",
+                      "type": "object",
+                      "additionalProperties": true,
+                      "required": [
+                        "count"
+                      ],
+                      "properties": {
+                        "count": {
+                          "description": "the number of times a field has been used for the given item.",
+                          "type": "integer"
+                        }
+                      }
+                    },
+                    "fields": {
+                      "description": "The number of fields where the given field is referenced.",
+                      "type": "object",
+                      "additionalProperties": true,
+                      "required": [
+                        "count"
+                      ],
+                      "properties": {
+                        "count": {
+                          "description": "the number of times a field has been used for the given item.",
+                          "type": "integer"
+                        }
+                      }
+                    },
+                    "forms": {
+                      "description": "The number of forms where the given field is referenced.",
+                      "type": "object",
+                      "additionalProperties": true,
+                      "required": [
+                        "count"
+                      ],
+                      "properties": {
+                        "count": {
+                          "description": "the number of times a field has been used for the given item.",
+                          "type": "integer"
+                        }
+                      }
+                    },
+                    "notifications": {
+                      "description": "The number of notifications where the given field is referenced.",
+                      "type": "object",
+                      "additionalProperties": true,
+                      "required": [
+                        "count"
+                      ],
+                      "properties": {
+                        "count": {
+                          "description": "the number of times a field has been used for the given item.",
+                          "type": "integer"
+                        }
+                      }
+                    },
+                    "personalReports": {
+                      "description": "The number of personal reports where the given field is referenced.",
+                      "type": "object",
+                      "additionalProperties": true,
+                      "required": [
+                        "count"
+                      ],
+                      "properties": {
+                        "count": {
+                          "description": "the number of times a field has been used for the given item.",
+                          "type": "integer"
+                        }
+                      }
+                    },
+                    "relationships": {
+                      "description": "The number of relationships where the given field is referenced.",
+                      "type": "object",
+                      "additionalProperties": true,
+                      "required": [
+                        "count"
+                      ],
+                      "properties": {
+                        "count": {
+                          "description": "the number of times a field has been used for the given item.",
+                          "type": "integer"
+                        }
+                      }
+                    },
+                    "reminders": {
+                      "description": "The number of reminders where the given field is referenced.",
+                      "type": "object",
+                      "additionalProperties": true,
+                      "required": [
+                        "count"
+                      ],
+                      "properties": {
+                        "count": {
+                          "description": "the number of times a field has been used for the given item.",
+                          "type": "integer"
+                        }
+                      }
+                    },
+                    "reports": {
+                      "description": "The number of reports where the given field is referenced.",
+                      "type": "object",
+                      "additionalProperties": true,
+                      "required": [
+                        "count"
+                      ],
+                      "properties": {
+                        "count": {
+                          "description": "the number of times a field has been used for the given item.",
+                          "type": "integer"
+                        }
+                      }
+                    },
+                    "roles": {
+                      "description": "The number of roles where the given field is referenced.",
+                      "type": "object",
+                      "additionalProperties": true,
+                      "required": [
+                        "count"
+                      ],
+                      "properties": {
+                        "count": {
+                          "description": "the number of times a field has been used for the given item.",
+                          "type": "integer"
+                        }
+                      }
+                    },
+                    "tableImports": {
+                      "required": [
+                        "count"
+                      ],
+                      "type": "object",
+                      "properties": {
+                        "count": {
+                          "type": "integer",
+                          "description": "the number of times a field has been used for the given item."
+                        }
+                      },
+                      "description": "The number of table imports where the given field is referenced."
+                    },
+                    "tableRules": {
+                      "required": [
+                        "count"
+                      ],
+                      "type": "object",
+                      "properties": {
+                        "count": {
+                          "type": "integer",
+                          "description": "the number of times a field has been used for the given item."
+                        }
+                      },
+                      "description": "The number of table rules where the given field is referenced."
+                    },
+                    "webhooks": {
+                      "description": "The number of webhooks where the given field is referenced.",
                       "type": "object",
                       "additionalProperties": true,
                       "required": [
@@ -20145,7 +20468,7 @@
       }
     },
     {
-      "description": "Insert and/or update record(s) in a table. In this single API call, inserts and updates can be submitted. Update can use the key field on the table, or any other supported unique field. Refer to the [Field types page](../fieldInfo) for more information about how each field type should be formatted. This operation allows for incremental processing of successful records, even when some of the records fail.  \n**Note:** This endpoint supports a maximum payload size of 10MB.",
+      "description": "Insert and/or update record(s) in a table. In this single API call, inserts and updates can be submitted. Update can use the key field on the table, or any other supported unique field. Refer to the [Field types page](../fieldInfo) for more information about how each field type should be formatted. This operation allows for incremental processing of successful records, even when some of the records fail.  \n**Note:** This endpoint supports a maximum payload size of 25MB.",
       "summary": "Insert/Update record(s)",
       "operationId": "upsert",
       "consumes": [
@@ -21288,7 +21611,7 @@
       }
     },
     {
-      "description": "Use this endpoint to get a temporary authorization token, scoped to either an app or a table. You can then use this token to make other API calls (see [authorization](../auth)).  This token expires in 5 minutes.",
+      "description": "Use this endpoint to get a temporary authorization token, scoped to either an app or a table. It can only be used inside of code pages for client-side authentication because it relies on the browser session. Learn more about [extending Quickbase](https://helpv2.quickbase.com/hc/en-us/articles/4570341709844-Extending-Quickbase). You can then use this token to make other API calls (see [authorization](../auth)).  This token expires in 5 minutes.",
       "summary": "Get a temporary token for a dbid",
       "operationId": "getTempTokenDBID",
       "consumes": [
@@ -21394,6 +21717,196 @@
           "type": "string"
         }
       ]
+    },
+    {
+      "description": "Use this endpoint to exchange a SAML assertion for a Quickbase token following [RFC 8693](https://www.rfc-editor.org/rfc/rfc8693.html). Callers can choose to return a token compatible with SCIM, XML, or RESTful APIs. The token duration is determined by the [SAML timeout session time](https://helpv2.quickbase.com/hc/en-us/articles/4570410646420-SAML-assertion-example#:~:text=Setting%20SAML%20timeout%20session%20time). You must be able to create a SAML assertion in your code to use this endpoint. The SAML assertion is verified against the configuration on the realm. Learn more about about [SAML assertions](https://helpv2.quickbase.com/hc/en-us/articles/4570410646420-SAML-assertion-example).",
+      "summary": "Exchange an SSO token",
+      "operationId": "exchangeSsoToken",
+      "consumes": [
+        "application/json"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "parameters": [
+        {
+          "name": "QB-Realm-Hostname",
+          "description": "Your Quickbase domain, for example demo.quickbase.com",
+          "required": true,
+          "in": "header",
+          "example": "demo.quickbase.com",
+          "type": "string"
+        },
+        {
+          "name": "User-Agent",
+          "description": "This is entered by the person or utility invoking the API. You might custom create this or use the default one of your toolkit. Being descriptive here may offer more identification and troubleshooting capabilities.",
+          "required": false,
+          "in": "header",
+          "example": "FileService_Integration_V2.1",
+          "type": "string"
+        },
+        {
+          "x-amf-mediaType": "application/json",
+          "in": "body",
+          "name": "generated",
+          "schema": {
+            "example": {
+              "grant_type": "urn:ietf:params:oauth:grant-type:token-exchange",
+              "requested_token_type": "urn:quickbase:params:oauth:token-type:temp_ticket",
+              "subject_token": "PHNhbWxwOlJlc3BvbnNlDQogICAgeG1sbnM6c2FtbHA9bjp...",
+              "subject_token_type": "urn:ietf:params:oauth:token-type:saml2"
+            },
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "grant_type",
+              "subject_token",
+              "subject_token_type",
+              "requested_token_type"
+            ],
+            "properties": {
+              "grant_type": {
+                "type": "string",
+                "description": "The value `urn:ietf:params:oauth:grant-type:token-exchange` indicates that a token exchange is being performed.",
+                "enum": [
+                  "urn:ietf:params:oauth:grant-type:token-exchange"
+                ]
+              },
+              "requested_token_type": {
+                "type": "string",
+                "description": "An identifier for the type of the requested security token. For the RESTful API, use `urn:quickbase:params:oauth:token-type:temp_token`. For the XML or SCIM APIs use `urn:quickbase:params:oauth:token-type:temp_ticket`.",
+                "enum": [
+                  "urn:quickbase:params:oauth:token-type:temp_ticket",
+                  "urn:quickbase:params:oauth:token-type:temp_token"
+                ]
+              },
+              "subject_token": {
+                "type": "string",
+                "description": "A security token that represents the identity of the party on behalf of whom the request is being made. For SAML 2.0, the value should be a base64url-encoded SAML 2.0 assertion."
+              },
+              "subject_token_type": {
+                "type": "string",
+                "description": "An identifier that indicates the type of the security token in the `subject_token` parameter.",
+                "enum": [
+                  "urn:ietf:params:oauth:token-type:saml2"
+                ]
+              }
+            }
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Success",
+          "x-amf-mediaType": "application/json",
+          "schema": {
+            "example": {
+              "access_token": "example_token_1NiIsImtpZCI6IjllciJ9w",
+              "issued_token_type": "urn:quickbase:params:oauth:token-type:temp_ticket",
+              "token_type": "N_A"
+            },
+            "type": "object",
+            "additionalProperties": true,
+            "properties": {
+              "access_token": {
+                "type": "string",
+                "description": "The security token issued by the authorization server in response to the token exchange request. The identifier `access_token` is used for historical reasons and the issued token need not be an OAuth access token."
+              },
+              "issued_token_type": {
+                "type": "string",
+                "description": "An identifier for the representation of the issued security token.",
+                "enum": [
+                  "urn:quickbase:params:oauth:token-type:temp_ticket",
+                  "urn:quickbase:params:oauth:token-type:temp_token"
+                ]
+              },
+              "token_type": {
+                "type": "string",
+                "description": "Will always return `N_A`",
+                "enum": [
+                  "N_A"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "tags": [
+        "Auth"
+      ],
+      "id": "exchangeSsoToken",
+      "path": "/auth/oauth/token",
+      "host": "https://api.quickbase.com/v1",
+      "method": "post",
+      "headerParams": [
+        {
+          "name": "QB-Realm-Hostname",
+          "description": "Your Quickbase domain, for example demo.quickbase.com",
+          "required": true,
+          "in": "header",
+          "example": "demo.quickbase.com",
+          "type": "string"
+        },
+        {
+          "name": "User-Agent",
+          "description": "This is entered by the person or utility invoking the API. You might custom create this or use the default one of your toolkit. Being descriptive here may offer more identification and troubleshooting capabilities.",
+          "required": false,
+          "in": "header",
+          "example": "FileService_Integration_V2.1",
+          "type": "string"
+        }
+      ],
+      "queryParams": [],
+      "pathParams": [],
+      "requests": {
+        "x-amf-mediaType": "application/json",
+        "in": "body",
+        "name": "generated",
+        "schema": {
+          "example": {
+            "grant_type": "urn:ietf:params:oauth:grant-type:token-exchange",
+            "requested_token_type": "urn:quickbase:params:oauth:token-type:temp_ticket",
+            "subject_token": "PHNhbWxwOlJlc3BvbnNlDQogICAgeG1sbnM6c2FtbHA9bjp...",
+            "subject_token_type": "urn:ietf:params:oauth:token-type:saml2"
+          },
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "grant_type",
+            "subject_token",
+            "subject_token_type",
+            "requested_token_type"
+          ],
+          "properties": {
+            "grant_type": {
+              "type": "string",
+              "description": "The value `urn:ietf:params:oauth:grant-type:token-exchange` indicates that a token exchange is being performed.",
+              "enum": [
+                "urn:ietf:params:oauth:grant-type:token-exchange"
+              ]
+            },
+            "requested_token_type": {
+              "type": "string",
+              "description": "An identifier for the type of the requested security token. For the RESTful API, use `urn:quickbase:params:oauth:token-type:temp_token`. For the XML or SCIM APIs use `urn:quickbase:params:oauth:token-type:temp_ticket`.",
+              "enum": [
+                "urn:quickbase:params:oauth:token-type:temp_ticket",
+                "urn:quickbase:params:oauth:token-type:temp_token"
+              ]
+            },
+            "subject_token": {
+              "type": "string",
+              "description": "A security token that represents the identity of the party on behalf of whom the request is being made. For SAML 2.0, the value should be a base64url-encoded SAML 2.0 assertion."
+            },
+            "subject_token_type": {
+              "type": "string",
+              "description": "An identifier that indicates the type of the security token in the `subject_token` parameter.",
+              "enum": [
+                "urn:ietf:params:oauth:token-type:saml2"
+              ]
+            }
+          }
+        }
+      }
     },
     {
       "description": "Clones the authenticated user token. All applications associated with that token are automatically associated with the new token.",
@@ -24027,7 +24540,7 @@
       }
     },
     {
-      "description": "Gathers the audit logs for a single day from a realm. By default, this API returns 10,000 entries. This can be changed with the numRows parameter. Integrators can iterate through batches to get an entire day's worth of logs. Each realm has a maximum entitlement of querying 1,000 days per year (allowing lookbacks for up to two years). Requests for paginated data do not count towards the annual limit. Transactional rate limits are 10 per 10 seconds.",
+      "description": "Gathers the audit logs for a single day from a realm. By default, this API returns 10,000 entries. This can be changed with the numRows parameter. Integrators can iterate through batches to get an entire day's worth of logs. Each realm has a maximum entitlement of querying 1,000 days per year (allowing lookbacks for up to two years). Requests for paginated data do not count towards the annual limit. Transactional rate limits are 10 per 10 seconds.  \n**Note:** This API is available for enterprise users only.",
       "summary": "Get audit logs",
       "operationId": "audit",
       "consumes": [
@@ -33467,6 +33980,9 @@
                     "appHomePages": {
                       "count": 0
                     },
+                    "dashboards": {
+                      "count": 2
+                    },
                     "defaultReports": {
                       "count": 1
                     },
@@ -33496,6 +34012,12 @@
                     },
                     "roles": {
                       "count": 2
+                    },
+                    "tableImports": {
+                      "count": 3
+                    },
+                    "tableRules": {
+                      "count": 1
                     },
                     "webhooks": {
                       "count": 0
@@ -33541,163 +34063,26 @@
                     "type": "object",
                     "additionalProperties": true,
                     "required": [
-                      "defaultReports",
-                      "notifications",
-                      "reminders",
-                      "forms",
                       "actions",
-                      "personalReports",
-                      "roles",
-                      "reports",
-                      "fields",
-                      "relationships",
-                      "webhooks",
                       "appHomePages",
-                      "exactForms"
+                      "dashboards",
+                      "defaultReports",
+                      "exactForms",
+                      "fields",
+                      "forms",
+                      "notifications",
+                      "personalReports",
+                      "relationships",
+                      "reminders",
+                      "reports",
+                      "roles",
+                      "tableImports",
+                      "tableRules",
+                      "webhooks"
                     ],
                     "properties": {
-                      "defaultReports": {
-                        "description": "The number of default reports where the given field is referenced.",
-                        "type": "object",
-                        "additionalProperties": true,
-                        "required": [
-                          "count"
-                        ],
-                        "properties": {
-                          "count": {
-                            "description": "the number of times a field has been used for the given item.",
-                            "type": "integer"
-                          }
-                        }
-                      },
-                      "notifications": {
-                        "description": "The number of notifications where the given field is referenced.",
-                        "type": "object",
-                        "additionalProperties": true,
-                        "required": [
-                          "count"
-                        ],
-                        "properties": {
-                          "count": {
-                            "description": "the number of times a field has been used for the given item.",
-                            "type": "integer"
-                          }
-                        }
-                      },
-                      "reminders": {
-                        "description": "The number of reminders where the given field is referenced.",
-                        "type": "object",
-                        "additionalProperties": true,
-                        "required": [
-                          "count"
-                        ],
-                        "properties": {
-                          "count": {
-                            "description": "the number of times a field has been used for the given item.",
-                            "type": "integer"
-                          }
-                        }
-                      },
-                      "forms": {
-                        "description": "The number of forms where the given field is referenced.",
-                        "type": "object",
-                        "additionalProperties": true,
-                        "required": [
-                          "count"
-                        ],
-                        "properties": {
-                          "count": {
-                            "description": "the number of times a field has been used for the given item.",
-                            "type": "integer"
-                          }
-                        }
-                      },
                       "actions": {
                         "description": "The number of quickbase actions where the given field is referenced.",
-                        "type": "object",
-                        "additionalProperties": true,
-                        "required": [
-                          "count"
-                        ],
-                        "properties": {
-                          "count": {
-                            "description": "the number of times a field has been used for the given item.",
-                            "type": "integer"
-                          }
-                        }
-                      },
-                      "personalReports": {
-                        "description": "The number of personal reports where the given field is referenced.",
-                        "type": "object",
-                        "additionalProperties": true,
-                        "required": [
-                          "count"
-                        ],
-                        "properties": {
-                          "count": {
-                            "description": "the number of times a field has been used for the given item.",
-                            "type": "integer"
-                          }
-                        }
-                      },
-                      "roles": {
-                        "description": "The number of roles where the given field is referenced.",
-                        "type": "object",
-                        "additionalProperties": true,
-                        "required": [
-                          "count"
-                        ],
-                        "properties": {
-                          "count": {
-                            "description": "the number of times a field has been used for the given item.",
-                            "type": "integer"
-                          }
-                        }
-                      },
-                      "reports": {
-                        "description": "The number of reports where the given field is referenced.",
-                        "type": "object",
-                        "additionalProperties": true,
-                        "required": [
-                          "count"
-                        ],
-                        "properties": {
-                          "count": {
-                            "description": "the number of times a field has been used for the given item.",
-                            "type": "integer"
-                          }
-                        }
-                      },
-                      "fields": {
-                        "description": "The number of fields where the given field is referenced.",
-                        "type": "object",
-                        "additionalProperties": true,
-                        "required": [
-                          "count"
-                        ],
-                        "properties": {
-                          "count": {
-                            "description": "the number of times a field has been used for the given item.",
-                            "type": "integer"
-                          }
-                        }
-                      },
-                      "relationships": {
-                        "description": "The number of relationships where the given field is referenced.",
-                        "type": "object",
-                        "additionalProperties": true,
-                        "required": [
-                          "count"
-                        ],
-                        "properties": {
-                          "count": {
-                            "description": "the number of times a field has been used for the given item.",
-                            "type": "integer"
-                          }
-                        }
-                      },
-                      "webhooks": {
-                        "description": "The number of webhooks where the given field is referenced.",
                         "type": "object",
                         "additionalProperties": true,
                         "required": [
@@ -33724,8 +34109,187 @@
                           }
                         }
                       },
+                      "dashboards": {
+                        "required": [
+                          "count"
+                        ],
+                        "type": "object",
+                        "properties": {
+                          "count": {
+                            "type": "integer",
+                            "description": "the number of times a field has been used for the given item."
+                          }
+                        },
+                        "description": "The number of dashboards where the given field is referenced."
+                      },
+                      "defaultReports": {
+                        "description": "The number of default reports where the given field is referenced.",
+                        "type": "object",
+                        "additionalProperties": true,
+                        "required": [
+                          "count"
+                        ],
+                        "properties": {
+                          "count": {
+                            "description": "the number of times a field has been used for the given item.",
+                            "type": "integer"
+                          }
+                        }
+                      },
                       "exactForms": {
                         "description": "The number of exact forms where the given field is referenced.",
+                        "type": "object",
+                        "additionalProperties": true,
+                        "required": [
+                          "count"
+                        ],
+                        "properties": {
+                          "count": {
+                            "description": "the number of times a field has been used for the given item.",
+                            "type": "integer"
+                          }
+                        }
+                      },
+                      "fields": {
+                        "description": "The number of fields where the given field is referenced.",
+                        "type": "object",
+                        "additionalProperties": true,
+                        "required": [
+                          "count"
+                        ],
+                        "properties": {
+                          "count": {
+                            "description": "the number of times a field has been used for the given item.",
+                            "type": "integer"
+                          }
+                        }
+                      },
+                      "forms": {
+                        "description": "The number of forms where the given field is referenced.",
+                        "type": "object",
+                        "additionalProperties": true,
+                        "required": [
+                          "count"
+                        ],
+                        "properties": {
+                          "count": {
+                            "description": "the number of times a field has been used for the given item.",
+                            "type": "integer"
+                          }
+                        }
+                      },
+                      "notifications": {
+                        "description": "The number of notifications where the given field is referenced.",
+                        "type": "object",
+                        "additionalProperties": true,
+                        "required": [
+                          "count"
+                        ],
+                        "properties": {
+                          "count": {
+                            "description": "the number of times a field has been used for the given item.",
+                            "type": "integer"
+                          }
+                        }
+                      },
+                      "personalReports": {
+                        "description": "The number of personal reports where the given field is referenced.",
+                        "type": "object",
+                        "additionalProperties": true,
+                        "required": [
+                          "count"
+                        ],
+                        "properties": {
+                          "count": {
+                            "description": "the number of times a field has been used for the given item.",
+                            "type": "integer"
+                          }
+                        }
+                      },
+                      "relationships": {
+                        "description": "The number of relationships where the given field is referenced.",
+                        "type": "object",
+                        "additionalProperties": true,
+                        "required": [
+                          "count"
+                        ],
+                        "properties": {
+                          "count": {
+                            "description": "the number of times a field has been used for the given item.",
+                            "type": "integer"
+                          }
+                        }
+                      },
+                      "reminders": {
+                        "description": "The number of reminders where the given field is referenced.",
+                        "type": "object",
+                        "additionalProperties": true,
+                        "required": [
+                          "count"
+                        ],
+                        "properties": {
+                          "count": {
+                            "description": "the number of times a field has been used for the given item.",
+                            "type": "integer"
+                          }
+                        }
+                      },
+                      "reports": {
+                        "description": "The number of reports where the given field is referenced.",
+                        "type": "object",
+                        "additionalProperties": true,
+                        "required": [
+                          "count"
+                        ],
+                        "properties": {
+                          "count": {
+                            "description": "the number of times a field has been used for the given item.",
+                            "type": "integer"
+                          }
+                        }
+                      },
+                      "roles": {
+                        "description": "The number of roles where the given field is referenced.",
+                        "type": "object",
+                        "additionalProperties": true,
+                        "required": [
+                          "count"
+                        ],
+                        "properties": {
+                          "count": {
+                            "description": "the number of times a field has been used for the given item.",
+                            "type": "integer"
+                          }
+                        }
+                      },
+                      "tableImports": {
+                        "required": [
+                          "count"
+                        ],
+                        "type": "object",
+                        "properties": {
+                          "count": {
+                            "type": "integer",
+                            "description": "the number of times a field has been used for the given item."
+                          }
+                        },
+                        "description": "The number of table imports where the given field is referenced."
+                      },
+                      "tableRules": {
+                        "required": [
+                          "count"
+                        ],
+                        "type": "object",
+                        "properties": {
+                          "count": {
+                            "type": "integer",
+                            "description": "the number of times a field has been used for the given item."
+                          }
+                        },
+                        "description": "The number of table rules where the given field is referenced."
+                      },
+                      "webhooks": {
+                        "description": "The number of webhooks where the given field is referenced.",
                         "type": "object",
                         "additionalProperties": true,
                         "required": [
@@ -33877,6 +34441,9 @@
                     "appHomePages": {
                       "count": 0
                     },
+                    "dashboards": {
+                      "count": 2
+                    },
                     "defaultReports": {
                       "count": 1
                     },
@@ -33906,6 +34473,12 @@
                     },
                     "roles": {
                       "count": 2
+                    },
+                    "tableImports": {
+                      "count": 2
+                    },
+                    "tableRules": {
+                      "count": 1
                     },
                     "webhooks": {
                       "count": 0
@@ -33951,163 +34524,26 @@
                     "type": "object",
                     "additionalProperties": true,
                     "required": [
-                      "defaultReports",
-                      "notifications",
-                      "reminders",
-                      "forms",
                       "actions",
-                      "personalReports",
-                      "roles",
-                      "reports",
-                      "fields",
-                      "relationships",
-                      "webhooks",
                       "appHomePages",
-                      "exactForms"
+                      "dashboards",
+                      "defaultReports",
+                      "exactForms",
+                      "fields",
+                      "forms",
+                      "notifications",
+                      "personalReports",
+                      "relationships",
+                      "reminders",
+                      "reports",
+                      "roles",
+                      "tableImports",
+                      "tableRules",
+                      "webhooks"
                     ],
                     "properties": {
-                      "defaultReports": {
-                        "description": "The number of default reports where the given field is referenced.",
-                        "type": "object",
-                        "additionalProperties": true,
-                        "required": [
-                          "count"
-                        ],
-                        "properties": {
-                          "count": {
-                            "description": "the number of times a field has been used for the given item.",
-                            "type": "integer"
-                          }
-                        }
-                      },
-                      "notifications": {
-                        "description": "The number of notifications where the given field is referenced.",
-                        "type": "object",
-                        "additionalProperties": true,
-                        "required": [
-                          "count"
-                        ],
-                        "properties": {
-                          "count": {
-                            "description": "the number of times a field has been used for the given item.",
-                            "type": "integer"
-                          }
-                        }
-                      },
-                      "reminders": {
-                        "description": "The number of reminders where the given field is referenced.",
-                        "type": "object",
-                        "additionalProperties": true,
-                        "required": [
-                          "count"
-                        ],
-                        "properties": {
-                          "count": {
-                            "description": "the number of times a field has been used for the given item.",
-                            "type": "integer"
-                          }
-                        }
-                      },
-                      "forms": {
-                        "description": "The number of forms where the given field is referenced.",
-                        "type": "object",
-                        "additionalProperties": true,
-                        "required": [
-                          "count"
-                        ],
-                        "properties": {
-                          "count": {
-                            "description": "the number of times a field has been used for the given item.",
-                            "type": "integer"
-                          }
-                        }
-                      },
                       "actions": {
                         "description": "The number of quickbase actions where the given field is referenced.",
-                        "type": "object",
-                        "additionalProperties": true,
-                        "required": [
-                          "count"
-                        ],
-                        "properties": {
-                          "count": {
-                            "description": "the number of times a field has been used for the given item.",
-                            "type": "integer"
-                          }
-                        }
-                      },
-                      "personalReports": {
-                        "description": "The number of personal reports where the given field is referenced.",
-                        "type": "object",
-                        "additionalProperties": true,
-                        "required": [
-                          "count"
-                        ],
-                        "properties": {
-                          "count": {
-                            "description": "the number of times a field has been used for the given item.",
-                            "type": "integer"
-                          }
-                        }
-                      },
-                      "roles": {
-                        "description": "The number of roles where the given field is referenced.",
-                        "type": "object",
-                        "additionalProperties": true,
-                        "required": [
-                          "count"
-                        ],
-                        "properties": {
-                          "count": {
-                            "description": "the number of times a field has been used for the given item.",
-                            "type": "integer"
-                          }
-                        }
-                      },
-                      "reports": {
-                        "description": "The number of reports where the given field is referenced.",
-                        "type": "object",
-                        "additionalProperties": true,
-                        "required": [
-                          "count"
-                        ],
-                        "properties": {
-                          "count": {
-                            "description": "the number of times a field has been used for the given item.",
-                            "type": "integer"
-                          }
-                        }
-                      },
-                      "fields": {
-                        "description": "The number of fields where the given field is referenced.",
-                        "type": "object",
-                        "additionalProperties": true,
-                        "required": [
-                          "count"
-                        ],
-                        "properties": {
-                          "count": {
-                            "description": "the number of times a field has been used for the given item.",
-                            "type": "integer"
-                          }
-                        }
-                      },
-                      "relationships": {
-                        "description": "The number of relationships where the given field is referenced.",
-                        "type": "object",
-                        "additionalProperties": true,
-                        "required": [
-                          "count"
-                        ],
-                        "properties": {
-                          "count": {
-                            "description": "the number of times a field has been used for the given item.",
-                            "type": "integer"
-                          }
-                        }
-                      },
-                      "webhooks": {
-                        "description": "The number of webhooks where the given field is referenced.",
                         "type": "object",
                         "additionalProperties": true,
                         "required": [
@@ -34134,8 +34570,187 @@
                           }
                         }
                       },
+                      "dashboards": {
+                        "required": [
+                          "count"
+                        ],
+                        "type": "object",
+                        "properties": {
+                          "count": {
+                            "type": "integer",
+                            "description": "the number of times a field has been used for the given item."
+                          }
+                        },
+                        "description": "The number of dashboards where the given field is referenced."
+                      },
+                      "defaultReports": {
+                        "description": "The number of default reports where the given field is referenced.",
+                        "type": "object",
+                        "additionalProperties": true,
+                        "required": [
+                          "count"
+                        ],
+                        "properties": {
+                          "count": {
+                            "description": "the number of times a field has been used for the given item.",
+                            "type": "integer"
+                          }
+                        }
+                      },
                       "exactForms": {
                         "description": "The number of exact forms where the given field is referenced.",
+                        "type": "object",
+                        "additionalProperties": true,
+                        "required": [
+                          "count"
+                        ],
+                        "properties": {
+                          "count": {
+                            "description": "the number of times a field has been used for the given item.",
+                            "type": "integer"
+                          }
+                        }
+                      },
+                      "fields": {
+                        "description": "The number of fields where the given field is referenced.",
+                        "type": "object",
+                        "additionalProperties": true,
+                        "required": [
+                          "count"
+                        ],
+                        "properties": {
+                          "count": {
+                            "description": "the number of times a field has been used for the given item.",
+                            "type": "integer"
+                          }
+                        }
+                      },
+                      "forms": {
+                        "description": "The number of forms where the given field is referenced.",
+                        "type": "object",
+                        "additionalProperties": true,
+                        "required": [
+                          "count"
+                        ],
+                        "properties": {
+                          "count": {
+                            "description": "the number of times a field has been used for the given item.",
+                            "type": "integer"
+                          }
+                        }
+                      },
+                      "notifications": {
+                        "description": "The number of notifications where the given field is referenced.",
+                        "type": "object",
+                        "additionalProperties": true,
+                        "required": [
+                          "count"
+                        ],
+                        "properties": {
+                          "count": {
+                            "description": "the number of times a field has been used for the given item.",
+                            "type": "integer"
+                          }
+                        }
+                      },
+                      "personalReports": {
+                        "description": "The number of personal reports where the given field is referenced.",
+                        "type": "object",
+                        "additionalProperties": true,
+                        "required": [
+                          "count"
+                        ],
+                        "properties": {
+                          "count": {
+                            "description": "the number of times a field has been used for the given item.",
+                            "type": "integer"
+                          }
+                        }
+                      },
+                      "relationships": {
+                        "description": "The number of relationships where the given field is referenced.",
+                        "type": "object",
+                        "additionalProperties": true,
+                        "required": [
+                          "count"
+                        ],
+                        "properties": {
+                          "count": {
+                            "description": "the number of times a field has been used for the given item.",
+                            "type": "integer"
+                          }
+                        }
+                      },
+                      "reminders": {
+                        "description": "The number of reminders where the given field is referenced.",
+                        "type": "object",
+                        "additionalProperties": true,
+                        "required": [
+                          "count"
+                        ],
+                        "properties": {
+                          "count": {
+                            "description": "the number of times a field has been used for the given item.",
+                            "type": "integer"
+                          }
+                        }
+                      },
+                      "reports": {
+                        "description": "The number of reports where the given field is referenced.",
+                        "type": "object",
+                        "additionalProperties": true,
+                        "required": [
+                          "count"
+                        ],
+                        "properties": {
+                          "count": {
+                            "description": "the number of times a field has been used for the given item.",
+                            "type": "integer"
+                          }
+                        }
+                      },
+                      "roles": {
+                        "description": "The number of roles where the given field is referenced.",
+                        "type": "object",
+                        "additionalProperties": true,
+                        "required": [
+                          "count"
+                        ],
+                        "properties": {
+                          "count": {
+                            "description": "the number of times a field has been used for the given item.",
+                            "type": "integer"
+                          }
+                        }
+                      },
+                      "tableImports": {
+                        "required": [
+                          "count"
+                        ],
+                        "type": "object",
+                        "properties": {
+                          "count": {
+                            "type": "integer",
+                            "description": "the number of times a field has been used for the given item."
+                          }
+                        },
+                        "description": "The number of table imports where the given field is referenced."
+                      },
+                      "tableRules": {
+                        "required": [
+                          "count"
+                        ],
+                        "type": "object",
+                        "properties": {
+                          "count": {
+                            "type": "integer",
+                            "description": "the number of times a field has been used for the given item."
+                          }
+                        },
+                        "description": "The number of table rules where the given field is referenced."
+                      },
+                      "webhooks": {
+                        "description": "The number of webhooks where the given field is referenced.",
                         "type": "object",
                         "additionalProperties": true,
                         "required": [
@@ -34373,7 +34988,7 @@
     ],
     "Records": [
       {
-        "description": "Insert and/or update record(s) in a table. In this single API call, inserts and updates can be submitted. Update can use the key field on the table, or any other supported unique field. Refer to the [Field types page](../fieldInfo) for more information about how each field type should be formatted. This operation allows for incremental processing of successful records, even when some of the records fail.  \n**Note:** This endpoint supports a maximum payload size of 10MB.",
+        "description": "Insert and/or update record(s) in a table. In this single API call, inserts and updates can be submitted. Update can use the key field on the table, or any other supported unique field. Refer to the [Field types page](../fieldInfo) for more information about how each field type should be formatted. This operation allows for incremental processing of successful records, even when some of the records fail.  \n**Note:** This endpoint supports a maximum payload size of 25MB.",
         "summary": "Insert/Update record(s)",
         "operationId": "upsert",
         "consumes": [
@@ -35518,7 +36133,7 @@
     ],
     "Auth": [
       {
-        "description": "Use this endpoint to get a temporary authorization token, scoped to either an app or a table. You can then use this token to make other API calls (see [authorization](../auth)).  This token expires in 5 minutes.",
+        "description": "Use this endpoint to get a temporary authorization token, scoped to either an app or a table. It can only be used inside of code pages for client-side authentication because it relies on the browser session. Learn more about [extending Quickbase](https://helpv2.quickbase.com/hc/en-us/articles/4570341709844-Extending-Quickbase). You can then use this token to make other API calls (see [authorization](../auth)).  This token expires in 5 minutes.",
         "summary": "Get a temporary token for a dbid",
         "operationId": "getTempTokenDBID",
         "consumes": [
@@ -35624,6 +36239,196 @@
             "type": "string"
           }
         ]
+      },
+      {
+        "description": "Use this endpoint to exchange a SAML assertion for a Quickbase token following [RFC 8693](https://www.rfc-editor.org/rfc/rfc8693.html). Callers can choose to return a token compatible with SCIM, XML, or RESTful APIs. The token duration is determined by the [SAML timeout session time](https://helpv2.quickbase.com/hc/en-us/articles/4570410646420-SAML-assertion-example#:~:text=Setting%20SAML%20timeout%20session%20time). You must be able to create a SAML assertion in your code to use this endpoint. The SAML assertion is verified against the configuration on the realm. Learn more about about [SAML assertions](https://helpv2.quickbase.com/hc/en-us/articles/4570410646420-SAML-assertion-example).",
+        "summary": "Exchange an SSO token",
+        "operationId": "exchangeSsoToken",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "QB-Realm-Hostname",
+            "description": "Your Quickbase domain, for example demo.quickbase.com",
+            "required": true,
+            "in": "header",
+            "example": "demo.quickbase.com",
+            "type": "string"
+          },
+          {
+            "name": "User-Agent",
+            "description": "This is entered by the person or utility invoking the API. You might custom create this or use the default one of your toolkit. Being descriptive here may offer more identification and troubleshooting capabilities.",
+            "required": false,
+            "in": "header",
+            "example": "FileService_Integration_V2.1",
+            "type": "string"
+          },
+          {
+            "x-amf-mediaType": "application/json",
+            "in": "body",
+            "name": "generated",
+            "schema": {
+              "example": {
+                "grant_type": "urn:ietf:params:oauth:grant-type:token-exchange",
+                "requested_token_type": "urn:quickbase:params:oauth:token-type:temp_ticket",
+                "subject_token": "PHNhbWxwOlJlc3BvbnNlDQogICAgeG1sbnM6c2FtbHA9bjp...",
+                "subject_token_type": "urn:ietf:params:oauth:token-type:saml2"
+              },
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "grant_type",
+                "subject_token",
+                "subject_token_type",
+                "requested_token_type"
+              ],
+              "properties": {
+                "grant_type": {
+                  "type": "string",
+                  "description": "The value `urn:ietf:params:oauth:grant-type:token-exchange` indicates that a token exchange is being performed.",
+                  "enum": [
+                    "urn:ietf:params:oauth:grant-type:token-exchange"
+                  ]
+                },
+                "requested_token_type": {
+                  "type": "string",
+                  "description": "An identifier for the type of the requested security token. For the RESTful API, use `urn:quickbase:params:oauth:token-type:temp_token`. For the XML or SCIM APIs use `urn:quickbase:params:oauth:token-type:temp_ticket`.",
+                  "enum": [
+                    "urn:quickbase:params:oauth:token-type:temp_ticket",
+                    "urn:quickbase:params:oauth:token-type:temp_token"
+                  ]
+                },
+                "subject_token": {
+                  "type": "string",
+                  "description": "A security token that represents the identity of the party on behalf of whom the request is being made. For SAML 2.0, the value should be a base64url-encoded SAML 2.0 assertion."
+                },
+                "subject_token_type": {
+                  "type": "string",
+                  "description": "An identifier that indicates the type of the security token in the `subject_token` parameter.",
+                  "enum": [
+                    "urn:ietf:params:oauth:token-type:saml2"
+                  ]
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "x-amf-mediaType": "application/json",
+            "schema": {
+              "example": {
+                "access_token": "example_token_1NiIsImtpZCI6IjllciJ9w",
+                "issued_token_type": "urn:quickbase:params:oauth:token-type:temp_ticket",
+                "token_type": "N_A"
+              },
+              "type": "object",
+              "additionalProperties": true,
+              "properties": {
+                "access_token": {
+                  "type": "string",
+                  "description": "The security token issued by the authorization server in response to the token exchange request. The identifier `access_token` is used for historical reasons and the issued token need not be an OAuth access token."
+                },
+                "issued_token_type": {
+                  "type": "string",
+                  "description": "An identifier for the representation of the issued security token.",
+                  "enum": [
+                    "urn:quickbase:params:oauth:token-type:temp_ticket",
+                    "urn:quickbase:params:oauth:token-type:temp_token"
+                  ]
+                },
+                "token_type": {
+                  "type": "string",
+                  "description": "Will always return `N_A`",
+                  "enum": [
+                    "N_A"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Auth"
+        ],
+        "id": "exchangeSsoToken",
+        "path": "/auth/oauth/token",
+        "host": "https://api.quickbase.com/v1",
+        "method": "post",
+        "headerParams": [
+          {
+            "name": "QB-Realm-Hostname",
+            "description": "Your Quickbase domain, for example demo.quickbase.com",
+            "required": true,
+            "in": "header",
+            "example": "demo.quickbase.com",
+            "type": "string"
+          },
+          {
+            "name": "User-Agent",
+            "description": "This is entered by the person or utility invoking the API. You might custom create this or use the default one of your toolkit. Being descriptive here may offer more identification and troubleshooting capabilities.",
+            "required": false,
+            "in": "header",
+            "example": "FileService_Integration_V2.1",
+            "type": "string"
+          }
+        ],
+        "queryParams": [],
+        "pathParams": [],
+        "requests": {
+          "x-amf-mediaType": "application/json",
+          "in": "body",
+          "name": "generated",
+          "schema": {
+            "example": {
+              "grant_type": "urn:ietf:params:oauth:grant-type:token-exchange",
+              "requested_token_type": "urn:quickbase:params:oauth:token-type:temp_ticket",
+              "subject_token": "PHNhbWxwOlJlc3BvbnNlDQogICAgeG1sbnM6c2FtbHA9bjp...",
+              "subject_token_type": "urn:ietf:params:oauth:token-type:saml2"
+            },
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "grant_type",
+              "subject_token",
+              "subject_token_type",
+              "requested_token_type"
+            ],
+            "properties": {
+              "grant_type": {
+                "type": "string",
+                "description": "The value `urn:ietf:params:oauth:grant-type:token-exchange` indicates that a token exchange is being performed.",
+                "enum": [
+                  "urn:ietf:params:oauth:grant-type:token-exchange"
+                ]
+              },
+              "requested_token_type": {
+                "type": "string",
+                "description": "An identifier for the type of the requested security token. For the RESTful API, use `urn:quickbase:params:oauth:token-type:temp_token`. For the XML or SCIM APIs use `urn:quickbase:params:oauth:token-type:temp_ticket`.",
+                "enum": [
+                  "urn:quickbase:params:oauth:token-type:temp_ticket",
+                  "urn:quickbase:params:oauth:token-type:temp_token"
+                ]
+              },
+              "subject_token": {
+                "type": "string",
+                "description": "A security token that represents the identity of the party on behalf of whom the request is being made. For SAML 2.0, the value should be a base64url-encoded SAML 2.0 assertion."
+              },
+              "subject_token_type": {
+                "type": "string",
+                "description": "An identifier that indicates the type of the security token in the `subject_token` parameter.",
+                "enum": [
+                  "urn:ietf:params:oauth:token-type:saml2"
+                ]
+              }
+            }
+          }
+        }
       }
     ],
     "UserToken": [
@@ -38265,7 +39070,7 @@
     ],
     "Audit": [
       {
-        "description": "Gathers the audit logs for a single day from a realm. By default, this API returns 10,000 entries. This can be changed with the numRows parameter. Integrators can iterate through batches to get an entire day's worth of logs. Each realm has a maximum entitlement of querying 1,000 days per year (allowing lookbacks for up to two years). Requests for paginated data do not count towards the annual limit. Transactional rate limits are 10 per 10 seconds.",
+        "description": "Gathers the audit logs for a single day from a realm. By default, this API returns 10,000 entries. This can be changed with the numRows parameter. Integrators can iterate through batches to get an entire day's worth of logs. Each realm has a maximum entitlement of querying 1,000 days per year (allowing lookbacks for up to two years). Requests for paginated data do not count towards the annual limit. Transactional rate limits are 10 per 10 seconds.  \n**Note:** This API is available for enterprise users only.",
         "summary": "Get audit logs",
         "operationId": "audit",
         "consumes": [
