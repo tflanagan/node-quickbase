@@ -753,7 +753,7 @@ const buildAPIFunction = (operationObj: SwaggerOperation) => {
 	operationObj.pathParams.forEach(({ name, type, description, required }) => {
 		const override = overrides[operationObj.id]?.request;
 		const origName = '' + name;
-	
+
 		if(override && override.args !== undefined && override.args[name]){
 			name = override.args[name];
 
@@ -776,7 +776,7 @@ const buildAPIFunction = (operationObj: SwaggerOperation) => {
 
 	operationObj.queryParams.forEach(({ name, type, description, required }) => {
 		const override = overrides[operationObj.id]?.request;
-	
+
 		if(override && override.args !== undefined && override.args[name]){
 			name = override.args[name];
 
@@ -875,8 +875,8 @@ const buildAPIFunction = (operationObj: SwaggerOperation) => {
 			return ` * @param options.${arg} ${escapeDescription(description)}`;
 		}).join('\n'),
 		' */',
-		`public async ${operationObj.id}({ ${argsList('false').join(', ')} }: ${reqTypeName} & { returnAxios?: false }): Promise<${resTypeName}>;`,
-		`public async ${operationObj.id}({ ${argsList('true').join(', ')} }: ${reqTypeName} & { returnAxios: true }): Promise<AxiosResponse<${resTypeName}>>;`,
+		`public async ${operationObj.id}({ ${argsList().join(', ')} }: ${reqTypeName} & { returnAxios?: false }): Promise<${resTypeName}>;`,
+		`public async ${operationObj.id}({ ${argsList().join(', ')} }: ${reqTypeName} & { returnAxios: true }): Promise<AxiosResponse<${resTypeName}>>;`,
 		`public async ${operationObj.id}({ ${argsList('false').join(', ')} }: ${reqTypeName}${argsAreOptional ? ' = {}' : ''}): Promise<${resTypeName} | AxiosResponse<${resTypeName}>> {`,
 		`	const results = await this.api<${resTypeName}>({`,
 		`		method: '${method}',`,
@@ -924,7 +924,7 @@ const buildFnHelp = (operationObj: SwaggerOperation, key: string, property: Swag
 	if(override && override.args !== undefined && override.args[key]){
 		key = override.args[key];
 	}
-	
+
 	if(isSwaggerBodyPropertyUnion(property)){
 		return buildFnHelp(operationObj, key, {
 			description: property.description,

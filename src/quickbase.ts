@@ -7,7 +7,6 @@ import { debug } from 'debug';
 import { Throttle } from 'generic-throttle';
 import axios, {
 	AxiosRequestConfig,
-	AxiosRequestHeaders,
 	AxiosResponse
 } from 'axios';
 
@@ -192,7 +191,7 @@ export class QuickBase {
 		return this;
 	}
 
-	private assignAuthorizationHeaders(headers?: AxiosRequestHeaders, addToken = true){
+	private assignAuthorizationHeaders(headers?: AxiosRequestConfig['headers'], addToken = true) {
 		if(!headers){
 			headers = {};
 		}
@@ -236,8 +235,6 @@ export class QuickBase {
 			options.headers = this.assignAuthorizationHeaders(options.headers, !options.url?.startsWith('/auth/temporary'));
 
 			const results = await axios.request<T>(options);
-
-			results.headers = objKeysToLowercase<Record<string, string>>(results.headers);
 
 			debugResponse(id, results);
 
@@ -412,8 +409,8 @@ export class QuickBase {
 	 * @param options.requestOptions Override axios request configuration
 	 * @param options.returnAxios If `true`, the returned object will be the entire `AxiosResponse` object
 	 */
-	public async createApp({ requestOptions, returnAxios = false, ...body }: QuickBaseRequestCreateApp & { returnAxios?: false }): Promise<QuickBaseResponseCreateApp>;
-	public async createApp({ requestOptions, returnAxios = true, ...body }: QuickBaseRequestCreateApp & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseCreateApp>>;
+	public async createApp({ requestOptions, returnAxios, ...body }: QuickBaseRequestCreateApp & { returnAxios?: false }): Promise<QuickBaseResponseCreateApp>;
+	public async createApp({ requestOptions, returnAxios, ...body }: QuickBaseRequestCreateApp & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseCreateApp>>;
 	public async createApp({ requestOptions, returnAxios = false, ...body }: QuickBaseRequestCreateApp): Promise<QuickBaseResponseCreateApp | AxiosResponse<QuickBaseResponseCreateApp>> {
 		const results = await this.api<QuickBaseResponseCreateApp>({
 			method: 'POST',
@@ -436,8 +433,8 @@ export class QuickBase {
 	 * @param options.requestOptions Override axios request configuration
 	 * @param options.returnAxios If `true`, the returned object will be the entire `AxiosResponse` object
 	 */
-	public async getApp({ appId, requestOptions, returnAxios = false }: QuickBaseRequestGetApp & { returnAxios?: false }): Promise<QuickBaseResponseGetApp>;
-	public async getApp({ appId, requestOptions, returnAxios = true }: QuickBaseRequestGetApp & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseGetApp>>;
+	public async getApp({ appId, requestOptions, returnAxios }: QuickBaseRequestGetApp & { returnAxios?: false }): Promise<QuickBaseResponseGetApp>;
+	public async getApp({ appId, requestOptions, returnAxios }: QuickBaseRequestGetApp & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseGetApp>>;
 	public async getApp({ appId, requestOptions, returnAxios = false }: QuickBaseRequestGetApp): Promise<QuickBaseResponseGetApp | AxiosResponse<QuickBaseResponseGetApp>> {
 		const results = await this.api<QuickBaseResponseGetApp>({
 			method: 'GET',
@@ -469,8 +466,8 @@ export class QuickBase {
 	 * @param options.requestOptions Override axios request configuration
 	 * @param options.returnAxios If `true`, the returned object will be the entire `AxiosResponse` object
 	 */
-	public async updateApp({ appId, requestOptions, returnAxios = false, ...body }: QuickBaseRequestUpdateApp & { returnAxios?: false }): Promise<QuickBaseResponseUpdateApp>;
-	public async updateApp({ appId, requestOptions, returnAxios = true, ...body }: QuickBaseRequestUpdateApp & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseUpdateApp>>;
+	public async updateApp({ appId, requestOptions, returnAxios, ...body }: QuickBaseRequestUpdateApp & { returnAxios?: false }): Promise<QuickBaseResponseUpdateApp>;
+	public async updateApp({ appId, requestOptions, returnAxios, ...body }: QuickBaseRequestUpdateApp & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseUpdateApp>>;
 	public async updateApp({ appId, requestOptions, returnAxios = false, ...body }: QuickBaseRequestUpdateApp): Promise<QuickBaseResponseUpdateApp | AxiosResponse<QuickBaseResponseUpdateApp>> {
 		const results = await this.api<QuickBaseResponseUpdateApp>({
 			method: 'POST',
@@ -494,8 +491,8 @@ export class QuickBase {
 	 * @param options.requestOptions Override axios request configuration
 	 * @param options.returnAxios If `true`, the returned object will be the entire `AxiosResponse` object
 	 */
-	public async deleteApp({ appId, requestOptions, returnAxios = false, ...body }: QuickBaseRequestDeleteApp & { returnAxios?: false }): Promise<QuickBaseResponseDeleteApp>;
-	public async deleteApp({ appId, requestOptions, returnAxios = true, ...body }: QuickBaseRequestDeleteApp & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseDeleteApp>>;
+	public async deleteApp({ appId, requestOptions, returnAxios, ...body }: QuickBaseRequestDeleteApp & { returnAxios?: false }): Promise<QuickBaseResponseDeleteApp>;
+	public async deleteApp({ appId, requestOptions, returnAxios, ...body }: QuickBaseRequestDeleteApp & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseDeleteApp>>;
 	public async deleteApp({ appId, requestOptions, returnAxios = false, ...body }: QuickBaseRequestDeleteApp): Promise<QuickBaseResponseDeleteApp | AxiosResponse<QuickBaseResponseDeleteApp>> {
 		const results = await this.api<QuickBaseResponseDeleteApp>({
 			method: 'DELETE',
@@ -518,8 +515,8 @@ export class QuickBase {
 	 * @param options.requestOptions Override axios request configuration
 	 * @param options.returnAxios If `true`, the returned object will be the entire `AxiosResponse` object
 	 */
-	public async getAppEvents({ appId, requestOptions, returnAxios = false }: QuickBaseRequestGetAppEvents & { returnAxios?: false }): Promise<QuickBaseResponseGetAppEvents>;
-	public async getAppEvents({ appId, requestOptions, returnAxios = true }: QuickBaseRequestGetAppEvents & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseGetAppEvents>>;
+	public async getAppEvents({ appId, requestOptions, returnAxios }: QuickBaseRequestGetAppEvents & { returnAxios?: false }): Promise<QuickBaseResponseGetAppEvents>;
+	public async getAppEvents({ appId, requestOptions, returnAxios }: QuickBaseRequestGetAppEvents & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseGetAppEvents>>;
 	public async getAppEvents({ appId, requestOptions, returnAxios = false }: QuickBaseRequestGetAppEvents): Promise<QuickBaseResponseGetAppEvents | AxiosResponse<QuickBaseResponseGetAppEvents>> {
 		const results = await this.api<QuickBaseResponseGetAppEvents>({
 			method: 'GET',
@@ -547,8 +544,8 @@ export class QuickBase {
 	 * @param options.requestOptions Override axios request configuration
 	 * @param options.returnAxios If `true`, the returned object will be the entire `AxiosResponse` object
 	 */
-	public async copyApp({ appId, requestOptions, returnAxios = false, ...body }: QuickBaseRequestCopyApp & { returnAxios?: false }): Promise<QuickBaseResponseCopyApp>;
-	public async copyApp({ appId, requestOptions, returnAxios = true, ...body }: QuickBaseRequestCopyApp & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseCopyApp>>;
+	public async copyApp({ appId, requestOptions, returnAxios, ...body }: QuickBaseRequestCopyApp & { returnAxios?: false }): Promise<QuickBaseResponseCopyApp>;
+	public async copyApp({ appId, requestOptions, returnAxios, ...body }: QuickBaseRequestCopyApp & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseCopyApp>>;
 	public async copyApp({ appId, requestOptions, returnAxios = false, ...body }: QuickBaseRequestCopyApp): Promise<QuickBaseResponseCopyApp | AxiosResponse<QuickBaseResponseCopyApp>> {
 		const results = await this.api<QuickBaseResponseCopyApp>({
 			method: 'POST',
@@ -575,8 +572,8 @@ export class QuickBase {
 	 * @param options.requestOptions Override axios request configuration
 	 * @param options.returnAxios If `true`, the returned object will be the entire `AxiosResponse` object
 	 */
-	public async createTable({ appId, requestOptions, returnAxios = false, ...body }: QuickBaseRequestCreateTable & { returnAxios?: false }): Promise<QuickBaseResponseCreateTable>;
-	public async createTable({ appId, requestOptions, returnAxios = true, ...body }: QuickBaseRequestCreateTable & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseCreateTable>>;
+	public async createTable({ appId, requestOptions, returnAxios, ...body }: QuickBaseRequestCreateTable & { returnAxios?: false }): Promise<QuickBaseResponseCreateTable>;
+	public async createTable({ appId, requestOptions, returnAxios, ...body }: QuickBaseRequestCreateTable & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseCreateTable>>;
 	public async createTable({ appId, requestOptions, returnAxios = false, ...body }: QuickBaseRequestCreateTable): Promise<QuickBaseResponseCreateTable | AxiosResponse<QuickBaseResponseCreateTable>> {
 		const results = await this.api<QuickBaseResponseCreateTable>({
 			method: 'POST',
@@ -602,8 +599,8 @@ export class QuickBase {
 	 * @param options.requestOptions Override axios request configuration
 	 * @param options.returnAxios If `true`, the returned object will be the entire `AxiosResponse` object
 	 */
-	public async getAppTables({ appId, requestOptions, returnAxios = false }: QuickBaseRequestGetAppTables & { returnAxios?: false }): Promise<QuickBaseResponseGetAppTables>;
-	public async getAppTables({ appId, requestOptions, returnAxios = true }: QuickBaseRequestGetAppTables & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseGetAppTables>>;
+	public async getAppTables({ appId, requestOptions, returnAxios }: QuickBaseRequestGetAppTables & { returnAxios?: false }): Promise<QuickBaseResponseGetAppTables>;
+	public async getAppTables({ appId, requestOptions, returnAxios }: QuickBaseRequestGetAppTables & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseGetAppTables>>;
 	public async getAppTables({ appId, requestOptions, returnAxios = false }: QuickBaseRequestGetAppTables): Promise<QuickBaseResponseGetAppTables | AxiosResponse<QuickBaseResponseGetAppTables>> {
 		const results = await this.api<QuickBaseResponseGetAppTables>({
 			method: 'GET',
@@ -629,8 +626,8 @@ export class QuickBase {
 	 * @param options.requestOptions Override axios request configuration
 	 * @param options.returnAxios If `true`, the returned object will be the entire `AxiosResponse` object
 	 */
-	public async getTable({ tableId, appId, requestOptions, returnAxios = false }: QuickBaseRequestGetTable & { returnAxios?: false }): Promise<QuickBaseResponseGetTable>;
-	public async getTable({ tableId, appId, requestOptions, returnAxios = true }: QuickBaseRequestGetTable & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseGetTable>>;
+	public async getTable({ tableId, appId, requestOptions, returnAxios }: QuickBaseRequestGetTable & { returnAxios?: false }): Promise<QuickBaseResponseGetTable>;
+	public async getTable({ tableId, appId, requestOptions, returnAxios }: QuickBaseRequestGetTable & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseGetTable>>;
 	public async getTable({ tableId, appId, requestOptions, returnAxios = false }: QuickBaseRequestGetTable): Promise<QuickBaseResponseGetTable | AxiosResponse<QuickBaseResponseGetTable>> {
 		const results = await this.api<QuickBaseResponseGetTable>({
 			method: 'GET',
@@ -660,8 +657,8 @@ export class QuickBase {
 	 * @param options.requestOptions Override axios request configuration
 	 * @param options.returnAxios If `true`, the returned object will be the entire `AxiosResponse` object
 	 */
-	public async updateTable({ tableId, appId, requestOptions, returnAxios = false, ...body }: QuickBaseRequestUpdateTable & { returnAxios?: false }): Promise<QuickBaseResponseUpdateTable>;
-	public async updateTable({ tableId, appId, requestOptions, returnAxios = true, ...body }: QuickBaseRequestUpdateTable & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseUpdateTable>>;
+	public async updateTable({ tableId, appId, requestOptions, returnAxios, ...body }: QuickBaseRequestUpdateTable & { returnAxios?: false }): Promise<QuickBaseResponseUpdateTable>;
+	public async updateTable({ tableId, appId, requestOptions, returnAxios, ...body }: QuickBaseRequestUpdateTable & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseUpdateTable>>;
 	public async updateTable({ tableId, appId, requestOptions, returnAxios = false, ...body }: QuickBaseRequestUpdateTable): Promise<QuickBaseResponseUpdateTable | AxiosResponse<QuickBaseResponseUpdateTable>> {
 		const results = await this.api<QuickBaseResponseUpdateTable>({
 			method: 'POST',
@@ -688,8 +685,8 @@ export class QuickBase {
 	 * @param options.requestOptions Override axios request configuration
 	 * @param options.returnAxios If `true`, the returned object will be the entire `AxiosResponse` object
 	 */
-	public async deleteTable({ tableId, appId, requestOptions, returnAxios = false }: QuickBaseRequestDeleteTable & { returnAxios?: false }): Promise<QuickBaseResponseDeleteTable>;
-	public async deleteTable({ tableId, appId, requestOptions, returnAxios = true }: QuickBaseRequestDeleteTable & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseDeleteTable>>;
+	public async deleteTable({ tableId, appId, requestOptions, returnAxios }: QuickBaseRequestDeleteTable & { returnAxios?: false }): Promise<QuickBaseResponseDeleteTable>;
+	public async deleteTable({ tableId, appId, requestOptions, returnAxios }: QuickBaseRequestDeleteTable & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseDeleteTable>>;
 	public async deleteTable({ tableId, appId, requestOptions, returnAxios = false }: QuickBaseRequestDeleteTable): Promise<QuickBaseResponseDeleteTable | AxiosResponse<QuickBaseResponseDeleteTable>> {
 		const results = await this.api<QuickBaseResponseDeleteTable>({
 			method: 'DELETE',
@@ -715,8 +712,8 @@ export class QuickBase {
 	 * @param options.requestOptions Override axios request configuration
 	 * @param options.returnAxios If `true`, the returned object will be the entire `AxiosResponse` object
 	 */
-	public async getRelationships({ childTableId, skip, requestOptions, returnAxios = false }: QuickBaseRequestGetRelationships & { returnAxios?: false }): Promise<QuickBaseResponseGetRelationships>;
-	public async getRelationships({ childTableId, skip, requestOptions, returnAxios = true }: QuickBaseRequestGetRelationships & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseGetRelationships>>;
+	public async getRelationships({ childTableId, skip, requestOptions, returnAxios }: QuickBaseRequestGetRelationships & { returnAxios?: false }): Promise<QuickBaseResponseGetRelationships>;
+	public async getRelationships({ childTableId, skip, requestOptions, returnAxios }: QuickBaseRequestGetRelationships & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseGetRelationships>>;
 	public async getRelationships({ childTableId, skip, requestOptions, returnAxios = false }: QuickBaseRequestGetRelationships): Promise<QuickBaseResponseGetRelationships | AxiosResponse<QuickBaseResponseGetRelationships>> {
 		const results = await this.api<QuickBaseResponseGetRelationships>({
 			method: 'GET',
@@ -748,8 +745,8 @@ export class QuickBase {
 	 * @param options.requestOptions Override axios request configuration
 	 * @param options.returnAxios If `true`, the returned object will be the entire `AxiosResponse` object
 	 */
-	public async createRelationship({ childTableId, requestOptions, returnAxios = false, ...body }: QuickBaseRequestCreateRelationship & { returnAxios?: false }): Promise<QuickBaseResponseCreateRelationship>;
-	public async createRelationship({ childTableId, requestOptions, returnAxios = true, ...body }: QuickBaseRequestCreateRelationship & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseCreateRelationship>>;
+	public async createRelationship({ childTableId, requestOptions, returnAxios, ...body }: QuickBaseRequestCreateRelationship & { returnAxios?: false }): Promise<QuickBaseResponseCreateRelationship>;
+	public async createRelationship({ childTableId, requestOptions, returnAxios, ...body }: QuickBaseRequestCreateRelationship & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseCreateRelationship>>;
 	public async createRelationship({ childTableId, requestOptions, returnAxios = false, ...body }: QuickBaseRequestCreateRelationship): Promise<QuickBaseResponseCreateRelationship | AxiosResponse<QuickBaseResponseCreateRelationship>> {
 		const results = await this.api<QuickBaseResponseCreateRelationship>({
 			method: 'POST',
@@ -778,8 +775,8 @@ export class QuickBase {
 	 * @param options.requestOptions Override axios request configuration
 	 * @param options.returnAxios If `true`, the returned object will be the entire `AxiosResponse` object
 	 */
-	public async updateRelationship({ childTableId, relationshipId, requestOptions, returnAxios = false, ...body }: QuickBaseRequestUpdateRelationship & { returnAxios?: false }): Promise<QuickBaseResponseUpdateRelationship>;
-	public async updateRelationship({ childTableId, relationshipId, requestOptions, returnAxios = true, ...body }: QuickBaseRequestUpdateRelationship & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseUpdateRelationship>>;
+	public async updateRelationship({ childTableId, relationshipId, requestOptions, returnAxios, ...body }: QuickBaseRequestUpdateRelationship & { returnAxios?: false }): Promise<QuickBaseResponseUpdateRelationship>;
+	public async updateRelationship({ childTableId, relationshipId, requestOptions, returnAxios, ...body }: QuickBaseRequestUpdateRelationship & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseUpdateRelationship>>;
 	public async updateRelationship({ childTableId, relationshipId, requestOptions, returnAxios = false, ...body }: QuickBaseRequestUpdateRelationship): Promise<QuickBaseResponseUpdateRelationship | AxiosResponse<QuickBaseResponseUpdateRelationship>> {
 		const results = await this.api<QuickBaseResponseUpdateRelationship>({
 			method: 'POST',
@@ -803,8 +800,8 @@ export class QuickBase {
 	 * @param options.requestOptions Override axios request configuration
 	 * @param options.returnAxios If `true`, the returned object will be the entire `AxiosResponse` object
 	 */
-	public async deleteRelationship({ childTableId, relationshipId, requestOptions, returnAxios = false }: QuickBaseRequestDeleteRelationship & { returnAxios?: false }): Promise<QuickBaseResponseDeleteRelationship>;
-	public async deleteRelationship({ childTableId, relationshipId, requestOptions, returnAxios = true }: QuickBaseRequestDeleteRelationship & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseDeleteRelationship>>;
+	public async deleteRelationship({ childTableId, relationshipId, requestOptions, returnAxios }: QuickBaseRequestDeleteRelationship & { returnAxios?: false }): Promise<QuickBaseResponseDeleteRelationship>;
+	public async deleteRelationship({ childTableId, relationshipId, requestOptions, returnAxios }: QuickBaseRequestDeleteRelationship & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseDeleteRelationship>>;
 	public async deleteRelationship({ childTableId, relationshipId, requestOptions, returnAxios = false }: QuickBaseRequestDeleteRelationship): Promise<QuickBaseResponseDeleteRelationship | AxiosResponse<QuickBaseResponseDeleteRelationship>> {
 		const results = await this.api<QuickBaseResponseDeleteRelationship>({
 			method: 'DELETE',
@@ -826,8 +823,8 @@ export class QuickBase {
 	 * @param options.requestOptions Override axios request configuration
 	 * @param options.returnAxios If `true`, the returned object will be the entire `AxiosResponse` object
 	 */
-	public async getTableReports({ tableId, requestOptions, returnAxios = false }: QuickBaseRequestGetTableReports & { returnAxios?: false }): Promise<QuickBaseResponseGetTableReports>;
-	public async getTableReports({ tableId, requestOptions, returnAxios = true }: QuickBaseRequestGetTableReports & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseGetTableReports>>;
+	public async getTableReports({ tableId, requestOptions, returnAxios }: QuickBaseRequestGetTableReports & { returnAxios?: false }): Promise<QuickBaseResponseGetTableReports>;
+	public async getTableReports({ tableId, requestOptions, returnAxios }: QuickBaseRequestGetTableReports & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseGetTableReports>>;
 	public async getTableReports({ tableId, requestOptions, returnAxios = false }: QuickBaseRequestGetTableReports): Promise<QuickBaseResponseGetTableReports | AxiosResponse<QuickBaseResponseGetTableReports>> {
 		const results = await this.api<QuickBaseResponseGetTableReports>({
 			method: 'GET',
@@ -853,8 +850,8 @@ export class QuickBase {
 	 * @param options.requestOptions Override axios request configuration
 	 * @param options.returnAxios If `true`, the returned object will be the entire `AxiosResponse` object
 	 */
-	public async getReport({ reportId, tableId, requestOptions, returnAxios = false }: QuickBaseRequestGetReport & { returnAxios?: false }): Promise<QuickBaseResponseGetReport>;
-	public async getReport({ reportId, tableId, requestOptions, returnAxios = true }: QuickBaseRequestGetReport & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseGetReport>>;
+	public async getReport({ reportId, tableId, requestOptions, returnAxios }: QuickBaseRequestGetReport & { returnAxios?: false }): Promise<QuickBaseResponseGetReport>;
+	public async getReport({ reportId, tableId, requestOptions, returnAxios }: QuickBaseRequestGetReport & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseGetReport>>;
 	public async getReport({ reportId, tableId, requestOptions, returnAxios = false }: QuickBaseRequestGetReport): Promise<QuickBaseResponseGetReport | AxiosResponse<QuickBaseResponseGetReport>> {
 		const results = await this.api<QuickBaseResponseGetReport>({
 			method: 'GET',
@@ -882,8 +879,8 @@ export class QuickBase {
 	 * @param options.requestOptions Override axios request configuration
 	 * @param options.returnAxios If `true`, the returned object will be the entire `AxiosResponse` object
 	 */
-	public async runReport({ reportId, tableId, skip, top, requestOptions, returnAxios = false }: QuickBaseRequestRunReport & { returnAxios?: false }): Promise<QuickBaseResponseRunReport>;
-	public async runReport({ reportId, tableId, skip, top, requestOptions, returnAxios = true }: QuickBaseRequestRunReport & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseRunReport>>;
+	public async runReport({ reportId, tableId, skip, top, requestOptions, returnAxios }: QuickBaseRequestRunReport & { returnAxios?: false }): Promise<QuickBaseResponseRunReport>;
+	public async runReport({ reportId, tableId, skip, top, requestOptions, returnAxios }: QuickBaseRequestRunReport & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseRunReport>>;
 	public async runReport({ reportId, tableId, skip, top, requestOptions, returnAxios = false }: QuickBaseRequestRunReport): Promise<QuickBaseResponseRunReport | AxiosResponse<QuickBaseResponseRunReport>> {
 		const results = await this.api<QuickBaseResponseRunReport>({
 			method: 'POST',
@@ -911,8 +908,8 @@ export class QuickBase {
 	 * @param options.requestOptions Override axios request configuration
 	 * @param options.returnAxios If `true`, the returned object will be the entire `AxiosResponse` object
 	 */
-	public async getFields({ tableId, includeFieldPerms, requestOptions, returnAxios = false }: QuickBaseRequestGetFields & { returnAxios?: false }): Promise<QuickBaseResponseGetFields>;
-	public async getFields({ tableId, includeFieldPerms, requestOptions, returnAxios = true }: QuickBaseRequestGetFields & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseGetFields>>;
+	public async getFields({ tableId, includeFieldPerms, requestOptions, returnAxios }: QuickBaseRequestGetFields & { returnAxios?: false }): Promise<QuickBaseResponseGetFields>;
+	public async getFields({ tableId, includeFieldPerms, requestOptions, returnAxios }: QuickBaseRequestGetFields & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseGetFields>>;
 	public async getFields({ tableId, includeFieldPerms, requestOptions, returnAxios = false }: QuickBaseRequestGetFields): Promise<QuickBaseResponseGetFields | AxiosResponse<QuickBaseResponseGetFields>> {
 		const results = await this.api<QuickBaseResponseGetFields>({
 			method: 'GET',
@@ -1007,8 +1004,8 @@ export class QuickBase {
 	 * @param options.requestOptions Override axios request configuration
 	 * @param options.returnAxios If `true`, the returned object will be the entire `AxiosResponse` object
 	 */
-	public async createField({ tableId, requestOptions, returnAxios = false, ...body }: QuickBaseRequestCreateField & { returnAxios?: false }): Promise<QuickBaseResponseCreateField>;
-	public async createField({ tableId, requestOptions, returnAxios = true, ...body }: QuickBaseRequestCreateField & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseCreateField>>;
+	public async createField({ tableId, requestOptions, returnAxios, ...body }: QuickBaseRequestCreateField & { returnAxios?: false }): Promise<QuickBaseResponseCreateField>;
+	public async createField({ tableId, requestOptions, returnAxios, ...body }: QuickBaseRequestCreateField & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseCreateField>>;
 	public async createField({ tableId, requestOptions, returnAxios = false, ...body }: QuickBaseRequestCreateField): Promise<QuickBaseResponseCreateField | AxiosResponse<QuickBaseResponseCreateField>> {
 		const results = await this.api<QuickBaseResponseCreateField>({
 			method: 'POST',
@@ -1035,8 +1032,8 @@ export class QuickBase {
 	 * @param options.requestOptions Override axios request configuration
 	 * @param options.returnAxios If `true`, the returned object will be the entire `AxiosResponse` object
 	 */
-	public async deleteFields({ tableId, requestOptions, returnAxios = false, ...body }: QuickBaseRequestDeleteFields & { returnAxios?: false }): Promise<QuickBaseResponseDeleteFields>;
-	public async deleteFields({ tableId, requestOptions, returnAxios = true, ...body }: QuickBaseRequestDeleteFields & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseDeleteFields>>;
+	public async deleteFields({ tableId, requestOptions, returnAxios, ...body }: QuickBaseRequestDeleteFields & { returnAxios?: false }): Promise<QuickBaseResponseDeleteFields>;
+	public async deleteFields({ tableId, requestOptions, returnAxios, ...body }: QuickBaseRequestDeleteFields & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseDeleteFields>>;
 	public async deleteFields({ tableId, requestOptions, returnAxios = false, ...body }: QuickBaseRequestDeleteFields): Promise<QuickBaseResponseDeleteFields | AxiosResponse<QuickBaseResponseDeleteFields>> {
 		const results = await this.api<QuickBaseResponseDeleteFields>({
 			method: 'DELETE',
@@ -1065,8 +1062,8 @@ export class QuickBase {
 	 * @param options.requestOptions Override axios request configuration
 	 * @param options.returnAxios If `true`, the returned object will be the entire `AxiosResponse` object
 	 */
-	public async getField({ fieldId, tableId, includeFieldPerms, requestOptions, returnAxios = false }: QuickBaseRequestGetField & { returnAxios?: false }): Promise<QuickBaseResponseGetField>;
-	public async getField({ fieldId, tableId, includeFieldPerms, requestOptions, returnAxios = true }: QuickBaseRequestGetField & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseGetField>>;
+	public async getField({ fieldId, tableId, includeFieldPerms, requestOptions, returnAxios }: QuickBaseRequestGetField & { returnAxios?: false }): Promise<QuickBaseResponseGetField>;
+	public async getField({ fieldId, tableId, includeFieldPerms, requestOptions, returnAxios }: QuickBaseRequestGetField & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseGetField>>;
 	public async getField({ fieldId, tableId, includeFieldPerms, requestOptions, returnAxios = false }: QuickBaseRequestGetField): Promise<QuickBaseResponseGetField | AxiosResponse<QuickBaseResponseGetField>> {
 		const results = await this.api<QuickBaseResponseGetField>({
 			method: 'GET',
@@ -1170,8 +1167,8 @@ export class QuickBase {
 	 * @param options.requestOptions Override axios request configuration
 	 * @param options.returnAxios If `true`, the returned object will be the entire `AxiosResponse` object
 	 */
-	public async updateField({ fieldId, tableId, requestOptions, returnAxios = false, ...body }: QuickBaseRequestUpdateField & { returnAxios?: false }): Promise<QuickBaseResponseUpdateField>;
-	public async updateField({ fieldId, tableId, requestOptions, returnAxios = true, ...body }: QuickBaseRequestUpdateField & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseUpdateField>>;
+	public async updateField({ fieldId, tableId, requestOptions, returnAxios, ...body }: QuickBaseRequestUpdateField & { returnAxios?: false }): Promise<QuickBaseResponseUpdateField>;
+	public async updateField({ fieldId, tableId, requestOptions, returnAxios, ...body }: QuickBaseRequestUpdateField & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseUpdateField>>;
 	public async updateField({ fieldId, tableId, requestOptions, returnAxios = false, ...body }: QuickBaseRequestUpdateField): Promise<QuickBaseResponseUpdateField | AxiosResponse<QuickBaseResponseUpdateField>> {
 		const results = await this.api<QuickBaseResponseUpdateField>({
 			method: 'POST',
@@ -1199,8 +1196,8 @@ export class QuickBase {
 	 * @param options.requestOptions Override axios request configuration
 	 * @param options.returnAxios If `true`, the returned object will be the entire `AxiosResponse` object
 	 */
-	public async getFieldsUsage({ tableId, skip, top, requestOptions, returnAxios = false }: QuickBaseRequestGetFieldsUsage & { returnAxios?: false }): Promise<QuickBaseResponseGetFieldsUsage>;
-	public async getFieldsUsage({ tableId, skip, top, requestOptions, returnAxios = true }: QuickBaseRequestGetFieldsUsage & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseGetFieldsUsage>>;
+	public async getFieldsUsage({ tableId, skip, top, requestOptions, returnAxios }: QuickBaseRequestGetFieldsUsage & { returnAxios?: false }): Promise<QuickBaseResponseGetFieldsUsage>;
+	public async getFieldsUsage({ tableId, skip, top, requestOptions, returnAxios }: QuickBaseRequestGetFieldsUsage & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseGetFieldsUsage>>;
 	public async getFieldsUsage({ tableId, skip, top, requestOptions, returnAxios = false }: QuickBaseRequestGetFieldsUsage): Promise<QuickBaseResponseGetFieldsUsage | AxiosResponse<QuickBaseResponseGetFieldsUsage>> {
 		const results = await this.api<QuickBaseResponseGetFieldsUsage>({
 			method: 'GET',
@@ -1228,8 +1225,8 @@ export class QuickBase {
 	 * @param options.requestOptions Override axios request configuration
 	 * @param options.returnAxios If `true`, the returned object will be the entire `AxiosResponse` object
 	 */
-	public async getFieldUsage({ fieldId, tableId, requestOptions, returnAxios = false }: QuickBaseRequestGetFieldUsage & { returnAxios?: false }): Promise<QuickBaseResponseGetFieldUsage>;
-	public async getFieldUsage({ fieldId, tableId, requestOptions, returnAxios = true }: QuickBaseRequestGetFieldUsage & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseGetFieldUsage>>;
+	public async getFieldUsage({ fieldId, tableId, requestOptions, returnAxios }: QuickBaseRequestGetFieldUsage & { returnAxios?: false }): Promise<QuickBaseResponseGetFieldUsage>;
+	public async getFieldUsage({ fieldId, tableId, requestOptions, returnAxios }: QuickBaseRequestGetFieldUsage & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseGetFieldUsage>>;
 	public async getFieldUsage({ fieldId, tableId, requestOptions, returnAxios = false }: QuickBaseRequestGetFieldUsage): Promise<QuickBaseResponseGetFieldUsage | AxiosResponse<QuickBaseResponseGetFieldUsage>> {
 		const results = await this.api<QuickBaseResponseGetFieldUsage>({
 			method: 'GET',
@@ -1256,8 +1253,8 @@ export class QuickBase {
 	 * @param options.requestOptions Override axios request configuration
 	 * @param options.returnAxios If `true`, the returned object will be the entire `AxiosResponse` object
 	 */
-	public async runFormula({ tableId, requestOptions, returnAxios = false, ...body }: QuickBaseRequestRunFormula & { returnAxios?: false }): Promise<QuickBaseResponseRunFormula>;
-	public async runFormula({ tableId, requestOptions, returnAxios = true, ...body }: QuickBaseRequestRunFormula & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseRunFormula>>;
+	public async runFormula({ tableId, requestOptions, returnAxios, ...body }: QuickBaseRequestRunFormula & { returnAxios?: false }): Promise<QuickBaseResponseRunFormula>;
+	public async runFormula({ tableId, requestOptions, returnAxios, ...body }: QuickBaseRequestRunFormula & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseRunFormula>>;
 	public async runFormula({ tableId, requestOptions, returnAxios = false, ...body }: QuickBaseRequestRunFormula): Promise<QuickBaseResponseRunFormula | AxiosResponse<QuickBaseResponseRunFormula>> {
 		const results = await this.api<QuickBaseResponseRunFormula>({
 			method: 'POST',
@@ -1287,8 +1284,8 @@ export class QuickBase {
 	 * @param options.requestOptions Override axios request configuration
 	 * @param options.returnAxios If `true`, the returned object will be the entire `AxiosResponse` object
 	 */
-	public async upsert({ tableId, requestOptions, returnAxios = false, ...body }: QuickBaseRequestUpsert & { returnAxios?: false }): Promise<QuickBaseResponseUpsert>;
-	public async upsert({ tableId, requestOptions, returnAxios = true, ...body }: QuickBaseRequestUpsert & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseUpsert>>;
+	public async upsert({ tableId, requestOptions, returnAxios, ...body }: QuickBaseRequestUpsert & { returnAxios?: false }): Promise<QuickBaseResponseUpsert>;
+	public async upsert({ tableId, requestOptions, returnAxios, ...body }: QuickBaseRequestUpsert & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseUpsert>>;
 	public async upsert({ tableId, requestOptions, returnAxios = false, ...body }: QuickBaseRequestUpsert): Promise<QuickBaseResponseUpsert | AxiosResponse<QuickBaseResponseUpsert>> {
 		const results = await this.api<QuickBaseResponseUpsert>({
 			method: 'POST',
@@ -1315,8 +1312,8 @@ export class QuickBase {
 	 * @param options.requestOptions Override axios request configuration
 	 * @param options.returnAxios If `true`, the returned object will be the entire `AxiosResponse` object
 	 */
-	public async deleteRecords({ tableId, requestOptions, returnAxios = false, ...body }: QuickBaseRequestDeleteRecords & { returnAxios?: false }): Promise<QuickBaseResponseDeleteRecords>;
-	public async deleteRecords({ tableId, requestOptions, returnAxios = true, ...body }: QuickBaseRequestDeleteRecords & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseDeleteRecords>>;
+	public async deleteRecords({ tableId, requestOptions, returnAxios, ...body }: QuickBaseRequestDeleteRecords & { returnAxios?: false }): Promise<QuickBaseResponseDeleteRecords>;
+	public async deleteRecords({ tableId, requestOptions, returnAxios, ...body }: QuickBaseRequestDeleteRecords & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseDeleteRecords>>;
 	public async deleteRecords({ tableId, requestOptions, returnAxios = false, ...body }: QuickBaseRequestDeleteRecords): Promise<QuickBaseResponseDeleteRecords | AxiosResponse<QuickBaseResponseDeleteRecords>> {
 		const results = await this.api<QuickBaseResponseDeleteRecords>({
 			method: 'DELETE',
@@ -1351,8 +1348,8 @@ export class QuickBase {
 	 * @param options.requestOptions Override axios request configuration
 	 * @param options.returnAxios If `true`, the returned object will be the entire `AxiosResponse` object
 	 */
-	public async runQuery({ tableId, requestOptions, returnAxios = false, ...body }: QuickBaseRequestRunQuery & { returnAxios?: false }): Promise<QuickBaseResponseRunQuery>;
-	public async runQuery({ tableId, requestOptions, returnAxios = true, ...body }: QuickBaseRequestRunQuery & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseRunQuery>>;
+	public async runQuery({ tableId, requestOptions, returnAxios, ...body }: QuickBaseRequestRunQuery & { returnAxios?: false }): Promise<QuickBaseResponseRunQuery>;
+	public async runQuery({ tableId, requestOptions, returnAxios, ...body }: QuickBaseRequestRunQuery & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseRunQuery>>;
 	public async runQuery({ tableId, requestOptions, returnAxios = false, ...body }: QuickBaseRequestRunQuery): Promise<QuickBaseResponseRunQuery | AxiosResponse<QuickBaseResponseRunQuery>> {
 		const results = await this.api<QuickBaseResponseRunQuery>({
 			method: 'POST',
@@ -1378,8 +1375,8 @@ export class QuickBase {
 	 * @param options.requestOptions Override axios request configuration
 	 * @param options.returnAxios If `true`, the returned object will be the entire `AxiosResponse` object
 	 */
-	public async getTempTokenDBID({ dbid, requestOptions, returnAxios = false }: QuickBaseRequestGetTempTokenDBID & { returnAxios?: false }): Promise<QuickBaseResponseGetTempTokenDBID>;
-	public async getTempTokenDBID({ dbid, requestOptions, returnAxios = true }: QuickBaseRequestGetTempTokenDBID & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseGetTempTokenDBID>>;
+	public async getTempTokenDBID({ dbid, requestOptions, returnAxios }: QuickBaseRequestGetTempTokenDBID & { returnAxios?: false }): Promise<QuickBaseResponseGetTempTokenDBID>;
+	public async getTempTokenDBID({ dbid, requestOptions, returnAxios }: QuickBaseRequestGetTempTokenDBID & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseGetTempTokenDBID>>;
 	public async getTempTokenDBID({ dbid, requestOptions, returnAxios = false }: QuickBaseRequestGetTempTokenDBID): Promise<QuickBaseResponseGetTempTokenDBID | AxiosResponse<QuickBaseResponseGetTempTokenDBID>> {
 		const results = await this.api<QuickBaseResponseGetTempTokenDBID>({
 			method: 'GET',
@@ -1407,8 +1404,8 @@ export class QuickBase {
 	 * @param options.requestOptions Override axios request configuration
 	 * @param options.returnAxios If `true`, the returned object will be the entire `AxiosResponse` object
 	 */
-	public async exchangeSsoToken({ requestOptions, returnAxios = false, ...body }: QuickBaseRequestExchangeSsoToken & { returnAxios?: false }): Promise<QuickBaseResponseExchangeSsoToken>;
-	public async exchangeSsoToken({ requestOptions, returnAxios = true, ...body }: QuickBaseRequestExchangeSsoToken & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseExchangeSsoToken>>;
+	public async exchangeSsoToken({ requestOptions, returnAxios, ...body }: QuickBaseRequestExchangeSsoToken & { returnAxios?: false }): Promise<QuickBaseResponseExchangeSsoToken>;
+	public async exchangeSsoToken({ requestOptions, returnAxios, ...body }: QuickBaseRequestExchangeSsoToken & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseExchangeSsoToken>>;
 	public async exchangeSsoToken({ requestOptions, returnAxios = false, ...body }: QuickBaseRequestExchangeSsoToken): Promise<QuickBaseResponseExchangeSsoToken | AxiosResponse<QuickBaseResponseExchangeSsoToken>> {
 		const results = await this.api<QuickBaseResponseExchangeSsoToken>({
 			method: 'POST',
@@ -1432,8 +1429,8 @@ export class QuickBase {
 	 * @param options.requestOptions Override axios request configuration
 	 * @param options.returnAxios If `true`, the returned object will be the entire `AxiosResponse` object
 	 */
-	public async cloneUserToken({ requestOptions, returnAxios = false, ...body }: QuickBaseRequestCloneUserToken & { returnAxios?: false }): Promise<QuickBaseResponseCloneUserToken>;
-	public async cloneUserToken({ requestOptions, returnAxios = true, ...body }: QuickBaseRequestCloneUserToken & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseCloneUserToken>>;
+	public async cloneUserToken({ requestOptions, returnAxios, ...body }: QuickBaseRequestCloneUserToken & { returnAxios?: false }): Promise<QuickBaseResponseCloneUserToken>;
+	public async cloneUserToken({ requestOptions, returnAxios, ...body }: QuickBaseRequestCloneUserToken & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseCloneUserToken>>;
 	public async cloneUserToken({ requestOptions, returnAxios = false, ...body }: QuickBaseRequestCloneUserToken): Promise<QuickBaseResponseCloneUserToken | AxiosResponse<QuickBaseResponseCloneUserToken>> {
 		const results = await this.api<QuickBaseResponseCloneUserToken>({
 			method: 'POST',
@@ -1455,8 +1452,8 @@ export class QuickBase {
 	 * @param options.requestOptions Override axios request configuration
 	 * @param options.returnAxios If `true`, the returned object will be the entire `AxiosResponse` object
 	 */
-	public async deactivateUserToken({ requestOptions, returnAxios = false }: QuickBaseRequestDeactivateUserToken & { returnAxios?: false }): Promise<QuickBaseResponseDeactivateUserToken>;
-	public async deactivateUserToken({ requestOptions, returnAxios = true }: QuickBaseRequestDeactivateUserToken & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseDeactivateUserToken>>;
+	public async deactivateUserToken({ requestOptions, returnAxios }: QuickBaseRequestDeactivateUserToken & { returnAxios?: false }): Promise<QuickBaseResponseDeactivateUserToken>;
+	public async deactivateUserToken({ requestOptions, returnAxios }: QuickBaseRequestDeactivateUserToken & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseDeactivateUserToken>>;
 	public async deactivateUserToken({ requestOptions, returnAxios = false }: QuickBaseRequestDeactivateUserToken = {}): Promise<QuickBaseResponseDeactivateUserToken | AxiosResponse<QuickBaseResponseDeactivateUserToken>> {
 		const results = await this.api<QuickBaseResponseDeactivateUserToken>({
 			method: 'POST',
@@ -1477,8 +1474,8 @@ export class QuickBase {
 	 * @param options.requestOptions Override axios request configuration
 	 * @param options.returnAxios If `true`, the returned object will be the entire `AxiosResponse` object
 	 */
-	public async deleteUserToken({ requestOptions, returnAxios = false }: QuickBaseRequestDeleteUserToken & { returnAxios?: false }): Promise<QuickBaseResponseDeleteUserToken>;
-	public async deleteUserToken({ requestOptions, returnAxios = true }: QuickBaseRequestDeleteUserToken & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseDeleteUserToken>>;
+	public async deleteUserToken({ requestOptions, returnAxios }: QuickBaseRequestDeleteUserToken & { returnAxios?: false }): Promise<QuickBaseResponseDeleteUserToken>;
+	public async deleteUserToken({ requestOptions, returnAxios }: QuickBaseRequestDeleteUserToken & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseDeleteUserToken>>;
 	public async deleteUserToken({ requestOptions, returnAxios = false }: QuickBaseRequestDeleteUserToken = {}): Promise<QuickBaseResponseDeleteUserToken | AxiosResponse<QuickBaseResponseDeleteUserToken>> {
 		const results = await this.api<QuickBaseResponseDeleteUserToken>({
 			method: 'DELETE',
@@ -1503,8 +1500,8 @@ export class QuickBase {
 	 * @param options.requestOptions Override axios request configuration
 	 * @param options.returnAxios If `true`, the returned object will be the entire `AxiosResponse` object
 	 */
-	public async downloadFile({ tableId, recordId, fieldId, versionNumber, requestOptions, returnAxios = false }: QuickBaseRequestDownloadFile & { returnAxios?: false }): Promise<QuickBaseResponseDownloadFile>;
-	public async downloadFile({ tableId, recordId, fieldId, versionNumber, requestOptions, returnAxios = true }: QuickBaseRequestDownloadFile & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseDownloadFile>>;
+	public async downloadFile({ tableId, recordId, fieldId, versionNumber, requestOptions, returnAxios }: QuickBaseRequestDownloadFile & { returnAxios?: false }): Promise<QuickBaseResponseDownloadFile>;
+	public async downloadFile({ tableId, recordId, fieldId, versionNumber, requestOptions, returnAxios }: QuickBaseRequestDownloadFile & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseDownloadFile>>;
 	public async downloadFile({ tableId, recordId, fieldId, versionNumber, requestOptions, returnAxios = false }: QuickBaseRequestDownloadFile): Promise<QuickBaseResponseDownloadFile | AxiosResponse<QuickBaseResponseDownloadFile>> {
 		const results = await this.api<QuickBaseResponseDownloadFile>({
 			method: 'GET',
@@ -1529,8 +1526,8 @@ export class QuickBase {
 	 * @param options.requestOptions Override axios request configuration
 	 * @param options.returnAxios If `true`, the returned object will be the entire `AxiosResponse` object
 	 */
-	public async deleteFile({ tableId, recordId, fieldId, versionNumber, requestOptions, returnAxios = false }: QuickBaseRequestDeleteFile & { returnAxios?: false }): Promise<QuickBaseResponseDeleteFile>;
-	public async deleteFile({ tableId, recordId, fieldId, versionNumber, requestOptions, returnAxios = true }: QuickBaseRequestDeleteFile & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseDeleteFile>>;
+	public async deleteFile({ tableId, recordId, fieldId, versionNumber, requestOptions, returnAxios }: QuickBaseRequestDeleteFile & { returnAxios?: false }): Promise<QuickBaseResponseDeleteFile>;
+	public async deleteFile({ tableId, recordId, fieldId, versionNumber, requestOptions, returnAxios }: QuickBaseRequestDeleteFile & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseDeleteFile>>;
 	public async deleteFile({ tableId, recordId, fieldId, versionNumber, requestOptions, returnAxios = false }: QuickBaseRequestDeleteFile): Promise<QuickBaseResponseDeleteFile | AxiosResponse<QuickBaseResponseDeleteFile>> {
 		const results = await this.api<QuickBaseResponseDeleteFile>({
 			method: 'DELETE',
@@ -1555,8 +1552,8 @@ export class QuickBase {
 	 * @param options.requestOptions Override axios request configuration
 	 * @param options.returnAxios If `true`, the returned object will be the entire `AxiosResponse` object
 	 */
-	public async getUsers({ accountId, requestOptions, returnAxios = false, ...body }: QuickBaseRequestGetUsers & { returnAxios?: false }): Promise<QuickBaseResponseGetUsers>;
-	public async getUsers({ accountId, requestOptions, returnAxios = true, ...body }: QuickBaseRequestGetUsers & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseGetUsers>>;
+	public async getUsers({ accountId, requestOptions, returnAxios, ...body }: QuickBaseRequestGetUsers & { returnAxios?: false }): Promise<QuickBaseResponseGetUsers>;
+	public async getUsers({ accountId, requestOptions, returnAxios, ...body }: QuickBaseRequestGetUsers & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseGetUsers>>;
 	public async getUsers({ accountId, requestOptions, returnAxios = false, ...body }: QuickBaseRequestGetUsers): Promise<QuickBaseResponseGetUsers | AxiosResponse<QuickBaseResponseGetUsers>> {
 		const results = await this.api<QuickBaseResponseGetUsers>({
 			method: 'POST',
@@ -1582,8 +1579,8 @@ export class QuickBase {
 	 * @param options.requestOptions Override axios request configuration
 	 * @param options.returnAxios If `true`, the returned object will be the entire `AxiosResponse` object
 	 */
-	public async denyUsers({ accountId, requestOptions, returnAxios = false }: QuickBaseRequestDenyUsers & { returnAxios?: false }): Promise<QuickBaseResponseDenyUsers>;
-	public async denyUsers({ accountId, requestOptions, returnAxios = true }: QuickBaseRequestDenyUsers & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseDenyUsers>>;
+	public async denyUsers({ accountId, requestOptions, returnAxios }: QuickBaseRequestDenyUsers & { returnAxios?: false }): Promise<QuickBaseResponseDenyUsers>;
+	public async denyUsers({ accountId, requestOptions, returnAxios }: QuickBaseRequestDenyUsers & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseDenyUsers>>;
 	public async denyUsers({ accountId, requestOptions, returnAxios = false }: QuickBaseRequestDenyUsers): Promise<QuickBaseResponseDenyUsers | AxiosResponse<QuickBaseResponseDenyUsers>> {
 		const results = await this.api<QuickBaseResponseDenyUsers>({
 			method: 'PUT',
@@ -1609,8 +1606,8 @@ export class QuickBase {
 	 * @param options.requestOptions Override axios request configuration
 	 * @param options.returnAxios If `true`, the returned object will be the entire `AxiosResponse` object
 	 */
-	public async denyUsersAndGroups({ shouldDeleteFromGroups, accountId, requestOptions, returnAxios = false }: QuickBaseRequestDenyUsersAndGroups & { returnAxios?: false }): Promise<QuickBaseResponseDenyUsersAndGroups>;
-	public async denyUsersAndGroups({ shouldDeleteFromGroups, accountId, requestOptions, returnAxios = true }: QuickBaseRequestDenyUsersAndGroups & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseDenyUsersAndGroups>>;
+	public async denyUsersAndGroups({ shouldDeleteFromGroups, accountId, requestOptions, returnAxios }: QuickBaseRequestDenyUsersAndGroups & { returnAxios?: false }): Promise<QuickBaseResponseDenyUsersAndGroups>;
+	public async denyUsersAndGroups({ shouldDeleteFromGroups, accountId, requestOptions, returnAxios }: QuickBaseRequestDenyUsersAndGroups & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseDenyUsersAndGroups>>;
 	public async denyUsersAndGroups({ shouldDeleteFromGroups, accountId, requestOptions, returnAxios = false }: QuickBaseRequestDenyUsersAndGroups): Promise<QuickBaseResponseDenyUsersAndGroups | AxiosResponse<QuickBaseResponseDenyUsersAndGroups>> {
 		const results = await this.api<QuickBaseResponseDenyUsersAndGroups>({
 			method: 'PUT',
@@ -1635,8 +1632,8 @@ export class QuickBase {
 	 * @param options.requestOptions Override axios request configuration
 	 * @param options.returnAxios If `true`, the returned object will be the entire `AxiosResponse` object
 	 */
-	public async undenyUsers({ accountId, requestOptions, returnAxios = false }: QuickBaseRequestUndenyUsers & { returnAxios?: false }): Promise<QuickBaseResponseUndenyUsers>;
-	public async undenyUsers({ accountId, requestOptions, returnAxios = true }: QuickBaseRequestUndenyUsers & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseUndenyUsers>>;
+	public async undenyUsers({ accountId, requestOptions, returnAxios }: QuickBaseRequestUndenyUsers & { returnAxios?: false }): Promise<QuickBaseResponseUndenyUsers>;
+	public async undenyUsers({ accountId, requestOptions, returnAxios }: QuickBaseRequestUndenyUsers & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseUndenyUsers>>;
 	public async undenyUsers({ accountId, requestOptions, returnAxios = false }: QuickBaseRequestUndenyUsers): Promise<QuickBaseResponseUndenyUsers | AxiosResponse<QuickBaseResponseUndenyUsers>> {
 		const results = await this.api<QuickBaseResponseUndenyUsers>({
 			method: 'PUT',
@@ -1661,8 +1658,8 @@ export class QuickBase {
 	 * @param options.requestOptions Override axios request configuration
 	 * @param options.returnAxios If `true`, the returned object will be the entire `AxiosResponse` object
 	 */
-	public async addMembersToGroup({ gid, requestOptions, returnAxios = false }: QuickBaseRequestAddMembersToGroup & { returnAxios?: false }): Promise<QuickBaseResponseAddMembersToGroup>;
-	public async addMembersToGroup({ gid, requestOptions, returnAxios = true }: QuickBaseRequestAddMembersToGroup & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseAddMembersToGroup>>;
+	public async addMembersToGroup({ gid, requestOptions, returnAxios }: QuickBaseRequestAddMembersToGroup & { returnAxios?: false }): Promise<QuickBaseResponseAddMembersToGroup>;
+	public async addMembersToGroup({ gid, requestOptions, returnAxios }: QuickBaseRequestAddMembersToGroup & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseAddMembersToGroup>>;
 	public async addMembersToGroup({ gid, requestOptions, returnAxios = false }: QuickBaseRequestAddMembersToGroup): Promise<QuickBaseResponseAddMembersToGroup | AxiosResponse<QuickBaseResponseAddMembersToGroup>> {
 		const results = await this.api<QuickBaseResponseAddMembersToGroup>({
 			method: 'POST',
@@ -1684,8 +1681,8 @@ export class QuickBase {
 	 * @param options.requestOptions Override axios request configuration
 	 * @param options.returnAxios If `true`, the returned object will be the entire `AxiosResponse` object
 	 */
-	public async removeMembersFromGroup({ gid, requestOptions, returnAxios = false }: QuickBaseRequestRemoveMembersFromGroup & { returnAxios?: false }): Promise<QuickBaseResponseRemoveMembersFromGroup>;
-	public async removeMembersFromGroup({ gid, requestOptions, returnAxios = true }: QuickBaseRequestRemoveMembersFromGroup & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseRemoveMembersFromGroup>>;
+	public async removeMembersFromGroup({ gid, requestOptions, returnAxios }: QuickBaseRequestRemoveMembersFromGroup & { returnAxios?: false }): Promise<QuickBaseResponseRemoveMembersFromGroup>;
+	public async removeMembersFromGroup({ gid, requestOptions, returnAxios }: QuickBaseRequestRemoveMembersFromGroup & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseRemoveMembersFromGroup>>;
 	public async removeMembersFromGroup({ gid, requestOptions, returnAxios = false }: QuickBaseRequestRemoveMembersFromGroup): Promise<QuickBaseResponseRemoveMembersFromGroup | AxiosResponse<QuickBaseResponseRemoveMembersFromGroup>> {
 		const results = await this.api<QuickBaseResponseRemoveMembersFromGroup>({
 			method: 'DELETE',
@@ -1707,8 +1704,8 @@ export class QuickBase {
 	 * @param options.requestOptions Override axios request configuration
 	 * @param options.returnAxios If `true`, the returned object will be the entire `AxiosResponse` object
 	 */
-	public async addManagersToGroup({ gid, requestOptions, returnAxios = false }: QuickBaseRequestAddManagersToGroup & { returnAxios?: false }): Promise<QuickBaseResponseAddManagersToGroup>;
-	public async addManagersToGroup({ gid, requestOptions, returnAxios = true }: QuickBaseRequestAddManagersToGroup & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseAddManagersToGroup>>;
+	public async addManagersToGroup({ gid, requestOptions, returnAxios }: QuickBaseRequestAddManagersToGroup & { returnAxios?: false }): Promise<QuickBaseResponseAddManagersToGroup>;
+	public async addManagersToGroup({ gid, requestOptions, returnAxios }: QuickBaseRequestAddManagersToGroup & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseAddManagersToGroup>>;
 	public async addManagersToGroup({ gid, requestOptions, returnAxios = false }: QuickBaseRequestAddManagersToGroup): Promise<QuickBaseResponseAddManagersToGroup | AxiosResponse<QuickBaseResponseAddManagersToGroup>> {
 		const results = await this.api<QuickBaseResponseAddManagersToGroup>({
 			method: 'POST',
@@ -1730,8 +1727,8 @@ export class QuickBase {
 	 * @param options.requestOptions Override axios request configuration
 	 * @param options.returnAxios If `true`, the returned object will be the entire `AxiosResponse` object
 	 */
-	public async removeManagersFromGroup({ gid, requestOptions, returnAxios = false }: QuickBaseRequestRemoveManagersFromGroup & { returnAxios?: false }): Promise<QuickBaseResponseRemoveManagersFromGroup>;
-	public async removeManagersFromGroup({ gid, requestOptions, returnAxios = true }: QuickBaseRequestRemoveManagersFromGroup & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseRemoveManagersFromGroup>>;
+	public async removeManagersFromGroup({ gid, requestOptions, returnAxios }: QuickBaseRequestRemoveManagersFromGroup & { returnAxios?: false }): Promise<QuickBaseResponseRemoveManagersFromGroup>;
+	public async removeManagersFromGroup({ gid, requestOptions, returnAxios }: QuickBaseRequestRemoveManagersFromGroup & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseRemoveManagersFromGroup>>;
 	public async removeManagersFromGroup({ gid, requestOptions, returnAxios = false }: QuickBaseRequestRemoveManagersFromGroup): Promise<QuickBaseResponseRemoveManagersFromGroup | AxiosResponse<QuickBaseResponseRemoveManagersFromGroup>> {
 		const results = await this.api<QuickBaseResponseRemoveManagersFromGroup>({
 			method: 'DELETE',
@@ -1753,8 +1750,8 @@ export class QuickBase {
 	 * @param options.requestOptions Override axios request configuration
 	 * @param options.returnAxios If `true`, the returned object will be the entire `AxiosResponse` object
 	 */
-	public async addSubgroupsToGroup({ gid, requestOptions, returnAxios = false }: QuickBaseRequestAddSubgroupsToGroup & { returnAxios?: false }): Promise<QuickBaseResponseAddSubgroupsToGroup>;
-	public async addSubgroupsToGroup({ gid, requestOptions, returnAxios = true }: QuickBaseRequestAddSubgroupsToGroup & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseAddSubgroupsToGroup>>;
+	public async addSubgroupsToGroup({ gid, requestOptions, returnAxios }: QuickBaseRequestAddSubgroupsToGroup & { returnAxios?: false }): Promise<QuickBaseResponseAddSubgroupsToGroup>;
+	public async addSubgroupsToGroup({ gid, requestOptions, returnAxios }: QuickBaseRequestAddSubgroupsToGroup & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseAddSubgroupsToGroup>>;
 	public async addSubgroupsToGroup({ gid, requestOptions, returnAxios = false }: QuickBaseRequestAddSubgroupsToGroup): Promise<QuickBaseResponseAddSubgroupsToGroup | AxiosResponse<QuickBaseResponseAddSubgroupsToGroup>> {
 		const results = await this.api<QuickBaseResponseAddSubgroupsToGroup>({
 			method: 'POST',
@@ -1776,8 +1773,8 @@ export class QuickBase {
 	 * @param options.requestOptions Override axios request configuration
 	 * @param options.returnAxios If `true`, the returned object will be the entire `AxiosResponse` object
 	 */
-	public async removeSubgroupsFromGroup({ gid, requestOptions, returnAxios = false }: QuickBaseRequestRemoveSubgroupsFromGroup & { returnAxios?: false }): Promise<QuickBaseResponseRemoveSubgroupsFromGroup>;
-	public async removeSubgroupsFromGroup({ gid, requestOptions, returnAxios = true }: QuickBaseRequestRemoveSubgroupsFromGroup & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseRemoveSubgroupsFromGroup>>;
+	public async removeSubgroupsFromGroup({ gid, requestOptions, returnAxios }: QuickBaseRequestRemoveSubgroupsFromGroup & { returnAxios?: false }): Promise<QuickBaseResponseRemoveSubgroupsFromGroup>;
+	public async removeSubgroupsFromGroup({ gid, requestOptions, returnAxios }: QuickBaseRequestRemoveSubgroupsFromGroup & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseRemoveSubgroupsFromGroup>>;
 	public async removeSubgroupsFromGroup({ gid, requestOptions, returnAxios = false }: QuickBaseRequestRemoveSubgroupsFromGroup): Promise<QuickBaseResponseRemoveSubgroupsFromGroup | AxiosResponse<QuickBaseResponseRemoveSubgroupsFromGroup>> {
 		const results = await this.api<QuickBaseResponseRemoveSubgroupsFromGroup>({
 			method: 'DELETE',
@@ -1803,8 +1800,8 @@ export class QuickBase {
 	 * @param options.requestOptions Override axios request configuration
 	 * @param options.returnAxios If `true`, the returned object will be the entire `AxiosResponse` object
 	 */
-	public async audit({ requestOptions, returnAxios = false, ...body }: QuickBaseRequestAudit & { returnAxios?: false }): Promise<QuickBaseResponseAudit>;
-	public async audit({ requestOptions, returnAxios = true, ...body }: QuickBaseRequestAudit & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseAudit>>;
+	public async audit({ requestOptions, returnAxios, ...body }: QuickBaseRequestAudit & { returnAxios?: false }): Promise<QuickBaseResponseAudit>;
+	public async audit({ requestOptions, returnAxios, ...body }: QuickBaseRequestAudit & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseAudit>>;
 	public async audit({ requestOptions, returnAxios = false, ...body }: QuickBaseRequestAudit): Promise<QuickBaseResponseAudit | AxiosResponse<QuickBaseResponseAudit>> {
 		const results = await this.api<QuickBaseResponseAudit>({
 			method: 'POST',
@@ -1828,8 +1825,8 @@ export class QuickBase {
 	 * @param options.requestOptions Override axios request configuration
 	 * @param options.returnAxios If `true`, the returned object will be the entire `AxiosResponse` object
 	 */
-	public async platformAnalyticReads({ day, requestOptions, returnAxios = false }: QuickBaseRequestPlatformAnalyticReads & { returnAxios?: false }): Promise<QuickBaseResponsePlatformAnalyticReads>;
-	public async platformAnalyticReads({ day, requestOptions, returnAxios = true }: QuickBaseRequestPlatformAnalyticReads & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponsePlatformAnalyticReads>>;
+	public async platformAnalyticReads({ day, requestOptions, returnAxios }: QuickBaseRequestPlatformAnalyticReads & { returnAxios?: false }): Promise<QuickBaseResponsePlatformAnalyticReads>;
+	public async platformAnalyticReads({ day, requestOptions, returnAxios }: QuickBaseRequestPlatformAnalyticReads & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponsePlatformAnalyticReads>>;
 	public async platformAnalyticReads({ day, requestOptions, returnAxios = false }: QuickBaseRequestPlatformAnalyticReads): Promise<QuickBaseResponsePlatformAnalyticReads | AxiosResponse<QuickBaseResponsePlatformAnalyticReads>> {
 		const results = await this.api<QuickBaseResponsePlatformAnalyticReads>({
 			method: 'GET',

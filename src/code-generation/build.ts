@@ -93,7 +93,9 @@ const formatPerson = (person: Person) => {
 		debug('Compiling for Browser...');
 		const browserifiedPrep = await browserify([
 			`./dist/${mainFilename}.js`
-		]);
+		], {
+			standalone: 'yes'
+		});
 
 		const browserified = transpileModule(browserifiedPrep.toString(), {
 			compilerOptions: {

@@ -6,7 +6,6 @@ import { debug } from 'debug';
 import { Throttle } from 'generic-throttle';
 import axios, {
 	AxiosRequestConfig,
-	AxiosRequestHeaders,
 	AxiosResponse
 } from 'axios';
 
@@ -191,7 +190,7 @@ export class QuickBase {
 		return this;
 	}
 
-	private assignAuthorizationHeaders(headers?: AxiosRequestHeaders, addToken = true){
+	private assignAuthorizationHeaders(headers?: AxiosRequestConfig['headers'], addToken = true) {
 		if(!headers){
 			headers = {};
 		}
@@ -235,8 +234,6 @@ export class QuickBase {
 			options.headers = this.assignAuthorizationHeaders(options.headers, !options.url?.startsWith('/auth/temporary'));
 
 			const results = await axios.request<T>(options);
-
-			results.headers = objKeysToLowercase<Record<string, string>>(results.headers);
 
 			debugResponse(id, results);
 
