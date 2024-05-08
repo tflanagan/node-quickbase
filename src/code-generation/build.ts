@@ -8,7 +8,6 @@ type Person = {
 /* Dependencies */
 import {
 	readFile,
-	unlink,
 	writeFile
 } from 'fs/promises';
 import {
@@ -16,32 +15,12 @@ import {
 } from 'child_process';
 
 import Debug from 'debug';
-import minify from 'minify';
-import Browserify from 'browserify';
-import {
-	ModuleKind,
-	ScriptTarget,
-	transpileModule
-} from 'typescript';
+import * as esbuild from 'esbuild';
 
 const pkg = require('../../package.json');
 const debug = Debug('quickbase:build');
 
 /* Helpers */
-const browserify = async (files: Browserify.InputFile[], options?: Browserify.Options): Promise<Buffer> => {
-	return new Promise((resolve, reject) => {
-		const b = new Browserify(files, options);
-
-		b.bundle((err, src) => {
-			if(err){
-				return reject(err);
-			}
-
-			resolve(src);
-		});
-	});
-};
-
 const exec = async (cmd: string): Promise<string> => {
 	return new Promise((resolve, reject) => {
 		execNode(cmd, (err, stdout, stderr) => {
@@ -91,34 +70,17 @@ const formatPerson = (person: Person) => {
 		await exec('npx tsc');
 
 		debug('Compiling for Browser...');
-		const browserifiedPrep = await browserify([
-			`./dist/${mainFilename}.js`
-		], {
-			standalone: 'yes'
+		await esbuild.build({
+			entryPoints: [ `./dist/${mainFilename}.js` ],
+			bundle: true,
+			minify: true,
+			sourcemap: true,
+			target: ['es2015'],
+			outfile: `./dist/${mainFilename}.browserify.min.js`
 		});
-
-		const browserified = transpileModule(browserifiedPrep.toString(), {
-			compilerOptions: {
-				target: ScriptTarget.ES5,
-				module: ModuleKind.CommonJS,
-				lib: [
-					'dom',
-					'ES6'
-				],
-				allowJs: true,
-				checkJs: false,
-				sourceMap: false,
-				declaration: false,
-				removeComments: true
-			}
-		});
-
-		await writeFile(`./dist/${mainFilename}.browserify.js`, browserified.outputText);
-
-		debug('Minifing Browserified file...');
-		const browserSource = await minify(`./dist/${mainFilename}.browserify.js`);
 
 		debug('Loading Source...');
+		const browserSource = await readFile(`./dist/${mainFilename}.browserify.min.js`).then((val) => val.toString().trim());
 		const cjsSrc = await readFile(`./dist/${mainFilename}.js`).then((val) => val.toString().trim());
 
 		debug('Loading License...');
@@ -166,9 +128,6 @@ const formatPerson = (person: Person) => {
 				cjsSrc.trim()
 			].join('\n'))
 		]);
-
-		debug('Cleanup...');
-		await unlink(`./dist/${mainFilename}.browserify.js`);
 
 		debug('Done building.');
 	}catch(err){

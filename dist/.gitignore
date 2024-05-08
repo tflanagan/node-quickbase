@@ -2,3 +2,4 @@
 !.gitignore
 !.npmignore
 !quickbase.browserify.min.js
+!quickbase.browserify.min.js.map

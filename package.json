@@ -31,7 +31,7 @@
   },
   "scripts": {
     "build": "ts-node ./src/code-generation/build.ts",
-    "cleanup": "rm -rf ./dist/*",
+    "cleanup": "rm -rf ./dist/quickbase* && rm -rf ./dist/tests",
     "compile": "npm run cleanup && npm run generate && npm run build && npm run test && npm run docs",
     "docs": "mv ./docs/_config.yml ./ && npx typedoc src/quickbase.ts && mv ./_config.yml ./docs/",
     "generate": "ts-node ./src/code-generation/generate.ts",
@@ -45,13 +45,11 @@
   },
   "devDependencies": {
     "@ava/typescript": "^3.0.1",
-    "@types/browserify": "^12.0.40",
     "@types/debug": "^4.1.12",
     "@types/node": "^20.12.7",
     "ava": "^4.3.3",
-    "browserify": "^17.0.0",
     "dotenv": "^16.4.5",
-    "minify": "7.2.2",
+    "esbuild": "^0.21.1",
     "ts-node": "^10.9.2",
     "typedoc": "^0.25.13",
     "typescript": "^5.4.5"
