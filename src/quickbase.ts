@@ -1839,6 +1839,108 @@ export class QuickBase {
 		return returnAxios ? results : results.data;
 	}
 
+	/**
+	 * Get event summaries
+	 *
+	 * Get event summaries for any span of days up to one year and excluding future dates.  
+	 * **Note:** This API is available for enterprise users only. Data is updated hourly; to ensure accuracy, query dates should be at least one hour in the past. Transactional rate limits are 100 per hour.
+	 *
+	 * [Quickbase Documentation](https://developer.quickbase.com/operation/platformAnalyticEventSummaries)
+	 *
+	 * @param options Get event summaries method options object
+	 * @param options.accountId The ID of the account to query. If no value is specified, the first account matching the provided domain is chosen.
+	 * @param options.start The start date and time of the requested summaries in ISO 8601 time format.
+	 * @param options.end The end date and time of the requested summaries in ISO 8601 time format.
+	 * @param options.groupBy How the events should be grouped.
+	 * @param options.nextToken A pagination token from a previous response. Used to fetch the next page.
+	 * @param options.where[].id Id of the item to filter by - the hash uid if filtering a user, or the app id if filtering an app.
+	 * @param options.where[].type The type of item to filter by.
+	 * @param options.requestOptions Override axios request configuration
+	 * @param options.returnAxios If `true`, the returned object will be the entire `AxiosResponse` object
+	 */
+	public async platformAnalyticEventSummaries({ accountId, requestOptions, returnAxios, ...body }: QuickBaseRequestPlatformAnalyticEventSummaries & { returnAxios?: false }): Promise<QuickBaseResponsePlatformAnalyticEventSummaries>;
+	public async platformAnalyticEventSummaries({ accountId, requestOptions, returnAxios, ...body }: QuickBaseRequestPlatformAnalyticEventSummaries & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponsePlatformAnalyticEventSummaries>>;
+	public async platformAnalyticEventSummaries({ accountId, requestOptions, returnAxios = false, ...body }: QuickBaseRequestPlatformAnalyticEventSummaries): Promise<QuickBaseResponsePlatformAnalyticEventSummaries | AxiosResponse<QuickBaseResponsePlatformAnalyticEventSummaries>> {
+		const results = await this.api<QuickBaseResponsePlatformAnalyticEventSummaries>({
+			method: 'POST',
+			url: `/analytics/events/summaries`,
+			data: body,
+			params: {
+				accountId
+			}
+		}, requestOptions);
+	
+		return returnAxios ? results : results.data;
+	}
+
+	/**
+	 * Export a solution
+	 *
+	 * Returns the QBL for the specified solution. [See QBL documentation](https://help.quickbase.com/hc/en-us/articles/24845511223828-What-is-QBL)
+	 *
+	 * [Quickbase Documentation](https://developer.quickbase.com/operation/exportSolution)
+	 *
+	 * @param options Export a solution method options object
+	 * @param options.solutionId The unique identifier of a solution
+	 * @param options.requestOptions Override axios request configuration
+	 * @param options.returnAxios If `true`, the returned object will be the entire `AxiosResponse` object
+	 */
+	public async exportSolution({ solutionId, requestOptions, returnAxios }: QuickBaseRequestExportSolution & { returnAxios?: false }): Promise<QuickBaseResponseExportSolution>;
+	public async exportSolution({ solutionId, requestOptions, returnAxios }: QuickBaseRequestExportSolution & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseExportSolution>>;
+	public async exportSolution({ solutionId, requestOptions, returnAxios = false }: QuickBaseRequestExportSolution): Promise<QuickBaseResponseExportSolution | AxiosResponse<QuickBaseResponseExportSolution>> {
+		const results = await this.api<QuickBaseResponseExportSolution>({
+			method: 'GET',
+			url: `/solutions/${solutionId}`,
+		}, requestOptions);
+	
+		return returnAxios ? results : results.data;
+	}
+
+	/**
+	 * Update a solution
+	 *
+	 * Updates the solution using the provided QBL. [See QBL documentation](https://help.quickbase.com/hc/en-us/articles/24845511223828-What-is-QBL)
+	 *
+	 * [Quickbase Documentation](https://developer.quickbase.com/operation/updateSolution)
+	 *
+	 * @param options Update a solution method options object
+	 * @param options.solutionId The unique identifier of a solution
+	 * @param options.requestOptions Override axios request configuration
+	 * @param options.returnAxios If `true`, the returned object will be the entire `AxiosResponse` object
+	 */
+	public async updateSolution({ solutionId, requestOptions, returnAxios }: QuickBaseRequestUpdateSolution & { returnAxios?: false }): Promise<QuickBaseResponseUpdateSolution>;
+	public async updateSolution({ solutionId, requestOptions, returnAxios }: QuickBaseRequestUpdateSolution & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseUpdateSolution>>;
+	public async updateSolution({ solutionId, requestOptions, returnAxios = false }: QuickBaseRequestUpdateSolution): Promise<QuickBaseResponseUpdateSolution | AxiosResponse<QuickBaseResponseUpdateSolution>> {
+		const results = await this.api<QuickBaseResponseUpdateSolution>({
+			method: 'PUT',
+			url: `/solutions/${solutionId}`,
+		}, requestOptions);
+	
+		return returnAxios ? results : results.data;
+	}
+
+	/**
+	 * Create a solution
+	 *
+	 * Creates a solution using the provided QBL. [See QBL documentation](https://help.quickbase.com/hc/en-us/articles/24845511223828-What-is-QBL)
+	 *
+	 * [Quickbase Documentation](https://developer.quickbase.com/operation/createSolution)
+	 *
+	 * @param options Create a solution method options object
+	 * @param options.requestOptions Override axios request configuration
+	 * @param options.returnAxios If `true`, the returned object will be the entire `AxiosResponse` object
+	 */
+	public async createSolution({ requestOptions, returnAxios }: QuickBaseRequestCreateSolution & { returnAxios?: false }): Promise<QuickBaseResponseCreateSolution>;
+	public async createSolution({ requestOptions, returnAxios }: QuickBaseRequestCreateSolution & { returnAxios: true }): Promise<AxiosResponse<QuickBaseResponseCreateSolution>>;
+	public async createSolution({ requestOptions, returnAxios = false }: QuickBaseRequestCreateSolution = {}): Promise<QuickBaseResponseCreateSolution | AxiosResponse<QuickBaseResponseCreateSolution>> {
+		const results = await this.api<QuickBaseResponseCreateSolution>({
+			method: 'POST',
+			url: `/solutions`,
+		}, requestOptions);
+	
+		return returnAxios ? results : results.data;
+	}
+
 }
 
 /* Types */
@@ -3335,6 +3437,59 @@ export type QuickBaseRequestPlatformAnalyticReads = QuickBaseRequest & {
 	 * The date for which read summaries need to be fetched. This must be date-time only, as YYYY-MM-DD, and a valid date in the past.
 	 */
 	day?: string;
+};
+
+export type QuickBaseRequestPlatformAnalyticEventSummaries = QuickBaseRequest & {
+	/**
+	 * The ID of the account to query. If no value is specified, the first account matching the provided domain is chosen.
+	 */
+	accountId?: number;
+	/**
+	 * The start date and time of the requested summaries in ISO 8601 time format.
+	 */
+	start: string;
+	/**
+	 * The end date and time of the requested summaries in ISO 8601 time format.
+	 */
+	end: string;
+	/**
+	 * How the events should be grouped.
+	 */
+	groupBy: 'app' | 'user';
+	/**
+	 * A pagination token from a previous response. Used to fetch the next page.
+	 */
+	nextToken?: string;
+	/**
+	 * A list of items to filter events by. Only events which match ALL criteria will be included in the results.
+	 */
+	where?: {
+		/**
+		 * Id of the item to filter by - the hash uid if filtering a user, or the app id if filtering an app.
+		 */
+		id: string;
+		/**
+		 * The type of item to filter by.
+		 */
+		type: 'app' | 'user';
+	}[];
+};
+
+export type QuickBaseRequestExportSolution = QuickBaseRequest & {
+	/**
+	 * The unique identifier of a solution
+	 */
+	solutionId: string;
+};
+
+export type QuickBaseRequestUpdateSolution = QuickBaseRequest & {
+	/**
+	 * The unique identifier of a solution
+	 */
+	solutionId: string;
+};
+
+export type QuickBaseRequestCreateSolution = QuickBaseRequest & {
 };
 
 export type QuickBaseResponseCreateApp = {
@@ -5989,6 +6144,15 @@ export type QuickBaseResponseGetFieldsUsage = {
 			count: number;
 		};
 		/**
+		 * The number of pipelines where the given field is referenced.
+		 */
+		pipelines: {
+			/**
+			 * the number of times a field has been used for the given item.
+			 */
+			count: number;
+		};
+		/**
 		 * The number of relationships where the given field is referenced.
 		 */
 		relationships: {
@@ -6152,6 +6316,15 @@ export type QuickBaseResponseGetFieldUsage = {
 		 * The number of personal reports where the given field is referenced.
 		 */
 		personalReports: {
+			/**
+			 * the number of times a field has been used for the given item.
+			 */
+			count: number;
+		};
+		/**
+		 * The number of pipelines where the given field is referenced.
+		 */
+		pipelines: {
 			/**
 			 * the number of times a field has been used for the given item.
 			 */
@@ -6672,6 +6845,96 @@ export type QuickBaseResponsePlatformAnalyticReads = {
 		};
 	};
 };
+
+export type QuickBaseResponsePlatformAnalyticEventSummaries = {
+	/**
+	 * The ID of the account the events are associated with.
+	 */
+	accountId: string;
+	/**
+	 * The start date and time of the requested summaries in ISO 8601 time format.
+	 */
+	start: string;
+	/**
+	 * The end date and time of the requested summaries in ISO 8601 time format.
+	 */
+	end: string;
+	/**
+	 * How the events should be grouped.
+	 */
+	groupBy: 'app' | 'user';
+	where: {
+		/**
+		 * Id of the item to filter by.
+		 */
+		id: string;
+		/**
+		 * The type of item to filter by.
+		 */
+		type: 'app' | 'user';
+	}[];
+	/**
+	 * An array of objects that contains Application/User information and an events object with summaries by event type.
+	 */
+	results: {
+		/**
+		 * An array of events that contains specific information associated with an Application/User broken down by event type.
+		 */
+		eventTypes: {
+			/**
+			 * Billing category of the event type.
+			 */
+			billingCategory: 'user' | 'integration';
+			/**
+			 * Count of events associated with that event type and Application/User.
+			 */
+			count: number;
+			/**
+			 * Event type
+			 */
+			eventType: string;
+		}[];
+		/**
+		 * Id of the Application/User.
+		 */
+		id: string;
+		/**
+		 * Name of the Application/User.
+		 */
+		name: string;
+		/**
+		 * Totals by billing category for the event grouping.
+		 */
+		totals: {
+			all: number;
+			integration: number;
+			user: number;
+		};
+	}[];
+	/**
+	 * Additional information about the results that may be helpful.
+	 */
+	metadata?: {
+		/**
+		 * Supply this token in a subsequent request to fetch the next page of results.
+		 */
+		nextToken: string;
+	};
+	/**
+	 * Totals by billing category for all queried events.
+	 */
+	totals?: {
+		all: number;
+		integration: number;
+		user: number;
+	};
+};
+
+export type QuickBaseResponseExportSolution = any;
+
+export type QuickBaseResponseUpdateSolution = any;
+
+export type QuickBaseResponseCreateSolution = any;
 
 /* Export to Browser */
 if(IS_BROWSER){

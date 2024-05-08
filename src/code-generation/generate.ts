@@ -1066,7 +1066,7 @@ const buildType = ({
 		}else{
 			debug(`[WARN] Missing items type: ${key}. Assigning as \`any\`.`);
 
-			results.push(`${key}${required ? '' : '?'}: any;`);
+			results.push(`${key}${required ? '' : '?'}${isNested ? ':' : ' ='} any;`);
 		}
 	}else
 	if(property.type === 'object'){
@@ -1098,7 +1098,7 @@ const buildType = ({
 		}else{
 			debug(`[WARN] Missing type: ${key}. Assigning as \`any\`.`);
 
-			results.push(`${key}${required ? '' : '?'}: any;`);
+			results.push(`${key}${required ? '' : '?'}${isNested ? ':' : ' ='} any;`);
 		}
 	}
 
