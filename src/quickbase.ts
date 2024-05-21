@@ -148,6 +148,7 @@ export class QuickBase {
 	 * The default settings of a `QuickBase` instance
 	 */
 	static defaults: Required<QuickBaseOptions> = {
+		scheme: 'https',
 		server: 'api.quickbase.com',
 		version: 'v1',
 		realm: IS_BROWSER ? window.location.host.split('.')[0] : '',
@@ -216,7 +217,7 @@ export class QuickBase {
 	private getBaseRequest(){
 		return {
 			method: 'GET',
-			baseURL: `https://${this.settings.server}/${this.settings.version}`,
+			baseURL: `${this.settings.scheme}://${this.settings.server}/${this.settings.version}`,
 			headers: {
 				'Content-Type': 'application/json; charset=UTF-8',
 				[IS_BROWSER ? 'X-User-Agent' : 'User-Agent']: `${this.settings.userAgent} node-quickbase/v${VERSION} ${IS_BROWSER ? (window.navigator ? window.navigator.userAgent : '') : 'nodejs/' + process.version}`.trim(),
@@ -1945,6 +1946,13 @@ export class QuickBase {
 
 /* Types */
 export type QuickBaseOptions = Partial<{
+	/**
+	 * Quickbase API Server scheme
+	 *
+	 * Default is `https`
+	 */
+	scheme: string;
+
 	/**
 	 * Quickbase API Server FQDN
 	 *
