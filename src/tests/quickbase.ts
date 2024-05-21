@@ -20,6 +20,7 @@ const TEST_UTF_16 = process.env.TEST_UTF_16 === 'true';
 const TEST_FILE = process.env.TEST_FILE === 'true';
 
 const qbOptions: QuickBaseOptions = {
+	scheme: 'https',
 	server: 'api.quickbase.com',
 	version: 'v1',
 
